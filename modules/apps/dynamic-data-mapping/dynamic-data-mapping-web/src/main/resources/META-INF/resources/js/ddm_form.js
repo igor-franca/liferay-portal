@@ -1972,6 +1972,7 @@ AUI.add(
 						dialog: {
 							cssClass: 'lfr-ddm-link-to-page-modal',
 							height: 600,
+							left:400,
 							modal: true,
 							on: {
 								destroy() {
