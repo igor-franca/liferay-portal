@@ -2475,7 +2475,7 @@ html:not(#__):not(#___) .yui3-dd-proxy {
 }
 
 .modal-dialog:not(.dialog-iframe-modal):not(.modal-full-screen) {
-  position: relative;
+  position: absolute;
 }
 .modal-dialog.dialog-iframe-modal {
   max-width: none;
