@@ -2474,7 +2474,7 @@ html:not(#__):not(#___) .yui3-dd-proxy {
   padding: 0;
 }
 
-.modal-dialog:not(.dialog-iframe-modal):not(.modal-full-screen) {
+.modal-dialog:not(.dialog-iframe-modal):not(.modal-full-screen):not(.lfr-ddm-link-to-page-modal) {
   position: absolute;
 }
 .modal-dialog.dialog-iframe-modal {
