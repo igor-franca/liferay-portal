@@ -63,7 +63,7 @@ AUI.add(
 		var TPL_PAGE =
 			'<li class="lfr-ddm-link" data-groupId="{groupId}" data-layoutId="{layoutId}" data-nodeType="{nodeType}" data-privateLayout="{privateLayout}">' +
 			'<input class="lfr-ddm-page-radio" {checked} name="lfr-ddm-page" type="radio" />' +
-			'<a class="collapsed collapse-icon lfr-ddm-page-label" href="javascript:;">{pageTitle}{icon}</a>' +
+			'<span class="collapsed collapse-icon lfr-ddm-page-label">{pageTitle}{icon}</span>' +
 			'</li>';
 
 		var TPL_PAGES_BREADCRUMB =
@@ -71,7 +71,7 @@ AUI.add(
 
 		var TPL_PAGES_BREADCRUMB_ELEMENT =
 			'<li class="lfr-ddm-breadcrumb-element" data-groupId={groupId} data-layoutId={layoutId} data-privateLayout={privateLayout}>' +
-			'<a title="{label}">{label}</a>' +
+			'<span title="{label}">{label}</span>' +
 			'</li>';
 
 		var TPL_PAGES_CONTAINER =
@@ -1969,7 +1969,6 @@ AUI.add(
 					return {
 						dialog: {
 							cssClass: 'lfr-ddm-link-to-page-modal',
-							height: 328,
 							modal: true,
 							on: {
 								destroy() {
