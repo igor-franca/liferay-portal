@@ -39,12 +39,12 @@ AUI.add(
 			'<nav class="navbar navbar-collapse-absolute navbar-expand-md navbar-underline navigation-bar navigation-bar-light">' +
 			'<div class="collapse navbar-collapse">' +
 			'<ul class="nav navbar-nav">' +
-			'<li class="public {publicLayoutClass}"><a href="javascript:;">' +
+			'<li class="public {publicLayoutClass}"><span">' +
 			Liferay.Language.get('public-pages') +
-			'</a></li>' +
-			'<li class="private {privateLayoutClass}"><a href="javascript:;">' +
+			'</span></li>' +
+			'<li class="private {privateLayoutClass}"><span">' +
 			Liferay.Language.get('private-pages') +
-			'</a></li>' +
+			'</span></li>' +
 			'</ul>' +
 			'</div>' +
 			'</nav>';
@@ -52,11 +52,9 @@ AUI.add(
 		var TPL_LAYOUTS_NAVBAR =
 			'<nav class="navbar navbar-collapse-absolute navbar-expand-md navbar-underline navigation-bar navigation-bar-light">' +
 			'<div class="collapse navbar-collapse">' +
-			'<ul class="nav navbar-nav">' +
-			'<li class="public active"><a href="javascript:;">' +
+			'<span">' +
 			Liferay.Language.get('pages') +
-			'</a></li>' +
-			'</ul>' +
+			'</span">' +
 			'</div>' +
 			'</nav>';
 
@@ -1971,7 +1969,7 @@ AUI.add(
 					return {
 						dialog: {
 							cssClass: 'lfr-ddm-link-to-page-modal',
-							height: 600,
+							height: 328,
 							modal: true,
 							on: {
 								destroy() {
@@ -2021,7 +2019,7 @@ AUI.add(
 									},
 								],
 							},
-							width: 800,
+							width: 600,
 						},
 						title: Liferay.Language.get('select-layout'),
 					};
