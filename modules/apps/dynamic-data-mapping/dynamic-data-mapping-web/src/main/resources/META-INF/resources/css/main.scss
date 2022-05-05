@@ -321,12 +321,22 @@ textarea.script {
 
 .modal-dialog.lfr-ddm-link-to-page-modal{
 	position: fixed !important;
+	height: auto !important;
 }
 
 .lfr-ddm-link-to-page-modal {
 	.lfr-ddm-breadcrumb {
 		padding-left: 0;
 		padding-right: 0;
+	}
+
+	.lfr-ddm-link-to-page-modal-content{
+		.navbar.navbar-collapse-absolute{
+			padding: 1em;
+		}
+		.modal-body{
+			height: auto !important;
+		}
 	}
 
 	.lfr-ddm-pages-container {
@@ -354,7 +364,7 @@ textarea.script {
 
 		&.nav {
 			> li {
-				> a {
+				> span {
 					margin-left: 20px;
 					padding-left: 0;
 				}
@@ -372,6 +382,7 @@ textarea.script {
 			}
 		}
 	}
+
 }
 
 .form-builder-field {
