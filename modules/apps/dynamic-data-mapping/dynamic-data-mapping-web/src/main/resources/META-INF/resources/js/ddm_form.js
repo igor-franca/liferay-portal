@@ -39,12 +39,12 @@ AUI.add(
 			'<nav class="navbar navbar-collapse-absolute navbar-expand-md navbar-underline navigation-bar navigation-bar-light">' +
 			'<div class="collapse navbar-collapse">' +
 			'<ul class="nav navbar-nav">' +
-			'<li class="public {publicLayoutClass}"><span">' +
+			'<li class="public {publicLayoutClass}"><a">' +
 			Liferay.Language.get('public-pages') +
-			'</span></li>' +
-			'<li class="private {privateLayoutClass}"><span">' +
+			'</a></li>' +
+			'<li class="private {privateLayoutClass}"><a">' +
 			Liferay.Language.get('private-pages') +
-			'</span></li>' +
+			'</a></li>' +
 			'</ul>' +
 			'</div>' +
 			'</nav>';
@@ -52,9 +52,9 @@ AUI.add(
 		var TPL_LAYOUTS_NAVBAR =
 			'<nav class="navbar navbar-collapse-absolute navbar-expand-md navbar-underline navigation-bar navigation-bar-light">' +
 			'<div class="collapse navbar-collapse">' +
-			'<span">' +
+			'<span class="public">' +
 			Liferay.Language.get('pages') +
-			'</span">' +
+			'</span>' +
 			'</div>' +
 			'</nav>';
 

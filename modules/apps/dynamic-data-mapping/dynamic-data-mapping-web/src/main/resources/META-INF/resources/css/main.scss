@@ -4,6 +4,11 @@
 	display: none;
 }
 
+.portlet-content-container{
+	.button-holder {
+		margin: 1em;
+	}
+}
 .portlet-document-library,
 .portlet-dynamic-data-mapping {
 	.field-labels-inline {
@@ -325,15 +330,21 @@ textarea.script {
 }
 
 .lfr-ddm-link-to-page-modal {
+	.collapse.navbar-collapse{
+		.active{
+			border-bottom: 1px solid #004ad7;
+		}
+		li.public, li.private, span.public{
+			padding: 1.5em;
+		}
+	}
+
 	.lfr-ddm-breadcrumb {
 		padding-left: 0;
 		padding-right: 0;
 	}
 
 	.lfr-ddm-link-to-page-modal-content{
-		.navbar.navbar-collapse-absolute{
-			padding: 1em;
-		}
 		.modal-body{
 			height: auto !important;
 		}
@@ -349,11 +360,15 @@ textarea.script {
 		&.top-ended {
 			padding-top: 0;
 		}
-
+		
 		.lfr-ddm-link{
 			align-items: center;
 			display: flex;
-			margin-bottom: 16px;
+			margin-bottom: 1em;
+
+			span{
+				margin-left: 1em;
+			}
 		}
 
 		.loading-icon {
@@ -364,10 +379,6 @@ textarea.script {
 
 		&.nav {
 			> li {
-				> span {
-					margin-left: 20px;
-					padding-left: 0;
-				}
 
 				.loading-icon {
 					font-size: 18px;
