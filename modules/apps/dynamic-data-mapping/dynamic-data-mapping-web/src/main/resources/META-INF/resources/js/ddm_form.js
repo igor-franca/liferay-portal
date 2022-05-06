@@ -1971,7 +1971,6 @@ AUI.add(
 					return {
 						dialog: {
 							cssClass: 'lfr-ddm-link-to-page-modal',
-							height: 600,
 							modal: true,
 							on: {
 								destroy() {
@@ -2021,7 +2020,7 @@ AUI.add(
 									},
 								],
 							},
-							width: 400,
+							width: 600,
 						},
 						title: Liferay.Language.get('select-layout'),
 					};
