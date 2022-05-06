@@ -4,6 +4,12 @@
 	display: none;
 }
 
+.portlet-content-container{
+	.button-holder {
+		margin-top: 1em;
+	}
+}
+
 .portlet-document-library,
 .portlet-dynamic-data-mapping {
 	.field-labels-inline {
@@ -313,56 +319,83 @@ textarea.script {
 }
 
 .lfr-ddm-legend {
-	color: #272833;
+	color: #272833;	
 	font-size: 0.875rem;
 	font-weight: 600;
 	margin-bottom: 0.25rem;
 }
 
 .lfr-ddm-link-to-page-modal {
-	.lfr-ddm-breadcrumb {
-		padding-left: 0;
-		padding-right: 0;
+	.collapse.navbar-collapse{
+		.active{
+			border-bottom: 1px solid #004ad7;
+		}
+		li.public, li.private, span.public{
+			padding: 1.5em;
+		}
 	}
-
-	.lfr-ddm-pages-container {
-		height: 283px;
-		margin-right: -23px;
-		overflow: auto;
-		padding-left: 5px;
-		padding-top: 50px;
-
-		&.top-ended {
-			padding-top: 0;
+		.lfr-ddm-breadcrumb {
+			padding-left: 0;
+			padding-right: 0;
 		}
 
-		.loading-icon {
-			display: block;
-			font-size: 48px;
-			margin: 0 auto;
+		.lfr-ddm-link-to-page-modal-content{
+			.modal-body{
+				height: auto !important;
+			}
 		}
 
-		&.nav {
-			> li {
-				> a {
-					margin-left: 20px;
-					padding-left: 0;
-				}
+		.lfr-ddm-pages-container {
+			height: auto;
+			margin-right: -23px;
+			overflow: auto;
+			padding-left: 5px;
+			padding-top: 50px;
 
-				.loading-icon {
-					font-size: 18px;
-					position: absolute;
-					right: 36px;
-					top: 12px;
+			&.top-ended {
+				padding-top: 0;
+			}
+
+			.lfr-ddm-link{
+				align-items: center;
+				display: flex;
+				margin-bottom: 16px;
+				margin-bottom: 1em;
+
+				span{
+					margin-left: 1em;
 				}
 			}
 
-			.lfr-ddm-page-radio {
-				position: absolute;
-				top: 10px;
+			.loading-icon {
+				display: block;
+				font-size: 48px;
+				margin: 0 auto;
+			}
+
+			&.nav {
+				> li {
+					.loading-icon {
+						font-size: 18px;
+						position: absolute;
+						right: 36px;
+						top: 12px;
+					}
+				}
+
+				.lfr-ddm-page-radio {
+					position: relative;
+			}
+			.modal-body{
+				height: auto !important;
 			}
 		}
 	}
+}
+
+.modal-dialog.lfr-ddm-link-to-page-modal{
+	position: fixed !important;
+	height: auto !important;
 }
 
 .form-builder-field {
