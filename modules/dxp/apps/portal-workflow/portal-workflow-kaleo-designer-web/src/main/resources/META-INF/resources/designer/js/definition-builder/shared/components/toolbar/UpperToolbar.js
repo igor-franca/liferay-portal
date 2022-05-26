@@ -23,6 +23,7 @@ import {isEdge, isNode} from 'react-flow-renderer';
 import {DefinitionBuilderContext} from '../../../DefinitionBuilderContext';
 import {defaultLanguageId} from '../../../constants';
 import {xmlNamespace} from '../../../source-builder/constants';
+import DeserializeUtil from '../../../source-builder/deserializeUtil';
 import {serializeDefinition} from '../../../source-builder/serializeUtil';
 import XMLUtil from '../../../source-builder/xmlUtil';
 import {getAvailableLocalesObject} from '../../../util/availableLocales';
@@ -47,7 +48,9 @@ export default function UpperToolbar({displayNames, languageIds}) {
 		selectedLanguageId,
 		setAlertMessage,
 		setAlertType,
+		setDefinitionDescription,
 		setDefinitionId,
+		setDefinitionName,
 		setDefinitionTitle,
 		setDeserialize,
 		setSelectedLanguageId,
@@ -83,6 +86,14 @@ export default function UpperToolbar({displayNames, languageIds}) {
 	};
 
 	const getXMLContent = (exporting) => {
+		const deserializeUtil = new DeserializeUtil();
+
+		const xmlDefinition = currentEditor.getData();
+		deserializeUtil.updateXMLDefinition(xmlDefinition);
+		const metadata = deserializeUtil.getMetadata();
+		setDefinitionDescription(metadata.description);
+		setDefinitionName(metadata.name);
+
 		let xmlContent;
 
 		if (currentEditor && !exporting) {
@@ -92,8 +103,8 @@ export default function UpperToolbar({displayNames, languageIds}) {
 			xmlContent = serializeDefinition(
 				xmlNamespace,
 				{
-					description: definitionDescription,
-					name: definitionName,
+					description: metadata.description,
+					name: metadata.name,
 					version,
 				},
 				elements.filter(isNode),
