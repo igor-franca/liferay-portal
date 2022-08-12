@@ -504,6 +504,7 @@ public class ObjectFieldLocalServiceImpl
 			externalReferenceCode, newObjectField.getObjectDefinitionId());
 		_validateLabel(labelMap);
 
+		newObjectField.setDefaultValue(defaultValue);
 		newObjectField.setExternalReferenceCode(externalReferenceCode);
 		newObjectField.setLabelMap(labelMap, LocaleUtil.getSiteDefault());
 
@@ -539,7 +540,6 @@ public class ObjectFieldLocalServiceImpl
 
 		newObjectField.setListTypeDefinitionId(listTypeDefinitionId);
 		newObjectField.setDBColumnName(name + StringPool.UNDERLINE);
-		newObjectField.setDefaultValue(defaultValue);
 		newObjectField.setIndexed(indexed);
 		newObjectField.setIndexedAsKeyword(indexedAsKeyword);
 		newObjectField.setIndexedLanguageId(indexedLanguageId);
