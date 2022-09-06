@@ -35,8 +35,11 @@ export function DefinitionOfTerms({baseResourceURL}: IProps) {
 	const [entityFields, setEntityFields] = useState<Item[]>([]);
 
 	const filteredObjectDefinitions = useMemo(() => {
-		return objectDefinitions?.filter(({label}) =>
-			stringIncludesQuery(label[defaultLanguageId] as string, query)
+		return objectDefinitions?.filter(({label, name}) =>
+			stringIncludesQuery(
+				(label[defaultLanguageId] as string) ?? name,
+				query
+			)
 		);
 	}, [objectDefinitions, query]);
 
@@ -104,9 +107,9 @@ export function DefinitionOfTerms({baseResourceURL}: IProps) {
 					query={query}
 					value={selectedEntity?.label[defaultLanguageId]}
 				>
-					{({label}) => (
+					{({label, name}) => (
 						<div className="d-flex justify-content-between">
-							<div>{label[defaultLanguageId]}</div>
+							<div>{label[defaultLanguageId] ?? name}</div>
 						</div>
 					)}
 				</AutoComplete>
