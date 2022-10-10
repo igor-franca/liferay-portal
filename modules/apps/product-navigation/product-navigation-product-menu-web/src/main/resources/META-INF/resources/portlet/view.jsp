@@ -26,7 +26,7 @@ ApplicationsMenuInstanceConfiguration applicationsMenuInstanceConfiguration = Co
 <div class="lfr-product-menu-sidebar <%= applicationsMenuInstanceConfiguration.enableApplicationsMenu() ? "lfr-applications-menu" : "" %>" id="productMenuSidebar">
 	<c:if test="<%= !applicationsMenuInstanceConfiguration.enableApplicationsMenu() %>">
 		<div class="sidebar-header">
-			<h1 class="sr-only"><liferay-ui:message key="product-admin-menu" /></h1>
+			<h2 class="sr-only"><liferay-ui:message key="product-admin-menu" /></h2>
 
 			<clay:content-row>
 				<clay:content-col
