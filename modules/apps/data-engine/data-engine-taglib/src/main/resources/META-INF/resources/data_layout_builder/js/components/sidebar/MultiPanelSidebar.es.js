@@ -138,7 +138,7 @@ export default function MultiPanelSidebar({
 				>
 					<ul className="tbar-nav">
 						{panels.reduce((elements, group, groupIndex) => {
-							const buttons = group.map((panelId) => {
+							const buttons = group.map((panelId, index) => {
 								const panel = sidebarPanels[panelId];
 
 								const active =
@@ -191,6 +191,7 @@ export default function MultiPanelSidebar({
 												onMouseEnter={prefetch}
 												symbol={icon}
 												title={label}
+												tabIndex= {index === 0 ? "0" : "-1"}
 											/>
 										)}
 									</li>

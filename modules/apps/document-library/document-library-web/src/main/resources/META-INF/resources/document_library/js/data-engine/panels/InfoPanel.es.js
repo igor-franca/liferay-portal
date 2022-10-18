@@ -41,7 +41,7 @@ export default function InfoPanel({title, url}) {
 	return (
 		<div className="sidebar-sm">
 			<div className="sidebar-header">
-				<p className="component-title h4">{title}</p>
+				<h2 tabindex="0" className="component-title">{title}</h2>
 			</div>
 
 			<div className="sidebar-body">
