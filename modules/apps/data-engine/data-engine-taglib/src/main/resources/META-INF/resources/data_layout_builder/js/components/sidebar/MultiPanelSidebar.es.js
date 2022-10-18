@@ -212,7 +212,7 @@ export default function MultiPanelSidebar({
 				</nav>
 
 				<div
-					className={classNames('multi-panel-sidebar-content', {
+					aria-label={Liferay.Language.get('sidebar')} className={classNames('multi-panel-sidebar-content', {
 						'multi-panel-sidebar-content-open': open,
 					})}
 				>
