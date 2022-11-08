@@ -65,7 +65,7 @@ public class ObjectDefinitionsLayoutsDisplayContext
 				).buildString(),
 				"view", "view",
 				LanguageUtil.get(objectRequestHelper.getRequest(), "view"),
-				"get", null, "sidePanel"),
+				"get", "get", "sidePanel"),
 			new FDSActionDropdownItem(
 				"/o/object-admin/v1.0/object-layouts/{id}", "trash", "delete",
 				LanguageUtil.get(objectRequestHelper.getRequest(), "delete"),

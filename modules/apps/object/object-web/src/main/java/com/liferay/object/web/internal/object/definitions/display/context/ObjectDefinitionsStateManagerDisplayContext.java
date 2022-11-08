@@ -69,7 +69,7 @@ public class ObjectDefinitionsStateManagerDisplayContext
 				).buildString(),
 				"view", "view",
 				LanguageUtil.get(objectRequestHelper.getRequest(), "view"),
-				"get", null, "sidePanel"));
+				"get", "get", "sidePanel"));
 	}
 
 	public JSONObject getObjectFieldJSONObject(ObjectField objectField) {

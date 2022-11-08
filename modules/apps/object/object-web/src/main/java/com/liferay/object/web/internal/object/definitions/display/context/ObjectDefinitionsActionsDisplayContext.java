@@ -80,7 +80,7 @@ public class ObjectDefinitionsActionsDisplayContext
 				).buildString(),
 				"view", "view",
 				LanguageUtil.get(objectRequestHelper.getRequest(), "view"),
-				"get", null, "sidePanel"),
+				"get", "get", "sidePanel"),
 			new FDSActionDropdownItem(
 				"/o/object-admin/v1.0/object-actions/{id}", "trash", "delete",
 				LanguageUtil.get(objectRequestHelper.getRequest(), "delete"),

@@ -61,7 +61,7 @@ public class ObjectDefinitionsViewsDisplayContext
 				).buildString(),
 				"view", "view",
 				LanguageUtil.get(objectRequestHelper.getRequest(), "view"),
-				"get", null, "sidePanel"),
+				"get", "get", "sidePanel"),
 			new FDSActionDropdownItem(
 				"/o/object-admin/v1.0/object-views/{id}/copy", "copy", "copy",
 				LanguageUtil.get(objectRequestHelper.getRequest(), "duplicate"),

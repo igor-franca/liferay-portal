@@ -98,7 +98,7 @@ public class ViewObjectDefinitionsDisplayContext {
 				).buildString(),
 				"view", "view",
 				LanguageUtil.get(_objectRequestHelper.getRequest(), "view"),
-				"get", null, null),
+				"get", "get", null),
 			new FDSActionDropdownItem(
 				ResourceURLBuilder.createResourceURL(
 					_objectRequestHelper.getLiferayPortletResponse()
