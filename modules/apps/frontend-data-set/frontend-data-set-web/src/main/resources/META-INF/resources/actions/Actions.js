@@ -48,6 +48,19 @@ const formatActions = (actions, itemData) => {
 								},
 							];
 						}
+						if (
+							action.data.id === 'view' &&
+							itemData.actions.update
+						) {
+							return [
+								...actions,
+								{
+									...action,
+									icon: 'pencil',
+									label: Liferay.Language.get('edit'),
+								},
+							];
+						}
 						else {
 							return [...actions, action];
 						}
