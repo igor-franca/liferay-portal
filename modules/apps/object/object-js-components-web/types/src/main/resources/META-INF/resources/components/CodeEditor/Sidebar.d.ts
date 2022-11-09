@@ -13,12 +13,17 @@
  */
 
 import CodeMirror from 'codemirror';
-import React from 'react';
+import React, {ReactNode} from 'react';
 import './Sidebar.scss';
-export declare function Sidebar({editorRef, elements}: IProps): JSX.Element;
+export declare function Sidebar({
+	editorRef,
+	elements,
+	optinalComponent,
+}: IProps): JSX.Element;
 interface IProps {
 	editorRef: React.RefObject<CodeMirror.Editor>;
 	elements: SidebarCategory[];
+	optinalComponent?: ReactNode;
 }
 export interface SidebarCategory {
 	items: SidebarElement[];

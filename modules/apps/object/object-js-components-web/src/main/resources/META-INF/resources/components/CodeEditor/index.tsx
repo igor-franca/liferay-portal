@@ -14,7 +14,7 @@
 
 import classNames from 'classnames';
 import CodeMirror from 'codemirror';
-import React, {useRef} from 'react';
+import React, {useRef, ReactNode} from 'react';
 
 import {FieldBase} from '../FieldBase';
 import CodeMirrorEditor, {ICodeMirrorEditor} from './CodeMirrorEditor';
@@ -26,7 +26,7 @@ export {default as CodeMirrorEditor} from './CodeMirrorEditor';
 export {SidebarCategory} from './Sidebar';
 
 const CodeEditor = React.forwardRef<CodeMirror.Editor, IProps>(
-	({className, error, sidebarElements, ...options}, ref) => {
+	({className, error, sidebarElements, optinalComponent, ...options}, ref) => {
 		const editorRef = useRef<CodeMirror.Editor>(
 			null
 		) as React.MutableRefObject<CodeMirror.Editor>;
@@ -63,6 +63,7 @@ const CodeEditor = React.forwardRef<CodeMirror.Editor, IProps>(
 						<Sidebar
 							editorRef={editorRef}
 							elements={sidebarElements}
+							optinalComponent={optinalComponent}
 						/>
 					)}
 				</div>
@@ -77,4 +78,5 @@ interface IProps extends ICodeMirrorEditor {
 	className?: string;
 	error?: string;
 	sidebarElements?: SidebarCategory[];
+	optinalComponent?: ReactNode;
 }

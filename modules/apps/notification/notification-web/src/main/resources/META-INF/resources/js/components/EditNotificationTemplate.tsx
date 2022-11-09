@@ -26,6 +26,7 @@ import {
 	SingleSelect,
 	openToast,
 	useForm,
+	Freemarker
 } from '@liferay/object-js-components-web';
 import {fetch} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
@@ -135,6 +136,16 @@ export default function EditNotificationTemplate({
 	const [searchTerm, setSearchTerm] = useState('');
 
 	const [toTerms, setToTerms] = useState<string>('');
+
+	const SidebarElementsMock= [{
+		items: 
+			[{
+				content: 'content',
+				helpText: 'helpText',
+				label: 'Item label'
+			}],
+		label: 'label'
+	}]
 
 	const validate = (values: any) => {
 		const errors: {
@@ -868,6 +879,10 @@ export default function EditNotificationTemplate({
 							selectedLocale={selectedLocale}
 							translations={values.subject}
 						/>
+
+							<Freemarker
+								sidebarElements={SidebarElementsMock}
+							/>
 
 						{Liferay.FeatureFlags['LPS-162133'] &&
 							values.type === 'email' && (

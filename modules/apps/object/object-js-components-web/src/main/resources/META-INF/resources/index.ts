@@ -49,3 +49,4 @@ export {PanelHeader} from './components/Panel/PanelHeader';
 export * as API from './utils/api';
 export * from './utils/string';
 export * from './utils/array';
+export {Freemarker} from "./components/Freemarker"

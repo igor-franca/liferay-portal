@@ -12,20 +12,11 @@
  * details.
  */
 
-import CodeMirror from 'codemirror';
-import React, {ReactNode} from 'react';
-import {ICodeMirrorEditor} from './CodeMirrorEditor';
-import {SidebarCategory} from './Sidebar';
-import './index.scss';
-export {default as CodeMirrorEditor} from './CodeMirrorEditor';
-export {SidebarCategory} from './Sidebar';
-declare const CodeEditor: React.ForwardRefExoticComponent<
-	IProps & React.RefAttributes<CodeMirror.Editor>
->;
-export default CodeEditor;
-interface IProps extends ICodeMirrorEditor {
-	className?: string;
-	error?: string;
-	sidebarElements?: SidebarCategory[];
-	optinalComponent?: ReactNode;
+/// <reference types="react" />
+
+import {SidebarCategory} from './CodeEditor/index';
+export declare function Freemarker({sidebarElements}: IModalProps): JSX.Element;
+interface IModalProps {
+	sidebarElements: SidebarCategory[];
 }
+export {};

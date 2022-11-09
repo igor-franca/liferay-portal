@@ -13,26 +13,28 @@
  */
 
 import CodeMirror from 'codemirror';
-import React from 'react';
+import React, {ReactNode} from 'react';
 
 import {Collapsible} from './Collapsible';
 import {Element} from './Element';
 
 import './Sidebar.scss';
 
-export function Sidebar({editorRef, elements}: IProps) {
+export function Sidebar({editorRef, elements, optinalComponent}: IProps) {
 	const handleClick = (item: SidebarElement) =>
-		editorRef.current?.replaceSelection(item.content);
+		editorRef.current?.replaceSelection(item.content); 
 
 	return (
 		<div className="lfr-objects__code-editor-sidebar">
 			<div className="px-3">
 				<h5 className="my-3">{Liferay.Language.get('elements')}</h5>
 
-				{elements.map(({items, label}) => (
+				{optinalComponent}
+
+				{elements.map(({items, label}) => ( 
 					<Collapsible key={label} label={label}>
 						{items.map((item) => (
-							<Element
+							<Element 
 								helpText={item.helpText}
 								key={item.label}
 								label={item.label}
@@ -48,6 +50,7 @@ export function Sidebar({editorRef, elements}: IProps) {
 interface IProps {
 	editorRef: React.RefObject<CodeMirror.Editor>;
 	elements: SidebarCategory[];
+	optinalComponent?: ReactNode;
 }
 
 export interface SidebarCategory {
