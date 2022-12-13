@@ -97,6 +97,8 @@ public class ObjectActionLocalServiceImpl
 			UnicodeProperties parametersUnicodeProperties)
 		throws PortalException {
 
+		User user = _userLocalService.getUser(userId);
+
 		ObjectDefinition objectDefinition =
 			_objectDefinitionPersistence.findByPrimaryKey(objectDefinitionId);
 
@@ -301,7 +303,7 @@ public class ObjectActionLocalServiceImpl
 		_validateParametersUnicodeProperties(
 			objectAction.getCompanyId(), objectAction.getUserId(),
 			conditionExpression, objectActionExecutorKey,
-			objectActionTriggerKey, parametersUnicodeProperties);
+			objectActionTriggerKey, parametersUnicodeProperties, 0);
 
 		if (Validator.isNotNull(externalReferenceCode)) {
 			objectAction.setExternalReferenceCode(externalReferenceCode);
@@ -544,9 +546,40 @@ public class ObjectActionLocalServiceImpl
 			long objectDefinitionId = GetterUtil.getLong(
 				parametersUnicodeProperties.get("objectDefinitionId"));
 
-			ObjectDefinition objectDefinition =
-				_objectDefinitionPersistence.fetchByPrimaryKey(
-					objectDefinitionId);
+			ObjectDefinition objectDefinition = null;
+
+			if ((objectDefinitionId == 0) && (companyId != 0)) {
+				objectDefinition = _objectDefinitionPersistence.fetchByERC_C(
+					parametersUnicodeProperties.get(
+						"objectDefinitionExternalReferenceCode"),
+					companyId);
+
+				objectDefinitionId = objectDefinition.getObjectDefinitionId();
+			}
+			else {
+				objectDefinition =
+					_objectDefinitionPersistence.fetchByPrimaryKey(
+						objectDefinitionId);
+			}
+
+			String objectDefinitionExternalReferenceCode = GetterUtil.getString(
+				parametersUnicodeProperties.remove(
+					"objectDefinitionExternalReferenceCode"));
+
+			if (Validator.isNotNull(objectDefinitionExternalReferenceCode)) {
+				ObjectDefinition existingObjectDefinition =
+					_objectDefinitionPersistence.fetchByERC_C(
+						objectDefinitionExternalReferenceCode, companyId);
+
+				if (existingObjectDefinition != null) {
+					objectDefinition = existingObjectDefinition;
+
+					parametersUnicodeProperties.put(
+						"objectDefinitionId",
+						String.valueOf(
+							objectDefinition.getObjectDefinitionId()));
+				}
+			}
 
 			String objectDefinitionExternalReferenceCode = GetterUtil.getString(
 				parametersUnicodeProperties.remove(
