@@ -13,6 +13,15 @@
  */
 
 /**
+ * Get the label according to the locale
+ */
+export declare function getLocalizableLabel(
+	labels: LocalizedValue<string> | undefined,
+	creationLanguageId: Locale,
+	fallback?: string
+): string;
+
+/**
  * Checks if the string includes the query
  */
 export declare function stringIncludesQuery(
