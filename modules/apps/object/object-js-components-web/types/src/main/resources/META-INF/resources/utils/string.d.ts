@@ -19,7 +19,7 @@ export declare function getLocalizableLabel(
 	labels: LocalizedValue<string>,
 	creationLanguageId: Locale,
 	fallback: string
-): string;
+): string | undefined;
 
 /**
  * Checks if the string includes the query

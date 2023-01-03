@@ -23,10 +23,13 @@ export function getLocalizableLabel(
 	creationLanguageId: Locale,
 	fallback: string
 ) {
+	if (!labels) {
+		return fallback ?? '';
+	}
+
 	return (
 		labels[defaultLanguageId] ??
 		labels[creationLanguageId] ??
-		fallback ??
 		labels['en_US'] ??
 		''
 	);

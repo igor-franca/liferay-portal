@@ -17,12 +17,11 @@ import {FrontendDataSet} from '@liferay/frontend-data-set-web';
 import {
 	AutoComplete,
 	filterArrayByQuery,
+	getLocalizableLabel,
 	onActionDropdownItemClick,
 } from '@liferay/object-js-components-web';
 import {createResourceURL, fetch} from 'frontend-js-web';
 import React, {useEffect, useMemo, useState} from 'react';
-
-import {defaultLanguageId} from '../util/constants';
 
 interface DefinitionOfTermsProps {
 	baseResourceURL: string;
@@ -96,11 +95,21 @@ export function DefinitionOfTerms({
 						setSelectedEntity(item);
 					}}
 					query={query}
-					value={selectedEntity?.label[defaultLanguageId]}
+					value={getLocalizableLabel(
+						selectedEntity?.label as LocalizedValue<string>,
+						selectedEntity?.defaultLanguageId as Locale,
+						selectedEntity?.name as string
+					)}
 				>
-					{({label, name}) => (
+					{({defaultLanguageId, label, name}) => (
 						<div className="d-flex justify-content-between">
-							<div>{label[defaultLanguageId] ?? name}</div>
+							<div>
+								{getLocalizableLabel(
+									label,
+									defaultLanguageId,
+									name
+								)}
+							</div>
 						</div>
 					)}
 				</AutoComplete>

@@ -36,6 +36,7 @@ interface ObjectDefinition {
 	active: boolean;
 	dateCreated: string;
 	dateModified: string;
+	defaultLanguageId: Locale;
 	externalReferenceCode: string;
 	id: number;
 	label: LocalizedValue<string>;
