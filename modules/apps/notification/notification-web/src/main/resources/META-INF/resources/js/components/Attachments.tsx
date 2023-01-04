@@ -42,7 +42,11 @@ export function Attachments({setValues, values}: IProps) {
 
 	const filteredObjectDefinitions = useMemo(() => {
 		if (objectDefinitions) {
-			return filterArrayByQuery(objectDefinitions, 'label', query);
+			return filterArrayByQuery({
+				array: objectDefinitions,
+				query,
+				str: 'label',
+			});
 		}
 	}, [objectDefinitions, query]);
 

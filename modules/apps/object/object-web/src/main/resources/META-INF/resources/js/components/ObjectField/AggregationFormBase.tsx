@@ -17,6 +17,7 @@ import {
 	AutoComplete,
 	SingleSelect,
 	filterArrayByQuery,
+	getLocalizableLabel,
 } from '@liferay/object-js-components-web';
 import React, {useEffect, useMemo, useState} from 'react';
 
@@ -41,8 +42,6 @@ type TObjectRelationship = {
 	name: string;
 	objectDefinitionExternalReferenceCode2: string;
 };
-
-const defaultLanguageId = Liferay.ThemeDisplay.getDefaultLanguageId();
 
 const aggregationFunctions = [
 	{
@@ -95,27 +94,28 @@ export function AggregationFormBase({
 	const [objectRelationships, setObjectRelationships] = useState<
 		TObjectRelationship[]
 	>();
+	const [creationLanguageId, setCreationLanguageId] = useState<Locale>();
 	const [objectRelationshipFields, setObjectRelationshipFields] = useState<
 		ObjectField[]
 	>();
 
 	const filteredObjectRelationships = useMemo(() => {
 		if (objectRelationships) {
-			return filterArrayByQuery(
-				objectRelationships,
-				'label',
-				relationshipsQuery
-			);
+			return filterArrayByQuery({
+				array: objectRelationships,
+				query: relationshipsQuery,
+				str: 'label',
+			});
 		}
 	}, [objectRelationships, relationshipsQuery]);
 
 	const filteredObjectRelationshipFields = useMemo(() => {
 		if (objectRelationshipFields) {
-			return filterArrayByQuery(
-				objectRelationshipFields,
-				'label',
-				relationshipFieldsQuery
-			);
+			return filterArrayByQuery({
+				array: objectRelationshipFields,
+				query: relationshipFieldsQuery,
+				str: 'label',
+			});
 		}
 	}, [objectRelationshipFields, relationshipFieldsQuery]);
 
@@ -124,6 +124,12 @@ export function AggregationFormBase({
 			const objectRelationshipsData = await API.getObjectRelationshipsByExternalReferenceCode(
 				objectDefinitionExternalReferenceCode
 			);
+
+			const objectDefinition = await API.getObjectDefinitionByExternalReferenceCode(
+				objectDefinitionExternalReferenceCode
+			);
+
+			setCreationLanguageId(objectDefinition.defaultLanguageId);
 
 			setObjectRelationships(
 				objectRelationshipsData.filter(
@@ -189,7 +195,10 @@ export function AggregationFormBase({
 
 				if (currentSummarizeField) {
 					setSelectedSummarizeField(
-						currentSummarizeField.label[defaultLanguageId]
+						getLocalizableLabel(
+							currentSummarizeField.label,
+							creationLanguageId!
+						)
 					);
 				}
 			};
@@ -197,6 +206,7 @@ export function AggregationFormBase({
 			makeFetch();
 		}
 	}, [
+		creationLanguageId,
 		editingField,
 		objectRelationships,
 		objectFieldSettings,
@@ -308,7 +318,9 @@ export function AggregationFormBase({
 	};
 
 	const handleSummarizeFieldChange = (objectField: ObjectField) => {
-		setSelectedSummarizeField(objectField.label[defaultLanguageId]);
+		setSelectedSummarizeField(
+			getLocalizableLabel(objectField.label, creationLanguageId!)
+		);
 
 		const newObjectFieldSettings: ObjectFieldSetting[] | undefined = [
 			...objectFieldSettings.filter(
@@ -341,12 +353,19 @@ export function AggregationFormBase({
 				query={relationshipsQuery}
 				required
 				value={
-					selectedRelatedObjectRelationship?.label[defaultLanguageId]
+					selectedRelatedObjectRelationship?.label
+						? getLocalizableLabel(
+								selectedRelatedObjectRelationship?.label,
+								creationLanguageId!
+						  )
+						: ''
 				}
 			>
 				{({label}) => (
 					<div className="d-flex justify-content-between">
-						<div>{label[defaultLanguageId]}</div>
+						<div>
+							{getLocalizableLabel(label, creationLanguageId!)}
+						</div>
 					</div>
 				)}
 			</AutoComplete>
@@ -379,7 +398,12 @@ export function AggregationFormBase({
 				>
 					{({label}) => (
 						<div className="d-flex justify-content-between">
-							<div>{label[defaultLanguageId]}</div>
+							<div>
+								{getLocalizableLabel(
+									label,
+									creationLanguageId!
+								)}
+							</div>
 						</div>
 					)}
 				</AutoComplete>

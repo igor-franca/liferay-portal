@@ -15,8 +15,14 @@
 /**
  * Filter an Array by checking if the String includes the query
  */
-export declare function filterArrayByQuery<T>(
-	array: T[] | any[],
-	str: string,
-	query: string
-): any[];
+export declare function filterArrayByQuery<T>({
+	array,
+	creationLanguageId,
+	query,
+	str,
+}: {
+	array: T[] | any[];
+	creationLanguageId?: Locale;
+	query: string;
+	str: string;
+}): any[];

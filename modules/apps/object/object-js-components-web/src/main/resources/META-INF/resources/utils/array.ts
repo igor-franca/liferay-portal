@@ -12,19 +12,23 @@
  * details.
  */
 
-import {stringIncludesQuery} from './string';
-
-const defaultLanguageId = Liferay.ThemeDisplay.getDefaultLanguageId();
+import {getLocalizableLabel, stringIncludesQuery} from './string';
 
 /**
  * Filter an Array by checking if the String includes the query
  */
 
-export function filterArrayByQuery<T>(
-	array: T[] | any[],
-	str: string,
-	query: string
-) {
+export function filterArrayByQuery<T>({
+	array,
+	creationLanguageId,
+	query,
+	str,
+}: {
+	array: T[] | any[];
+	creationLanguageId?: Locale;
+	query: string;
+	str: string;
+}) {
 	return array.filter((item) => {
 		if (str === 'label') {
 			const localizedValue = ((item as {[key: string]: unknown}) as {
@@ -33,7 +37,10 @@ export function filterArrayByQuery<T>(
 
 			const localizedLabels = localizedValue as LocalizedValue<string>;
 
-			let label = localizedLabels[defaultLanguageId] as string;
+			let label = getLocalizableLabel(
+				localizedLabels,
+				creationLanguageId!
+			);
 
 			if (!label) {
 				label = localizedLabels[
