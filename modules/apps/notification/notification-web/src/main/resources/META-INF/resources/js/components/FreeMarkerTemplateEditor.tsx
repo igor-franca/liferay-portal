@@ -63,7 +63,11 @@ export function FreeMarkerTemplateEditor({
 			}
 		);
 
-		return filterArrayByQuery(availableObjectDefinitions, 'label', query);
+		return filterArrayByQuery({
+			array: availableObjectDefinitions,
+			query,
+			str: 'label',
+		});
 	}, [objectDefinitions, query]);
 
 	const getEntityFields = async (objectDefinitionId: number) => {

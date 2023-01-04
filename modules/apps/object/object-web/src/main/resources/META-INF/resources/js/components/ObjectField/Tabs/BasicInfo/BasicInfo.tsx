@@ -19,6 +19,7 @@ import {
 	Card,
 	Input,
 	InputLocalized,
+	getLocalizableLabel,
 	invalidateRequired,
 } from '@liferay/object-js-components-web';
 import React, {useEffect, useState} from 'react';
@@ -72,7 +73,6 @@ interface BasicInfoProps {
 }
 
 const REQUIRED_MSG = Liferay.Language.get('required');
-const defaultLanguageId = Liferay.ThemeDisplay.getDefaultLanguageId();
 
 export function BasicInfo({
 	errors,
@@ -102,6 +102,8 @@ export function BasicInfo({
 	const [aggregationFilters, setAggregationFilters] = useState<
 		AggregationFilters[]
 	>([]);
+
+	const [creationLanguageId, setCreationLanguageId] = useState<Locale>();
 	const [visibleModal, setVisibleModal] = useState(false);
 
 	const {observer, onClose} = useModal({
@@ -176,7 +178,9 @@ export function BasicInfo({
 		const newAggregationFilters = [
 			...aggregationFilters,
 			{
-				fieldLabel: fieldLabel ? fieldLabel[defaultLanguageId] : '',
+				fieldLabel: fieldLabel
+					? getLocalizableLabel(fieldLabel, creationLanguageId!)
+					: '',
 				filterBy,
 				filterType,
 				label: fieldLabel,
@@ -369,6 +373,18 @@ export function BasicInfo({
 	};
 
 	useEffect(() => {
+		const makeFetch = async () => {
+			const objectDefinition = await API.getObjectDefinitionByExternalReferenceCode(
+				objectDefinitionExternalReferenceCode
+			);
+
+			setCreationLanguageId(objectDefinition.defaultLanguageId);
+		};
+
+		makeFetch();
+	}, [objectDefinitionExternalReferenceCode]);
+
+	useEffect(() => {
 		if (
 			values.businessType === 'Aggregation' &&
 			objectDefinitionExternalReferenceCode2
@@ -415,8 +431,10 @@ export function BasicInfo({
 
 						if (objectField && filterType) {
 							const aggregationFilter: AggregationFilters = {
-								fieldLabel:
-									objectField.label[defaultLanguageId],
+								fieldLabel: getLocalizableLabel(
+									objectField.label,
+									creationLanguageId!
+								),
 								filterBy: parsedFilter.filterBy,
 								filterType,
 								label: objectField.label,
@@ -606,6 +624,7 @@ export function BasicInfo({
 
 			{values.businessType === 'Aggregation' && (
 				<BuilderScreen
+					creationLanguageId={creationLanguageId!}
 					disableEdit
 					emptyState={{
 						buttonText: Liferay.Language.get('new-filter'),
