@@ -19,10 +19,9 @@ import {
 	CustomItem,
 	MultipleSelect,
 	filterArrayByQuery,
+	getLocalizableLabel,
 } from '@liferay/object-js-components-web';
 import React, {useEffect, useMemo, useState} from 'react';
-
-import {defaultLanguageId} from '../util/constants';
 
 import './Attachments.scss';
 import {TNotificationTemplate} from './EditNotificationTemplate';
@@ -34,10 +33,7 @@ export function Attachments({setValues, values}: IProps) {
 	const [attachmentsFields, setAttachmentsFields] = useState<CustomItem[]>(
 		[]
 	);
-	const [
-		selectedEntity,
-		setSelectedEntity,
-	] = useState<ObjectDefinition | null>();
+	const [selectedEntity, setSelectedEntity] = useState<ObjectDefinition>();
 	const [query, setQuery] = useState<string>('');
 
 	const filteredObjectDefinitions = useMemo(() => {
@@ -57,10 +53,14 @@ export function Attachments({setValues, values}: IProps) {
 			values?.attachmentObjectFieldIds as number[]
 		);
 
-		fields.forEach(({id, label}) => {
+		fields.forEach(({id, label, name}) => {
 			parsedFields.push({
 				checked: attachmentObjectFieldIds.has(id as number),
-				label: label[defaultLanguageId] as string,
+				label: getLocalizableLabel(
+					label,
+					selectedEntity?.defaultLanguageId as Locale,
+					name
+				),
 				value: id?.toString(),
 			});
 		});
@@ -153,7 +153,7 @@ export function Attachments({setValues, values}: IProps) {
 							onChangeQuery={setQuery}
 							onSelectEmptyStateItem={(emptyStateItem) => {
 								setAttachmentsFields([]);
-								setSelectedEntity(null);
+								setSelectedEntity(undefined);
 
 								setValues({
 									...values,
@@ -171,7 +171,7 @@ export function Attachments({setValues, values}: IProps) {
 								}
 								else {
 									setAttachmentsFields([]);
-									setSelectedEntity(null);
+									setSelectedEntity(undefined);
 								}
 
 								setValues({
@@ -183,15 +183,20 @@ export function Attachments({setValues, values}: IProps) {
 								'select-a-data-source'
 							)}
 							query={query}
-							value={
-								selectedEntity?.label[defaultLanguageId] ??
-								selectedEntity?.name
-							}
+							value={getLocalizableLabel(
+								selectedEntity?.label,
+								selectedEntity?.defaultLanguageId as Locale,
+								selectedEntity?.name as string
+							)}
 						>
-							{({label, name}) => (
+							{({defaultLanguageId, label, name}) => (
 								<div className="d-flex justify-content-between">
 									<div>
-										{label[defaultLanguageId] ?? name}
+										{getLocalizableLabel(
+											label,
+											defaultLanguageId,
+											name
+										)}
 									</div>
 								</div>
 							)}
