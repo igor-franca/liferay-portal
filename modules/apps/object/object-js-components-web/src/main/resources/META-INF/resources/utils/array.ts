@@ -39,13 +39,15 @@ export function filterArrayByQuery<T>({
 
 			let label = getLocalizableLabel(
 				localizedLabels,
-				creationLanguageId!
+				creationLanguageId!,
+				''
 			);
 
 			if (!label) {
 				label = localizedLabels[
 					item.defaultLanguageId as Locale
 				] as string;
+				console.log(label, item);
 			}
 
 			return stringIncludesQuery(label, query);

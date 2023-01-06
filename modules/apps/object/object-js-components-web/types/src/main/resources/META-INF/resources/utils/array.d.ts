@@ -23,6 +23,7 @@ export declare function filterArrayByQuery<T>({
 }: {
 	array: T[] | any[];
 	creationLanguageId?: Locale;
+	fallBack?: string;
 	query: string;
 	str: string;
 }): any[];

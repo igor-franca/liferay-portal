@@ -40,8 +40,8 @@ export function getLocalizableLabel(
  * Checks if the string includes the query
  */
 export function stringIncludesQuery(str: string, query: string) {
-	return str.toLowerCase().includes(query.toLowerCase());
-}
+	return (str && query) ? str.toLowerCase().includes(query.toLowerCase()) : false
+	}	
 
 /**
  * Convert the received string into the format of a URL parameter
