@@ -110,14 +110,13 @@ public interface ObjectEntryService extends BaseService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<ObjectEntry> getOneToManyObjectEntries(
-			long groupId, long objectRelationshipId, long primaryKey,
-			boolean related, int start, int end)
+			long objectRelationshipId, long primaryKey, boolean related,
+			int start, int end)
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getOneToManyObjectEntriesCount(
-			long groupId, long objectRelationshipId, long primaryKey,
-			boolean related)
+			long objectRelationshipId, long primaryKey, boolean related)
 		throws PortalException;
 
 	/**

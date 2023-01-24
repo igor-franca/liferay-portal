@@ -510,9 +510,8 @@ public class ObjectEntryServiceHttp {
 
 	public static java.util.List<com.liferay.object.model.ObjectEntry>
 			getOneToManyObjectEntries(
-				HttpPrincipal httpPrincipal, long groupId,
-				long objectRelationshipId, long primaryKey, boolean related,
-				int start, int end)
+				HttpPrincipal httpPrincipal, long objectRelationshipId,
+				long primaryKey, boolean related, int start, int end)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		try {
@@ -521,8 +520,8 @@ public class ObjectEntryServiceHttp {
 				_getOneToManyObjectEntriesParameterTypes11);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, groupId, objectRelationshipId, primaryKey, related,
-				start, end);
+				methodKey, objectRelationshipId, primaryKey, related, start,
+				end);
 
 			Object returnObj = null;
 
@@ -554,8 +553,8 @@ public class ObjectEntryServiceHttp {
 	}
 
 	public static int getOneToManyObjectEntriesCount(
-			HttpPrincipal httpPrincipal, long groupId,
-			long objectRelationshipId, long primaryKey, boolean related)
+			HttpPrincipal httpPrincipal, long objectRelationshipId,
+			long primaryKey, boolean related)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		try {
@@ -564,7 +563,7 @@ public class ObjectEntryServiceHttp {
 				_getOneToManyObjectEntriesCountParameterTypes12);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, groupId, objectRelationshipId, primaryKey, related);
+				methodKey, objectRelationshipId, primaryKey, related);
 
 			Object returnObj = null;
 
@@ -841,12 +840,11 @@ public class ObjectEntryServiceHttp {
 		new Class[] {String.class, long.class, long.class};
 	private static final Class<?>[] _getOneToManyObjectEntriesParameterTypes11 =
 		new Class[] {
-			long.class, long.class, long.class, boolean.class, int.class,
-			int.class
+			long.class, long.class, boolean.class, int.class, int.class
 		};
 	private static final Class<?>[]
 		_getOneToManyObjectEntriesCountParameterTypes12 = new Class[] {
-			long.class, long.class, long.class, boolean.class
+			long.class, long.class, boolean.class
 		};
 	private static final Class<?>[]
 		_hasModelResourcePermissionParameterTypes13 = new Class[] {

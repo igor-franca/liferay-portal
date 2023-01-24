@@ -143,22 +143,21 @@ public class ObjectEntryServiceWrapper
 	@Override
 	public java.util.List<com.liferay.object.model.ObjectEntry>
 			getOneToManyObjectEntries(
-				long groupId, long objectRelationshipId, long primaryKey,
-				boolean related, int start, int end)
+				long objectRelationshipId, long primaryKey, boolean related,
+				int start, int end)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _objectEntryService.getOneToManyObjectEntries(
-			groupId, objectRelationshipId, primaryKey, related, start, end);
+			objectRelationshipId, primaryKey, related, start, end);
 	}
 
 	@Override
 	public int getOneToManyObjectEntriesCount(
-			long groupId, long objectRelationshipId, long primaryKey,
-			boolean related)
+			long objectRelationshipId, long primaryKey, boolean related)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _objectEntryService.getOneToManyObjectEntriesCount(
-			groupId, objectRelationshipId, primaryKey, related);
+			objectRelationshipId, primaryKey, related);
 	}
 
 	/**
