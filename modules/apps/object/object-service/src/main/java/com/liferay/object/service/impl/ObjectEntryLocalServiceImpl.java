@@ -693,12 +693,12 @@ public class ObjectEntryLocalServiceImpl
 	}
 
 	public List<ObjectEntry> getOneToManyObjectEntries(
-			long groupId, long objectRelationshipId, long primaryKey,
+			long objectRelationshipId, long primaryKey,
 			boolean related, int start, int end)
 		throws PortalException {
 
 		DSLQuery dslQuery = _getOneToManyObjectEntriesGroupByStep(
-			groupId, objectRelationshipId, primaryKey, related,
+			objectRelationshipId, primaryKey, related,
 			DSLQueryFactoryUtil.selectDistinct(ObjectEntryTable.INSTANCE)
 		).limit(
 			start, end
@@ -713,12 +713,12 @@ public class ObjectEntryLocalServiceImpl
 
 	@Override
 	public int getOneToManyObjectEntriesCount(
-			long groupId, long objectRelationshipId, long primaryKey,
+			long objectRelationshipId, long primaryKey,
 			boolean related)
 		throws PortalException {
 
 		DSLQuery dslQuery = _getOneToManyObjectEntriesGroupByStep(
-			groupId, objectRelationshipId, primaryKey, related,
+			objectRelationshipId, primaryKey, related,
 			DSLQueryFactoryUtil.countDistinct(
 				ObjectEntryTable.INSTANCE.objectEntryId));
 
@@ -2035,7 +2035,7 @@ public class ObjectEntryLocalServiceImpl
 	}
 
 	private GroupByStep _getOneToManyObjectEntriesGroupByStep(
-			long groupId, long objectRelationshipId, long primaryKey,
+			long objectRelationshipId, long primaryKey,
 			boolean related, FromStep fromStep)
 		throws PortalException {
 
@@ -2067,11 +2067,8 @@ public class ObjectEntryLocalServiceImpl
 				primaryKeyColumn
 			)
 		).where(
-			ObjectEntryTable.INSTANCE.groupId.eq(
-				groupId
-			).and(
-				ObjectEntryTable.INSTANCE.companyId.eq(
-					objectRelationship.getCompanyId())
+			ObjectEntryTable.INSTANCE.companyId.eq(
+				objectRelationship.getCompanyId()
 			).and(
 				ObjectEntryTable.INSTANCE.objectDefinitionId.eq(
 					objectRelationship.getObjectDefinitionId2())
