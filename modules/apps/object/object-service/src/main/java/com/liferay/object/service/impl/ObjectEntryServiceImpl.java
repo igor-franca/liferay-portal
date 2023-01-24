@@ -260,13 +260,13 @@ public class ObjectEntryServiceImpl extends ObjectEntryServiceBaseImpl {
 
 	@Override
 	public List<ObjectEntry> getOneToManyObjectEntries(
-			long groupId, long objectRelationshipId, long primaryKey,
+			long objectRelationshipId, long primaryKey,
 			boolean related, int start, int end)
 		throws PortalException {
 
 		List<ObjectEntry> objectEntries =
 			objectEntryLocalService.getOneToManyObjectEntries(
-				groupId, objectRelationshipId, primaryKey, related, start, end);
+				objectRelationshipId, primaryKey, related, start, end);
 
 		for (ObjectEntry objectEntry : objectEntries) {
 			objectEntryService.checkModelResourcePermission(
@@ -279,12 +279,12 @@ public class ObjectEntryServiceImpl extends ObjectEntryServiceBaseImpl {
 
 	@Override
 	public int getOneToManyObjectEntriesCount(
-			long groupId, long objectRelationshipId, long primaryKey,
+			long objectRelationshipId, long primaryKey,
 			boolean related)
 		throws PortalException {
 
 		return objectEntryLocalService.getOneToManyObjectEntriesCount(
-			groupId, objectRelationshipId, primaryKey, related);
+			objectRelationshipId, primaryKey, related);
 	}
 
 	@Override
