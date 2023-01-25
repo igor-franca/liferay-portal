@@ -147,31 +147,31 @@ public class ObjectEntry1toMObjectRelatedModelsProviderImpl
 
 	@Override
 	public List<ObjectEntry> getRelatedModels(
-			long groupId, long objectRelationshipId, long primaryKey, int start,
+			long objectRelationshipId, long primaryKey, int start,
 			int end)
 		throws PortalException {
 
 		return _objectEntryService.getOneToManyObjectEntries(
-			groupId, objectRelationshipId, primaryKey, true, start, end);
+			objectRelationshipId, primaryKey, true, start, end);
 	}
 
 	@Override
 	public int getRelatedModelsCount(
-			long groupId, long objectRelationshipId, long primaryKey)
+			long objectRelationshipId, long primaryKey)
 		throws PortalException {
 
 		return _objectEntryService.getOneToManyObjectEntriesCount(
-			groupId, objectRelationshipId, primaryKey, true);
+			objectRelationshipId, primaryKey, true);
 	}
 
 	@Override
 	public List<ObjectEntry> getUnrelatedModels(
-			long companyId, long groupId, ObjectDefinition objectDefinition,
+			long companyId,ObjectDefinition objectDefinition,
 			long objectEntryId, long objectRelationshipId)
 		throws PortalException {
 
 		return _objectEntryService.getOneToManyObjectEntries(
-			groupId, objectRelationshipId, objectEntryId, false,
+			objectRelationshipId, objectEntryId, false,
 			QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 	}
 
