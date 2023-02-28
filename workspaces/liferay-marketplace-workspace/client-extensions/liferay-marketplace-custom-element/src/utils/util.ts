@@ -1,4 +1,5 @@
-import {getCatalogs} from './api';
+import { TYPES } from '../manage-app-state/actionTypes';
+import {createProductSpecification, createSpecification, getCatalogs, updateProductSpecification} from './api';
 
 export async function getMasterCatalogId() {
 	const response = await getCatalogs();
@@ -6,6 +7,42 @@ export async function getMasterCatalogId() {
 	const catalogs = response.items;
 
 	return catalogs.find(({name}: {name: string}) => name === 'Master')?.id;
+}
+
+async function submitSpecification(appId: string, productId: number, productSpecificationId: number, key: string, title: string, value: string): Promise<number> {
+    const dataSpecification = await createSpecification({
+      body: {
+        key: key,
+        title: { en_US: title },
+      },
+    });
+    if (productSpecificationId) {
+      updateProductSpecification({
+        body: {
+          specificationKey: dataSpecification.key,
+          value: { en_US: value },
+        },
+        id: productSpecificationId,
+      });
+  
+      return -1;
+    } else {
+      const { id } = await createProductSpecification({
+        body: {
+          productId,
+          specificationId: dataSpecification.id,
+          specificationKey: dataSpecification.key,
+          value: { en_US: value },
+        },
+        appId,
+      });
+  
+      return id;
+    }
+  };
+
+export async function saveSpecification(appId: string, productId: number, productSpecificationId: number, key: string, title: string, value: string, action: TYPES) {
+    return await submitSpecification(appId, productId, productSpecificationId, key, title, value);
 }
 
 export async function submitFile(
