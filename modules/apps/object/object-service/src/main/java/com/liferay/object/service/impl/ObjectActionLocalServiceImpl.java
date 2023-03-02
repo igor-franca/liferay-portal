@@ -97,8 +97,6 @@ public class ObjectActionLocalServiceImpl
 			UnicodeProperties parametersUnicodeProperties)
 		throws PortalException {
 
-		User user = _userLocalService.getUser(userId);
-
 		ObjectDefinition objectDefinition =
 			_objectDefinitionPersistence.findByPrimaryKey(objectDefinitionId);
 
@@ -500,7 +498,7 @@ public class ObjectActionLocalServiceImpl
 	private void _validateParametersUnicodeProperties(
 			long companyId, long userId, String conditionExpression,
 			String objectActionExecutorKey, String objectActionTriggerKey,
-			UnicodeProperties parametersUnicodeProperties)
+			UnicodeProperties parametersUnicodeProperties, long companyId)
 		throws PortalException {
 
 		Map<String, Object> errorMessageKeys = new HashMap<>();
@@ -561,10 +559,6 @@ public class ObjectActionLocalServiceImpl
 					_objectDefinitionPersistence.fetchByPrimaryKey(
 						objectDefinitionId);
 			}
-
-			String objectDefinitionExternalReferenceCode = GetterUtil.getString(
-				parametersUnicodeProperties.remove(
-					"objectDefinitionExternalReferenceCode"));
 
 			if (Validator.isNotNull(objectDefinitionExternalReferenceCode)) {
 				ObjectDefinition existingObjectDefinition =
