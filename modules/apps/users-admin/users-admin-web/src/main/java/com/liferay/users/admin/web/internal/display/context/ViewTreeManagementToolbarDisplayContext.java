@@ -94,10 +94,12 @@ public class ViewTreeManagementToolbarDisplayContext {
 		return DropdownItemList.of(
 			() -> DropdownItemBuilder.putData(
 				"action", Constants.DELETE
-			).setHref(
+			)
+			.setHref(
 				StringBundler.concat(
 					"javascript:", _renderResponse.getNamespace(), "delete();")
-			).setIcon(
+			)
+			.setIcon(
 				"times-circle"
 			).setLabel(
 				LanguageUtil.get(_httpServletRequest, Constants.DELETE)
@@ -111,11 +113,13 @@ public class ViewTreeManagementToolbarDisplayContext {
 
 				return DropdownItemBuilder.putData(
 					"action", Constants.RESTORE
-				).setHref(
+				)
+				.setHref(
 					StringBundler.concat(
 						"javascript:", _renderResponse.getNamespace(),
 						"deleteUsers('", Constants.RESTORE, "');")
-				).setIcon(
+				)
+				.setIcon(
 					"undo"
 				).setLabel(
 					LanguageUtil.get(_httpServletRequest, Constants.RESTORE)

@@ -92,10 +92,10 @@ public class ViewFlatUsersManagementToolbarDisplayContext
 					action = Constants.DEACTIVATE;
 				}
 
-				dropdownItem.setHref(
-					StringBundler.concat(
-						"javascript:", liferayPortletResponse.getNamespace(),
-						"deleteUsers('", action, "');"));
+				// dropdownItem.setHref(
+				// 	StringBundler.concat(
+				// 		"javascript:", liferayPortletResponse.getNamespace(),
+				// 		"deleteUsers('", action, "');"));
 
 				String icon = "times-circle";
 
