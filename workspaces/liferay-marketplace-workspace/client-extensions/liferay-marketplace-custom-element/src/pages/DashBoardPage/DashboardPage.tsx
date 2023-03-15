@@ -5,6 +5,7 @@ import {
 	AppProps,
 	DashboardTable,
 } from '../../components/DashboardTable/DashboardTable';
+import { DashboardTableRow } from '../../components/DashboardTable/DashboardTableRow';
 import {Footer} from '../../components/Footer/Footer';
 import {Header} from '../../components/Header/Header';
 import {AppDetailsPage} from '../AppDetailsPage/AppDetailsPage';
@@ -50,6 +51,28 @@ export function DashboardPage({
 }: DashBoardPageProps) {
 	const [selectedApp, setSelectedApp] = useState<AppProps>();
 
+	const tableHeaders = [
+		{
+			iconSymbol: 'order-arrow',
+			title: 'Name'
+		},
+		{
+			title: 'Version'
+		},
+		{
+			title: 'Type'
+		},
+		{
+			title: 'Last Updated'
+		},
+		{
+			title: 'Rating'
+		},
+		{
+			title: 'Status'
+		},
+	];
+
 	return (
 		<div className="dashboard-page-container">
 			<div>
@@ -86,10 +109,13 @@ export function DashboardPage({
 								</a>
 							</div>
 
-							<DashboardTable
+							<DashboardTable<AppProps>
 								emptyStateMessage={messages.emptyStateMessage}
 								items={items}
-							/>
+								tableHeaders={tableHeaders}
+							>
+								{(item) => (<DashboardTableRow  item={item} key={item.name} />)}
+							</ DashboardTable>
 						</div>
 					)}
 				</div>
