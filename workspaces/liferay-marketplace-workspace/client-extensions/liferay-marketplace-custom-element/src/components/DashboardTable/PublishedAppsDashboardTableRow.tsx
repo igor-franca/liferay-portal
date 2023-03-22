@@ -2,7 +2,7 @@ import ClayTable from '@clayui/table';
 
 import circleFill from '../../assets/icons/circle_fill.svg';
 
-import './DashboardTableRow.scss';
+import './PublishedAppsDashboardTableRow.scss';
 
 import classNames from 'classnames';
 
@@ -10,11 +10,13 @@ import starEmpty from '../../assets/icons/star-empty.svg';
 import starFill from '../../assets/icons/star-fill.svg';
 import {AppProps} from './DashboardTable';
 
-interface DashboardTableRowProps {
+interface PublishedAppsDashboardTableRowProps {
 	item: AppProps;
 }
 
-export function DashboardTableRow({item}: DashboardTableRowProps) {
+export function PublishedAppsDashboardTableRow({
+	item,
+}: PublishedAppsDashboardTableRowProps) {
 	const {
 		image,
 		name,
