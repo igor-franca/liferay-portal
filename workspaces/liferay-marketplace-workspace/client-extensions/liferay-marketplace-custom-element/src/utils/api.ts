@@ -1,14 +1,14 @@
-declare let Liferay: {authToken: string, ThemeDisplay: any};
+declare let Liferay: {authToken: string; ThemeDisplay: any};
 const headers = {
 	'Content-Type': 'application/json',
 	'X-CSRF-Token': Liferay.authToken,
 };
 
 type Categories = {
-	externalReferenceCode: string,
-	id: number,
-	name: string,
-	vocabulary: string
+	externalReferenceCode: string;
+	id: number;
+	name: string;
+	vocabulary: string;
 };
 
 export function createApp({
@@ -190,8 +190,16 @@ export async function getCatalogs() {
 	return response.json();
 }
 
-export async function getOrders() {
-	return [];
+export async function getOrders(page: number, pageSize: number) {
+	const response = await fetch(
+		`/o/headless-commerce-delivery-order/v1.0/channels/52624/accounts/52606/placed-orders?nestedFields=placedOrderItems&page=${page}&pageSize=${pageSize}`,
+		{headers, method: 'GET'}
+	);
+
+	return (await response.json()) as {
+		items: PlacedOrder[];
+		totalCount: number;
+	};
 }
 
 export async function getChannelById(channelId: number) {
@@ -211,7 +219,7 @@ export async function getCategories({vocabId}: {vocabId: number}) {
 		`/o/headless-admin-taxonomy/v1.0/taxonomy-vocabularies/${vocabId}/taxonomy-categories`,
 		{
 			headers,
-			method: 'GET'
+			method: 'GET',
 		}
 	);
 
@@ -288,7 +296,7 @@ export async function getVocabularies() {
 		`/o/headless-admin-taxonomy/v1.0/sites/${Liferay.ThemeDisplay.getCompanyGroupId()}/taxonomy-vocabularies`,
 		{
 			headers,
-			method: 'GET'
+			method: 'GET',
 		}
 	);
 
