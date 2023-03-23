@@ -1,13 +1,16 @@
 import {useEffect, useState} from 'react';
 
 import accountLogo from '../../assets/icons/mainAppLogo.svg';
-import {AppProps, DashboardTable} from '../../components/DashboardTable/DashboardTable';
+import {
+	AppProps,
+	DashboardTable,
+} from '../../components/DashboardTable/DashboardTable';
 import {PublishedAppsDashboardTableRow} from '../../components/DashboardTable/PublishedAppsDashboardTableRow';
-import {getProducts, getProductSpecifications} from '../../utils/api';
+import {getProductSpecifications, getProducts} from '../../utils/api';
 import {DashboardPage} from '../DashBoardPage/DashboardPage';
 import {initialDashboardNavigationItems} from './PublishedDashboardPageUtil';
 
-declare let Liferay: {authToken: string, ThemeDisplay: any};
+declare let Liferay: {authToken: string; ThemeDisplay: any};
 
 const tableHeaders = [
 	{
@@ -50,59 +53,62 @@ export function PublishedAppsDashboardPage() {
 		const dateOptions: any = {
 			day: 'numeric',
 			month: 'short',
-			year: 'numeric'
+			year: 'numeric',
 		};
 
-		const formattedDate = new Intl.DateTimeFormat(locale, dateOptions).format(
-			new Date(date)
-		);
+		const formattedDate = new Intl.DateTimeFormat(
+			locale,
+			dateOptions
+		).format(new Date(date));
 
 		return formattedDate;
-	}
+	};
 
-	function getAppListProductSpecifications(productIds : number[]) {
-		let appListProductSpecifications : any[] = [];
+	function getAppListProductSpecifications(productIds: number[]) {
+		const appListProductSpecifications: any[] = [];
 
-		productIds.forEach((productId) =>  {
-			appListProductSpecifications.push(getProductSpecifications({appProductId: productId}));
-		})
+		productIds.forEach((productId) => {
+			appListProductSpecifications.push(
+				getProductSpecifications({appProductId: productId})
+			);
+		});
 
 		return Promise.all(appListProductSpecifications);
 	}
 
 	function getAppListProductIds(products: any) {
-		const productIds : any[] = [];
+		const productIds: any[] = [];
 
 		products.items.map((product: any) => {
 			productIds.push(product.productId);
-		})
+		});
 
 		return productIds;
 	}
 
 	function getProductTypeFromSpecifications(specifications: any) {
-		var productType = 'no type';
+		let productType = 'no type';
 
 		specifications.items.forEach((specification: any) => {
-			if (specification.specificationKey === "type") {
+			if (specification.specificationKey === 'type') {
 				productType = specification.value.en_US;
 
-				if (productType === "saas") productType = "SaaS"
-				else if (productType === "osgi") productType = "OSGI"
+				if (productType === 'saas') {productType = 'SaaS';}
+				else if (productType === 'osgi') {productType = 'OSGI';}
 			}
-		})
+		});
 
 		return productType;
 	}
 
 	function getProductVersionFromSpecifications(specifications: any) {
-		var productVersion = '0';
+		let productVersion = '0';
 
 		specifications.items.forEach((specification: any) => {
-			if (specification.specificationKey === "version") {
+			if (specification.specificationKey === 'version') {
 				productVersion = specification.value.en_US;
 			}
-		})
+		});
 
 		return productVersion;
 	}
@@ -111,21 +117,31 @@ export function PublishedAppsDashboardPage() {
 		(async () => {
 			const appList = await getProducts();
 
-			const appListProductIds : number[] = getAppListProductIds(appList);
+			const appListProductIds: number[] = getAppListProductIds(appList);
 
-			const appListProductSpecifications = await getAppListProductSpecifications(appListProductIds);
+			const appListProductSpecifications =
+				await getAppListProductSpecifications(appListProductIds);
 
-			const newAppList = appList.items.map((product: any, index: number) => {
-				return {
-					lastUpdatedBy: product.lastUpdatedBy,
-					name: product.name.en_US,
-					status: product.workflowStatusInfo.label.replace(/(^\w|\s\w)/g, (m: string) => m.toUpperCase()),
-					thumbnail: product.thumbnail,
-					type: getProductTypeFromSpecifications(appListProductSpecifications[index]),
-					version: getProductVersionFromSpecifications(appListProductSpecifications[index]),
-					updatedDate: formatDate(product.modifiedDate)
+			const newAppList = appList.items.map(
+				(product: any, index: number) => {
+					return {
+						lastUpdatedBy: product.lastUpdatedBy,
+						name: product.name.en_US,
+						status: product.workflowStatusInfo.label.replace(
+							/(^\w|\s\w)/g,
+							(m: string) => m.toUpperCase()
+						),
+						thumbnail: product.thumbnail,
+						type: getProductTypeFromSpecifications(
+							appListProductSpecifications[index]
+						),
+						updatedDate: formatDate(product.modifiedDate),
+						version: getProductVersionFromSpecifications(
+							appListProductSpecifications[index]
+						),
+					};
 				}
-			})
+			);
 
 			setApps(newAppList);
 		})();

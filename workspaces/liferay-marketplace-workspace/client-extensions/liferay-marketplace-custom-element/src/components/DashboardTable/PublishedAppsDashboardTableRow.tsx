@@ -6,8 +6,6 @@ import './PublishedAppsDashboardTableRow.scss';
 
 import classNames from 'classnames';
 
-import starEmpty from '../../assets/icons/star-empty.svg';
-import starFill from '../../assets/icons/star-fill.svg';
 import {AppProps} from './DashboardTable';
 
 interface PublishedAppsDashboardTableRowProps {
