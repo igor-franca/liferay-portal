@@ -24,8 +24,12 @@ export function InformLicensingTermsPage({
 	onClickBack,
 	onClickContinue,
 }: InformLicensingTermsPageProps) {
-	const [{appERC, appLicense, appProductId, dayTrial, priceModel}, dispatch] =
-		useAppContext();
+	const [
+		{appERC, appLicense, appProductId, dayTrial, priceModel, skuId},
+		dispatch,
+	] = useAppContext();
+
+	console.log(skuId);
 
 	return (
 		<div className="informing-licensing-terms-page-container">

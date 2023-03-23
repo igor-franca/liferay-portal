@@ -170,6 +170,13 @@ export function appReducer(state: InitialStateProps, action: TAction) {
 				},
 			};
 		}
+
+		case TYPES.UPDATE_SKU_ID: {
+			const id = action.payload.value;
+
+			return {...state, skuId: id};
+		}
+
 		default:
 			return state;
 	}

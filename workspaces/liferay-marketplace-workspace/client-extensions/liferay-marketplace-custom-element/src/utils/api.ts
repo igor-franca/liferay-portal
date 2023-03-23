@@ -13,12 +13,16 @@ type Categories = {
 };
 
 export function createApp({
-	appCategories,
+
+	// appCategories,
+
 	appDescription,
 	appName,
 	catalogId,
 }: {
-	appCategories: Categories[];
+
+	// appCategories: Categories[];
+
 	appDescription: string;
 	appName: string;
 	catalogId: number;
@@ -27,8 +31,10 @@ export function createApp({
 		body: JSON.stringify({
 			active: true,
 			catalogId,
-			categories: appCategories,
 			configuration: {allowBackOrder: true, maxOrderQuantity: 1},
+
+			// categories: appCategories,
+
 			description: {en_US: appDescription},
 			name: {en_US: appName},
 			productStatus: 2,
@@ -79,6 +85,67 @@ export async function createAppLicensePrice({
 	);
 
 	return await response.json();
+}
+
+export async function createAppSKU({
+	appProductId,
+	body,
+}: {
+	appProductId: number;
+	body: Object;
+}) {
+	const response = await fetch(
+		`/o/headless-commerce-admin-catalog/v1.0/products/${appProductId}/skus
+	  `,
+		{
+			body: JSON.stringify(body),
+			headers,
+			method: 'POST',
+		}
+	);
+
+	return await response.json();
+}
+
+export async function addSkuExpandoValue({
+	companyId,
+	notesValue,
+	skuId,
+	versionValue,
+}: {
+	companyId: number;
+	notesValue: string;
+	skuId: number;
+	versionValue: string;
+}) {
+	await Liferay.Service(
+		'/expandovalue/add-values',
+		{
+			companyId,
+			className: 'com.liferay.commerce.product.model.CPInstance',
+			tableName: 'CUSTOM_FIELDS',
+			classPK: skuId,
+			attributeValues: {version: versionValue, notes: notesValue},
+		},
+		(obj: any) => {
+			console.log(obj);
+		}
+	);
+
+	// Liferay.Service(
+	// 	'/expandovalue/get-data',
+	// 	{
+	// 		companyId: companyId,
+	// 		className: 'com.liferay.commerce.product.model.CPInstance',
+	// 		tableName: 'CUSTOM_FIELDS',
+	// 		columnName: 'sku_custom_field',
+	// 		classPK: skuId
+	// 	},
+	// 	function(obj: any) {
+	// 		console.log(obj);
+	// 	}
+	// 	);
+
 }
 
 export function createAttachment({

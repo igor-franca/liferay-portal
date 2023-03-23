@@ -2,8 +2,10 @@ import {Header} from '../../components/Header/Header';
 import {Input} from '../../components/Input/Input';
 import {NewAppPageFooterButtons} from '../../components/NewAppPageFooterButtons/NewAppPageFooterButtons';
 import {Section} from '../../components/Section/Section';
+import {getCompanyId} from '../../liferay/constants';
 import {useAppContext} from '../../manage-app-state/AppManageState';
 import {TYPES} from '../../manage-app-state/actionTypes';
+import {addSkuExpandoValue, createAppSKU, getProductSKU} from '../../utils/api';
 import {saveSpecification} from '../../utils/util';
 
 import './ProvideVersionDetailsPage.scss';
@@ -70,58 +72,42 @@ export function ProvideVersionDetailsPage({
 				disableContinueButton={!appVersion || !appNotes}
 				onClickBack={() => onClickBack()}
 				onClickContinue={async () => {
-					const versionSpecificationId = await saveSpecification(
-						appId,
-						appProductId,
-						appVersion?.id,
-						'version',
-						'Version',
-						appVersion?.value
+					const skuResponse = await getProductSKU({appProductId});
+
+					const versionSku = skuResponse.items.find(
+						({sku}) => sku === appVersion?.value
 					);
 
-					if (versionSpecificationId !== -1) {
-						dispatch({
-							payload: {
-								id: versionSpecificationId,
-								value: appVersion.value,
-							},
-							type: TYPES.UPDATE_APP_VERSION,
-						});
+					let id;
+
+					if (versionSku) {
+						id = versionSku.id;
 					}
 					else {
+						const response = await createAppSKU({
+							appProductId,
+							body: {
+								sku: `${appProductId}v${appVersion?.value}`,
+							},
+						});
+
+						id = response.id;
+
 						dispatch({
 							payload: {
-								id: appVersion?.id,
-								value: appVersion.value,
+								value: response.id,
 							},
-							type: TYPES.UPDATE_APP_VERSION,
+							type: TYPES.UPDATE_SKU_ID,
 						});
 					}
 
-					const noteSpecificationId = await saveSpecification(
-						appId,
-						appProductId,
-						appNotes?.id,
-						'notes',
-						'Notes',
-						appNotes?.value
-					);
+					addSkuExpandoValue({
+						companyId: parseInt(getCompanyId()),
+						notesValue: appNotes.value,
+						skuId: id,
+						versionValue: appVersion.value,
+					});
 
-					if (noteSpecificationId !== -1) {
-						dispatch({
-							payload: {
-								id: noteSpecificationId,
-								value: appNotes.value,
-							},
-							type: TYPES.UPDATE_APP_NOTES,
-						});
-					}
-					else {
-						dispatch({
-							payload: {id: appNotes?.id, value: appNotes.value},
-							type: TYPES.UPDATE_APP_NOTES,
-						});
-					}
 					onClickContinue();
 				}}
 			/>

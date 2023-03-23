@@ -40,13 +40,14 @@ export interface InitialStateProps {
 	dayTrial: string;
 	priceModel: string;
 	publisherWebsiteURL: Specification;
+	skuId: number;
 	supportURL: Specification;
 }
 
 const initialState = {
 	appBuild: 'upload',
 	appLicense: 'perpetual',
-	appType: {value: 'saas'},
+	appType: {value: 'cloud'},
 	dayTrial: 'no',
 	priceModel: 'paid',
 } as InitialStateProps;

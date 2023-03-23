@@ -102,11 +102,11 @@ export function ProvideAppBuildPage({
 						icon={taskCheckedIcon}
 						onChange={() => {
 							dispatch({
-								payload: {id: appType.id, value: 'saas'},
+								payload: {id: appType.id, value: 'cloud'},
 								type: TYPES.UPDATE_APP_LXC_COMPATIBILITY,
 							});
 						}}
-						selected={appType.value === 'saas'}
+						selected={appType.value === 'cloud'}
 						title="Yes"
 						tooltip="More Info"
 					/>
