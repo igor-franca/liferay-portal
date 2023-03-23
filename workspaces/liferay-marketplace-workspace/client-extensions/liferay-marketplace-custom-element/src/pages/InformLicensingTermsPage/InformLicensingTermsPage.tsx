@@ -13,6 +13,8 @@ import {TYPES} from '../../manage-app-state/actionTypes';
 import {
 	createAppLicensePrice,
 	createProductSubscriptionConfiguration,
+	getSKUById,
+	patchSKUById,
 } from '../../utils/api';
 
 interface InformLicensingTermsPageProps {
@@ -25,11 +27,16 @@ export function InformLicensingTermsPage({
 	onClickContinue,
 }: InformLicensingTermsPageProps) {
 	const [
-		{appERC, appLicense, appProductId, dayTrial, priceModel, skuId},
+		{
+			appERC,
+			appLicense,
+			appProductId,
+			dayTrial,
+			priceModel,
+			skuId,
+		},
 		dispatch,
 	] = useAppContext();
-
-	console.log(skuId);
 
 	return (
 		<div className="informing-licensing-terms-page-container">
@@ -84,6 +91,7 @@ export function InformLicensingTermsPage({
 			>
 				<div className="informing-licensing-terms-page-day-trial-container">
 					<RadioCard
+						disabled={priceModel === 'free'}
 						description="Offer a 30-day free trial for this app"
 						icon={taskCheckedIcon}
 						onChange={() => {
@@ -118,19 +126,21 @@ export function InformLicensingTermsPage({
 				onClickContinue={() => {
 					const submitLicenseTermsPage = async () => {
 						if (priceModel === 'free') {
-							createAppLicensePrice({
-								appProductId,
-								body: {
-									neverExpire: true,
-									price: 0,
-									published: true,
-									purchasable: true,
-									sku: 'default',
-								},
-							});
+							const skuJSON = await getSKUById(skuId);
+
+							console.log(skuJSON);
+
+							const skuBody = {
+								...skuJSON,
+								purchasable: true,
+								price: 0,
+								neverExpire: true,
+							};
+
+							await patchSKUById(skuId, skuBody);
 						}
 
-						if (dayTrial === 'yes') {
+						if (dayTrial === 'yes' && priceModel !== 'free') {
 							createAppLicensePrice({
 								appProductId,
 								body: {
