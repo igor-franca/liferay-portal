@@ -38,10 +38,14 @@ export interface InitialStateProps {
 	buildZIPFiles: UploadedFile[];
 	catalogId: number;
 	dayTrial: string;
+	notTrialOptionId: number;
+	optionId: number;
 	priceModel: string;
+	productOptionERC: string;
 	publisherWebsiteURL: Specification;
 	skuId: number;
 	supportURL: Specification;
+	trialOptionId: number;
 }
 
 const initialState = {

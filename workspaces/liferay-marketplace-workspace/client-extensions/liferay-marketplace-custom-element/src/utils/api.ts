@@ -508,3 +508,73 @@ export async function postCheckoutCart({
 
 	return (await await response.json()) as PostCheckoutCartResponse;
 }
+
+export async function postOption() : Promise<string> {
+	const response = await fetch(
+		`/o/headless-commerce-admin-catalog/v1.0/options`,
+		{
+			headers,
+			method: "POST",
+			body: JSON.stringify(
+				{
+					fieldType: "radio",
+					key : "trial",
+					name : {en_US: "Trial"}
+				}
+			)
+		}
+	);
+
+	const {id} = await response.json();
+
+	return id;
+} 
+
+export async function postOptionValue(key: string, name: string, optionId: number) : Promise<number> {{
+	const response = await fetch(
+		`/o/headless-commerce-admin-catalog/v1.0/productOptions/${optionId}/productOptionValues`,
+		{
+			headers,
+			method: "POST",
+			body: JSON.stringify({
+				key: key,
+				name: {en_US: name},
+				priority: 1
+			})
+		});
+
+		const {id} = await response.json();
+
+		return id;
+	}
+} 
+
+export async function postProductOption(optionId: number, productId: number) : Promise<string> {
+	const response = await fetch(
+		`/o/headless-commerce-admin-catalog/v1.0/products/${productId}/productOptions`,
+		{
+			headers,
+			method: "POST",
+			body: JSON.stringify(
+				[
+					{
+						facetable: true,
+						fieldType: "radio",
+						key: "trial",
+						name: {
+							en_US: "Trial"
+						},
+						optionId: optionId,
+						productOptionValues: [],
+						required: true,
+						skuContributor: true,
+					}
+				]
+			)
+		}
+	)
+
+	const {externalReferenceCode} = await response.json();
+
+	return externalReferenceCode;
+}

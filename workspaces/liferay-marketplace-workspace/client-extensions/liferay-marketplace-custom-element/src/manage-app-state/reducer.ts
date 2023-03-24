@@ -74,6 +74,13 @@ export function appReducer(state: InitialStateProps, action: TAction) {
 
 			return {...state, catalogId};
 		}
+
+		case TYPES.UPDATE_NOT_TRIAL_OPTION_ID: {
+			const notTrialOptionId = action.payload.files;
+
+			return {...state, notTrialOptionId};
+		}
+
 		case TYPES.UPLOAD_BUILD_ZIP_FILES: {
 			const buildZIPFiles = action.payload.files;
 
@@ -175,6 +182,12 @@ export function appReducer(state: InitialStateProps, action: TAction) {
 			const id = action.payload.value;
 
 			return {...state, skuId: id};
+		}
+
+		case TYPES.UPDATE_TRIAL_OPTION_ID: {
+			const trialOptionId = action.payload.files;
+
+			return {...state, trialOptionId};
 		}
 
 		default:

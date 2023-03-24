@@ -5,8 +5,7 @@ import {Section} from '../../components/Section/Section';
 import {getCompanyId} from '../../liferay/constants';
 import {useAppContext} from '../../manage-app-state/AppManageState';
 import {TYPES} from '../../manage-app-state/actionTypes';
-import {addSkuExpandoValue, createAppSKU, getProductSKU} from '../../utils/api';
-import {saveSpecification} from '../../utils/util';
+import {addSkuExpandoValue, createAppSKU, getProductSKU, postOption, postOptionValue, postProductOption} from '../../utils/api';
 
 import './ProvideVersionDetailsPage.scss';
 
@@ -19,7 +18,7 @@ export function ProvideVersionDetailsPage({
 	onClickBack,
 	onClickContinue,
 }: ProvideVersionDetailsPageProps) {
-	const [{appId, appNotes, appProductId, appVersion}, dispatch] =
+	const [{appId, appNotes, appProductId, appVersion, productOptionERC, optionId}, dispatch] =
 		useAppContext();
 
 	return (
@@ -107,6 +106,39 @@ export function ProvideVersionDetailsPage({
 						skuId: id,
 						versionValue: appVersion.value,
 					});
+
+					if(!productOptionERC) {
+						const makeFetch = async () => {
+							if(!optionId){
+								const newOptionId = await postOption();
+								dispatch({
+									payload: {value: newOptionId},
+									type: TYPES.UPDATE_OPTION_ID,
+								});
+							}
+							const productOptionERC = await postProductOption(optionId, appProductId);
+			
+							dispatch({
+								payload: {value: productOptionERC},
+								type: TYPES.UPDATE_PRODUCT_OPTION,
+							});
+
+							const trialOptionId = postOptionValue('yes', 'Yes', optionId);
+											
+							dispatch({
+								payload: {value: trialOptionId},
+								type: TYPES.UPDATE_TRIAL_OPTION_ID,
+							});
+
+							const notTrialOptionId = postOptionValue('no', 'No', optionId);
+
+							dispatch({
+								payload: {value: notTrialOptionId},
+								type: TYPES.UPDATE_NOT_TRIAL_OPTION_ID,
+							});
+						}
+						makeFetch();
+					}
 
 					onClickContinue();
 				}}
