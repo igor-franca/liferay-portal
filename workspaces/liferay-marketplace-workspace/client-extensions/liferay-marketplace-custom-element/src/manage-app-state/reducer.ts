@@ -75,12 +75,6 @@ export function appReducer(state: InitialStateProps, action: TAction) {
 			return {...state, catalogId};
 		}
 
-		case TYPES.UPDATE_NOT_TRIAL_OPTION_ID: {
-			const notTrialOptionId = action.payload.files;
-
-			return {...state, notTrialOptionId};
-		}
-
 		case TYPES.UPLOAD_BUILD_ZIP_FILES: {
 			const buildZIPFiles = action.payload.files;
 
@@ -183,14 +177,27 @@ export function appReducer(state: InitialStateProps, action: TAction) {
 
 			return {...state, skuId: id};
 		}
+		
+		case TYPES.UPDATE_OPTION_ID: {
+			const optionId = action.payload.value;
+			
+			return {...state, optionId};
+		}
+		
+		case TYPES.UPDATE_PRODUCT_OPTION_VALUES_ID: {
+			const optionValuesId = {yes : action.payload.yesOptionId as number, no: action.payload.noOptionId as number};
 
-		case TYPES.UPDATE_TRIAL_OPTION_ID: {
-			const trialOptionId = action.payload.files;
+			return {...state, optionValuesId};
+		}
 
-			return {...state, trialOptionId};
+		case TYPES.UPDATE_PRODUCT_OPTION_ID: {
+			const productOptionId = action.payload.value;
+
+			return {...state, productOptionId};
 		}
 
 		default:
 			return state;
 	}
 }
+

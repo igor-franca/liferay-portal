@@ -1,6 +1,5 @@
-declare let Liferay: {ThemeDisplay: any; authToken: string};
-
-const headers = {
+declare let Liferay: {authToken: string; ThemeDisplay: any; Service: any};
+	const headers = {
 	'Content-Type': 'application/json',
 	'X-CSRF-Token': Liferay.authToken,
 };
@@ -14,15 +13,13 @@ type Categories = {
 
 export function createApp({
 
-	// appCategories,
-
+	appCategories,
 	appDescription,
 	appName,
 	catalogId,
 }: {
 
-	// appCategories: Categories[];
-
+	appCategories: Categories[];
 	appDescription: string;
 	appName: string;
 	catalogId: number;
@@ -509,7 +506,7 @@ export async function postCheckoutCart({
 	return (await await response.json()) as PostCheckoutCartResponse;
 }
 
-export async function postOption() : Promise<string> {
+export async function postOption() : Promise<number> {
 	const response = await fetch(
 		`/o/headless-commerce-admin-catalog/v1.0/options`,
 		{
@@ -549,7 +546,7 @@ export async function postOptionValue(key: string, name: string, optionId: numbe
 	}
 } 
 
-export async function postProductOption(optionId: number, productId: number) : Promise<string> {
+export async function postProductOption(optionId: number, productId: number) : Promise<any> {
 	const response = await fetch(
 		`/o/headless-commerce-admin-catalog/v1.0/products/${productId}/productOptions`,
 		{
@@ -559,6 +556,7 @@ export async function postProductOption(optionId: number, productId: number) : P
 				[
 					{
 						facetable: true,
+						description: {en_US: "Specifies if a trial exists for a given app or solution submission."},
 						fieldType: "radio",
 						key: "trial",
 						name: {
@@ -574,7 +572,19 @@ export async function postProductOption(optionId: number, productId: number) : P
 		}
 	)
 
-	const {externalReferenceCode} = await response.json();
+	const [{id}] = await response.json() as ProductOption[];
 
-	return externalReferenceCode;
+	return id;
+}
+
+export async function getOptions() {
+	const response = await fetch(
+		`/o/headless-commerce-admin-catalog/v1.0/options`,
+		{
+			headers,
+			method: 'GET',
+		}
+	);
+
+	return await response.json() as CommerceOption[];
 }

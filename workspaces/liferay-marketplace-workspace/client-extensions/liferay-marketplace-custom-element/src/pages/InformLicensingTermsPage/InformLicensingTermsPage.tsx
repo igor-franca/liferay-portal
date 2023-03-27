@@ -13,8 +13,12 @@ import {TYPES} from '../../manage-app-state/actionTypes';
 import {
 	createAppLicensePrice,
 	createProductSubscriptionConfiguration,
+	getOptions,
 	getSKUById,
 	patchSKUById,
+	postOption,
+	postOptionValue,
+	postProductOption,
 } from '../../utils/api';
 
 interface InformLicensingTermsPageProps {
@@ -26,13 +30,16 @@ export function InformLicensingTermsPage({
 	onClickBack,
 	onClickContinue,
 }: InformLicensingTermsPageProps) {
+
 	const [
 		{
 			appERC,
 			appLicense,
 			appProductId,
 			dayTrial,
+			optionId,
 			priceModel,
+			productOptionId,
 			skuId,
 		},
 		dispatch,
@@ -124,6 +131,46 @@ export function InformLicensingTermsPage({
 			<NewAppPageFooterButtons
 				onClickBack={() => onClickBack()}
 				onClickContinue={() => {
+
+					if(!productOptionId) {
+						const makeFetch = async () => {
+							let newOptionId : number;
+							const options = await getOptions();
+
+							const trialOption = options.find(({key}) => key === 'trial');
+
+							if(!optionId && !trialOption){
+								newOptionId = await postOption();
+							}
+
+							else{
+								newOptionId = optionId ?? trialOption!.id;
+							}
+
+							dispatch({
+								payload: {value: newOptionId},
+								type: TYPES.UPDATE_OPTION_ID,
+							});
+
+							const productOptionId = await postProductOption(newOptionId, appProductId);
+			
+							dispatch({
+								payload: {value: productOptionId},
+								type: TYPES.UPDATE_PRODUCT_OPTION_ID,
+							});
+
+							const yesOptionId = postOptionValue('yes', 'Yes', productOptionId);
+							const noOptionId = postOptionValue('no', 'No', productOptionId);
+
+							dispatch({
+								payload: {yesOptionId: yesOptionId, noOptionId: noOptionId},
+								type: TYPES.UPDATE_PRODUCT_OPTION_VALUES_ID,
+							});
+						}
+						makeFetch();
+					}
+
+
 					const submitLicenseTermsPage = async () => {
 						if (priceModel === 'free') {
 							const skuJSON = await getSKUById(skuId);

@@ -85,3 +85,16 @@ type SKU = {
 	sku: string;
 	skuOptions: [];
 };
+
+type CommerceOption = {
+	id: number;
+	key: string;
+	name: string;
+}
+
+type ProductOption = {
+	id: number;
+	name : string;
+	key: string;
+	optionId: number;
+}
