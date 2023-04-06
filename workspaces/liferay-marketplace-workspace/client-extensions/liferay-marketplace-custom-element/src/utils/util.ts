@@ -1,7 +1,9 @@
 import {
 	createProductSpecification,
+	getAccountGroup,
 	getCatalogs,
 	getSpecifications,
+	getUserAccountsById,
 	updateProductSpecification,
 } from './api';
 
@@ -19,6 +21,19 @@ export async function getCatalogId() {
 	const response = await getCatalogs();
 
 	return response.items[0].id;
+}
+
+export async function publisherUserChecker(){
+	const userAccounts = await getUserAccountsById();
+	const [userAccountPublisherGroup] = userAccounts.accountBriefs.map(async (currentAccount) => {
+		const accountGroup = await getAccountGroup(currentAccount.id);
+		const accountGroupPublisher = accountGroup.find((currentAccountGroup) =>
+			currentAccountGroup.name === 'Business Publisher' || currentAccountGroup.name ===  'Individual Publisher'
+		)
+		return !!accountGroupPublisher
+	})
+
+	return userAccountPublisherGroup;
 }
 
 async function submitSpecification(
