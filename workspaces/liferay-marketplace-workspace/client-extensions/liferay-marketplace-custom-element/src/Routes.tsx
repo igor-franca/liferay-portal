@@ -5,7 +5,7 @@ import GetAppPage from './pages/GetAppPage/GetAppPage';
 import {PublishedAppsDashboardPage} from './pages/PublishedAppsDashboardPage/PublishedAppsDashboardPage';
 import {PublisherGatePage} from './pages/PublisherGatePage/PublisherGatePage';
 import {PurchasedAppsDashboardPage} from './pages/PurchasedAppsDashboardPage/PurchasedAppsDashboardPage';
-import {publisherUserChecker} from './utils/util';
+import {userAccountChecker} from './utils/util';
 
 import './Routes.scss';
 import {Liferay} from './liferay/liferay';
@@ -14,23 +14,31 @@ interface AppRoutesProps {
 	route: string;
 }
 export default function AppRoutes({route}: AppRoutesProps) {
+	const [userCustomerChecker, setUserCustomerChecker] = useState(false);
 	const [userPublisherChecker, setUserPublisherChecker] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		const makePublisherUserChecker = async () => {
-			setUserPublisherChecker(await publisherUserChecker());
+		const makeUserAccountChecker = async () => {
+			setUserCustomerChecker(
+				await userAccountChecker(['Cloud Customer'])
+			);
+			setUserPublisherChecker(
+				await userAccountChecker([
+					'Business Publisher',
+					'Individual Publisher',
+				])
+			);
 			setIsLoading(false);
 		};
-
-		makePublisherUserChecker();
+		makeUserAccountChecker();
 	}, []);
 
 	if (route === 'create-app') {
 		return <AppCreationFlow />;
 	}
 	else if (route === 'get-app') {
-		return <GetAppPage />;
+		return <GetAppPage userCustomerChecker={userCustomerChecker} />;
 	}
 	else if (route === 'purchased-apps') {
 		return <PurchasedAppsDashboardPage />;
