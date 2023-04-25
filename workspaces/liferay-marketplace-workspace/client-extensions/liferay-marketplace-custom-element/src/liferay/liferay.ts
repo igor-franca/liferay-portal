@@ -4,6 +4,7 @@ interface ILiferay {
 	ThemeDisplay: {
 		getCanonicalURL: () => string;
 		getCompanyId: () => string;
+		getLanguageId: () => string;
 		getPathThemeImages: () => string;
 		isSignedIn: () => boolean;
 	};
@@ -22,6 +23,7 @@ export const Liferay = window.Liferay || {
 	ThemeDisplay: {
 		getCanonicalURL: () => window.location.href,
 		getCompanyId: () => '',
+		getLanguageId: () => '',
 		getPathThemeImages: () => '',
 		isSignedIn: () => {
 			return false;
