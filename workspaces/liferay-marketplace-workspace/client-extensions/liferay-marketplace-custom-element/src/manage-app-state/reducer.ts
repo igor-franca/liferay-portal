@@ -49,6 +49,12 @@ export function appReducer(state: InitialStateProps, action: TAction) {
 				},
 			};
 		}
+		case TYPES.UPDATE_APP_LATEST_VERSION: {
+			const {id, value} = action.payload;
+
+			return {...state, latestVersion: {id, value}};
+		}
+
 		case TYPES.UPDATE_APP_INSTALLATION_AND_UNINSTALLATION_GUIDE_URL: {
 			const {id, value} = action.payload;
 

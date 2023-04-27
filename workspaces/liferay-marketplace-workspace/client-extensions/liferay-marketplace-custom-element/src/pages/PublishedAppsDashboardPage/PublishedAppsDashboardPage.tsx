@@ -200,7 +200,7 @@ export function PublishedAppsDashboardPage() {
 		let productVersion = '0';
 
 		specifications.items.forEach((specification: Specification) => {
-			if (specification.specificationKey === 'version') {
+			if (specification.specificationKey === 'latest-version') {
 				productVersion = specification.value.en_US;
 			}
 		});

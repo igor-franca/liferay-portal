@@ -10,11 +10,14 @@ import {TYPES} from '../../manage-app-state/actionTypes';
 import {
 	addSkuExpandoValue,
 	createAppSKU,
+	createProductSpecification,
+	createSpecification,
 	getOptions,
 	getProductSKU,
 	postOptionValue,
 	postTrialOption,
 	postTrialProductOption,
+	updateProductSpecification,
 } from '../../utils/api';
 import {createSkuName} from '../../utils/util';
 
@@ -31,9 +34,11 @@ export function ProvideVersionDetailsPage({
 }: ProvideVersionDetailsPageProps) {
 	const [
 		{
+			appId,
 			appNotes,
 			appProductId,
 			appVersion,
+			latestVersion,
 			optionId,
 			optionValuesId,
 			productOptionId,
@@ -144,6 +149,39 @@ export function ProvideVersionDetailsPage({
 				disableContinueButton={!appVersion || !appNotes}
 				onClickBack={() => onClickBack()}
 				onClickContinue={async () => {
+					if (!latestVersion) {
+						const dataSpecification = await createSpecification({
+							body: {
+								key: 'latest-version',
+								title: {en_US: 'Latest Version'},
+							},
+						});
+
+						const {id} = await createProductSpecification({
+							appId,
+							body: {
+								productId: appProductId,
+								specificationId: dataSpecification.id,
+								specificationKey: dataSpecification.key,
+								value: {en_US: appVersion},
+							},
+						});
+
+						dispatch({
+							payload: {id, value: appVersion},
+							type: TYPES.UPDATE_APP_LATEST_VERSION,
+						});
+					}
+					else {
+						updateProductSpecification({
+							body: {
+								specificationKey: 'latest-version',
+								value: {en_US: appVersion},
+							},
+							id: latestVersion.id,
+						});
+					}
+
 					const skuResponse = await getProductSKU({appProductId});
 
 					const versionSku = skuResponse.items.find(
