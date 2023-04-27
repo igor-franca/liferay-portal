@@ -35,6 +35,7 @@ import {
 } from './PurchasedDashboardPageUtil';
 
 import './PurchasedAppsDashboardPage.scss';
+import {Liferay} from '../../liferay/liferay';
 
 export interface PurchasedAppProps {
 	image: string;
@@ -105,6 +106,11 @@ export function PurchasedAppsDashboardPage() {
 	const [selectedNavigationItem, setSelectedNavigationItem] =
 		useState('My Apps');
 	const [selectedApp, setSelectedApp] = useState<AppProps>();
+
+	const buttonRedirectURL = Liferay.ThemeDisplay.getCanonicalURL().replaceAll(
+		'/customer-dashboard',
+		'/app-marketplace'
+	);
 
 	const messages = {
 		description: 'Manage apps purchase from the Marketplace',
@@ -350,7 +356,6 @@ export function PurchasedAppsDashboardPage() {
 				currentAccount={selectedAccount}
 				dashboardNavigationItems={dashboardNavigationItems}
 				onSelectAppChange={setSelectedApp}
-				selectedApp={selectedApp}
 				setDashboardNavigationItems={setDashboardNavigationItems}
 				setSelectedAccount={setSelectedAccount}
 			/>
@@ -358,8 +363,11 @@ export function PurchasedAppsDashboardPage() {
 			{selectedNavigationItem === 'My Apps' && (
 				<DashboardPage
 					buttonMessage="Add Apps"
+					buttonHref={buttonRedirectURL}
 					dashboardNavigationItems={dashboardNavigationItems}
 					messages={messages}
+					selectedApp={selectedApp}
+					setSelectedApp={setSelectedApp}
 				>
 					<DashboardTable<PurchasedAppProps>
 						emptyStateMessage={messages.emptyStateMessage}
