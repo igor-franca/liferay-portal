@@ -31,7 +31,6 @@ import {
 import './PurchasedAppsDashboardPage.scss';
 import {
 	initialAccountState,
-	initialAppState,
 	initialDashboardNavigationItems,
 } from './PurchasedDashboardPageUtil';
 
@@ -106,7 +105,6 @@ export function PurchasedAppsDashboardPage() {
 	const [selectedMember, setSelectedMember] = useState<MemberProps>();
 	const [selectedNavigationItem, setSelectedNavigationItem] =
 		useState('My Apps');
-	const [selectedApp, setSelectedApp] = useState<AppProps>(initialAppState);
 
 	const messages = {
 		description: 'Manage apps purchase from the Marketplace',
@@ -254,7 +252,6 @@ export function PurchasedAppsDashboardPage() {
 							accountBrief.name === selectedAccount.name
 					).roleBriefs;
 
-
 				const currentUserAccountBriefs =
 					currentUserAccount.accountBriefs.find(
 						(accountBrief: {name: string}) =>
@@ -265,7 +262,8 @@ export function PurchasedAppsDashboardPage() {
 					customerRoles.forEach((customerRole) => {
 						if (
 							currentUserAccountBriefs.roleBriefs.find(
-								(role: {name: string}) => role.name === customerRole
+								(role: {name: string}) =>
+									role.name === customerRole
 							)
 						) {
 							currentUserAccount.isCustomerAccount = true;
@@ -351,7 +349,6 @@ export function PurchasedAppsDashboardPage() {
 				accounts={accounts}
 				currentAccount={selectedAccount}
 				dashboardNavigationItems={dashboardNavigationItems}
-				onSelectAppChange={setSelectedApp}
 				setDashboardNavigationItems={setDashboardNavigationItems}
 				setSelectedAccount={setSelectedAccount}
 			/>
@@ -362,8 +359,6 @@ export function PurchasedAppsDashboardPage() {
 					buttonHref="https://marketplace.liferay.com/"
 					dashboardNavigationItems={dashboardNavigationItems}
 					messages={messages}
-					selectedApp={selectedApp}
-					setSelectedApp={setSelectedApp}
 				>
 					<DashboardTable<PurchasedAppProps>
 						emptyStateMessage={messages.emptyStateMessage}

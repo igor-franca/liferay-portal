@@ -361,7 +361,8 @@ export function PublishedAppsDashboardPage() {
 					customerRoles.forEach((customerRole) => {
 						if (
 							currentUserAccountBriefs.roleBriefs.find(
-								(role: {name: string}) => role.name === customerRole
+								(role: {name: string}) =>
+									role.name === customerRole
 							)
 						) {
 							currentUserAccount.isCustomerAccount = true;
