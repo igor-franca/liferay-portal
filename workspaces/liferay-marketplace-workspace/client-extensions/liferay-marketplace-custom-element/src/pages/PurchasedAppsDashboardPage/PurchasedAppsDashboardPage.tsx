@@ -16,6 +16,8 @@ import {
 	getPlacedOrders,
 	getSKUCustomFieldExpandoValue,
 	getUserAccounts,
+	getProduct,
+	getProductById,
 } from '../../utils/api';
 import {DashboardPage} from '../DashBoardPage/DashboardPage';
 import {
@@ -35,7 +37,6 @@ import {
 import './PurchasedAppsDashboardPage.scss';
 
 export interface PurchasedAppProps {
-	image: string;
 	name: string;
 	orderId: number;
 	project?: string;
@@ -43,6 +44,7 @@ export interface PurchasedAppProps {
 	purchasedBy: string;
 	purchasedDate: string;
 	type: string;
+	thumbnail: string;
 	version: string;
 }
 
@@ -211,8 +213,23 @@ export function PurchasedAppsDashboardPage() {
 						skuId: placeOrderItem.skuId,
 					});
 
+					const product = await getProductById({
+						appId: placeOrderItem.productId,
+					});
+
+					const thumbnailAttachment = product.attachments.find(
+						({customFields}) =>
+							customFields?.find(
+								({
+									name,
+									customValue: {
+										data: [value],
+									},
+								}) => name === 'App Icon' && value === 'Yes'
+							)
+					);
+
 					return {
-						image: placeOrderItem.thumbnail,
 						name: placeOrderItem.name,
 						orderId: order.id,
 						provisioning: order.orderStatusInfo.label_i18n,
@@ -221,6 +238,7 @@ export function PurchasedAppsDashboardPage() {
 						type: placeOrderItem.subscription
 							? 'Subscription'
 							: 'Perpetual',
+						thumbnail: thumbnailAttachment!.src,
 						version:
 							Object.keys(version).length === 0 ? '' : version,
 					};

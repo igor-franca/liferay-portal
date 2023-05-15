@@ -266,6 +266,7 @@ export function PublishedAppsDashboardPage() {
 					appList.items.forEach((product, index: number) => {
 						if (product.catalogId === accountCatalogId) {
 							newAppList.push({
+								attachments: product.attachments,
 								catalogId: product.catalogId,
 								externalReferenceCode:
 									product.externalReferenceCode,

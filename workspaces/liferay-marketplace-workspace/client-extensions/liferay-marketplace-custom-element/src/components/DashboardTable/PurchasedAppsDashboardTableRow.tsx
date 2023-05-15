@@ -8,6 +8,7 @@ import DropDown from '@clayui/drop-down/lib/DropDown';
 import {showAppImage} from '../../utils/util';
 import classNames from 'classnames';
 
+import appPlaceholder from '../../assets/images/app_placeholder.png';
 import {PurchasedAppProps} from '../../pages/PurchasedAppsDashboardPage/PurchasedAppsDashboardPage';
 
 interface PurchasedAppsDashboardTableRowProps {
@@ -18,13 +19,13 @@ export function PurchasedAppsDashboardTableRow({
 	item,
 }: PurchasedAppsDashboardTableRowProps) {
 	const {
-		image,
 		name,
 		orderId,
 		project,
 		provisioning,
 		purchasedBy,
 		purchasedDate,
+		thumbnail,
 		type,
 		version,
 	} = item;
@@ -37,7 +38,9 @@ export function PurchasedAppsDashboardTableRow({
 						<img
 							alt="App Image"
 							className="dashboard-table-row-name-logo"
-							src={showAppImage(image)}
+							src={showAppImage(
+								thumbnail ? thumbnail : appPlaceholder
+							)}
 						/>
 					</div>
 

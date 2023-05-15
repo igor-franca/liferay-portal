@@ -17,15 +17,15 @@ type Categories = {
 
 export async function addExpandoValue({
 	attributeValues,
-	companyId,
 	className,
 	classPK,
+	companyId,
 	tableName,
 }: {
 	attributeValues: Object;
-	companyId: number;
 	className: string;
 	classPK: number;
+	companyId: number;
 	tableName: string;
 }) {
 	await Liferay.Service('/expandovalue/add-values', {
@@ -421,7 +421,7 @@ export async function getPlacedOrders(
 	if (page && pageSize) {
 		url =
 			url +
-			`?nestedFields=placedOrderItems&page=${page}&pageSize=${pageSize}`;
+			`?nestedFields=placedOrderItems,attachments&page=${page}&pageSize=${pageSize}`;
 	}
 
 	const response = await fetch(url, {headers, method: 'GET'});
@@ -448,7 +448,7 @@ export async function getOrderTypes() {
 
 export async function getProduct({appERC}: {appERC: string}) {
 	const response = await fetch(
-		`${baseURL}/o/headless-commerce-admin-catalog/v1.0/products/by-externalReferenceCode/${appERC}
+		`${baseURL}/o/headless-commerce-admin-catalog/v1.0/products/by-externalReferenceCode/${appERC}?nestedFields=attachments
 		`,
 		{
 			headers,
@@ -457,6 +457,19 @@ export async function getProduct({appERC}: {appERC: string}) {
 	);
 
 	return await response.json();
+}
+
+export async function getProductById({appId}: {appId: number}) {
+	const response = await fetch(
+		`${baseURL}/o/headless-commerce-admin-catalog/v1.0/products/${appId}?nestedFields=attachments
+		`,
+		{
+			headers,
+			method: 'GET',
+		}
+	);
+
+	return (await response.json()) as Product;
 }
 
 export async function getProductImages({appProductId}: {appProductId: number}) {

@@ -262,10 +262,10 @@ export function ProvideAppBuildPage({
 							attributeValues: {
 								'App Icon': 'No',
 							},
-							companyId: Number(getCompanyId()),
 							className:
 								'com.liferay.commerce.product.model.CPAttachmentFileEntry',
 							classPK: buildZIPFileId as number,
+							companyId: Number(getCompanyId()),
 							tableName: 'CUSTOM_FIELDS',
 						});
 					});

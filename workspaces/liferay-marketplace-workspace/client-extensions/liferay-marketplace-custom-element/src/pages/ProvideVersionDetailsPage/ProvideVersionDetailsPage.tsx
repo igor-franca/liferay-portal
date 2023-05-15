@@ -187,10 +187,10 @@ export function ProvideVersionDetailsPage({
 							'Version': appVersion,
 							'Version Description': appNotes,
 						},
-						companyId: Number(getCompanyId()),
 						className:
 							'com.liferay.commerce.product.model.CPInstance',
 						classPK: skuId,
+						companyId: Number(getCompanyId()),
 						tableName: 'CUSTOM_FIELDS',
 					});
 
