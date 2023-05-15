@@ -7,9 +7,17 @@ type Account = {
 	type: string;
 };
 
+type Attachment = {
+	customFields: CustomField[];
+	externalReferenceCode: string;
+	id: number;
+	src: string;
+	title: {[key: string]: string};
+};
+
 type CustomField = {
 	customValue: {
-		data: string;
+		data: string | string[];
 	};
 	dataType?: string;
 	name: string;
@@ -262,6 +270,7 @@ interface PostCheckoutCartResponse extends PostCartResponse {
 
 type Product = {
 	active: boolean;
+	attachments: Attachment[];
 	categories: {
 		externalReferenceCode: string;
 		id: number;

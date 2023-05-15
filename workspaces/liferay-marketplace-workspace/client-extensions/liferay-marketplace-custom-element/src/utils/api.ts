@@ -15,26 +15,25 @@ type Categories = {
 	vocabulary: string;
 };
 
-export async function addSkuExpandoValue({
+export async function addExpandoValue({
+	attributeValues,
 	companyId,
-	notesValue,
-	skuId,
-	versionValue,
+	className,
+	classPK,
+	tableName,
 }: {
+	attributeValues: Object;
 	companyId: number;
-	notesValue: string;
-	skuId: number;
-	versionValue: string;
+	className: string;
+	classPK: number;
+	tableName: string;
 }) {
 	await Liferay.Service('/expandovalue/add-values', {
-		attributeValues: {
-			'version': versionValue,
-			'version description': notesValue,
-		},
-		className: 'com.liferay.commerce.product.model.CPInstance',
-		classPK: skuId,
+		attributeValues,
+		className,
+		classPK,
 		companyId,
-		tableName: 'CUSTOM_FIELDS',
+		tableName,
 	});
 }
 
@@ -105,7 +104,7 @@ export async function createAppSKU({
 	return (await response.json()) as SKU;
 }
 
-export function createAttachment({
+export async function createAttachment({
 	body,
 	externalReferenceCode,
 }: {
@@ -474,7 +473,7 @@ export async function getProductImages({appProductId}: {appProductId: number}) {
 
 export async function getProducts() {
 	const response = await fetch(
-		`${baseURL}/o/headless-commerce-admin-catalog/v1.0/products?pageSize=-1`,
+		`${baseURL}/o/headless-commerce-admin-catalog/v1.0/products?pageSize=-1&nestedFields=attachments`,
 		{
 			headers,
 			method: 'GET',
