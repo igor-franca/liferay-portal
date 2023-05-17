@@ -14,6 +14,7 @@ import {
 	getOrderTypes,
 	getPaymentMethodURL,
 	getProduct,
+	getProductAttachments,
 	getProductSKU,
 	getProductSpecifications,
 	getSKUCustomFieldExpandoValue,
@@ -23,7 +24,11 @@ import {
 	postCartByChannelId,
 	postCheckoutCart,
 } from '../../utils/api';
-import {showAccountImage} from '../../utils/util';
+import {
+	getThumbnailByProductAttachment,
+	showAccountImage,
+	showAppImage,
+} from '../../utils/util';
 import {AccountSelector} from './AccountSelector';
 
 import './GetAppModal.scss';
@@ -31,6 +36,7 @@ import {SelectPaymentMethod} from './SelectPaymentMethod';
 import {StepTracker} from './StepTracker';
 
 interface App {
+	attachments: ProductAttachment[];
 	createdBy: string;
 	id: number;
 	name: {en_US: string} | string;
@@ -64,6 +70,7 @@ export function GetAppModal({handleClose}: GetAppModalProps) {
 	const [accountPublisher, setAccountPublisher] = useState<Account>();
 	const [accounts, setAccounts] = useState<AccountBrief[]>();
 	const [app, setApp] = useState<App>({
+		attachments: [],
 		createdBy: '',
 		id: 0,
 		name: '',
@@ -132,6 +139,8 @@ export function GetAppModal({handleClose}: GetAppModalProps) {
 			selected: false,
 		},
 	]);
+
+	const [thumbnail, setThumbnail] = useState<string>();
 
 	useEffect(() => {
 		const getAddresses = async () => {
@@ -266,6 +275,18 @@ export function GetAppModal({handleClose}: GetAppModalProps) {
 		};
 		getModalInfo();
 	}, []);
+
+	async function getThumbnail() {
+		const productAttachments = await getProductAttachments(
+			{productId: app.productId},
+			{channelId: channel.id}
+		);
+
+		const productAttachmentThumbnail = getThumbnailByProductAttachment(productAttachments);
+		setThumbnail(productAttachmentThumbnail);
+	};
+
+	getThumbnail();
 
 	async function handleGetApp() {
 		const productSpecifications = await getProductSpecifications({
@@ -517,7 +538,7 @@ export function GetAppModal({handleClose}: GetAppModalProps) {
 									<img
 										alt="App Image"
 										className="get-app-modal-body-content-image"
-										src={app.urlImage.replace(
+										src={showAppImage(thumbnail).replace(
 											Liferay.ThemeDisplay.getPortalURL().replace(
 												'http',
 												'https'

@@ -14,10 +14,14 @@ import {
 	getChannels,
 	getMyUserAccount,
 	getPlacedOrders,
+	getProductAttachments,
 	getSKUCustomFieldExpandoValue,
 	getUserAccounts,
 } from '../../utils/api';
-import {showAccountImage} from '../../utils/util';
+import {
+	getThumbnailByProductAttachment,
+	showAccountImage,
+} from '../../utils/util';
 import {DashboardPage} from '../DashBoardPage/DashboardPage';
 import {
 	AccountBriefProps,
@@ -39,7 +43,6 @@ import {
 import './PurchasedAppsDashboardPage.scss';
 
 export interface PurchasedAppProps {
-	image: string;
 	name: string;
 	orderId: number;
 	project?: string;
@@ -47,6 +50,7 @@ export interface PurchasedAppProps {
 	purchasedBy: string;
 	purchasedDate: string;
 	type: string;
+	thumbnail: string;
 	version: string;
 }
 
@@ -91,6 +95,7 @@ const solutionMessages = {
 export function PurchasedAppsDashboardPage() {
 	const [accounts, setAccounts] = useState<Account[]>(initialAccountState);
 	const [commerceAccount, setCommerceAccount] = useState<CommerceAccount>();
+	const [marketPlaceChannelId, setMarketPlaceChannelId] = useState<number>();
 	const [selectedAccount, setSelectedAccount] = useState<Account>(
 		accounts[0]
 	);
@@ -140,6 +145,8 @@ export function PurchasedAppsDashboardPage() {
 						(channel) => channel.name === 'Marketplace Channel'
 					) || channels[0];
 
+				setMarketPlaceChannelId(channel.id);
+
 				const placedOrders = await getPlacedOrders(
 					selectedAccount?.id || 50307,
 					channel.id,
@@ -184,8 +191,15 @@ export function PurchasedAppsDashboardPage() {
 							skuId: placeOrderItem.skuId,
 						});
 
+						const attachments = await getProductAttachments(
+							{productId: placeOrderItem.productId},
+							{channelId: marketPlaceChannelId!}
+						);
+
+						const orderThumbnail =
+							getThumbnailByProductAttachment(attachments);
+
 						return {
-							image: placeOrderItem.thumbnail,
 							name: placeOrderItem.name,
 							orderId: order.id,
 							provisioning: order.orderStatusInfo.label_i18n,
@@ -194,6 +208,7 @@ export function PurchasedAppsDashboardPage() {
 							type: placeOrderItem.subscription
 								? 'Subscription'
 								: 'Perpetual',
+							thumbnail: orderThumbnail as string,
 							version: !Object.keys(version).length
 								? ''
 								: version,

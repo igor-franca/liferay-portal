@@ -140,7 +140,7 @@ export function PublishedAppsDashboardPage() {
 				if (accountCatalogId && accountCatalogId !== 0) {
 					setCatalogId(accountCatalogId);
 					const {items: productsItems} = await getProducts(
-						'productChannels'
+						'productChannels, attachments'
 					);
 
 					const appListProductIds: number[] =
@@ -170,6 +170,7 @@ export function PublishedAppsDashboardPage() {
 							product.catalogId === accountCatalogId
 						) {
 							newAppList.push({
+								attachments: product.attachments,
 								catalogId: product.catalogId,
 								externalReferenceCode:
 									product.externalReferenceCode,
@@ -196,16 +197,17 @@ export function PublishedAppsDashboardPage() {
 
 					setCommerceAccount(commerceAccountResponse);
 
-					const newDashboardNavigationItems = dashboardNavigationItems.map(navigationItems => {
-						if (navigationItems.itemName === 'apps') {
-							return {
-								...navigationItems,
-								items: newAppList.slice(0,4),
-							};
-						}
+					const newDashboardNavigationItems =
+						dashboardNavigationItems.map((navigationItems) => {
+							if (navigationItems.itemName === 'apps') {
+								return {
+									...navigationItems,
+									items: newAppList.slice(0, 4),
+								};
+							}
 
-						return navigationItems;
-					})
+							return navigationItems;
+						});
 
 					setDashboardNavigationItems(newDashboardNavigationItems);
 					setAppTotalCount(newAppList.length);

@@ -470,6 +470,22 @@ export async function getProduct({
 	return (await response.json()) as Product;
 }
 
+export async function getProductAttachments(
+	{productId}: {productId: number},
+	{channelId}: {channelId: number}
+) {
+	const response = await fetch(
+		`${baseURL}/o/headless-commerce-delivery-catalog/v1.0/channels/${channelId}/products/${productId}/attachments
+		`,
+		{
+			headers,
+			method: 'GET',
+		}
+	);
+
+	return (await response.json()) as ProductAttachment[];
+}
+
 export async function getProductImages({appProductId}: {appProductId: number}) {
 	const response = await fetch(
 		`${baseURL}/o/headless-commerce-admin-catalog/v1.0/products/${appProductId}/images`,
