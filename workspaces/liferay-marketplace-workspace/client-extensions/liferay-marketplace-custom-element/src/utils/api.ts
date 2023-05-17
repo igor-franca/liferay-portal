@@ -15,26 +15,25 @@ type Categories = {
 	vocabulary: string;
 };
 
-export async function addSkuExpandoValue({
+export async function addExpandoValue({
+	attributeValues,
+	className,
+	classPK,
 	companyId,
-	notesValue,
-	skuId,
-	versionValue,
+	tableName,
 }: {
+	attributeValues: Object;
+	className: string;
+	classPK: number;
 	companyId: number;
-	notesValue: string;
-	skuId: number;
-	versionValue: string;
+	tableName: string;
 }) {
 	await Liferay.Service('/expandovalue/add-values', {
-		attributeValues: {
-			'version': versionValue,
-			'version description': notesValue,
-		},
-		className: 'com.liferay.commerce.product.model.CPInstance',
-		classPK: skuId,
+		attributeValues,
+		className,
+		classPK,
 		companyId,
-		tableName: 'CUSTOM_FIELDS',
+		tableName,
 	});
 }
 
@@ -108,7 +107,7 @@ export async function createAppSKU({
 	return (await response.json()) as SKU;
 }
 
-export function createAttachment({
+export async function createAttachment({
 	body,
 	externalReferenceCode,
 }: {
