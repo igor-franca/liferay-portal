@@ -42,7 +42,7 @@ interface ManagementToolbarProps {
 	label: string;
 	onExternalReferenceCodeChange?: (value: string) => void;
 	onGetEntity: () => Promise<Entity>;
-	onSubmit: (props: boolean) => void;
+	onSubmit: (draft: boolean) => void;
 	portletNamespace: string;
 	screenNavigationCategoryKey?: string;
 	showEntityDetails?: boolean;

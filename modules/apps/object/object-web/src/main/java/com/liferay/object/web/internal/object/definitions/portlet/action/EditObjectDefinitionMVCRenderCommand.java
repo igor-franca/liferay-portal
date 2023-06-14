@@ -14,12 +14,15 @@
 
 package com.liferay.object.web.internal.object.definitions.portlet.action;
 
+import com.liferay.application.list.PanelCategoryRegistry;
 import com.liferay.object.constants.ObjectPortletKeys;
 import com.liferay.object.constants.ObjectWebKeys;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.rest.manager.v1_0.ObjectEntryManagerRegistry;
+import com.liferay.object.scope.ObjectScopeProviderRegistry;
 import com.liferay.object.service.ObjectDefinitionLocalService;
 import com.liferay.object.service.ObjectFieldLocalService;
+import com.liferay.object.service.ObjectRelationshipLocalService;
 import com.liferay.object.web.internal.object.definitions.display.context.ObjectDefinitionsDetailsDisplayContext;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
@@ -28,7 +31,6 @@ import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermi
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -64,15 +66,15 @@ public class EditObjectDefinitionMVCRenderCommand implements MVCRenderCommand {
 				_objectDefinitionLocalService.getObjectDefinition(
 					objectDefinitionId));
 			renderRequest.setAttribute(
-				ObjectWebKeys.OBJECT_FIELDS,
-				_objectFieldLocalService.getObjectFields(objectDefinitionId));
-			renderRequest.setAttribute(
-				WebKeys.PORTLET_DISPLAY_CONTEXT,
+				ObjectWebKeys.OBJECT_DEFINITIONS_DETAILS_DISPLAY_CONTEXT,
 				new ObjectDefinitionsDetailsDisplayContext(
 					_configurationProvider,
 					_portal.getHttpServletRequest(renderRequest),
 					_objectDefinitionModelResourcePermission,
-					_objectEntryManagerRegistry, null, null));
+					_objectScopeProviderRegistry, _panelCategoryRegistry));
+			renderRequest.setAttribute(
+				ObjectWebKeys.OBJECT_FIELDS,
+				_objectFieldLocalService.getObjectFields(objectDefinitionId));
 		}
 		catch (PortalException portalException) {
 			SessionErrors.add(renderRequest, portalException.getClass());
@@ -98,6 +100,12 @@ public class EditObjectDefinitionMVCRenderCommand implements MVCRenderCommand {
 
 	@Reference
 	private ObjectFieldLocalService _objectFieldLocalService;
+
+	@Reference
+	private ObjectScopeProviderRegistry _objectScopeProviderRegistry;
+
+	@Reference
+	private PanelCategoryRegistry _panelCategoryRegistry;
 
 	@Reference
 	private Portal _portal;
