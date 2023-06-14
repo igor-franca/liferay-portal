@@ -14,32 +14,48 @@
 
 /// <reference types="react" />
 
-interface ObjectManagementToolbarProps {
+import {KeyValuePair} from '../ObjectDetails/EditObjectDetails';
+interface EditObjectDefinitionProps {
 	backURL: string;
+	companyKeyValuePair: KeyValuePair[];
+	dbTableName: string;
 	externalReferenceCode: string;
 	hasPublishObjectPermission: boolean;
 	hasUpdateObjectDefinitionPermission: boolean;
 	isApproved: boolean;
-	label: string;
+	label: LocalizedValue<string>;
+	nonRelationshipObjectFieldsInfo: {
+		label: LocalizedValue<string>;
+		name: string;
+	}[];
 	objectDefinitionId: number;
 	onSubmit: (draft: boolean) => void;
+	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
 	screenNavigationCategoryKey: string;
 	setValues: (values: Partial<ObjectDefinition>) => void;
+	shortName: string;
+	siteKeyValuePair: KeyValuePair[];
+	storageTypes: LabelValueObject[];
 	system: boolean;
 }
-export default function ObjectManagementToolbar({
+export default function EditObjectDefinition({
 	backURL,
+	companyKeyValuePair,
+	dbTableName,
 	externalReferenceCode,
 	hasPublishObjectPermission,
 	hasUpdateObjectDefinitionPermission,
 	isApproved,
 	label,
+	nonRelationshipObjectFieldsInfo,
 	objectDefinitionId,
-	onSubmit,
+	pluralLabel,
 	portletNamespace,
 	screenNavigationCategoryKey,
-	setValues,
+	shortName,
+	siteKeyValuePair,
+	storageTypes,
 	system,
-}: ObjectManagementToolbarProps): JSX.Element;
+}: EditObjectDefinitionProps): JSX.Element;
 export {};
