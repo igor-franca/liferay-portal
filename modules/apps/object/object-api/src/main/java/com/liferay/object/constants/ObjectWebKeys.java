@@ -43,6 +43,10 @@ public class ObjectWebKeys {
 
 	public static final String OBJECT_LAYOUT = "OBJECT_LAYOUT";
 
+	public static final String
+		OBJECT_PORTLET_DEFINITION_DETAILS_DISPLAY_CONTEXT =
+			"OBJECT_PORTLET_DEFINITION_DETAILS_DISPLAY_CONTEXT";
+
 	public static final String OBJECT_RELATIONSHIP = "OBJECT_RELATIONSHIP";
 
 	public static final String OBJECT_VALIDATION = "OBJECT_VALIDATION";
