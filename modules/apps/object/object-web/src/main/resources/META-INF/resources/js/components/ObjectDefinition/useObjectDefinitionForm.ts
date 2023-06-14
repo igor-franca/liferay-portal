@@ -24,12 +24,12 @@ import {
 	specialCharactersInString,
 } from '../../utils/string';
 
-interface UseObjectDetailsFormProps {
+interface UseObjectDefinitionFormProps {
 	initialValues: Partial<ObjectDefinition>;
 	onSubmit: (field: ObjectDefinition) => void;
 }
 
-export type ObjectDetailsErrors = FormError<Partial<ObjectDefinition>>;
+export type ObjectDefinitionErrors = FormError<Partial<ObjectDefinition>>;
 
 const REQUIRED_MSG = Liferay.Language.get('required');
 
@@ -66,12 +66,12 @@ const getNameErrors = (
 	}
 };
 
-export function useObjectDetailsForm({
+export function useObjectDefinitionForm({
 	initialValues,
 	onSubmit,
-}: UseObjectDetailsFormProps) {
+}: UseObjectDefinitionFormProps) {
 	const validate = (objectDefinition: Partial<ObjectDefinition>) => {
-		const errors: ObjectDetailsErrors = {};
+		const errors: ObjectDefinitionErrors = {};
 
 		if (!objectDefinition.system) {
 			if (invalidateLocalizableLabelRequired(objectDefinition.label)) {
