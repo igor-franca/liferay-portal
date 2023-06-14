@@ -14,15 +14,12 @@
 
 import {FormError} from '@liferay/object-js-components-web';
 import React from 'react';
-import './ObjectDetails.scss';
-export declare type KeyValuePair = {
-	key: string;
-	value: string;
-};
-interface EditObjectDetailsProps {
+import './ObjectNavigationTabs.scss';
+import {KeyValuePair} from '../../ObjectDetails/EditObjectDetails';
+interface ObjectNavigationProps {
 	companyKeyValuePair: KeyValuePair[];
 	dbTableName: string;
-	errors: FormError<Partial<ObjectDefinition>>;
+	errors: FormError<ObjectDefinition>;
 	externalReferenceCode: string;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	hasPublishObjectPermission: boolean;
@@ -37,24 +34,33 @@ interface EditObjectDetailsProps {
 	objectFields: ObjectField[];
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
+	screenNavigationCategoryKey: string;
 	setValues: (values: Partial<ObjectDefinition>) => void;
 	shortName: string;
 	siteKeyValuePair: KeyValuePair[];
 	storageTypes: LabelValueObject[];
+	system: boolean;
 	values: Partial<ObjectDefinition>;
 }
-export default function EditObjectDetails({
+export declare function ObjectNavigationTabs({
 	companyKeyValuePair,
 	dbTableName,
 	errors,
+	externalReferenceCode,
 	handleChange,
+	hasPublishObjectPermission,
 	hasUpdateObjectDefinitionPermission,
 	isApproved,
+	label,
 	nonRelationshipObjectFieldsInfo,
+	objectDefinitionId,
 	objectFields,
+	pluralLabel,
+	portletNamespace,
 	setValues,
+	shortName,
 	siteKeyValuePair,
 	storageTypes,
 	values,
-}: EditObjectDetailsProps): JSX.Element;
+}: ObjectNavigationProps): JSX.Element;
 export {};

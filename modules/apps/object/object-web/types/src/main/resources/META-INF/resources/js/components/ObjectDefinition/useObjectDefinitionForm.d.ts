@@ -12,18 +12,18 @@
  * details.
  */
 
-/// <reference types="react" />
-
 import {FormError} from '@liferay/object-js-components-web';
-interface UseObjectDetailsFormProps {
+interface UseObjectDefinitionFormProps {
 	initialValues: Partial<ObjectDefinition>;
 	onSubmit: (field: ObjectDefinition) => void;
 }
-export declare type ObjectDetailsErrors = FormError<Partial<ObjectDefinition>>;
-export declare function useObjectDetailsForm({
+export declare type ObjectDefinitionErrors = FormError<
+	Partial<ObjectDefinition>
+>;
+export declare function useObjectDefinitionForm({
 	initialValues,
 	onSubmit,
-}: UseObjectDetailsFormProps): {
+}: UseObjectDefinitionFormProps): {
 	errors: FormError<ObjectDefinition>;
 	handleChange: import('react').ChangeEventHandler<HTMLInputElement>;
 	handleSubmit: import('react').FormEventHandler<HTMLFormElement>;
