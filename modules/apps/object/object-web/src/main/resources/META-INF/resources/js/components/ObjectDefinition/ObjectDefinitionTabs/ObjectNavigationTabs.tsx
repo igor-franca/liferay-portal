@@ -20,12 +20,21 @@ import './ObjectNavigationTabs.scss';
 import EditObjectDetails, {
 	KeyValuePair,
 } from '../../ObjectDetails/EditObjectDetails';
+import Fields from '../../ObjectField/Fields';
 
 interface ObjectNavigationProps {
 	companyKeyValuePair: KeyValuePair[];
 	dbTableName: string;
 	errors: FormError<ObjectDefinition>;
 	externalReferenceCode: string;
+	fieldDropdownItems: [];
+	fieldId: string;
+	fieldUrl: string;
+	fieldsApiURL: string;
+	fieldsCreationMenu: {
+		primaryItems?: any[];
+		secondaryItems?: any[];
+	};
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	hasPublishObjectPermission: boolean;
 	hasUpdateObjectDefinitionPermission: boolean;
@@ -53,6 +62,11 @@ export function ObjectNavigationTabs({
 	dbTableName,
 	errors,
 	externalReferenceCode,
+	fieldDropdownItems,
+	fieldId,
+	fieldUrl,
+	fieldsApiURL,
+	fieldsCreationMenu,
 	handleChange,
 	hasPublishObjectPermission,
 	hasUpdateObjectDefinitionPermission,
@@ -86,6 +100,14 @@ export function ObjectNavigationTabs({
 					>
 						{Liferay.Language.get('details')}
 					</ClayTabs.Item>
+
+					<ClayTabs.Item
+						innerProps={{
+							'aria-controls': 'tabpanel-2',
+						}}
+					>
+						{Liferay.Language.get('fields')}
+					</ClayTabs.Item>
 				</ClayTabs>
 			</div>
 
@@ -115,6 +137,19 @@ export function ObjectNavigationTabs({
 						siteKeyValuePair={siteKeyValuePair}
 						storageTypes={storageTypes}
 						values={values}
+					/>
+				</ClayTabs.TabPane>
+
+				<ClayTabs.TabPane aria-labelledby="fields-tab">
+					<Fields
+						apiURL={fieldsApiURL}
+						creationMenu={fieldsCreationMenu}
+						id={fieldId}
+						items={fieldDropdownItems}
+						objectDefinitionExternalReferenceCode={
+							externalReferenceCode
+						}
+						url={fieldUrl}
 					/>
 				</ClayTabs.TabPane>
 			</ClayTabs.Content>

@@ -21,6 +21,14 @@ interface ObjectNavigationProps {
 	dbTableName: string;
 	errors: FormError<ObjectDefinition>;
 	externalReferenceCode: string;
+	fieldsApiURL: string;
+	fieldsCreationMenu: {
+		primaryItems?: any[];
+		secondaryItems?: any[];
+	};
+	fieldDropdownitems: [];
+	fieldId: string;
+	fieldUrl: string;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	hasPublishObjectPermission: boolean;
 	hasUpdateObjectDefinitionPermission: boolean;
@@ -47,6 +55,11 @@ export declare function ObjectNavigationTabs({
 	dbTableName,
 	errors,
 	externalReferenceCode,
+	fieldDropdownitems,
+	fieldId,
+	fieldUrl,
+	fieldsApiURL,
+	fieldsCreationMenu,
 	handleChange,
 	hasPublishObjectPermission,
 	hasUpdateObjectDefinitionPermission,
