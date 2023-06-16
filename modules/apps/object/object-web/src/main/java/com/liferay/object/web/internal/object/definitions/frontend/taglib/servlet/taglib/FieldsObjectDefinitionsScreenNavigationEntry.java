@@ -16,6 +16,7 @@ package com.liferay.object.web.internal.object.definitions.frontend.taglib.servl
 
 import com.liferay.frontend.taglib.servlet.taglib.ScreenNavigationEntry;
 import com.liferay.list.type.service.ListTypeDefinitionService;
+import com.liferay.object.constants.ObjectWebKeys;
 import com.liferay.object.field.business.type.ObjectFieldBusinessTypeRegistry;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.service.ObjectFieldSettingLocalService;
@@ -24,7 +25,6 @@ import com.liferay.object.web.internal.object.definitions.constants.ObjectDefini
 import com.liferay.object.web.internal.object.definitions.display.context.ObjectDefinitionsFieldsDisplayContext;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
-import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.IOException;
 
@@ -52,7 +52,8 @@ public class FieldsObjectDefinitionsScreenNavigationEntry
 
 	@Override
 	public String getJspPath() {
-		return "/object_definitions/object_definition/fields.jsp";
+		return "/object_definitions/object_definition" +
+			"/edit_object_definition.jsp";
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class FieldsObjectDefinitionsScreenNavigationEntry
 		throws IOException {
 
 		httpServletRequest.setAttribute(
-			WebKeys.PORTLET_DISPLAY_CONTEXT,
+			ObjectWebKeys.OBJECT_DEFINITIONS_FIELDS_DISPLAY_CONTEXT,
 			new ObjectDefinitionsFieldsDisplayContext(
 				httpServletRequest, _listTypeDefinitionService,
 				_objectDefinitionModelResourcePermission,

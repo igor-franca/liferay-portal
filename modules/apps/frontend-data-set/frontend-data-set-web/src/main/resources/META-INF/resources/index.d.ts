@@ -160,7 +160,7 @@ export interface IFrontendDataSetProps {
 	sidePanelId?: string;
 	sorting?: TSorting[];
 	style?: 'default' | 'fluid' | 'stacked';
-	views: TViews[];
+	views?: TViews[];
 }
 
 export {
