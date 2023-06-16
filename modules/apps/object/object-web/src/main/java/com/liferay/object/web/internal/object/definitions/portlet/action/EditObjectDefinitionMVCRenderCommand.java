@@ -15,14 +15,19 @@
 package com.liferay.object.web.internal.object.definitions.portlet.action;
 
 import com.liferay.application.list.PanelCategoryRegistry;
+import com.liferay.list.type.service.ListTypeDefinitionService;
 import com.liferay.object.constants.ObjectPortletKeys;
 import com.liferay.object.constants.ObjectWebKeys;
+import com.liferay.object.field.business.type.ObjectFieldBusinessTypeRegistry;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.rest.manager.v1_0.ObjectEntryManagerRegistry;
 import com.liferay.object.scope.ObjectScopeProviderRegistry;
 import com.liferay.object.service.ObjectDefinitionLocalService;
 import com.liferay.object.service.ObjectFieldLocalService;
+import com.liferay.object.service.ObjectFieldSettingLocalService;
+import com.liferay.object.service.ObjectRelationshipLocalService;
 import com.liferay.object.web.internal.object.definitions.display.context.ObjectDefinitionsDetailsDisplayContext;
+import com.liferay.object.web.internal.object.definitions.display.context.ObjectDefinitionsFieldsDisplayContext;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
@@ -73,6 +78,15 @@ public class EditObjectDefinitionMVCRenderCommand implements MVCRenderCommand {
 					_objectEntryManagerRegistry, _objectScopeProviderRegistry,
 					_panelCategoryRegistry));
 			renderRequest.setAttribute(
+				ObjectWebKeys.OBJECT_DEFINITIONS_FIELDS_DISPLAY_CONTEXT,
+				new ObjectDefinitionsFieldsDisplayContext(
+					_portal.getHttpServletRequest(renderRequest),
+					_listTypeDefinitionService,
+					_objectDefinitionModelResourcePermission,
+					_objectFieldBusinessTypeRegistry,
+					_objectFieldSettingLocalService,
+					_objectRelationshipLocalService));
+			renderRequest.setAttribute(
 				ObjectWebKeys.OBJECT_FIELDS,
 				_objectFieldLocalService.getObjectFields(objectDefinitionId));
 		}
@@ -87,6 +101,9 @@ public class EditObjectDefinitionMVCRenderCommand implements MVCRenderCommand {
 	private ConfigurationProvider _configurationProvider;
 
 	@Reference
+	private ListTypeDefinitionService _listTypeDefinitionService;
+
+	@Reference
 	private ObjectDefinitionLocalService _objectDefinitionLocalService;
 
 	@Reference(
@@ -99,7 +116,16 @@ public class EditObjectDefinitionMVCRenderCommand implements MVCRenderCommand {
 	private ObjectEntryManagerRegistry _objectEntryManagerRegistry;
 
 	@Reference
+	private ObjectFieldBusinessTypeRegistry _objectFieldBusinessTypeRegistry;
+
+	@Reference
 	private ObjectFieldLocalService _objectFieldLocalService;
+
+	@Reference
+	private ObjectFieldSettingLocalService _objectFieldSettingLocalService;
+
+	@Reference
+	private ObjectRelationshipLocalService _objectRelationshipLocalService;
 
 	@Reference
 	private ObjectScopeProviderRegistry _objectScopeProviderRegistry;
