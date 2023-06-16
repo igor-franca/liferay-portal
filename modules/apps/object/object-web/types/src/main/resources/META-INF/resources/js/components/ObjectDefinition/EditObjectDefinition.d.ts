@@ -20,6 +20,14 @@ interface EditObjectDefinitionProps {
 	companyKeyValuePair: KeyValuePair[];
 	dbTableName: string;
 	externalReferenceCode: string;
+	fieldsApiURL: string;
+	fieldsCreationMenu: {
+		primaryItems?: any[];
+		secondaryItems?: any[];
+	};
+	fieldDropdownitems: [];
+	fieldId: string;
+	fieldUrl: string;
 	hasPublishObjectPermission: boolean;
 	hasUpdateObjectDefinitionPermission: boolean;
 	isApproved: boolean;
@@ -44,6 +52,11 @@ export default function EditObjectDefinition({
 	companyKeyValuePair,
 	dbTableName,
 	externalReferenceCode,
+	fieldDropdownitems,
+	fieldId,
+	fieldUrl,
+	fieldsApiURL,
+	fieldsCreationMenu,
 	hasPublishObjectPermission,
 	hasUpdateObjectDefinitionPermission,
 	isApproved,
