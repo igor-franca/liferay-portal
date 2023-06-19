@@ -13,7 +13,7 @@
  */
 
 import ClayTabs from '@clayui/tabs';
-import {FormError} from '@liferay/object-js-components-web';
+import {FormError, SidebarCategory} from '@liferay/object-js-components-web';
 import React, {useState} from 'react';
 
 import './ObjectNavigationTabs.scss';
@@ -23,21 +23,26 @@ import EditObjectDetails, {
 import Fields from '../../ObjectField/Fields';
 
 interface ObjectNavigationProps {
+	creationLanguageId: Liferay.Language.Locale;
 	companyKeyValuePair: KeyValuePair[];
 	dbTableName: string;
 	errors: FormError<ObjectDefinition>;
 	externalReferenceCode: string;
 	fieldDropdownItems: [];
 	fieldId: string;
-	fieldUrl: string;
 	fieldsApiURL: string;
 	fieldsCreationMenu: {
 		primaryItems?: any[];
 		secondaryItems?: any[];
 	};
+	filterOperators: TFilterOperators;
+	forbiddenChars: string[];
+	forbiddenLastChars: string[];
+	forbiddenNames: string[];
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	hasPublishObjectPermission: boolean;
 	hasUpdateObjectDefinitionPermission: boolean;
+	isDefaultStorageType: boolean;
 	isApproved: boolean;
 	label: LocalizedValue<string>;
 	nonRelationshipObjectFieldsInfo: {
@@ -45,9 +50,14 @@ interface ObjectNavigationProps {
 		name: string;
 	}[];
 	objectDefinitionId: number;
+	objectRelationshipId: number;
+	objectFieldTypes: ObjectFieldType[];
 	objectFields: ObjectField[];
+	objectFieldId: number;
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
+	readOnly: boolean;
+	readOnlySidebarElements: SidebarCategory[];
 	screenNavigationCategoryKey: string;
 	setValues: (values: Partial<ObjectDefinition>) => void;
 	shortName: string;
@@ -55,35 +65,49 @@ interface ObjectNavigationProps {
 	storageTypes: LabelValueObject[];
 	system: boolean;
 	values: Partial<ObjectDefinition>;
+	sidebarElements: SidebarCategory[];
+	workflowStatusJSONArray: LabelValueObject[];
 }
 
 export function ObjectNavigationTabs({
 	companyKeyValuePair,
+	creationLanguageId,
 	dbTableName,
 	errors,
 	externalReferenceCode,
 	fieldDropdownItems,
 	fieldId,
-	fieldUrl,
 	fieldsApiURL,
 	fieldsCreationMenu,
+	filterOperators,
+	forbiddenChars,
+	forbiddenLastChars,
+	forbiddenNames,
 	handleChange,
 	hasPublishObjectPermission,
 	hasUpdateObjectDefinitionPermission,
 	isApproved,
+	isDefaultStorageType,
 	label,
 	nonRelationshipObjectFieldsInfo,
 	objectDefinitionId,
+	objectFieldId,
+	objectFieldTypes,
 	objectFields,
+	objectRelationshipId,
 	pluralLabel,
 	portletNamespace,
+	readOnly,
+	readOnlySidebarElements,
 	setValues,
 	shortName,
+	sidebarElements,
 	siteKeyValuePair,
 	storageTypes,
 	values,
+	workflowStatusJSONArray,
 }: ObjectNavigationProps) {
-	const [active, setActive] = useState(0);
+	const [active, setActive] = useState(1);
 
 	return (
 		<>
@@ -111,48 +135,66 @@ export function ObjectNavigationTabs({
 				</ClayTabs>
 			</div>
 
-			<ClayTabs.Content activeIndex={active} fade>
-				<ClayTabs.TabPane aria-labelledby="tab-1">
-					<EditObjectDetails
-						companyKeyValuePair={companyKeyValuePair}
-						dbTableName={dbTableName}
-						errors={errors}
-						externalReferenceCode={externalReferenceCode}
-						handleChange={handleChange}
-						hasPublishObjectPermission={hasPublishObjectPermission}
-						hasUpdateObjectDefinitionPermission={
-							hasUpdateObjectDefinitionPermission
-						}
-						isApproved={isApproved}
-						label={label}
-						nonRelationshipObjectFieldsInfo={
-							nonRelationshipObjectFieldsInfo
-						}
-						objectDefinitionId={objectDefinitionId}
-						objectFields={objectFields}
-						pluralLabel={pluralLabel}
-						portletNamespace={portletNamespace}
-						setValues={setValues}
-						shortName={shortName}
-						siteKeyValuePair={siteKeyValuePair}
-						storageTypes={storageTypes}
-						values={values}
-					/>
-				</ClayTabs.TabPane>
+			<div className="lfr__objects-navigation-tabs-content">
+				<ClayTabs.Content activeIndex={active} fade>
+					<ClayTabs.TabPane aria-labelledby="details-tab">
+						<EditObjectDetails
+							companyKeyValuePair={companyKeyValuePair}
+							dbTableName={dbTableName}
+							errors={errors}
+							externalReferenceCode={externalReferenceCode}
+							handleChange={handleChange}
+							hasPublishObjectPermission={
+								hasPublishObjectPermission
+							}
+							hasUpdateObjectDefinitionPermission={
+								hasUpdateObjectDefinitionPermission
+							}
+							isApproved={isApproved}
+							label={label}
+							nonRelationshipObjectFieldsInfo={
+								nonRelationshipObjectFieldsInfo
+							}
+							objectDefinitionId={objectDefinitionId}
+							objectFields={objectFields}
+							pluralLabel={pluralLabel}
+							portletNamespace={portletNamespace}
+							setValues={setValues}
+							shortName={shortName}
+							siteKeyValuePair={siteKeyValuePair}
+							storageTypes={storageTypes}
+							values={values}
+						/>
+					</ClayTabs.TabPane>
 
-				<ClayTabs.TabPane aria-labelledby="fields-tab">
-					<Fields
-						apiURL={fieldsApiURL}
-						creationMenu={fieldsCreationMenu}
-						id={fieldId}
-						items={fieldDropdownItems}
-						objectDefinitionExternalReferenceCode={
-							externalReferenceCode
-						}
-						url={fieldUrl}
-					/>
-				</ClayTabs.TabPane>
-			</ClayTabs.Content>
+					<ClayTabs.TabPane aria-labelledby="fields-tab">
+						<Fields
+							apiURL={fieldsApiURL}
+							creationLanguageId={creationLanguageId}
+							creationMenu={fieldsCreationMenu}
+							filterOperators={filterOperators}
+							forbiddenChars={forbiddenChars}
+							forbiddenLastChars={forbiddenLastChars}
+							forbiddenNames={forbiddenNames}
+							id={fieldId}
+							isApproved={isApproved}
+							isDefaultStorageType={isDefaultStorageType}
+							items={fieldDropdownItems}
+							objectDefinitionExternalReferenceCode={
+								externalReferenceCode
+							}
+							objectFieldId={objectFieldId}
+							objectFieldTypes={objectFieldTypes}
+							objectName={shortName}
+							objectRelationshipId={objectRelationshipId}
+							readOnly={readOnly}
+							readOnlySidebarElements={readOnlySidebarElements}
+							sidebarElements={sidebarElements}
+							workflowStatusJSONArray={workflowStatusJSONArray}
+						/>
+					</ClayTabs.TabPane>
+				</ClayTabs.Content>
+			</div>
 		</>
 	);
 }

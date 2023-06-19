@@ -25,13 +25,13 @@ interface EditObjectFieldProps {
 	isApproved: boolean;
 	isDefaultStorageType: boolean;
 	objectDefinitionExternalReferenceCode: string;
-	objectField: ObjectField;
 	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
 	objectName: string;
 	objectRelationshipId: number;
 	readOnly: boolean;
 	sidebarElements: SidebarCategory[];
+	setVerticalBarVisible: (values: boolean) => void;
 	workflowStatusJSONArray: LabelValueObject[];
 }
 export default function EditObjectField({
@@ -48,6 +48,7 @@ export default function EditObjectField({
 	objectName,
 	objectRelationshipId,
 	readOnly,
+	setVerticalBarVisible,
 	sidebarElements,
 	workflowStatusJSONArray,
 }: EditObjectFieldProps): JSX.Element;

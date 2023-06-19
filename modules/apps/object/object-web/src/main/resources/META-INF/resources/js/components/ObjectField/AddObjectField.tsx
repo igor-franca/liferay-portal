@@ -28,7 +28,7 @@ import {useObjectFieldForm} from './useObjectFieldForm';
 
 import './AddObjectField.scss';
 
-interface IModal extends IProps {
+interface IModal extends Omit<IProps, 'onVisibilityChange'> {
 	observer: Observer;
 	onClose: () => void;
 }
@@ -39,6 +39,7 @@ interface IProps {
 	objectDefinitionExternalReferenceCode: string;
 	objectFieldTypes: ObjectFieldType[];
 	objectName: string;
+	onVisibilityChange: (value: boolean) => void;
 }
 
 function ModalAddObjectField({
@@ -264,15 +265,11 @@ export default function AddObjectField({
 	objectDefinitionExternalReferenceCode,
 	objectFieldTypes,
 	objectName,
+	onVisibilityChange,
 }: IProps) {
-	const [isVisible, setVisibility] = useState<boolean>(false);
-	const {observer, onClose} = useModal({onClose: () => setVisibility(false)});
-
-	useEffect(() => {
-		Liferay.on('addObjectField', () => setVisibility(true));
-
-		return () => Liferay.detach('addObjectField');
-	}, []);
+	const {observer, onClose} = useModal({
+		onClose: () => onVisibilityChange(false),
+	});
 
 	const applyFeatureFlag = () => {
 		return objectFieldTypes.filter((objectFieldType) => {
@@ -284,23 +281,21 @@ export default function AddObjectField({
 
 	return (
 		<ClayModalProvider>
-			{isVisible && (
-				<ModalAddObjectField
-					apiURL={apiURL}
-					creationLanguageId={creationLanguageId}
-					objectDefinitionExternalReferenceCode={
-						objectDefinitionExternalReferenceCode
-					}
-					objectFieldTypes={
-						!Liferay.FeatureFlags['LPS-164948']
-							? applyFeatureFlag()
-							: objectFieldTypes
-					}
-					objectName={objectName}
-					observer={observer}
-					onClose={onClose}
-				/>
-			)}
+			<ModalAddObjectField
+				apiURL={apiURL}
+				creationLanguageId={creationLanguageId}
+				objectDefinitionExternalReferenceCode={
+					objectDefinitionExternalReferenceCode
+				}
+				objectFieldTypes={
+					!Liferay.FeatureFlags['LPS-164948']
+						? applyFeatureFlag()
+						: objectFieldTypes
+				}
+				objectName={objectName}
+				observer={observer}
+				onClose={onClose}
+			/>
 		</ClayModalProvider>
 	);
 }

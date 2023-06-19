@@ -49,6 +49,7 @@ export function SidePanelContent({
 	customLabel,
 	onSave,
 	readOnly,
+	setVerticalBarVisible,
 	title,
 }: IProps) {
 	const saveProps: {
@@ -78,7 +79,11 @@ export function SidePanelContent({
 					aria-label={Liferay.Language.get('cancel')}
 					displayType="unstyled"
 					monospaced={false}
-					onClick={closeSidePanel}
+					onClick={() =>
+						setVerticalBarVisible
+							? setVerticalBarVisible(false)
+							: closeSidePanel()
+					}
 					symbol="times"
 				/>
 			</div>
@@ -89,7 +94,14 @@ export function SidePanelContent({
 				className="lfr-objects__side-panel-content-container"
 				spaced
 			>
-				<ClayButton displayType="secondary" onClick={closeSidePanel}>
+				<ClayButton
+					displayType="secondary"
+					onClick={() =>
+						setVerticalBarVisible
+							? setVerticalBarVisible(false)
+							: closeSidePanel()
+					}
+				>
 					{Liferay.Language.get('cancel')}
 				</ClayButton>
 
@@ -106,6 +118,7 @@ export function SidePanelForm({
 	customLabel,
 	onSubmit,
 	readOnly,
+	setVerticalBarVisible,
 	title,
 }: ISidePanelFormProps) {
 	return (
@@ -113,6 +126,7 @@ export function SidePanelForm({
 			<SidePanelContent
 				customLabel={customLabel}
 				readOnly={readOnly}
+				setVerticalBarVisible={setVerticalBarVisible}
 				title={title}
 			>
 				{children}
@@ -133,6 +147,7 @@ interface CommonProps extends IContainerProps {
 	};
 	readOnly?: boolean;
 	title: string;
+	setVerticalBarVisible?: (values: boolean) => void;
 }
 
 interface IProps extends CommonProps {

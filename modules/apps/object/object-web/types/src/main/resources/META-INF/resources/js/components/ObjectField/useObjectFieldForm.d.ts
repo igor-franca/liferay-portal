@@ -33,8 +33,8 @@ export declare function useObjectFieldForm({
 			function: unknown;
 			output: unknown;
 			script: unknown;
-			defaultValue: unknown;
 			acceptedFileExtensions: unknown;
+			defaultValue: unknown;
 			defaultValueType: unknown;
 			fileSource: unknown;
 			filters: unknown;

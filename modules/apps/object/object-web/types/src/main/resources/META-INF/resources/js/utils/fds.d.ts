@@ -23,7 +23,7 @@ export interface fdsItem<T> {
 }
 export interface IFDSTableProps extends IFrontendDataSetProps {
 	objectDefinitionExternalReferenceCode: string;
-	url: string;
+	url?: string;
 }
 export declare function formatActionURL(url: string, id: number): string;
 export declare const defaultDataSetProps: {

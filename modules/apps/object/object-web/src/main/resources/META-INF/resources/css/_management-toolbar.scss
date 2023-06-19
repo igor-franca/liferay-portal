@@ -16,8 +16,13 @@
 		top: 56px;
 	}
 
-	.navbar {
-		position: fixed !important;
+	.lfr__objects-navigation-tabs-content {
+		.navbar {
+			left: 0;
+			position: fixed !important;
+			top: 9.9rem;
+			width: 100vw;
+		}
 	}
 
 	.page-header {
