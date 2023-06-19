@@ -71,7 +71,6 @@ export default function EditObjectDetails({
 }: EditObjectDetailsProps) {
 	return (
 		<>
-			<div className="lfr-objects__object-definition-details">
 				<Sheet title={Liferay.Language.get('basic-information')}>
 					<ObjectDataContainer
 						dbTableName={dbTableName}
@@ -151,7 +150,6 @@ export default function EditObjectDetails({
 						/>
 					)}
 				</Sheet>
-			</div>
 		</>
 	);
 }

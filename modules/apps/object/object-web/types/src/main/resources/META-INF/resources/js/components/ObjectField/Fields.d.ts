@@ -15,6 +15,7 @@
 /// <reference types="react" />
 
 import {IFDSTableProps} from '../../utils/fds';
+import './Fields.scss';
 export default function Fields({
 	apiURL,
 	creationMenu,

@@ -76,6 +76,10 @@ public class EditObjectDefinitionMVCRenderCommand implements MVCRenderCommand {
 					_configurationProvider,
 					_portal.getHttpServletRequest(renderRequest),
 					_objectDefinitionModelResourcePermission,
+<<<<<<< HEAD
+=======
+					_objectEntryManagerRegistry,
+>>>>>>> ebac8b6 (Sidebar Wip)
 					_objectScopeProviderRegistry, _panelCategoryRegistry));
 			renderRequest.setAttribute(
 				ObjectWebKeys.OBJECT_FIELDS,

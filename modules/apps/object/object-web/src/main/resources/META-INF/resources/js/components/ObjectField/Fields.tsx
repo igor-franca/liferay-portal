@@ -21,13 +21,15 @@ import {
 import {API, getLocalizableLabel} from '@liferay/object-js-components-web';
 import classNames from 'classnames';
 import React, {useEffect, useState} from 'react';
-
+import {VerticalBar} from '@clayui/core';
 import {
 	IFDSTableProps,
 	defaultDataSetProps,
 	fdsItem,
-	formatActionURL,
 } from '../../utils/fds';
+import EditObjectField from './EditObjectField';
+
+import './Fields.scss';
 
 interface ItemData {
 	id: number;
@@ -49,6 +51,15 @@ export default function Fields({
 		Liferay.Language.Locale
 	>();
 
+	const [visible, setVisible] = useState<boolean>(false);
+
+	const sidePanelitems = [
+		{
+		  title: "editObjectFieldSideBar"
+		},
+	];
+	
+
 	useEffect(() => {
 		const makeFetch = async () => {
 			const objectDefinition = await API.getObjectDefinitionByExternalReferenceCode(
@@ -62,14 +73,10 @@ export default function Fields({
 	}, [objectDefinitionExternalReferenceCode]);
 
 	function objectFieldLabelDataRenderer({
-		itemData,
-		openSidePanel,
 		value,
 	}: fdsItem<ItemData>) {
 		const handleEditField = () => {
-			openSidePanel({
-				url: formatActionURL(url, itemData.id),
-			});
+			setVisible(!visible);
 		};
 
 		return (
@@ -182,5 +189,54 @@ export default function Fields({
 		],
 	};
 
-	return <FrontendDataSet {...dataSetProps} />;
+	console.log(visible);
+
+	return (
+		<>
+				<FrontendDataSet {...dataSetProps} />;
+				{visible && (
+					<VerticalBar
+						defaultPanelWidth={900}
+						defaultActive={"editObjectFieldSideBar"}
+						panelWidth={700}
+						panelWidthMax={900}
+						panelWidthMin={150}
+						position="right"
+						resize
+				>
+					<div className='lfr__object-edit-field-side-panel'>
+						<VerticalBar.Content items={sidePanelitems}>
+							{item => (
+								<VerticalBar.Panel key={item.title}>
+									<EditObjectField
+											creationLanguageId={'ar_SA'}
+											filterOperators={{
+												dateOperators: [],
+												numericOperators: [],
+												picklistOperators: []
+											}}
+											forbiddenChars={[]}
+											forbiddenLastChars={[]}
+											forbiddenNames={[]}
+											isApproved={false}
+											isDefaultStorageType={false}
+											objectDefinitionExternalReferenceCode={''}
+											objectField={{} as ObjectField}
+											objectFieldId={0}
+											objectFieldTypes={[]}
+											objectName={''}
+											objectRelationshipId={0}
+											readOnly={false}
+											readOnlySidebarElements={[]}
+											sidebarElements={[]}
+											workflowStatusJSONArray={[]} 
+										/>
+								</VerticalBar.Panel>
+							)}
+						</VerticalBar.Content>
+					</div>
+				</VerticalBar>
+			)}
+		</>
+	)
 }
