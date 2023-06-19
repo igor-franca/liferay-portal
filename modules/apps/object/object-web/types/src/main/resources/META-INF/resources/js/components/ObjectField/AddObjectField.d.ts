@@ -21,6 +21,7 @@ interface IProps {
 	objectDefinitionExternalReferenceCode: string;
 	objectFieldTypes: ObjectFieldType[];
 	objectName: string;
+	onVisibilityChange: (value: boolean) => void;
 }
 export default function AddObjectField({
 	apiURL,
@@ -28,5 +29,6 @@ export default function AddObjectField({
 	objectDefinitionExternalReferenceCode,
 	objectFieldTypes,
 	objectName,
+	onVisibilityChange,
 }: IProps): JSX.Element;
 export {};

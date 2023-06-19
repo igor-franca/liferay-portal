@@ -30,8 +30,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.portlet.LiferayWindowState;
-import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -91,18 +89,6 @@ public class ObjectDefinitionsFieldsDisplayContext
 		return creationMenu;
 	}
 
-	public String getEditObjectFieldURL() throws Exception {
-		return PortletURLBuilder.create(
-			getPortletURL()
-		).setMVCRenderCommandName(
-			"/object_definitions/edit_object_field"
-		).setParameter(
-			"objectFieldId", "{id}"
-		).setWindowState(
-			LiferayWindowState.POP_UP
-		).buildString();
-	}
-
 	public List<FDSActionDropdownItem> getFDSActionDropdownItems()
 		throws Exception {
 
@@ -120,9 +106,9 @@ public class ObjectDefinitionsFieldsDisplayContext
 
 		return Arrays.asList(
 			new FDSActionDropdownItem(
-				getEditObjectFieldURL(), "view", "view",
+				"#", "view", "editObjectField",
 				LanguageUtil.get(objectRequestHelper.getRequest(), "view"),
-				"get", null, "sidePanel"),
+				"get", null, null),
 			fdsActionDropdownItem);
 	}
 

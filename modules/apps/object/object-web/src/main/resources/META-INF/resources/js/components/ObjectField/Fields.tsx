@@ -12,22 +12,26 @@
  * details.
  */
 
+import {VerticalBar} from '@clayui/core';
 import {
 	FrontendDataSet,
 
 	// @ts-ignore
 
 } from '@liferay/frontend-data-set-web';
-import {API, getLocalizableLabel} from '@liferay/object-js-components-web';
+import {
+	API,
+	SidebarCategory,
+	getLocalizableLabel,
+} from '@liferay/object-js-components-web';
 import classNames from 'classnames';
 import React, {useEffect, useState} from 'react';
 
-import {
-	IFDSTableProps,
-	defaultDataSetProps,
-	fdsItem,
-	formatActionURL,
-} from '../../utils/fds';
+import {IFDSTableProps, defaultDataSetProps, fdsItem} from '../../utils/fds';
+import AddObjectField from './AddObjectField';
+import EditObjectField from './EditObjectField';
+
+import './Fields.scss';
 
 interface ItemData {
 	id: number;
@@ -35,40 +39,67 @@ interface ItemData {
 	system?: boolean;
 }
 
+interface FieldsProps extends IFDSTableProps {
+	objectFieldTypes: ObjectFieldType[];
+	objectName: string;
+	creationLanguageId: Liferay.Language.Locale;
+	filterOperators: TFilterOperators;
+	forbiddenChars: string[];
+	forbiddenLastChars: string[];
+	forbiddenNames: string[];
+	isApproved: boolean;
+	isDefaultStorageType: boolean;
+	objectFieldId: number;
+	objectRelationshipId: number;
+	readOnly: boolean;
+	readOnlySidebarElements: SidebarCategory[];
+	sidebarElements: SidebarCategory[];
+	workflowStatusJSONArray: LabelValueObject[];
+}
+
 export default function Fields({
 	apiURL,
+	creationLanguageId,
 	creationMenu,
+	filterOperators,
+	forbiddenChars,
+	forbiddenLastChars,
+	forbiddenNames,
 	formName,
 	id,
+	isApproved,
+	isDefaultStorageType,
 	items,
 	objectDefinitionExternalReferenceCode,
-	url,
-}: IFDSTableProps) {
-	const [creationLanguageId, setCreationLanguageId] = useState<
-		Liferay.Language.Locale
-	>();
+	objectFieldId,
+	objectFieldTypes,
+	objectName,
+	objectRelationshipId,
+	readOnly,
+	readOnlySidebarElements,
+	sidebarElements,
+	workflowStatusJSONArray,
+}: FieldsProps) {
+	const [isModalVisible, setModalVisible] = useState<boolean>(false);
+	const [isVerticalBarVisible, setVerticalBarVisible] = useState<boolean>(
+		false
+	);
+
+	const sidePanelitems = [
+		{
+			title: 'editObjectFieldSideBar',
+		},
+	];
 
 	useEffect(() => {
-		const makeFetch = async () => {
-			const objectDefinition = await API.getObjectDefinitionByExternalReferenceCode(
-				objectDefinitionExternalReferenceCode
-			);
+		Liferay.on('addObjectField', () => setModalVisible(true));
 
-			setCreationLanguageId(objectDefinition.defaultLanguageId);
-		};
+		return () => Liferay.detach('addObjectField');
+	}, []);
 
-		makeFetch();
-	}, [objectDefinitionExternalReferenceCode]);
-
-	function objectFieldLabelDataRenderer({
-		itemData,
-		openSidePanel,
-		value,
-	}: fdsItem<ItemData>) {
+	function objectFieldLabelDataRenderer({value}: fdsItem<ItemData>) {
 		const handleEditField = () => {
-			openSidePanel({
-				url: formatActionURL(url, itemData.id),
-			});
+			setVerticalBarVisible(true);
 		};
 
 		return (
@@ -132,9 +163,16 @@ export default function Fields({
 			if (action.data.id === 'deleteObjectField') {
 				Liferay.fire('deleteObjectField', {itemData});
 			}
+
+			if (action.data.id === 'editObjectField') {
+				setVerticalBarVisible(true);
+			}
 		},
 		portletId:
 			'com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet',
+		showManagementBar: true,
+		showPagination: true,
+		showSearch: true,
 		style: 'fluid' as 'fluid',
 		views: [
 			{
@@ -181,5 +219,68 @@ export default function Fields({
 		],
 	};
 
-	return <FrontendDataSet {...dataSetProps} />;
+	return (
+		<>
+			<FrontendDataSet {...dataSetProps} />;
+			{isVerticalBarVisible && (
+				<VerticalBar
+					defaultActive="editObjectFieldSideBar"
+					defaultPanelWidth={900}
+					panelWidth={700}
+					panelWidthMax={900}
+					panelWidthMin={150}
+					position="right"
+					resize
+				>
+					<div className="lfr__object-edit-field-side-panel">
+						<VerticalBar.Content items={sidePanelitems}>
+							{(item) => (
+								<VerticalBar.Panel key={item.title}>
+									<EditObjectField
+										creationLanguageId={creationLanguageId}
+										filterOperators={filterOperators}
+										forbiddenChars={forbiddenChars}
+										forbiddenLastChars={forbiddenLastChars}
+										forbiddenNames={forbiddenNames}
+										isApproved={isApproved}
+										isDefaultStorageType={
+											isDefaultStorageType
+										}
+										objectDefinitionExternalReferenceCode=""
+										objectFieldId={objectFieldId}
+										objectFieldTypes={objectFieldTypes}
+										objectName={objectName}
+										objectRelationshipId={
+											objectRelationshipId
+										}
+										readOnly={readOnly}
+										setVerticalBarVisible={
+											setVerticalBarVisible
+										}
+										sidebarElements={sidebarElements}
+										workflowStatusJSONArray={
+											workflowStatusJSONArray
+										}
+									/>
+								</VerticalBar.Panel>
+							)}
+						</VerticalBar.Content>
+					</div>
+				</VerticalBar>
+			)}
+			
+			{isModalVisible && (
+				<AddObjectField
+					apiURL={apiURL as string}
+					creationLanguageId="ar_SA"
+					objectDefinitionExternalReferenceCode={
+						objectDefinitionExternalReferenceCode
+					}
+					objectFieldTypes={objectFieldTypes}
+					objectName={objectName}
+					onVisibilityChange={setModalVisible}
+				/>
+			)}
+		</>
+	);
 }

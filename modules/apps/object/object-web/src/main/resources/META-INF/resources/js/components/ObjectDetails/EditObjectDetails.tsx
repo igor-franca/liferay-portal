@@ -71,87 +71,85 @@ export default function EditObjectDetails({
 }: EditObjectDetailsProps) {
 	return (
 		<>
-			<div className="lfr-objects__object-definition-details">
-				<Sheet title={Liferay.Language.get('basic-information')}>
-					<ObjectDataContainer
-						dbTableName={dbTableName}
-						errors={errors}
-						handleChange={handleChange}
-						hasUpdateObjectDefinitionPermission={
-							hasUpdateObjectDefinitionPermission
-						}
-						isApproved={isApproved}
-						setValues={setValues}
-						values={values}
-					/>
+			<Sheet title={Liferay.Language.get('basic-information')}>
+				<ObjectDataContainer
+					dbTableName={dbTableName}
+					errors={errors}
+					handleChange={handleChange}
+					hasUpdateObjectDefinitionPermission={
+						hasUpdateObjectDefinitionPermission
+					}
+					isApproved={isApproved}
+					setValues={setValues}
+					values={values}
+				/>
 
-					<EntryDisplayContainer
+				<EntryDisplayContainer
+					errors={errors}
+					nonRelationshipObjectFieldsInfo={
+						nonRelationshipObjectFieldsInfo
+					}
+					objectFields={objectFields}
+					setValues={setValues}
+					values={values}
+				/>
+
+				{Liferay.FeatureFlags['LPS-135430'] && (
+					<div className="lfr__object-web-edit-object-details-external-data-source-container">
+						<ExternalDataSourceContainer
+							errors={errors}
+							setValues={setValues}
+							storageTypes={storageTypes}
+							values={values}
+						/>
+
+						<div className="lfr__object-web-edit-object-details-external-data-source-container-beta">
+							{values.storageType === 'salesforce' && (
+								<BetaButton />
+							)}
+						</div>
+					</div>
+				)}
+
+				<ScopeContainer
+					companyKeyValuePair={companyKeyValuePair}
+					errors={errors}
+					hasUpdateObjectDefinitionPermission={
+						hasUpdateObjectDefinitionPermission
+					}
+					isApproved={isApproved}
+					setValues={setValues}
+					siteKeyValuePair={siteKeyValuePair}
+					values={values}
+				/>
+
+				{(Liferay.FeatureFlags['LPS-167253']
+					? values.modifiable
+					: !values.system) && (
+					<AccountRestrictionContainer
 						errors={errors}
-						nonRelationshipObjectFieldsInfo={
-							nonRelationshipObjectFieldsInfo
-						}
+						isApproved={isApproved}
 						objectFields={objectFields}
 						setValues={setValues}
 						values={values}
 					/>
+				)}
 
-					{Liferay.FeatureFlags['LPS-135430'] && (
-						<div className="lfr__object-web-edit-object-details-external-data-source-container">
-							<ExternalDataSourceContainer
-								errors={errors}
-								setValues={setValues}
-								storageTypes={storageTypes}
-								values={values}
-							/>
+				<ConfigurationContainer
+					hasUpdateObjectDefinitionPermission={
+						hasUpdateObjectDefinitionPermission
+					}
+					setValues={setValues}
+					values={values}
+				/>
 
-							<div className="lfr__object-web-edit-object-details-external-data-source-container-beta">
-								{values.storageType === 'salesforce' && (
-									<BetaButton />
-								)}
-							</div>
-						</div>
-					)}
-
-					<ScopeContainer
-						companyKeyValuePair={companyKeyValuePair}
-						errors={errors}
-						hasUpdateObjectDefinitionPermission={
-							hasUpdateObjectDefinitionPermission
-						}
-						isApproved={isApproved}
-						setValues={setValues}
-						siteKeyValuePair={siteKeyValuePair}
-						values={values}
-					/>
-
-					{(Liferay.FeatureFlags['LPS-167253']
-						? values.modifiable
-						: !values.system) && (
-						<AccountRestrictionContainer
-							errors={errors}
-							isApproved={isApproved}
-							objectFields={objectFields}
-							setValues={setValues}
-							values={values}
-						/>
-					)}
-
-					<ConfigurationContainer
-						hasUpdateObjectDefinitionPermission={
-							hasUpdateObjectDefinitionPermission
-						}
+				{Liferay.FeatureFlags['LPS-146755'] && (
+					<TranslationsContainer
 						setValues={setValues}
 						values={values}
 					/>
-
-					{Liferay.FeatureFlags['LPS-146755'] && (
-						<TranslationsContainer
-							setValues={setValues}
-							values={values}
-						/>
-					)}
-				</Sheet>
-			</div>
+				)}
+			</Sheet>
 		</>
 	);
 }
