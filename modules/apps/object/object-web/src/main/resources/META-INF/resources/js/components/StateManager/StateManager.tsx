@@ -65,7 +65,7 @@ export default function StateManager({
 	}: fdsItem<ItemData>) {
 		const handleEditField = () => {
 			openSidePanel({
-				url: formatActionURL(url, itemData.id),
+				url: formatActionURL(url as string, itemData.id),
 			});
 		};
 

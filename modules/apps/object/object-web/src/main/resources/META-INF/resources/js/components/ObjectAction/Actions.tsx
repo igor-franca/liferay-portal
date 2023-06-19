@@ -81,7 +81,7 @@ export default function Actions({
 	}: fdsItem<ItemData>) {
 		const handleEditAction = () => {
 			openSidePanel({
-				url: formatActionURL(url, itemData.id),
+				url: formatActionURL(url as string, itemData.id),
 			});
 		};
 

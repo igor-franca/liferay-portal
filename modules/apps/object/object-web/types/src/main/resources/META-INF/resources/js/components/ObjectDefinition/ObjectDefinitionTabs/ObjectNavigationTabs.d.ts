@@ -12,26 +12,31 @@
  * details.
  */
 
-import {FormError} from '@liferay/object-js-components-web';
+import {FormError, SidebarCategory} from '@liferay/object-js-components-web';
 import React from 'react';
 import './ObjectNavigationTabs.scss';
 import {KeyValuePair} from '../../ObjectDetails/EditObjectDetails';
 interface ObjectNavigationProps {
+	creationLanguageId: Liferay.Language.Locale;
 	companyKeyValuePair: KeyValuePair[];
 	dbTableName: string;
 	errors: FormError<ObjectDefinition>;
 	externalReferenceCode: string;
 	fieldDropdownItems: [];
 	fieldId: string;
-	fieldUrl: string;
 	fieldsApiURL: string;
 	fieldsCreationMenu: {
 		primaryItems?: any[];
 		secondaryItems?: any[];
 	};
+	filterOperators: TFilterOperators;
+	forbiddenChars: string[];
+	forbiddenLastChars: string[];
+	forbiddenNames: string[];
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	hasPublishObjectPermission: boolean;
 	hasUpdateObjectDefinitionPermission: boolean;
+	isDefaultStorageType: boolean;
 	isApproved: boolean;
 	label: LocalizedValue<string>;
 	nonRelationshipObjectFieldsInfo: {
@@ -39,9 +44,14 @@ interface ObjectNavigationProps {
 		name: string;
 	}[];
 	objectDefinitionId: number;
+	objectRelationshipId: number;
+	objectFieldTypes: ObjectFieldType[];
 	objectFields: ObjectField[];
+	objectFieldId: number;
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
+	readOnly: boolean;
+	readOnlySidebarElements: SidebarCategory[];
 	screenNavigationCategoryKey: string;
 	setValues: (values: Partial<ObjectDefinition>) => void;
 	shortName: string;
@@ -49,31 +59,45 @@ interface ObjectNavigationProps {
 	storageTypes: LabelValueObject[];
 	system: boolean;
 	values: Partial<ObjectDefinition>;
+	sidebarElements: SidebarCategory[];
+	workflowStatusJSONArray: LabelValueObject[];
 }
 export declare function ObjectNavigationTabs({
 	companyKeyValuePair,
+	creationLanguageId,
 	dbTableName,
 	errors,
 	externalReferenceCode,
 	fieldDropdownItems,
 	fieldId,
-	fieldUrl,
 	fieldsApiURL,
 	fieldsCreationMenu,
+	filterOperators,
+	forbiddenChars,
+	forbiddenLastChars,
+	forbiddenNames,
 	handleChange,
 	hasPublishObjectPermission,
 	hasUpdateObjectDefinitionPermission,
 	isApproved,
+	isDefaultStorageType,
 	label,
 	nonRelationshipObjectFieldsInfo,
 	objectDefinitionId,
+	objectFieldId,
+	objectFieldTypes,
 	objectFields,
+	objectRelationshipId,
 	pluralLabel,
 	portletNamespace,
+	readOnly,
+	readOnlySidebarElements,
 	setValues,
 	shortName,
+	sidebarElements,
 	siteKeyValuePair,
 	storageTypes,
 	values,
+	workflowStatusJSONArray,
 }: ObjectNavigationProps): JSX.Element;
 export {};

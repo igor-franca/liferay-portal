@@ -4,6 +4,10 @@
 		margin-top: 4rem;
 		position: fixed;
 		width: -webkit-fill-available;
-		z-index: 1;
+		z-index: 2;
+
+		&-content {
+			padding: 10rem;
+		}
 	}
 }
