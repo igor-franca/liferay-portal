@@ -31,7 +31,6 @@ interface EditObjectFieldProps {
 	objectName: string;
 	objectRelationshipId: number;
 	readOnly: boolean;
-	readOnlySidebarElements: SidebarCategory[];
 	sidebarElements: SidebarCategory[];
 	workflowStatusJSONArray: LabelValueObject[];
 }
@@ -49,7 +48,6 @@ export default function EditObjectField({
 	objectName,
 	objectRelationshipId,
 	readOnly,
-	readOnlySidebarElements,
 	sidebarElements,
 	workflowStatusJSONArray,
 }: EditObjectFieldProps): JSX.Element;
