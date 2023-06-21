@@ -15,6 +15,7 @@
 package com.liferay.object.web.internal.object.definitions.frontend.taglib.servlet.taglib;
 
 import com.liferay.frontend.taglib.servlet.taglib.ScreenNavigationEntry;
+import com.liferay.object.constants.ObjectWebKeys;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.service.ObjectDefinitionService;
 import com.liferay.object.service.ObjectFieldService;
@@ -24,7 +25,6 @@ import com.liferay.object.web.internal.object.definitions.constants.ObjectDefini
 import com.liferay.object.web.internal.object.definitions.display.context.ObjectDefinitionsRelationshipsDisplayContext;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
-import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.IOException;
 
@@ -52,7 +52,8 @@ public class RelationshipsObjectDefinitionsScreenNavigationEntry
 
 	@Override
 	public String getJspPath() {
-		return "/object_definitions/object_definition/relationships.jsp";
+		return "/object_definitions/object_definition" +
+			"/edit_object_definition.jsp";
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class RelationshipsObjectDefinitionsScreenNavigationEntry
 		throws IOException {
 
 		httpServletRequest.setAttribute(
-			WebKeys.PORTLET_DISPLAY_CONTEXT,
+			ObjectWebKeys.OBJECT_DEFINITIONS_RELATIONSHIPS_DISPLAY_CONTEXT,
 			new ObjectDefinitionsRelationshipsDisplayContext(
 				_ffOneToOneRelationshipConfigurationActivator,
 				httpServletRequest, _objectDefinitionModelResourcePermission,

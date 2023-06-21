@@ -23,6 +23,8 @@ ObjectDefinition objectDefinition = (ObjectDefinition)request.getAttribute(Objec
 ObjectDefinitionsDetailsDisplayContext objectDefinitionsDetailsDisplayContext = (ObjectDefinitionsDetailsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_DETAILS_DISPLAY_CONTEXT);
 ObjectDefinitionsFieldsDisplayContext objectDefinitionsFieldsDisplayContext = (ObjectDefinitionsFieldsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_FIELDS_DISPLAY_CONTEXT);
 
+
+ObjectDefinitionsRelationshipsDisplayContext objectDefinitionsRelationshipsDisplayContext = (ObjectDefinitionsRelationshipsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_RELATIONSHIPS_DISPLAY_CONTEXT);
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(backURL);
 
@@ -87,6 +89,16 @@ renderResponse.setTitle(LanguageUtil.format(request, "edit-x", objectDefinition.
 				"readOnly", !objectDefinitionsFieldsDisplayContext.hasUpdateObjectDefinitionPermission()
 			).put(
 				"readOnlySidebarElements", objectDefinitionsFieldsDisplayContext.getObjectCodeEditorElements()
+			).put(
+				"relationshipCreationMenu", objectDefinitionsRelationshipsDisplayContext.getCreationMenu()
+			).put(
+				"relationshipDropdownItems", objectDefinitionsRelationshipsDisplayContext.getFDSActionDropdownItems()
+			).put(
+				"relationshipId", ObjectDefinitionsFDSNames.OBJECT_RELATIONSHIPS
+			).put(
+				"relationshipsApiURL", objectDefinitionsRelationshipsDisplayContext.getAPIURL()
+			).put(
+				"relationshipUrl", objectDefinitionsRelationshipsDisplayContext.getEditObjectRelationshipURL()
 			).put(
 				"screenNavigationCategoryKey", ParamUtil.getString(request, "screenNavigationCategoryKey")
 			).put(

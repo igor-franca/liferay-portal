@@ -168,6 +168,7 @@ export default function Relationships({
 						},
 					],
 				},
+				style: 'fluid' as 'fluid',
 				thumbnail: 'table',
 			},
 		],

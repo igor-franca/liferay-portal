@@ -50,6 +50,15 @@ interface EditObjectDefinitionProps {
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
 	readOnly: boolean;
+	readOnlySidebarElements: SidebarCategory[];
+	relationshipDropdownItems: [];
+	relationshipsApiURL: string;
+	relationshipCreationMenu: {
+		primaryItems?: any[];
+		secondaryItems?: any[];
+	};
+	relationshipId: string;
+	relationshipUrl: string;
 	screenNavigationCategoryKey: string;
 	setValues: (values: Partial<ObjectDefinition>) => void;
 	shortName: string;
@@ -85,6 +94,12 @@ export default function EditObjectDefinition({
 	pluralLabel,
 	portletNamespace,
 	readOnly,
+	readOnlySidebarElements,
+	relationshipCreationMenu,
+	relationshipDropdownItems,
+	relationshipId,
+	relationshipUrl,
+	relationshipsApiURL,
 	screenNavigationCategoryKey,
 	shortName,
 	sidebarElements,
