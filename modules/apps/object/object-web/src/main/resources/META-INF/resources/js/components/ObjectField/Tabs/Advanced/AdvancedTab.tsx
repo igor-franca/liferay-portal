@@ -47,7 +47,7 @@ export function AdvancedTab({
 						values.businessType === 'Aggregation' ||
 						values.businessType === 'Formula'
 					}
-					readOnlySidebarElements={readOnlySidebarElements}
+					readOnlySidebarElements={sidebarElements}
 					requiredField={values.required as boolean}
 					setValues={setValues}
 					values={values}

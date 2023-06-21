@@ -32,7 +32,7 @@ ObjectAction objectAction = objectDefinitionsActionsDisplayContext.getObjectActi
 		).put(
 			"objectAction", objectDefinitionsActionsDisplayContext.getObjectActionJSONObject(objectAction)
 		).put(
-			"objectActionCodeEditorElements", objectDefinitionsActionsDisplayContext.getObjectActionCodeEditorElements()
+			"objectActionCodeEditorElements", objectDefinitionsActionsDisplayContext.getObjectCodeEditorElements()
 		).put(
 			"objectActionExecutors", objectDefinitionsActionsDisplayContext.getObjectActionExecutorsJSONArray()
 		).put(
