@@ -23,12 +23,10 @@ import com.liferay.object.action.trigger.ObjectActionTrigger;
 import com.liferay.object.action.trigger.ObjectActionTriggerRegistry;
 import com.liferay.object.admin.rest.dto.v1_0.util.ObjectActionUtil;
 import com.liferay.object.constants.ObjectActionTriggerConstants;
-import com.liferay.object.constants.ObjectFieldConstants;
 import com.liferay.object.constants.ObjectWebKeys;
 import com.liferay.object.model.ObjectAction;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.service.ObjectDefinitionLocalService;
-import com.liferay.object.web.internal.object.definitions.display.context.util.ObjectCodeEditorUtil;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -43,7 +41,6 @@ import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermi
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
@@ -113,14 +110,6 @@ public class ObjectDefinitionsActionsDisplayContext
 
 		return (ObjectAction)httpServletRequest.getAttribute(
 			ObjectWebKeys.OBJECT_ACTION);
-	}
-
-	public List<Map<String, Object>> getObjectActionCodeEditorElements() {
-		return ObjectCodeEditorUtil.getCodeEditorElements(
-			true, true, objectRequestHelper.getLocale(),
-			getObjectDefinitionId(),
-			objectField -> !objectField.compareBusinessType(
-				ObjectFieldConstants.BUSINESS_TYPE_AGGREGATION));
 	}
 
 	public ObjectActionExecutor getObjectActionExecutor() {

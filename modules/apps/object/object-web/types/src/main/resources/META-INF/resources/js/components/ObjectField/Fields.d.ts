@@ -22,6 +22,5 @@ export default function Fields({
 	id,
 	items,
 	objectDefinitionExternalReferenceCode,
-	style,
 	url,
 }: IFDSTableProps): JSX.Element;

@@ -19,7 +19,6 @@ import {ObjectFieldErrors} from '../../ObjectFieldFormBase';
 interface AdvancedTabProps {
 	creationLanguageId: Liferay.Language.Locale;
 	errors: ObjectFieldErrors;
-	readOnlySidebarElements: SidebarCategory[];
 	setValues: (value: Partial<ObjectField>) => void;
 	sidebarElements: SidebarCategory[];
 	values: Partial<ObjectField>;
@@ -27,7 +26,6 @@ interface AdvancedTabProps {
 export declare function AdvancedTab({
 	creationLanguageId,
 	errors,
-	readOnlySidebarElements,
 	setValues,
 	sidebarElements,
 	values,
