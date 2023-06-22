@@ -47,10 +47,8 @@ interface FieldsProps extends IFDSTableProps {
 	forbiddenNames: string[];
 	isApproved: boolean;
 	isDefaultStorageType: boolean;
-	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
 	objectName: string;
-	objectRelationshipId: number;
 	readOnly: boolean;
 	sidebarElements: SidebarCategory[];
 	workflowStatusJSONArray: LabelValueObject[];
@@ -71,10 +69,8 @@ export default function Fields({
 	isDefaultStorageType,
 	items,
 	objectDefinitionExternalReferenceCode,
-	objectFieldId,
 	objectFieldTypes,
 	objectName,
-	objectRelationshipId,
 	readOnly,
 	sidebarElements,
 	workflowStatusJSONArray,
@@ -93,6 +89,7 @@ export default function Fields({
 		setShowDeletionNotAllowedModal,
 	] = useState<boolean>(false);
 	const [showVerticalBar, setShowVerticalBar] = useState<boolean>(false);
+	const [objectFieldId, setObjetFieldId] = useState<number>();
 
 	const sidePanelitems = [
 		{
@@ -113,10 +110,14 @@ export default function Fields({
 		}, 500);
 	}
 
-	function objectFieldLabelDataRenderer({value}: fdsItem<ItemData>) {
+	function objectFieldLabelDataRenderer({
+		itemData,
+		value,
+	}: fdsItem<ItemData>) {
 		const handleEditField = () => {
 			setShowVerticalBar(true);
 			settriggerSideBarAnimation(true);
+			setObjetFieldId(itemData.id);
 		};
 
 		return (
@@ -216,6 +217,7 @@ export default function Fields({
 			}
 
 			if (action.data.id === 'editObjectField') {
+				setObjetFieldId(itemData.id);
 				setShowVerticalBar(true);
 				settriggerSideBarAnimation(true);
 			}
@@ -304,13 +306,12 @@ export default function Fields({
 										isDefaultStorageType={
 											isDefaultStorageType
 										}
-										objectDefinitionExternalReferenceCode=""
-										objectFieldId={objectFieldId}
+										objectDefinitionExternalReferenceCode={
+											objectDefinitionExternalReferenceCode
+										}
+										objectFieldId={objectFieldId as number}
 										objectFieldTypes={objectFieldTypes}
 										objectName={objectName}
-										objectRelationshipId={
-											objectRelationshipId
-										}
 										readOnly={readOnly}
 										sidebarElements={sidebarElements}
 										workflowStatusJSONArray={
