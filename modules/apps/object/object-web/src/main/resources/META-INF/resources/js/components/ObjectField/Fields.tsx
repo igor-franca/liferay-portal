@@ -84,6 +84,9 @@ export default function Fields({
 	const [isVerticalBarVisible, setVerticalBarVisible] = useState<boolean>(
 		false
 	);
+	const [triggerSideBarAnimation, settriggerSideBarAnimation] = useState<
+		boolean
+	>(false);
 
 	const sidePanelitems = [
 		{
@@ -97,9 +100,17 @@ export default function Fields({
 		return () => Liferay.detach('addObjectField');
 	}, []);
 
+	function closeVerticalBar() {
+		settriggerSideBarAnimation(false);
+		setTimeout(() => {
+			setVerticalBarVisible(false);
+		}, 500);
+	}
+
 	function objectFieldLabelDataRenderer({value}: fdsItem<ItemData>) {
 		const handleEditField = () => {
 			setVerticalBarVisible(true);
+			settriggerSideBarAnimation(true);
 		};
 
 		return (
@@ -166,6 +177,7 @@ export default function Fields({
 
 			if (action.data.id === 'editObjectField') {
 				setVerticalBarVisible(true);
+				settriggerSideBarAnimation(true);
 			}
 		},
 		portletId:
@@ -224,10 +236,15 @@ export default function Fields({
 			<FrontendDataSet {...dataSetProps} />;
 			{isVerticalBarVisible && (
 				<VerticalBar
+					className={classNames(
+						triggerSideBarAnimation
+							? 'lfr__edit-object-field-side-bar-open'
+							: 'lfr__edit-object-field-side-bar-closed'
+					)}
 					defaultActive="editObjectFieldSideBar"
-					defaultPanelWidth={900}
+					defaultPanelWidth={1200}
 					panelWidth={700}
-					panelWidthMax={900}
+					panelWidthMax={1200}
 					panelWidthMin={150}
 					position="right"
 					resize
@@ -237,6 +254,7 @@ export default function Fields({
 							{(item) => (
 								<VerticalBar.Panel key={item.title}>
 									<EditObjectField
+										closeVerticalBar={closeVerticalBar}
 										creationLanguageId={creationLanguageId}
 										filterOperators={filterOperators}
 										forbiddenChars={forbiddenChars}
@@ -254,9 +272,6 @@ export default function Fields({
 											objectRelationshipId
 										}
 										readOnly={readOnly}
-										setVerticalBarVisible={
-											setVerticalBarVisible
-										}
 										sidebarElements={sidebarElements}
 										workflowStatusJSONArray={
 											workflowStatusJSONArray
@@ -268,7 +283,6 @@ export default function Fields({
 					</div>
 				</VerticalBar>
 			)}
-			
 			{isModalVisible && (
 				<AddObjectField
 					apiURL={apiURL as string}
