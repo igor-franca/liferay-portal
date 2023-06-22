@@ -14,8 +14,16 @@
 
 /// <reference types="react" />
 
-export default function ModalWithProvider({
-	baseResourceURL,
-}: {
-	baseResourceURL: string;
-}): JSX.Element;
+interface ModalDeleteObjectFieldProps {
+	objectField: ObjectField;
+	setModalVisibility: (value: boolean) => void;
+	setObjectField: (values: ObjectField | null) => void;
+	showDeletionNotAllowedModal: boolean;
+}
+export declare function ModalDeleteObjectField({
+	objectField,
+	setModalVisibility,
+	setObjectField,
+	showDeletionNotAllowedModal,
+}: ModalDeleteObjectFieldProps): JSX.Element;
+export {};

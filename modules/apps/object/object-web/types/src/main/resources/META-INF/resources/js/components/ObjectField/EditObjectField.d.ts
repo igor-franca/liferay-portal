@@ -35,6 +35,7 @@ interface EditObjectFieldProps {
 	workflowStatusJSONArray: LabelValueObject[];
 }
 export default function EditObjectField({
+	closeVerticalBar,
 	creationLanguageId,
 	filterOperators,
 	forbiddenChars,
@@ -48,7 +49,6 @@ export default function EditObjectField({
 	objectName,
 	objectRelationshipId,
 	readOnly,
-	closeVerticalBar,
 	sidebarElements,
 	workflowStatusJSONArray,
 }: EditObjectFieldProps): JSX.Element;

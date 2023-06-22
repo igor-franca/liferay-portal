@@ -29,12 +29,16 @@ portletDisplay.setURLBack(backURL);
 renderResponse.setTitle(LanguageUtil.format(request, "edit-x", objectDefinition.getLabel(locale, true), false));
 %>
 
+<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" var="baseResourceURL" />
+
 <div class="lfr-object__edit-object-definition">
 	<react:component
 		module="js/components/ObjectDefinition/EditObjectDefinition"
 		props='<%=
 			HashMapBuilder.<String, Object>put(
 				"backURL", ParamUtil.getString(request, "backURL", String.valueOf(renderResponse.createRenderURL()))
+			).put(
+				"baseResourceURL", String.valueOf(baseResourceURL)
 			).put(
 				"companyKeyValuePair", objectDefinitionsDetailsDisplayContext.getScopeKeyValuePairs("company")
 			).put(
