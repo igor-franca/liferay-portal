@@ -9,3 +9,29 @@ div[id$='editObjectFieldSideBar'] {
 .c-slideout-end {
 	top: 9.9rem;
 }
+
+.lfr__edit-object-field-side-bar-open {
+	animation: open-side-panel 0.5s;
+}
+
+.lfr__edit-object-field-side-bar-closed {
+	animation: closed-side-panel 0.5s;
+}
+
+@keyframes open-side-panel {
+	from {
+		right: -50%;
+	}
+	to {
+		right: 0;
+	}
+}
+
+@keyframes closed-side-panel {
+	from {
+		right: 0;
+	}
+	to {
+		right: -50%;
+	}
+}
