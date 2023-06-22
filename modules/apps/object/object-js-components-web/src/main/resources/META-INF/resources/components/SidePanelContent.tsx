@@ -115,6 +115,7 @@ export function SidePanelForm({
 	customLabel,
 	onSubmit,
 	readOnly,
+	setShowVerticalBar,
 	title,
 }: ISidePanelFormProps) {
 	return (
@@ -123,6 +124,7 @@ export function SidePanelForm({
 				closeVerticalBar={closeVerticalBar}
 				customLabel={customLabel}
 				readOnly={readOnly}
+				setShowVerticalBar={setShowVerticalBar}
 				title={title}
 			>
 				{children}
@@ -143,6 +145,7 @@ interface CommonProps extends IContainerProps {
 		message: string;
 	};
 	readOnly?: boolean;
+	setShowVerticalBar?: (values: boolean) => void;
 	title: string;
 }
 
