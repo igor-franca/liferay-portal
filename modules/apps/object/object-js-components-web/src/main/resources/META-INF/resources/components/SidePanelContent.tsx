@@ -46,10 +46,10 @@ export function openToast(options: {
 export function SidePanelContent({
 	children,
 	className,
+	closeVerticalBar,
 	customLabel,
 	onSave,
 	readOnly,
-	setVerticalBarVisible,
 	title,
 }: IProps) {
 	const saveProps: {
@@ -80,9 +80,7 @@ export function SidePanelContent({
 					displayType="unstyled"
 					monospaced={false}
 					onClick={() =>
-						setVerticalBarVisible
-							? setVerticalBarVisible(false)
-							: closeSidePanel()
+						closeVerticalBar ? closeVerticalBar() : closeSidePanel()
 					}
 					symbol="times"
 				/>
@@ -97,9 +95,7 @@ export function SidePanelContent({
 				<ClayButton
 					displayType="secondary"
 					onClick={() =>
-						setVerticalBarVisible
-							? setVerticalBarVisible(false)
-							: closeSidePanel()
+						closeVerticalBar ? closeVerticalBar() : closeSidePanel()
 					}
 				>
 					{Liferay.Language.get('cancel')}
@@ -115,18 +111,18 @@ export function SidePanelContent({
 
 export function SidePanelForm({
 	children,
+	closeVerticalBar,
 	customLabel,
 	onSubmit,
 	readOnly,
-	setVerticalBarVisible,
 	title,
 }: ISidePanelFormProps) {
 	return (
 		<ClayForm onSubmit={onSubmit}>
 			<SidePanelContent
+				closeVerticalBar={closeVerticalBar}
 				customLabel={customLabel}
 				readOnly={readOnly}
-				setVerticalBarVisible={setVerticalBarVisible}
 				title={title}
 			>
 				{children}
@@ -141,13 +137,13 @@ interface IContainerProps {
 }
 
 interface CommonProps extends IContainerProps {
+	closeVerticalBar?: () => void;
 	customLabel?: {
 		displayType: 'success' | 'info';
 		message: string;
 	};
 	readOnly?: boolean;
 	title: string;
-	setVerticalBarVisible?: (values: boolean) => void;
 }
 
 interface IProps extends CommonProps {
