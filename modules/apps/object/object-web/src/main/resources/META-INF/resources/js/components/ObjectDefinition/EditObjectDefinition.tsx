@@ -27,8 +27,9 @@ import {useObjectDefinitionForm} from './useObjectDefinitionForm';
 
 interface EditObjectDefinitionProps {
 	backURL: string;
-	creationLanguageId: Liferay.Language.Locale;
+	baseResourceURL: string;
 	companyKeyValuePair: KeyValuePair[];
+	creationLanguageId: Liferay.Language.Locale;
 	dbTableName: string;
 	externalReferenceCode: string;
 	fieldDropdownItems: [];
@@ -53,26 +54,26 @@ interface EditObjectDefinitionProps {
 		name: string;
 	}[];
 	objectDefinitionId: number;
+	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
 	objectRelationshipId: number;
-	objectFieldId: number;
 	onSubmit: (draft: boolean) => void;
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
 	readOnly: boolean;
-	readOnlySidebarElements: SidebarCategory[];
 	screenNavigationCategoryKey: string;
 	setValues: (values: Partial<ObjectDefinition>) => void;
 	shortName: string;
 	sidebarElements: SidebarCategory[];
-	workflowStatusJSONArray: LabelValueObject[];
 	siteKeyValuePair: KeyValuePair[];
 	storageTypes: LabelValueObject[];
 	system: boolean;
+	workflowStatusJSONArray: LabelValueObject[];
 }
 
 export default function EditObjectDefinition({
 	backURL,
+	baseResourceURL,
 	companyKeyValuePair,
 	creationLanguageId,
 	dbTableName,
@@ -98,7 +99,6 @@ export default function EditObjectDefinition({
 	pluralLabel,
 	portletNamespace,
 	readOnly,
-	readOnlySidebarElements,
 	screenNavigationCategoryKey,
 	shortName,
 	sidebarElements,
@@ -183,6 +183,7 @@ export default function EditObjectDefinition({
 			/>
 
 			<ObjectNavigationTabs
+				baseResourceURL={baseResourceURL}
 				companyKeyValuePair={companyKeyValuePair}
 				creationLanguageId={creationLanguageId}
 				dbTableName={dbTableName}
@@ -215,7 +216,6 @@ export default function EditObjectDefinition({
 				pluralLabel={pluralLabel}
 				portletNamespace={portletNamespace}
 				readOnly={readOnly}
-				readOnlySidebarElements={readOnlySidebarElements}
 				screenNavigationCategoryKey={screenNavigationCategoryKey}
 				setValues={setValues}
 				shortName={shortName}

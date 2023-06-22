@@ -17,8 +17,9 @@ import React from 'react';
 import './ObjectNavigationTabs.scss';
 import {KeyValuePair} from '../../ObjectDetails/EditObjectDetails';
 interface ObjectNavigationProps {
-	creationLanguageId: Liferay.Language.Locale;
+	baseResourceURL: string;
 	companyKeyValuePair: KeyValuePair[];
+	creationLanguageId: Liferay.Language.Locale;
 	dbTableName: string;
 	errors: FormError<ObjectDefinition>;
 	externalReferenceCode: string;
@@ -36,33 +37,33 @@ interface ObjectNavigationProps {
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	hasPublishObjectPermission: boolean;
 	hasUpdateObjectDefinitionPermission: boolean;
-	isDefaultStorageType: boolean;
 	isApproved: boolean;
+	isDefaultStorageType: boolean;
 	label: LocalizedValue<string>;
 	nonRelationshipObjectFieldsInfo: {
 		label: LocalizedValue<string>;
 		name: string;
 	}[];
 	objectDefinitionId: number;
-	objectRelationshipId: number;
+	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
 	objectFields: ObjectField[];
-	objectFieldId: number;
+	objectRelationshipId: number;
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
 	readOnly: boolean;
-	readOnlySidebarElements: SidebarCategory[];
 	screenNavigationCategoryKey: string;
 	setValues: (values: Partial<ObjectDefinition>) => void;
 	shortName: string;
+	sidebarElements: SidebarCategory[];
 	siteKeyValuePair: KeyValuePair[];
 	storageTypes: LabelValueObject[];
 	system: boolean;
 	values: Partial<ObjectDefinition>;
-	sidebarElements: SidebarCategory[];
 	workflowStatusJSONArray: LabelValueObject[];
 }
 export declare function ObjectNavigationTabs({
+	baseResourceURL,
 	companyKeyValuePair,
 	creationLanguageId,
 	dbTableName,
@@ -91,7 +92,6 @@ export declare function ObjectNavigationTabs({
 	pluralLabel,
 	portletNamespace,
 	readOnly,
-	readOnlySidebarElements,
 	setValues,
 	shortName,
 	sidebarElements,

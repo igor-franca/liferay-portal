@@ -13,23 +13,22 @@
  */
 
 import {VerticalBar} from '@clayui/core';
-import {
-	FrontendDataSet,
-
-	// @ts-ignore
-
-} from '@liferay/frontend-data-set-web';
+import {FrontendDataSet} from '@liferay/frontend-data-set-web';
 import {
 	API,
 	SidebarCategory,
 	getLocalizableLabel,
 } from '@liferay/object-js-components-web';
 import classNames from 'classnames';
+import {createResourceURL} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
 
+import {defaultLanguageId} from '../../utils/constants';
 import {IFDSTableProps, defaultDataSetProps, fdsItem} from '../../utils/fds';
 import AddObjectField from './AddObjectField';
 import EditObjectField from './EditObjectField';
+import {ModalDeleteObjectField} from './ModalDeleteObjectField';
+import {deleteObjectField} from './deleteObjectFieldUtil';
 
 import './Fields.scss';
 
@@ -40,8 +39,7 @@ interface ItemData {
 }
 
 interface FieldsProps extends IFDSTableProps {
-	objectFieldTypes: ObjectFieldType[];
-	objectName: string;
+	baseResourceURL: string;
 	creationLanguageId: Liferay.Language.Locale;
 	filterOperators: TFilterOperators;
 	forbiddenChars: string[];
@@ -50,15 +48,17 @@ interface FieldsProps extends IFDSTableProps {
 	isApproved: boolean;
 	isDefaultStorageType: boolean;
 	objectFieldId: number;
+	objectFieldTypes: ObjectFieldType[];
+	objectName: string;
 	objectRelationshipId: number;
 	readOnly: boolean;
-	readOnlySidebarElements: SidebarCategory[];
 	sidebarElements: SidebarCategory[];
 	workflowStatusJSONArray: LabelValueObject[];
 }
 
 export default function Fields({
 	apiURL,
+	baseResourceURL,
 	creationLanguageId,
 	creationMenu,
 	filterOperators,
@@ -76,17 +76,23 @@ export default function Fields({
 	objectName,
 	objectRelationshipId,
 	readOnly,
-	readOnlySidebarElements,
 	sidebarElements,
 	workflowStatusJSONArray,
 }: FieldsProps) {
-	const [isModalVisible, setModalVisible] = useState<boolean>(false);
-	const [isVerticalBarVisible, setVerticalBarVisible] = useState<boolean>(
-		false
-	);
 	const [triggerSideBarAnimation, settriggerSideBarAnimation] = useState<
 		boolean
 	>(false);
+	const [
+		deletedObjectField,
+		setDeletedObjectField,
+	] = useState<ObjectField | null>(null);
+	const [showAddModalField, setShowAddFieldModal] = useState<boolean>(false);
+	const [showDeletionModal, setShowDeletionModal] = useState<boolean>(false);
+	const [
+		showDeletionNotAllowedModal,
+		setShowDeletionNotAllowedModal,
+	] = useState<boolean>(false);
+	const [showVerticalBar, setShowVerticalBar] = useState<boolean>(false);
 
 	const sidePanelitems = [
 		{
@@ -95,7 +101,7 @@ export default function Fields({
 	];
 
 	useEffect(() => {
-		Liferay.on('addObjectField', () => setModalVisible(true));
+		Liferay.on('addObjectField', () => setShowAddFieldModal(true));
 
 		return () => Liferay.detach('addObjectField');
 	}, []);
@@ -103,13 +109,13 @@ export default function Fields({
 	function closeVerticalBar() {
 		settriggerSideBarAnimation(false);
 		setTimeout(() => {
-			setVerticalBarVisible(false);
+			setShowVerticalBar(false);
 		}, 500);
 	}
 
 	function objectFieldLabelDataRenderer({value}: fdsItem<ItemData>) {
 		const handleEditField = () => {
-			setVerticalBarVisible(true);
+			setShowVerticalBar(true);
 			settriggerSideBarAnimation(true);
 		};
 
@@ -169,14 +175,48 @@ export default function Fields({
 			itemData,
 		}: {
 			action: {data: {id: string}};
-			itemData: {id: string};
+			itemData: ObjectField;
 		}) {
 			if (action.data.id === 'deleteObjectField') {
-				Liferay.fire('deleteObjectField', {itemData});
+				const makeFetch = async () => {
+					const url = createResourceURL(baseResourceURL, {
+						objectFieldId: itemData.id,
+						p_p_resource_id:
+							'/object_definitions/get_object_field_delete_info',
+					}).href;
+					const showModalResponse = await API.fetchJSON<{
+						showDeletionModal: boolean;
+						showDeletionNotAllowedModal: boolean;
+					}>(url);
+
+					if (showModalResponse.showDeletionModal) {
+						setShowDeletionModal(
+							showModalResponse.showDeletionModal
+						);
+						setShowDeletionNotAllowedModal(
+							showModalResponse.showDeletionNotAllowedModal
+						);
+						setDeletedObjectField(itemData);
+
+						return;
+					}
+
+					await deleteObjectField(
+						defaultLanguageId,
+						itemData.id,
+						itemData
+					);
+
+					setTimeout(() => window.location.reload(), 1500);
+
+					return;
+				};
+
+				makeFetch();
 			}
 
 			if (action.data.id === 'editObjectField') {
-				setVerticalBarVisible(true);
+				setShowVerticalBar(true);
 				settriggerSideBarAnimation(true);
 			}
 		},
@@ -233,8 +273,8 @@ export default function Fields({
 
 	return (
 		<>
-			<FrontendDataSet {...dataSetProps} />;
-			{isVerticalBarVisible && (
+			<FrontendDataSet {...dataSetProps} />
+			{showVerticalBar && (
 				<VerticalBar
 					className={classNames(
 						triggerSideBarAnimation
@@ -283,7 +323,8 @@ export default function Fields({
 					</div>
 				</VerticalBar>
 			)}
-			{isModalVisible && (
+
+			{showAddModalField && (
 				<AddObjectField
 					apiURL={apiURL as string}
 					creationLanguageId="ar_SA"
@@ -292,7 +333,16 @@ export default function Fields({
 					}
 					objectFieldTypes={objectFieldTypes}
 					objectName={objectName}
-					onVisibilityChange={setModalVisible}
+					onVisibilityChange={setShowAddFieldModal}
+				/>
+			)}
+
+			{showDeletionModal && (
+				<ModalDeleteObjectField
+					objectField={deletedObjectField as ObjectField}
+					setModalVisibility={setShowDeletionModal}
+					setObjectField={setDeletedObjectField}
+					showDeletionNotAllowedModal={showDeletionNotAllowedModal}
 				/>
 			)}
 		</>

@@ -18,8 +18,7 @@ import {SidebarCategory} from '@liferay/object-js-components-web';
 import {IFDSTableProps} from '../../utils/fds';
 import './Fields.scss';
 interface FieldsProps extends IFDSTableProps {
-	objectFieldTypes: ObjectFieldType[];
-	objectName: string;
+	baseResourceURL: string;
 	creationLanguageId: Liferay.Language.Locale;
 	filterOperators: TFilterOperators;
 	forbiddenChars: string[];
@@ -28,14 +27,16 @@ interface FieldsProps extends IFDSTableProps {
 	isApproved: boolean;
 	isDefaultStorageType: boolean;
 	objectFieldId: number;
+	objectFieldTypes: ObjectFieldType[];
+	objectName: string;
 	objectRelationshipId: number;
 	readOnly: boolean;
-	readOnlySidebarElements: SidebarCategory[];
 	sidebarElements: SidebarCategory[];
 	workflowStatusJSONArray: LabelValueObject[];
 }
 export default function Fields({
 	apiURL,
+	baseResourceURL,
 	creationLanguageId,
 	creationMenu,
 	filterOperators,
@@ -53,7 +54,6 @@ export default function Fields({
 	objectName,
 	objectRelationshipId,
 	readOnly,
-	readOnlySidebarElements,
 	sidebarElements,
 	workflowStatusJSONArray,
 }: FieldsProps): JSX.Element;

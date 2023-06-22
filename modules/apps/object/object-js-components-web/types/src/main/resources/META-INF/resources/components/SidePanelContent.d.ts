@@ -23,18 +23,20 @@ export declare function openToast(options: {
 export declare function SidePanelContent({
 	children,
 	className,
+	closeVerticalBar,
 	customLabel,
 	onSave,
 	readOnly,
-	closeVerticalBar,
+	setShowVerticalBar,
 	title,
 }: IProps): JSX.Element;
 export declare function SidePanelForm({
 	children,
+	closeVerticalBar,
 	customLabel,
 	onSubmit,
 	readOnly,
-	closeVerticalBar,
+	setShowVerticalBar,
 	title,
 }: ISidePanelFormProps): JSX.Element;
 interface IContainerProps {
@@ -42,13 +44,14 @@ interface IContainerProps {
 	className?: string;
 }
 interface CommonProps extends IContainerProps {
+	closeVerticalBar?: () => void;
 	customLabel?: {
 		displayType: 'success' | 'info';
 		message: string;
 	};
 	readOnly?: boolean;
+	setShowVerticalBar?: (values: boolean) => void;
 	title: string;
-	closeVerticalBar?: () => void;
 }
 interface IProps extends CommonProps {
 	onSave?: () => void;
