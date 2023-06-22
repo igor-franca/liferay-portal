@@ -45,10 +45,8 @@ interface ObjectNavigationProps {
 		name: string;
 	}[];
 	objectDefinitionId: number;
-	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
 	objectFields: ObjectField[];
-	objectRelationshipId: number;
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
 	readOnly: boolean;
@@ -85,10 +83,8 @@ export declare function ObjectNavigationTabs({
 	label,
 	nonRelationshipObjectFieldsInfo,
 	objectDefinitionId,
-	objectFieldId,
 	objectFieldTypes,
 	objectFields,
-	objectRelationshipId,
 	pluralLabel,
 	portletNamespace,
 	readOnly,

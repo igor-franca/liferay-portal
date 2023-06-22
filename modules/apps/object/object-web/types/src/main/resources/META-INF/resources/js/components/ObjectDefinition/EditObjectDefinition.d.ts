@@ -45,9 +45,7 @@ interface EditObjectDefinitionProps {
 		name: string;
 	}[];
 	objectDefinitionId: number;
-	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
-	objectRelationshipId: number;
 	onSubmit: (draft: boolean) => void;
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
@@ -83,9 +81,7 @@ export default function EditObjectDefinition({
 	label,
 	nonRelationshipObjectFieldsInfo,
 	objectDefinitionId,
-	objectFieldId,
 	objectFieldTypes,
-	objectRelationshipId,
 	pluralLabel,
 	portletNamespace,
 	readOnly,

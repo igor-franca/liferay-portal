@@ -51,10 +51,8 @@ interface ObjectNavigationProps {
 		name: string;
 	}[];
 	objectDefinitionId: number;
-	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
 	objectFields: ObjectField[];
-	objectRelationshipId: number;
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
 	readOnly: boolean;
@@ -92,10 +90,8 @@ export function ObjectNavigationTabs({
 	label,
 	nonRelationshipObjectFieldsInfo,
 	objectDefinitionId,
-	objectFieldId,
 	objectFieldTypes,
 	objectFields,
-	objectRelationshipId,
 	pluralLabel,
 	portletNamespace,
 	readOnly,
@@ -184,10 +180,8 @@ export function ObjectNavigationTabs({
 							objectDefinitionExternalReferenceCode={
 								externalReferenceCode
 							}
-							objectFieldId={objectFieldId}
 							objectFieldTypes={objectFieldTypes}
 							objectName={shortName}
-							objectRelationshipId={objectRelationshipId}
 							readOnly={readOnly}
 							sidebarElements={sidebarElements}
 							workflowStatusJSONArray={workflowStatusJSONArray}

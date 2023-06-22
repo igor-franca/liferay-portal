@@ -28,6 +28,7 @@ import {BasicInfo} from './Tabs/BasicInfo/BasicInfo';
 import {useObjectFieldForm} from './useObjectFieldForm';
 
 interface EditObjectFieldProps {
+	closeVerticalBar: () => void;
 	creationLanguageId: Liferay.Language.Locale;
 	filterOperators: TFilterOperators;
 	forbiddenChars: string[];
@@ -39,10 +40,8 @@ interface EditObjectFieldProps {
 	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
 	objectName: string;
-	objectRelationshipId: number;
 	readOnly: boolean;
 	sidebarElements: SidebarCategory[];
-	closeVerticalBar: () => void;
 	workflowStatusJSONArray: LabelValueObject[];
 }
 
@@ -80,12 +79,12 @@ export default function EditObjectField({
 	objectFieldId,
 	objectFieldTypes,
 	objectName,
-	objectRelationshipId,
 	readOnly,
 	sidebarElements,
 	workflowStatusJSONArray,
 }: EditObjectFieldProps) {
 	const [activeIndex, setActiveIndex] = useState(0);
+	const [objectRelationshipId, setObjectRelationshipId] = useState<number>();
 
 	const onSubmit = async ({id, ...objectField}: ObjectField) => {
 		if (Liferay.FeatureFlags['LPS-163716']) {
@@ -136,17 +135,6 @@ export default function EditObjectField({
 		TABS.push(Liferay.Language.get('advanced'));
 	}
 
-	useEffect(() => {
-		const makeFetch = async () => {
-			const objectFieldResponse = await API.getObjectField(objectFieldId);
-
-			setValues(objectFieldResponse);
-		};
-
-		makeFetch();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [objectFieldId]);
-
 	const showAdvancedTab = () => {
 		if (Liferay.FeatureFlags['LPS-170122'] && isDefaultStorageType) {
 			return true;
@@ -161,6 +149,38 @@ export default function EditObjectField({
 
 		return false;
 	};
+
+	useEffect(() => {
+		const makeFetch = async () => {
+			const objectFieldResponse = await API.getObjectField(objectFieldId);
+
+			setValues(objectFieldResponse);
+		};
+
+		makeFetch();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [objectFieldId]);
+
+	useEffect(() => {
+		if (values.businessType === 'Relationship') {
+			const makeFetch = async () => {
+				const objectRelationships = await API.getObjectRelationshipsById(
+					objectFieldId as number
+				);
+				const objectFieldRelationshipId = objectRelationships.find(
+					(objectRelationship) => {
+						objectRelationship.parameterObjectFieldId ===
+							objectFieldId;
+					}
+				);
+
+				setObjectRelationshipId(objectFieldRelationshipId?.id);
+			};
+			makeFetch();
+		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [objectFieldId]);
 
 	return (
 		<SidePanelForm
@@ -198,7 +218,9 @@ export default function EditObjectField({
 								}
 								objectFieldTypes={objectFieldTypes}
 								objectName={objectName}
-								objectRelationshipId={objectRelationshipId}
+								objectRelationshipId={
+									objectRelationshipId as number
+								}
 								readOnly={readOnly}
 								setValues={setValues}
 								values={values}
@@ -236,7 +258,7 @@ export default function EditObjectField({
 					}
 					objectFieldTypes={objectFieldTypes}
 					objectName={objectName}
-					objectRelationshipId={objectRelationshipId}
+					objectRelationshipId={objectRelationshipId as number}
 					readOnly={readOnly}
 					setValues={setValues}
 					values={values}

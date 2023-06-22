@@ -26,10 +26,8 @@ interface FieldsProps extends IFDSTableProps {
 	forbiddenNames: string[];
 	isApproved: boolean;
 	isDefaultStorageType: boolean;
-	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
 	objectName: string;
-	objectRelationshipId: number;
 	readOnly: boolean;
 	sidebarElements: SidebarCategory[];
 	workflowStatusJSONArray: LabelValueObject[];
@@ -49,10 +47,8 @@ export default function Fields({
 	isDefaultStorageType,
 	items,
 	objectDefinitionExternalReferenceCode,
-	objectFieldId,
 	objectFieldTypes,
 	objectName,
-	objectRelationshipId,
 	readOnly,
 	sidebarElements,
 	workflowStatusJSONArray,
