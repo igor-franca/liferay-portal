@@ -28,7 +28,6 @@ interface EditObjectFieldProps {
 	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
 	objectName: string;
-	objectRelationshipId: number;
 	readOnly: boolean;
 	sidebarElements: SidebarCategory[];
 	closeVerticalBar: () => void;
@@ -47,7 +46,6 @@ export default function EditObjectField({
 	objectFieldId,
 	objectFieldTypes,
 	objectName,
-	objectRelationshipId,
 	readOnly,
 	sidebarElements,
 	workflowStatusJSONArray,
