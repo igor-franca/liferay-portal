@@ -38,6 +38,8 @@ renderResponse.setTitle(objectDefinition.getLabel(locale, true));
 			).put(
 				"creationMenu", objectDefinitionsRelationshipsDisplayContext.getCreationMenu()
 			).put(
+				"ffOneToOneRelationshipConfigurationEnabled", objectDefinitionsRelationshipsDisplayContext.isFFOneToOneRelationshipConfigurationEnabled()
+			).put(
 				"formName", "fm"
 			).put(
 				"id", ObjectDefinitionsFDSNames.OBJECT_RELATIONSHIPS
@@ -45,6 +47,8 @@ renderResponse.setTitle(objectDefinition.getLabel(locale, true));
 				"items", objectDefinitionsRelationshipsDisplayContext.getFDSActionDropdownItems()
 			).put(
 				"objectDefinitionExternalReferenceCode", objectDefinition.getExternalReferenceCode()
+			).put(
+				"parameterRequired", objectDefinitionsRelationshipsDisplayContext.isParameterRequired(objectDefinition)
 			).put(
 				"style", "fluid"
 			).put(

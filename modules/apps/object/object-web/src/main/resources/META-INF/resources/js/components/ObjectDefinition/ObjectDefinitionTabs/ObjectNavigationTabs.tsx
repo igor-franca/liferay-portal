@@ -24,12 +24,12 @@ import Fields from '../../ObjectField/Fields';
 import Relationships from '../../ObjectRelationship/Relationships';
 
 interface ObjectNavigationProps {
-	baseResourceURL: string;
 	companyKeyValuePair: KeyValuePair[];
 	creationLanguageId: Liferay.Language.Locale;
 	dbTableName: string;
 	errors: FormError<ObjectDefinition>;
 	externalReferenceCode: string;
+	ffOneToOneRelationshipConfigurationEnabled: boolean;
 	fieldDropdownItems: [];
 	fieldId: string;
 	fieldsApiURL: string;
@@ -52,20 +52,23 @@ interface ObjectNavigationProps {
 		name: string;
 	}[];
 	objectDefinitionId: number;
+	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
 	objectFields: ObjectField[];
+	objectRelationshipId: number;
+	parameterRequired: boolean;
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
 	readOnly: boolean;
 	readOnlySidebarElements: SidebarCategory[];
-	relationshipDropdownItems: [];
 	relationshipCreationMenu: {
 		primaryItems?: any[];
 		secondaryItems?: any[];
 	};
-	relationshipsApiURL: string;
+	relationshipDropdownItems: [];
 	relationshipId: string;
 	relationshipUrl: string;
+	relationshipsApiURL: string;
 	screenNavigationCategoryKey: string;
 	setValues: (values: Partial<ObjectDefinition>) => void;
 	shortName: string;
@@ -84,6 +87,7 @@ export function ObjectNavigationTabs({
 	dbTableName,
 	errors,
 	externalReferenceCode,
+	ffOneToOneRelationshipConfigurationEnabled,
 	fieldDropdownItems,
 	fieldId,
 	fieldsApiURL,
@@ -102,6 +106,8 @@ export function ObjectNavigationTabs({
 	objectDefinitionId,
 	objectFieldTypes,
 	objectFields,
+	objectRelationshipId,
+	parameterRequired,
 	pluralLabel,
 	portletNamespace,
 	readOnly,
@@ -119,7 +125,7 @@ export function ObjectNavigationTabs({
 	values,
 	workflowStatusJSONArray,
 }: ObjectNavigationProps) {
-	const [active, setActive] = useState(1);
+	const [active, setActive] = useState(2);
 
 	return (
 		<>
@@ -216,11 +222,15 @@ export function ObjectNavigationTabs({
 						<Relationships
 							apiURL={relationshipsApiURL}
 							creationMenu={relationshipCreationMenu}
+							ffOneToOneRelationshipConfigurationEnabled={
+								ffOneToOneRelationshipConfigurationEnabled
+							}
 							id={relationshipId}
 							items={relationshipDropdownItems}
 							objectDefinitionExternalReferenceCode={
 								externalReferenceCode
 							}
+							parameterRequired={parameterRequired}
 							url={relationshipUrl}
 						/>
 					</ClayTabs.TabPane>

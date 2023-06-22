@@ -41,6 +41,7 @@ interface EditObjectFieldProps {
 	objectFieldTypes: ObjectFieldType[];
 	objectName: string;
 	readOnly: boolean;
+	setVerticalBarVisible: (values: boolean) => void;
 	sidebarElements: SidebarCategory[];
 	workflowStatusJSONArray: LabelValueObject[];
 }

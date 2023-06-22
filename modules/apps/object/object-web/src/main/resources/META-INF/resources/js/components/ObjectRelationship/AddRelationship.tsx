@@ -18,7 +18,7 @@ import ClayForm from '@clayui/form';
 import ClayModal, {ClayModalProvider, useModal} from '@clayui/modal';
 import {Observer} from '@clayui/modal/lib/types';
 import {API, Input} from '@liferay/object-js-components-web';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 
 import {defaultLanguageId} from '../../utils/constants';
 import {toCamelCase} from '../../utils/string';
@@ -29,13 +29,25 @@ import {
 } from './ObjectRelationshipFormBase';
 import SelectRelationship from './SelectRelationship';
 
+interface IModal extends Omit<IProps, 'onVisibilityChange'> {
+	observer: Observer;
+	onClose: () => void;
+}
+
+interface IProps {
+	ffOneToOneRelationshipConfigurationEnabled: boolean;
+	objectDefinitionExternalReferenceCode: string;
+	onVisibilityChange: (value: boolean) => void;
+	parameterRequired: boolean;
+}
+
 function ModalAddObjectRelationship({
 	ffOneToOneRelationshipConfigurationEnabled,
 	objectDefinitionExternalReferenceCode,
 	observer,
 	onClose,
 	parameterRequired,
-}: IProps) {
+}: IModal) {
 	const [error, setError] = useState<string>('');
 
 	const initialValues: Partial<ObjectRelationship> = {
@@ -151,44 +163,26 @@ function ModalAddObjectRelationship({
 export default function AddRelationship({
 	ffOneToOneRelationshipConfigurationEnabled,
 	objectDefinitionExternalReferenceCode,
+	onVisibilityChange,
 	parameterRequired,
 }: IProps) {
-	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 	const {observer, onClose} = useModal({
-		onClose: () => setVisibleModal(false),
+		onClose: () => onVisibilityChange(false),
 	});
-
-	useEffect(() => {
-		Liferay.on('addObjectRelationship', () => setVisibleModal(true));
-
-		return () => {
-			Liferay.detach('addObjectRelationship');
-		};
-	}, []);
 
 	return (
 		<ClayModalProvider>
-			{visibleModal && (
-				<ModalAddObjectRelationship
-					ffOneToOneRelationshipConfigurationEnabled={
-						ffOneToOneRelationshipConfigurationEnabled
-					}
-					objectDefinitionExternalReferenceCode={
-						objectDefinitionExternalReferenceCode
-					}
-					observer={observer}
-					onClose={onClose}
-					parameterRequired={parameterRequired}
-				/>
-			)}
+			<ModalAddObjectRelationship
+				ffOneToOneRelationshipConfigurationEnabled={
+					ffOneToOneRelationshipConfigurationEnabled
+				}
+				objectDefinitionExternalReferenceCode={
+					objectDefinitionExternalReferenceCode
+				}
+				observer={observer}
+				onClose={onClose}
+				parameterRequired={parameterRequired}
+			/>
 		</ClayModalProvider>
 	);
-}
-
-interface IProps {
-	ffOneToOneRelationshipConfigurationEnabled: boolean;
-	objectDefinitionExternalReferenceCode: string;
-	observer: Observer;
-	onClose: () => void;
-	parameterRequired: boolean;
 }

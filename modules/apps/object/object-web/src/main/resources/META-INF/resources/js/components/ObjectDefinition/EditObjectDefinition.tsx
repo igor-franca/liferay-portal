@@ -27,11 +27,11 @@ import {useObjectDefinitionForm} from './useObjectDefinitionForm';
 
 interface EditObjectDefinitionProps {
 	backURL: string;
-	baseResourceURL: string;
 	companyKeyValuePair: KeyValuePair[];
 	creationLanguageId: Liferay.Language.Locale;
 	dbTableName: string;
 	externalReferenceCode: string;
+	ffOneToOneRelationshipConfigurationEnabled: boolean;
 	fieldDropdownItems: [];
 	fieldId: string;
 	fieldUrl: string;
@@ -54,20 +54,23 @@ interface EditObjectDefinitionProps {
 		name: string;
 	}[];
 	objectDefinitionId: number;
+	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
+	objectRelationshipId: number;
 	onSubmit: (draft: boolean) => void;
+	parameterRequired: boolean;
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
 	readOnly: boolean;
 	readOnlySidebarElements: SidebarCategory[];
-	relationshipDropdownItems: [];
-	relationshipsApiURL: string;
 	relationshipCreationMenu: {
 		primaryItems?: any[];
 		secondaryItems?: any[];
 	};
+	relationshipDropdownItems: [];
 	relationshipId: string;
 	relationshipUrl: string;
+	relationshipsApiURL: string;
 	screenNavigationCategoryKey: string;
 	setValues: (values: Partial<ObjectDefinition>) => void;
 	shortName: string;
@@ -85,6 +88,7 @@ export default function EditObjectDefinition({
 	creationLanguageId,
 	dbTableName,
 	externalReferenceCode,
+	ffOneToOneRelationshipConfigurationEnabled,
 	fieldDropdownItems,
 	fieldId,
 	fieldsApiURL,
@@ -101,6 +105,8 @@ export default function EditObjectDefinition({
 	nonRelationshipObjectFieldsInfo,
 	objectDefinitionId,
 	objectFieldTypes,
+	objectRelationshipId,
+	parameterRequired,
 	pluralLabel,
 	portletNamespace,
 	readOnly,
@@ -200,6 +206,9 @@ export default function EditObjectDefinition({
 				dbTableName={dbTableName}
 				errors={errors}
 				externalReferenceCode={externalReferenceCode}
+				ffOneToOneRelationshipConfigurationEnabled={
+					ffOneToOneRelationshipConfigurationEnabled
+				}
 				fieldDropdownItems={fieldDropdownItems}
 				fieldId={fieldId}
 				fieldsApiURL={fieldsApiURL}
@@ -222,6 +231,8 @@ export default function EditObjectDefinition({
 				objectDefinitionId={objectDefinitionId}
 				objectFieldTypes={objectFieldTypes}
 				objectFields={objectFields}
+				objectRelationshipId={objectRelationshipId}
+				parameterRequired={parameterRequired}
 				pluralLabel={pluralLabel}
 				portletNamespace={portletNamespace}
 				readOnly={readOnly}

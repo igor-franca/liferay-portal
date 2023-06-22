@@ -15,13 +15,20 @@
 /// <reference types="react" />
 
 import {IFDSTableProps} from '../../utils/fds';
+interface IRelationship extends IFDSTableProps {
+	ffOneToOneRelationshipConfigurationEnabled: boolean;
+	parameterRequired: boolean;
+}
 export default function Relationships({
 	apiURL,
 	creationMenu,
+	ffOneToOneRelationshipConfigurationEnabled,
 	formName,
 	id,
 	items,
 	objectDefinitionExternalReferenceCode,
+	parameterRequired,
 	style,
 	url,
-}: IFDSTableProps): JSX.Element;
+}: IRelationship): JSX.Element;
+export {};

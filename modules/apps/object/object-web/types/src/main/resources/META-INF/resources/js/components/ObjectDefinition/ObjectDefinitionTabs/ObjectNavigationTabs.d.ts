@@ -17,12 +17,12 @@ import React from 'react';
 import './ObjectNavigationTabs.scss';
 import {KeyValuePair} from '../../ObjectDetails/EditObjectDetails';
 interface ObjectNavigationProps {
-	baseResourceURL: string;
 	companyKeyValuePair: KeyValuePair[];
 	creationLanguageId: Liferay.Language.Locale;
 	dbTableName: string;
 	errors: FormError<ObjectDefinition>;
 	externalReferenceCode: string;
+	ffOneToOneRelationshipConfigurationEnabled: boolean;
 	fieldDropdownItems: [];
 	fieldId: string;
 	fieldsApiURL: string;
@@ -45,20 +45,23 @@ interface ObjectNavigationProps {
 		name: string;
 	}[];
 	objectDefinitionId: number;
+	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
 	objectFields: ObjectField[];
+	objectRelationshipId: number;
+	parameterRequired: boolean;
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
 	readOnly: boolean;
 	readOnlySidebarElements: SidebarCategory[];
-	relationshipDropdownItems: [];
 	relationshipCreationMenu: {
 		primaryItems?: any[];
 		secondaryItems?: any[];
 	};
-	relationshipsApiURL: string;
+	relationshipDropdownItems: [];
 	relationshipId: string;
 	relationshipUrl: string;
+	relationshipsApiURL: string;
 	screenNavigationCategoryKey: string;
 	setValues: (values: Partial<ObjectDefinition>) => void;
 	shortName: string;
@@ -76,6 +79,7 @@ export declare function ObjectNavigationTabs({
 	dbTableName,
 	errors,
 	externalReferenceCode,
+	ffOneToOneRelationshipConfigurationEnabled,
 	fieldDropdownItems,
 	fieldId,
 	fieldsApiURL,
@@ -94,6 +98,8 @@ export declare function ObjectNavigationTabs({
 	objectDefinitionId,
 	objectFieldTypes,
 	objectFields,
+	objectRelationshipId,
+	parameterRequired,
 	pluralLabel,
 	portletNamespace,
 	readOnly,

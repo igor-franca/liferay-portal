@@ -28,25 +28,41 @@ import {
 	fdsItem,
 	formatActionURL,
 } from '../../utils/fds';
+import AddRelationship from './AddRelationship';
 
 interface ItemData {
 	id: number;
 	reverse: boolean;
 }
 
+interface IRelationship extends IFDSTableProps {
+	ffOneToOneRelationshipConfigurationEnabled: boolean;
+	parameterRequired: boolean;
+}
+
 export default function Relationships({
 	apiURL,
 	creationMenu,
+	ffOneToOneRelationshipConfigurationEnabled,
 	formName,
 	id,
 	items,
 	objectDefinitionExternalReferenceCode,
+	parameterRequired,
 	style,
 	url,
-}: IFDSTableProps) {
+}: IRelationship) {
+	const [isModalVisible, setModalVisible] = useState<boolean>(false);
+
 	const [creationLanguageId, setCreationLanguageId] = useState<
 		Liferay.Language.Locale
 	>();
+
+	useEffect(() => {
+		Liferay.on('addObjectRelationship', () => setModalVisible(true));
+
+		return () => Liferay.detach('addObjectRelationship');
+	}, []);
 
 	useEffect(() => {
 		const makeFetch = async () => {
@@ -174,5 +190,21 @@ export default function Relationships({
 		],
 	};
 
-	return <FrontendDataSet {...dataSetProps} />;
+	return (
+		<>
+			<FrontendDataSet {...dataSetProps} />;
+			{isModalVisible && (
+				<AddRelationship
+					ffOneToOneRelationshipConfigurationEnabled={
+						ffOneToOneRelationshipConfigurationEnabled
+					}
+					objectDefinitionExternalReferenceCode={
+						objectDefinitionExternalReferenceCode
+					}
+					onVisibilityChange={setModalVisible}
+					parameterRequired={parameterRequired}
+				/>
+			)}
+		</>
+	);
 }
