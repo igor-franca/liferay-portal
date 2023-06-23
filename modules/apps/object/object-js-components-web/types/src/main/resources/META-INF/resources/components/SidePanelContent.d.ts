@@ -27,7 +27,6 @@ export declare function SidePanelContent({
 	customLabel,
 	onSave,
 	readOnly,
-	setShowVerticalBar,
 	title,
 }: IProps): JSX.Element;
 export declare function SidePanelForm({

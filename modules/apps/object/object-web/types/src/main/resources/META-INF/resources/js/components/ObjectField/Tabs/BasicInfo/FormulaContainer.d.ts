@@ -14,15 +14,18 @@
 
 /// <reference types="react" />
 
+import {SidebarCategory} from '@liferay/object-js-components-web';
 import {ObjectFieldErrors} from '../../ObjectFieldFormBase';
 interface FormulaContainerProps {
 	errors: ObjectFieldErrors;
 	objectFieldSettings: ObjectFieldSetting[];
 	setValues: (values: Partial<ObjectField>) => void;
+	sidebarElements: SidebarCategory[];
 }
 export declare function FormulaContainer({
 	errors,
 	objectFieldSettings,
 	setValues,
+	sidebarElements,
 }: FormulaContainerProps): JSX.Element;
 export {};

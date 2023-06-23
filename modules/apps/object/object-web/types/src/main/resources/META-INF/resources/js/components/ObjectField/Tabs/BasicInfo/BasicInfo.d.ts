@@ -12,6 +12,7 @@
  * details.
  */
 
+import {SidebarCategory} from '@liferay/object-js-components-web';
 import React from 'react';
 import {ObjectFieldErrors} from '../../ObjectFieldFormBase';
 interface BasicInfoProps {
@@ -27,6 +28,7 @@ interface BasicInfoProps {
 	objectRelationshipId: number;
 	readOnly: boolean;
 	setValues: (values: Partial<ObjectField>) => void;
+	sidebarElements: SidebarCategory[];
 	values: Partial<ObjectField>;
 	workflowStatusJSONArray: LabelValueObject[];
 }
@@ -43,6 +45,7 @@ export declare function BasicInfo({
 	objectRelationshipId,
 	readOnly,
 	setValues,
+	sidebarElements,
 	values,
 	workflowStatusJSONArray,
 }: BasicInfoProps): JSX.Element;

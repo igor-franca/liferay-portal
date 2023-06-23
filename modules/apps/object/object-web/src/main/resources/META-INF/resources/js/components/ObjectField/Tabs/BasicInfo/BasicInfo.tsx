@@ -17,6 +17,7 @@ import {
 	Card,
 	Input,
 	InputLocalized,
+	SidebarCategory,
 } from '@liferay/object-js-components-web';
 import React, {useEffect, useState} from 'react';
 
@@ -60,6 +61,7 @@ interface BasicInfoProps {
 	objectRelationshipId: number;
 	readOnly: boolean;
 	setValues: (values: Partial<ObjectField>) => void;
+	sidebarElements: SidebarCategory[];
 	values: Partial<ObjectField>;
 	workflowStatusJSONArray: LabelValueObject[];
 }
@@ -77,6 +79,7 @@ export function BasicInfo({
 	objectRelationshipId,
 	readOnly,
 	setValues,
+	sidebarElements,
 	values,
 	workflowStatusJSONArray,
 }: BasicInfoProps) {
@@ -217,6 +220,7 @@ export function BasicInfo({
 						values.objectFieldSettings as ObjectFieldSetting[]
 					}
 					setValues={setValues}
+					sidebarElements={sidebarElements}
 				/>
 			)}
 

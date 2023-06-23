@@ -14,11 +14,27 @@
 
 /// <reference types="react" />
 
-import {SidebarCategory} from '@liferay/object-js-components-web';
-interface IProps {
+import {SidebarCategory} from '../CodeEditor/index';
+interface ExpressionBuilderModalProps {
+	error?: string;
+	header?: string;
+	onCloseModal: () => void;
+	onSave: (source: string) => void;
+	placeholder?: string;
+	required?: boolean;
 	sidebarElements: SidebarCategory[];
+	source?: string;
+	validateExpressionURL?: string;
 }
-export default function ExpressionBuilderModal({
+export declare function ExpressionBuilderModal({
+	error,
+	header,
+	onCloseModal,
+	onSave,
+	placeholder,
+	required,
 	sidebarElements,
-}: IProps): JSX.Element;
+	source,
+	validateExpressionURL,
+}: ExpressionBuilderModalProps): JSX.Element | null;
 export {};

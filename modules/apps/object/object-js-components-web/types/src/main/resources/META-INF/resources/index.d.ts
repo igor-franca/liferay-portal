@@ -25,7 +25,8 @@ export {
 } from './components/CodeEditor/index';
 export {CodeEditorLocalized} from './components/CodeEditor/CodeEditorLocalized';
 export {DatePicker} from './components/DatePicker';
-export * from './components/ExpressionBuilder';
+export {ExpressionBuilder} from './components/ExpressionBuilder/ExpressionBuilder';
+export {ExpressionBuilderModal} from './components/ExpressionBuilder/ExpressionBuilderModal';
 export {FieldBase} from './components/FieldBase';
 export {Input} from './components/Input';
 export {InputLocalized} from './components/InputLocalized';

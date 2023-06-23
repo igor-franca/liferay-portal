@@ -17,6 +17,7 @@
 import {SidebarCategory} from '@liferay/object-js-components-web';
 import './EditObjectField.scss';
 interface EditObjectFieldProps {
+	closeVerticalBar: () => void;
 	creationLanguageId: Liferay.Language.Locale;
 	filterOperators: TFilterOperators;
 	forbiddenChars: string[];
@@ -30,7 +31,6 @@ interface EditObjectFieldProps {
 	objectName: string;
 	readOnly: boolean;
 	sidebarElements: SidebarCategory[];
-	closeVerticalBar: () => void;
 	workflowStatusJSONArray: LabelValueObject[];
 }
 export default function EditObjectField({

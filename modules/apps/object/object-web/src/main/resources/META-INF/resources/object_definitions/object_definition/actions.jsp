@@ -59,7 +59,7 @@ renderResponse.setTitle(objectDefinition.getLabel(locale, true));
 		module="js/components/ExpressionBuilderModal"
 		props='<%=
 			HashMapBuilder.<String, Object>put(
-				"sidebarElements", objectDefinitionsActionsDisplayContext.getObjectActionCodeEditorElements()
+				"sidebarElements", objectDefinitionsActionsDisplayContext.getObjectCodeEditorElements()
 			).build()
 		%>'
 	/>

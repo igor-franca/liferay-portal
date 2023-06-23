@@ -47,8 +47,6 @@ renderResponse.setTitle(objectDefinition.getLabel(locale, true));
 				"objectDefinitionExternalReferenceCode", objectDefinition.getExternalReferenceCode()
 			).put(
 				"style", "fluid"
-			).put(
-				"url", objectDefinitionsFieldsDisplayContext.getEditObjectFieldURL()
 			).build()
 		%>'
 	/>
