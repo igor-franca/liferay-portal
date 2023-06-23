@@ -47,6 +47,8 @@ renderResponse.setTitle(LanguageUtil.format(request, "edit-x", objectDefinition.
 			).put(
 				"dbTableName", objectDefinition.getDBTableName()
 			).put(
+				"deletionTypes", objectDefinitionsRelationshipsDisplayContext.getObjectRelationshipDeletionTypesJSONArray()
+			).put(
 				"externalReferenceCode", objectDefinition.getExternalReferenceCode()
 			).put(
 				"fieldDropdownItems", objectDefinitionsFieldsDisplayContext.getFDSActionDropdownItems()
@@ -80,6 +82,10 @@ renderResponse.setTitle(LanguageUtil.format(request, "edit-x", objectDefinition.
 				"objectDefinitionId", objectDefinition.getObjectDefinitionId()
 			).put(
 				"objectFieldTypes", objectDefinitionsFieldsDisplayContext.getObjectFieldBusinessTypeMaps(false, locale)
+			).put(
+				"objectRelationship", objectDefinitionsRelationshipsDisplayContext.getObjectRelationshipJSONObject(objectRelationship)
+			).put(
+				"parameterEndpoint", objectDefinitionsRelationshipsDisplayContext.getRESTContextPath(objectDefinition)
 			).put(
 				"pluralLabel", LocalizationUtil.getLocalizationMap(objectDefinition.getPluralLabel())
 			).put(

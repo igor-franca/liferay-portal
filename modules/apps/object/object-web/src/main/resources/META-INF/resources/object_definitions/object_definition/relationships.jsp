@@ -38,6 +38,10 @@ renderResponse.setTitle(objectDefinition.getLabel(locale, true));
 			).put(
 				"creationMenu", objectDefinitionsRelationshipsDisplayContext.getCreationMenu()
 			).put(
+				"deletionTypes", objectDefinitionsRelationshipsDisplayContext.getObjectRelationshipDeletionTypesJSONArray()
+			).put(
+				"hasUpdateObjectDefinitionPermission", objectDefinitionsRelationshipsDisplayContext.hasUpdateObjectDefinitionPermission()
+			).put(
 				"ffOneToOneRelationshipConfigurationEnabled", objectDefinitionsRelationshipsDisplayContext.isFFOneToOneRelationshipConfigurationEnabled()
 			).put(
 				"formName", "fm"
@@ -47,6 +51,10 @@ renderResponse.setTitle(objectDefinition.getLabel(locale, true));
 				"items", objectDefinitionsRelationshipsDisplayContext.getFDSActionDropdownItems()
 			).put(
 				"objectDefinitionExternalReferenceCode", objectDefinition.getExternalReferenceCode()
+			).put(
+				"objectRelationship", objectDefinitionsRelationshipsDisplayContext.getObjectRelationshipJSONObject(objectRelationship)
+			).put(
+				"parameterEndpoint", objectDefinitionsRelationshipsDisplayContext.getRESTContextPath(objectDefinition)
 			).put(
 				"parameterRequired", objectDefinitionsRelationshipsDisplayContext.isParameterRequired(objectDefinition)
 			).put(

@@ -24,9 +24,11 @@ import Fields from '../../ObjectField/Fields';
 import Relationships from '../../ObjectRelationship/Relationships';
 
 interface ObjectNavigationProps {
+	baseResourceURL: string;
 	companyKeyValuePair: KeyValuePair[];
 	creationLanguageId: Liferay.Language.Locale;
 	dbTableName: string;
+	deletionTypes: any;
 	errors: FormError<ObjectDefinition>;
 	externalReferenceCode: string;
 	ffOneToOneRelationshipConfigurationEnabled: boolean;
@@ -52,10 +54,11 @@ interface ObjectNavigationProps {
 		name: string;
 	}[];
 	objectDefinitionId: number;
-	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
 	objectFields: ObjectField[];
+	objectRelationship: any;
 	objectRelationshipId: number;
+	parameterEndpoint: any;
 	parameterRequired: boolean;
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
@@ -85,6 +88,7 @@ export function ObjectNavigationTabs({
 	companyKeyValuePair,
 	creationLanguageId,
 	dbTableName,
+	deletionTypes,
 	errors,
 	externalReferenceCode,
 	ffOneToOneRelationshipConfigurationEnabled,
@@ -106,7 +110,9 @@ export function ObjectNavigationTabs({
 	objectDefinitionId,
 	objectFieldTypes,
 	objectFields,
+	objectRelationship,
 	objectRelationshipId,
+	parameterEndpoint,
 	parameterRequired,
 	pluralLabel,
 	portletNamespace,
@@ -222,14 +228,14 @@ export function ObjectNavigationTabs({
 						<Relationships
 							apiURL={relationshipsApiURL}
 							creationMenu={relationshipCreationMenu}
-							ffOneToOneRelationshipConfigurationEnabled={
-								ffOneToOneRelationshipConfigurationEnabled
-							}
+							deletionTypes={deletionTypes} 
+							ffOneToOneRelationshipConfigurationEnabled={ffOneToOneRelationshipConfigurationEnabled}
+							hasUpdateObjectDefinitionPermission={hasPublishObjectPermission}
 							id={relationshipId}
 							items={relationshipDropdownItems}
-							objectDefinitionExternalReferenceCode={
-								externalReferenceCode
-							}
+							objectDefinitionExternalReferenceCode={externalReferenceCode}
+							objectRelationship={objectRelationship}
+							parameterEndpoint={parameterEndpoint}
 							parameterRequired={parameterRequired}
 							url={relationshipUrl}
 						/>

@@ -27,9 +27,11 @@ import {useObjectDefinitionForm} from './useObjectDefinitionForm';
 
 interface EditObjectDefinitionProps {
 	backURL: string;
+	baseResourceURL: string;
 	companyKeyValuePair: KeyValuePair[];
 	creationLanguageId: Liferay.Language.Locale;
 	dbTableName: string;
+	deletionTypes: any;
 	externalReferenceCode: string;
 	ffOneToOneRelationshipConfigurationEnabled: boolean;
 	fieldDropdownItems: [];
@@ -56,8 +58,10 @@ interface EditObjectDefinitionProps {
 	objectDefinitionId: number;
 	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
+	objectRelationship: any;
 	objectRelationshipId: number;
 	onSubmit: (draft: boolean) => void;
+	parameterEndpoint: any;
 	parameterRequired: boolean;
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
@@ -87,6 +91,7 @@ export default function EditObjectDefinition({
 	companyKeyValuePair,
 	creationLanguageId,
 	dbTableName,
+	deletionTypes,
 	externalReferenceCode,
 	ffOneToOneRelationshipConfigurationEnabled,
 	fieldDropdownItems,
@@ -105,7 +110,9 @@ export default function EditObjectDefinition({
 	nonRelationshipObjectFieldsInfo,
 	objectDefinitionId,
 	objectFieldTypes,
+	objectRelationship,
 	objectRelationshipId,
+	parameterEndpoint,
 	parameterRequired,
 	pluralLabel,
 	portletNamespace,
@@ -204,11 +211,10 @@ export default function EditObjectDefinition({
 				companyKeyValuePair={companyKeyValuePair}
 				creationLanguageId={creationLanguageId}
 				dbTableName={dbTableName}
+				deletionTypes={deletionTypes}
 				errors={errors}
 				externalReferenceCode={externalReferenceCode}
-				ffOneToOneRelationshipConfigurationEnabled={
-					ffOneToOneRelationshipConfigurationEnabled
-				}
+				ffOneToOneRelationshipConfigurationEnabled={ffOneToOneRelationshipConfigurationEnabled}
 				fieldDropdownItems={fieldDropdownItems}
 				fieldId={fieldId}
 				fieldsApiURL={fieldsApiURL}
@@ -219,19 +225,17 @@ export default function EditObjectDefinition({
 				forbiddenNames={forbiddenNames}
 				handleChange={handleChange}
 				hasPublishObjectPermission={hasPublishObjectPermission}
-				hasUpdateObjectDefinitionPermission={
-					hasUpdateObjectDefinitionPermission
-				}
+				hasUpdateObjectDefinitionPermission={hasUpdateObjectDefinitionPermission}
 				isApproved={isApproved}
 				isDefaultStorageType={isDefaultStorageType}
 				label={label}
-				nonRelationshipObjectFieldsInfo={
-					nonRelationshipObjectFieldsInfo
-				}
+				nonRelationshipObjectFieldsInfo={nonRelationshipObjectFieldsInfo}
 				objectDefinitionId={objectDefinitionId}
 				objectFieldTypes={objectFieldTypes}
 				objectFields={objectFields}
+				objectRelationship={objectRelationship}
 				objectRelationshipId={objectRelationshipId}
+				parameterEndpoint={parameterEndpoint}
 				parameterRequired={parameterRequired}
 				pluralLabel={pluralLabel}
 				portletNamespace={portletNamespace}
@@ -251,7 +255,7 @@ export default function EditObjectDefinition({
 				system={system}
 				values={values}
 				workflowStatusJSONArray={workflowStatusJSONArray}
-			/>
+				/>
 		</>
 	);
 }

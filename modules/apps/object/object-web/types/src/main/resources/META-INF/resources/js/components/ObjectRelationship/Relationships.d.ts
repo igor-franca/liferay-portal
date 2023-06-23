@@ -16,17 +16,25 @@
 
 import {IFDSTableProps} from '../../utils/fds';
 interface IRelationship extends IFDSTableProps {
+	deletionTypes: any;
 	ffOneToOneRelationshipConfigurationEnabled: boolean;
+	hasUpdateObjectDefinitionPermission: boolean;
+	objectRelationship: any;
+	parameterEndpoint: any;
 	parameterRequired: boolean;
 }
 export default function Relationships({
 	apiURL,
 	creationMenu,
+	deletionTypes,
+	hasUpdateObjectDefinitionPermission,
 	ffOneToOneRelationshipConfigurationEnabled,
 	formName,
 	id,
 	items,
 	objectDefinitionExternalReferenceCode,
+	objectRelationship,
+	parameterEndpoint,
 	parameterRequired,
 	style,
 	url,

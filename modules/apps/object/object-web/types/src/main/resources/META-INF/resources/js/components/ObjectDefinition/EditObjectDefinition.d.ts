@@ -18,9 +18,11 @@ import {SidebarCategory} from '@liferay/object-js-components-web';
 import {KeyValuePair} from '../ObjectDetails/EditObjectDetails';
 interface EditObjectDefinitionProps {
 	backURL: string;
+	baseResourceURL: string;
 	companyKeyValuePair: KeyValuePair[];
 	creationLanguageId: Liferay.Language.Locale;
 	dbTableName: string;
+	deletionTypes: any;
 	externalReferenceCode: string;
 	ffOneToOneRelationshipConfigurationEnabled: boolean;
 	fieldDropdownItems: [];
@@ -47,8 +49,10 @@ interface EditObjectDefinitionProps {
 	objectDefinitionId: number;
 	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
+	objectRelationship: any;
 	objectRelationshipId: number;
 	onSubmit: (draft: boolean) => void;
+	parameterEndpoint: any;
 	parameterRequired: boolean;
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
@@ -77,6 +81,7 @@ export default function EditObjectDefinition({
 	companyKeyValuePair,
 	creationLanguageId,
 	dbTableName,
+	deletionTypes,
 	externalReferenceCode,
 	ffOneToOneRelationshipConfigurationEnabled,
 	fieldDropdownItems,
@@ -95,7 +100,9 @@ export default function EditObjectDefinition({
 	nonRelationshipObjectFieldsInfo,
 	objectDefinitionId,
 	objectFieldTypes,
+	objectRelationship,
 	objectRelationshipId,
+	parameterEndpoint,
 	parameterRequired,
 	pluralLabel,
 	portletNamespace,

@@ -17,9 +17,11 @@ import React from 'react';
 import './ObjectNavigationTabs.scss';
 import {KeyValuePair} from '../../ObjectDetails/EditObjectDetails';
 interface ObjectNavigationProps {
+	baseResourceURL: string;
 	companyKeyValuePair: KeyValuePair[];
 	creationLanguageId: Liferay.Language.Locale;
 	dbTableName: string;
+	deletionTypes: any;
 	errors: FormError<ObjectDefinition>;
 	externalReferenceCode: string;
 	ffOneToOneRelationshipConfigurationEnabled: boolean;
@@ -45,10 +47,11 @@ interface ObjectNavigationProps {
 		name: string;
 	}[];
 	objectDefinitionId: number;
-	objectFieldId: number;
 	objectFieldTypes: ObjectFieldType[];
 	objectFields: ObjectField[];
+	objectRelationship: any;
 	objectRelationshipId: number;
+	parameterEndpoint: any;
 	parameterRequired: boolean;
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
@@ -77,6 +80,7 @@ export declare function ObjectNavigationTabs({
 	companyKeyValuePair,
 	creationLanguageId,
 	dbTableName,
+	deletionTypes,
 	errors,
 	externalReferenceCode,
 	ffOneToOneRelationshipConfigurationEnabled,
@@ -98,7 +102,9 @@ export declare function ObjectNavigationTabs({
 	objectDefinitionId,
 	objectFieldTypes,
 	objectFields,
+	objectRelationship,
 	objectRelationshipId,
+	parameterEndpoint,
 	parameterRequired,
 	pluralLabel,
 	portletNamespace,

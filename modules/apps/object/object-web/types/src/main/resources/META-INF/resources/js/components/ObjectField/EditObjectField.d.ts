@@ -17,11 +17,12 @@
 import {SidebarCategory} from '@liferay/object-js-components-web';
 import './EditObjectField.scss';
 interface EditObjectFieldProps {
+	closeVerticalBar: () => void;
 	creationLanguageId: Liferay.Language.Locale;
 	filterOperators: TFilterOperators;
-	forbiddenChars: string[];
-	forbiddenLastChars: string[];
-	forbiddenNames: string[];
+	forbiddenChars?: string[];
+	forbiddenLastChars?: string[];
+	forbiddenNames?: string[];
 	isApproved: boolean;
 	isDefaultStorageType: boolean;
 	objectDefinitionExternalReferenceCode: string;
@@ -29,7 +30,6 @@ interface EditObjectFieldProps {
 	objectFieldTypes: ObjectFieldType[];
 	objectName: string;
 	readOnly: boolean;
-	setVerticalBarVisible: (values: boolean) => void;
 	sidebarElements: SidebarCategory[];
 	workflowStatusJSONArray: LabelValueObject[];
 }
