@@ -15,12 +15,13 @@
 import ClayEmptyState from '@clayui/empty-state';
 import {ClayCheckbox, ClayRadio} from '@clayui/form';
 import classNames from 'classnames';
+import {sub} from 'frontend-js-web';
 import PropTypes from 'prop-types';
 import React, {useContext, useRef, useState} from 'react';
 
 import FrontendDataSetContext from '../../FrontendDataSetContext';
 import Actions from '../../actions/Actions';
-import {getValueDetailsFromItem} from '../../utils/index';
+import {getLocalizableLabel, getValueDetailsFromItem} from '../../utils/index';
 import ViewsContext from '../ViewsContext';
 import TableCell from './TableCell';
 import TableHead from './TableHead';
@@ -265,6 +266,10 @@ const RowWithActions = ({
 					columnName="item-selector"
 				>
 					<SelectionComponent
+						aria-label={sub(
+							Liferay.Language.get('select-x'),
+							getLocalizableLabel(item.name, item.urls)
+						)}
 						checked={
 							!!selectedItemsValue.find(
 								(element) => String(element) === String(itemId)

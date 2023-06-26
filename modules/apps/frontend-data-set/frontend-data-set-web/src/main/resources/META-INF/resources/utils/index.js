@@ -69,6 +69,27 @@ export function isValuesArrayChanged(prevValue = [], newValue = []) {
 	return changed;
 }
 
+export function getLocalizableLabel(label, fallback) {
+	if (fallback && typeof fallback === 'object') {
+		fallback =
+			fallback[Liferay.ThemeDisplay.getLanguageId()] ??
+			fallback[Liferay.ThemeDisplay.getDefaultLanguageId()] ??
+			fallback['en_US'];
+	}
+
+	if (!label) {
+		return fallback ?? '';
+	}
+
+	return (
+		label[Liferay.ThemeDisplay.getLanguageId()] ??
+		label[Liferay.ThemeDisplay.getDefaultLanguageId()] ??
+		label['en_US'] ??
+		fallback ??
+		''
+	);
+}
+
 export function getValueFromItem(item, fieldName) {
 	if (!fieldName) {
 		return null;
