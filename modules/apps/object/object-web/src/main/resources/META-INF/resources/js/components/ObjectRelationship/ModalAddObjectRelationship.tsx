@@ -1,0 +1,161 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
+import ClayAlert from '@clayui/alert';
+import ClayButton from '@clayui/button';
+import ClayForm from '@clayui/form';
+import ClayModal, {ClayModalProvider, useModal} from '@clayui/modal';
+import {API, Input} from '@liferay/object-js-components-web';
+import React, {useState} from 'react';
+
+import {defaultLanguageId} from '../../utils/constants';
+import {toCamelCase} from '../../utils/string';
+import {
+	ObjectRelationshipFormBase,
+	ObjectRelationshipType,
+	useObjectRelationshipForm,
+} from './ObjectRelationshipFormBase';
+import SelectRelationship from './SelectRelationship';
+
+interface ModalAddObjectRelationshipProps {
+	ffOneToOneRelationshipConfigurationEnabled: boolean;
+	objectDefinitionExternalReferenceCode: string;
+	onVisibilityChange: (value: boolean) => void;
+	parameterRequired: boolean;
+}
+
+export function ModalAddObjectRelationship({
+	ffOneToOneRelationshipConfigurationEnabled,
+	objectDefinitionExternalReferenceCode,
+	onVisibilityChange,
+	parameterRequired,
+}: ModalAddObjectRelationshipProps) {
+	const [error, setError] = useState<string>('');
+
+	const initialValues: Partial<ObjectRelationship> = {
+		objectDefinitionExternalReferenceCode1: objectDefinitionExternalReferenceCode,
+	};
+
+	const {observer, onClose} = useModal({
+		onClose: () => onVisibilityChange(false),
+	});
+
+	const onSubmit = async ({label, name, ...others}: ObjectRelationship) => {
+		try {
+			await API.save(
+				`/o/object-admin/v1.0/object-definitions/by-external-reference-code/${objectDefinitionExternalReferenceCode}/object-relationships`,
+				{
+					...others,
+					label,
+					name: name ?? toCamelCase(label[defaultLanguageId]!, true),
+				},
+				'POST'
+			);
+
+			onClose();
+			window.location.reload();
+		}
+		catch (error: unknown) {
+			const {message} = error as Error;
+
+			setError(message);
+		}
+	};
+
+	const {
+		errors,
+		handleChange,
+		handleSubmit,
+		setValues,
+		values,
+	} = useObjectRelationshipForm({initialValues, onSubmit, parameterRequired});
+
+	return (
+		<ClayModalProvider>
+			<ClayModal observer={observer}>
+				<ClayForm onSubmit={handleSubmit}>
+					<ClayModal.Header>
+						{Liferay.Language.get('new-relationship')}
+					</ClayModal.Header>
+
+					<ClayModal.Body>
+						{error && (
+							<ClayAlert displayType="danger">{error}</ClayAlert>
+						)}
+
+						<Input
+							error={errors.label}
+							label={Liferay.Language.get('label')}
+							onChange={({target: {value}}) =>
+								setValues({label: {[defaultLanguageId]: value}})
+							}
+							required
+							value={values.label?.[defaultLanguageId]}
+						/>
+
+						<ObjectRelationshipFormBase
+							errors={errors}
+							ffOneToOneRelationshipConfigurationEnabled={
+								ffOneToOneRelationshipConfigurationEnabled
+							}
+							handleChange={handleChange}
+							setValues={setValues}
+							values={{
+								...values,
+								name:
+									values.name ??
+									toCamelCase(
+										values.label?.[defaultLanguageId] ?? '',
+										true
+									),
+							}}
+						/>
+
+						{parameterRequired &&
+							values.type ===
+								ObjectRelationshipType.ONE_TO_MANY && (
+								<SelectRelationship
+									error={errors.parameterObjectFieldName}
+									objectDefinitionExternalReferenceCode={
+										values.objectDefinitionExternalReferenceCode2 as string
+									}
+									onChange={(parameterObjectFieldName) =>
+										setValues({parameterObjectFieldName})
+									}
+									value={values.parameterObjectFieldName}
+								/>
+							)}
+					</ClayModal.Body>
+
+					<ClayModal.Footer
+						last={
+							<ClayButton.Group spaced>
+								<ClayButton
+									displayType="secondary"
+									onClick={() => onClose()}
+								>
+									{Liferay.Language.get('cancel')}
+								</ClayButton>
+
+								<ClayButton displayType="primary" type="submit">
+									{Liferay.Language.get('save')}
+								</ClayButton>
+							</ClayButton.Group>
+						}
+					/>
+				</ClayForm>
+			</ClayModal>
+		</ClayModalProvider>
+	);
+}

@@ -64,7 +64,6 @@ interface EditObjectDefinitionProps {
 	};
 	relationshipDropdownItems: [];
 	relationshipId: string;
-	relationshipUrl: string;
 	relationshipsApiURL: string;
 	screenNavigationCategoryKey: string;
 	setValues: (values: Partial<ObjectDefinition>) => void;
@@ -111,7 +110,6 @@ export default function EditObjectDefinition({
 	relationshipCreationMenu,
 	relationshipDropdownItems,
 	relationshipId,
-	relationshipUrl,
 	relationshipsApiURL,
 	screenNavigationCategoryKey,
 	shortName,

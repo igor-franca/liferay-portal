@@ -70,7 +70,6 @@ interface ObjectNavigationProps {
 	};
 	relationshipDropdownItems: [];
 	relationshipId: string;
-	relationshipUrl: string;
 	relationshipsApiURL: string;
 	screenNavigationCategoryKey: string;
 	setValues: (values: Partial<ObjectDefinition>) => void;
@@ -111,7 +110,6 @@ export function ObjectNavigationTabs({
 	objectFieldTypes,
 	objectFields,
 	objectRelationship,
-	objectRelationshipId,
 	parameterEndpoint,
 	parameterRequired,
 	pluralLabel,
@@ -121,7 +119,6 @@ export function ObjectNavigationTabs({
 	relationshipCreationMenu,
 	relationshipDropdownItems,
 	relationshipId,
-	relationshipUrl,
 	relationshipsApiURL,
 	setValues,
 	shortName,
@@ -228,16 +225,21 @@ export function ObjectNavigationTabs({
 						<Relationships
 							apiURL={relationshipsApiURL}
 							creationMenu={relationshipCreationMenu}
-							deletionTypes={deletionTypes} 
-							ffOneToOneRelationshipConfigurationEnabled={ffOneToOneRelationshipConfigurationEnabled}
-							hasUpdateObjectDefinitionPermission={hasPublishObjectPermission}
+							deletionTypes={deletionTypes}
+							ffOneToOneRelationshipConfigurationEnabled={
+								ffOneToOneRelationshipConfigurationEnabled
+							}
+							hasUpdateObjectDefinitionPermission={
+								hasPublishObjectPermission
+							}
 							id={relationshipId}
 							items={relationshipDropdownItems}
-							objectDefinitionExternalReferenceCode={externalReferenceCode}
+							objectDefinitionExternalReferenceCode={
+								externalReferenceCode
+							}
 							objectRelationship={objectRelationship}
 							parameterEndpoint={parameterEndpoint}
 							parameterRequired={parameterRequired}
-							url={relationshipUrl}
 						/>
 					</ClayTabs.TabPane>
 				</ClayTabs.Content>

@@ -73,7 +73,6 @@ interface EditObjectDefinitionProps {
 	};
 	relationshipDropdownItems: [];
 	relationshipId: string;
-	relationshipUrl: string;
 	relationshipsApiURL: string;
 	screenNavigationCategoryKey: string;
 	setValues: (values: Partial<ObjectDefinition>) => void;
@@ -121,7 +120,6 @@ export default function EditObjectDefinition({
 	relationshipCreationMenu,
 	relationshipDropdownItems,
 	relationshipId,
-	relationshipUrl,
 	relationshipsApiURL,
 	screenNavigationCategoryKey,
 	shortName,
@@ -214,7 +212,9 @@ export default function EditObjectDefinition({
 				deletionTypes={deletionTypes}
 				errors={errors}
 				externalReferenceCode={externalReferenceCode}
-				ffOneToOneRelationshipConfigurationEnabled={ffOneToOneRelationshipConfigurationEnabled}
+				ffOneToOneRelationshipConfigurationEnabled={
+					ffOneToOneRelationshipConfigurationEnabled
+				}
 				fieldDropdownItems={fieldDropdownItems}
 				fieldId={fieldId}
 				fieldsApiURL={fieldsApiURL}
@@ -225,11 +225,15 @@ export default function EditObjectDefinition({
 				forbiddenNames={forbiddenNames}
 				handleChange={handleChange}
 				hasPublishObjectPermission={hasPublishObjectPermission}
-				hasUpdateObjectDefinitionPermission={hasUpdateObjectDefinitionPermission}
+				hasUpdateObjectDefinitionPermission={
+					hasUpdateObjectDefinitionPermission
+				}
 				isApproved={isApproved}
 				isDefaultStorageType={isDefaultStorageType}
 				label={label}
-				nonRelationshipObjectFieldsInfo={nonRelationshipObjectFieldsInfo}
+				nonRelationshipObjectFieldsInfo={
+					nonRelationshipObjectFieldsInfo
+				}
 				objectDefinitionId={objectDefinitionId}
 				objectFieldTypes={objectFieldTypes}
 				objectFields={objectFields}
@@ -244,7 +248,6 @@ export default function EditObjectDefinition({
 				relationshipCreationMenu={relationshipCreationMenu}
 				relationshipDropdownItems={relationshipDropdownItems}
 				relationshipId={relationshipId}
-				relationshipUrl={relationshipUrl}
 				relationshipsApiURL={relationshipsApiURL}
 				screenNavigationCategoryKey={screenNavigationCategoryKey}
 				setValues={setValues}
@@ -255,7 +258,7 @@ export default function EditObjectDefinition({
 				system={system}
 				values={values}
 				workflowStatusJSONArray={workflowStatusJSONArray}
-				/>
+			/>
 		</>
 	);
 }

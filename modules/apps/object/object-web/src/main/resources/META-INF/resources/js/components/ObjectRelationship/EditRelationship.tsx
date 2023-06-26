@@ -33,13 +33,26 @@ import {
 } from './ObjectRelationshipFormBase';
 import SelectRelationship from './SelectRelationship';
 
+interface EditRelationshipProps {
+	deletionTypes: TDeletionType[];
+	hasUpdateObjectDefinitionPermission: boolean;
+	objectRelationshipEdited: ObjectRelationship;
+	parameterEndpoint: string;
+	parameterRequired: boolean;
+}
+
+type TDeletionType = {
+	label: string;
+	value: string;
+};
+
 export default function EditRelationship({
 	deletionTypes,
 	hasUpdateObjectDefinitionPermission,
-	objectRelationship: initialValues,
+	objectRelationshipEdited,
 	parameterEndpoint,
 	parameterRequired,
-}: IProps) {
+}: EditRelationshipProps) {
 	const onSubmit = async (objectRelationship: ObjectRelationship) => {
 		try {
 			await API.updateRelationship(objectRelationship);
@@ -65,7 +78,7 @@ export default function EditRelationship({
 		setValues,
 		values,
 	} = useObjectRelationshipForm({
-		initialValues,
+		initialValues: objectRelationshipEdited,
 		onSubmit,
 		parameterRequired,
 	});
@@ -150,16 +163,3 @@ export default function EditRelationship({
 		</SidePanelForm>
 	);
 }
-
-interface IProps {
-	deletionTypes: TDeletionType[];
-	hasUpdateObjectDefinitionPermission: boolean;
-	objectRelationship: ObjectRelationship;
-	parameterEndpoint: string;
-	parameterRequired: boolean;
-}
-
-type TDeletionType = {
-	label: string;
-	value: string;
-};

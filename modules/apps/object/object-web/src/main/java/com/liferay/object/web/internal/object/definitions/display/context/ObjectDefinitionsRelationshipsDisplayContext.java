@@ -34,8 +34,6 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.portlet.LiferayWindowState;
-import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -75,26 +73,26 @@ public class ObjectDefinitionsRelationshipsDisplayContext
 		_objectRequestHelper = new ObjectRequestHelper(httpServletRequest);
 	}
 
-	public String getEditObjectRelationshipURL() throws Exception {
-		return PortletURLBuilder.create(
-			getPortletURL()
-		).setMVCRenderCommandName(
-			"/object_definitions/edit_object_relationship"
-		).setParameter(
-			"objectRelationshipId", "{id}"
-		).setWindowState(
-			LiferayWindowState.POP_UP
-		).buildString();
-	}
+	// public String getEditObjectRelationshipURL() throws Exception {
+	// 		return PortletURLBuilder.create(
+	// 			getPortletURL()
+	// 		).setMVCRenderCommandName(
+	// 			"/object_definitions/edit_object_relationship"
+	// 		).setParameter(
+	// 			"objectRelationshipId", "{id}"
+	// 		).setWindowState(
+	// 			LiferayWindowState.POP_UP
+	// 		).buildString();
+	// 	}
 
 	public List<FDSActionDropdownItem> getFDSActionDropdownItems()
 		throws Exception {
 
 		return Arrays.asList(
 			new FDSActionDropdownItem(
-				getEditObjectRelationshipURL(), "view", "view",
+				"#", "view", "editRelationship",
 				LanguageUtil.get(objectRequestHelper.getRequest(), "view"),
-				"get", null, "sidePanel"),
+				"get", null, null),
 			new FDSActionDropdownItem(
 				null, "trash", "deleteObjectRelationship",
 				LanguageUtil.get(objectRequestHelper.getRequest(), "delete"),

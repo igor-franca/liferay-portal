@@ -40,11 +40,11 @@ renderResponse.setTitle(objectDefinition.getLabel(locale, true));
 			).put(
 				"deletionTypes", objectDefinitionsRelationshipsDisplayContext.getObjectRelationshipDeletionTypesJSONArray()
 			).put(
-				"hasUpdateObjectDefinitionPermission", objectDefinitionsRelationshipsDisplayContext.hasUpdateObjectDefinitionPermission()
-			).put(
 				"ffOneToOneRelationshipConfigurationEnabled", objectDefinitionsRelationshipsDisplayContext.isFFOneToOneRelationshipConfigurationEnabled()
 			).put(
 				"formName", "fm"
+			).put(
+				"hasUpdateObjectDefinitionPermission", objectDefinitionsRelationshipsDisplayContext.hasUpdateObjectDefinitionPermission()
 			).put(
 				"id", ObjectDefinitionsFDSNames.OBJECT_RELATIONSHIPS
 			).put(
@@ -52,15 +52,11 @@ renderResponse.setTitle(objectDefinition.getLabel(locale, true));
 			).put(
 				"objectDefinitionExternalReferenceCode", objectDefinition.getExternalReferenceCode()
 			).put(
-				"objectRelationship", objectDefinitionsRelationshipsDisplayContext.getObjectRelationshipJSONObject(objectRelationship)
-			).put(
 				"parameterEndpoint", objectDefinitionsRelationshipsDisplayContext.getRESTContextPath(objectDefinition)
 			).put(
 				"parameterRequired", objectDefinitionsRelationshipsDisplayContext.isParameterRequired(objectDefinition)
 			).put(
 				"style", "fluid"
-			).put(
-				"url", objectDefinitionsRelationshipsDisplayContext.getEditObjectRelationshipURL()
 			).build()
 		%>'
 	/>

@@ -19,22 +19,22 @@ import {
 	// @ts-ignore
 
 } from '@liferay/frontend-data-set-web';
-import {	API,
-	SidebarCategory,
+import {
+	API,
 	getLocalizableLabel,
 } from '@liferay/object-js-components-web';
 import classNames from 'classnames';
 import {createResourceURL} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
 
+import './Relationships.scss';
 import {
 	IFDSTableProps,
 	defaultDataSetProps,
 	fdsItem,
-	formatActionURL,
 } from '../../utils/fds';
-import AddRelationship from './AddRelationship';
 import EditRelationship from './EditRelationship';
+import {ModalAddObjectRelationship} from './ModalAddObjectRelationship';
 
 interface ItemData {
 	id: number;
@@ -54,13 +54,12 @@ export default function Relationships({
 	apiURL,
 	creationMenu,
 	deletionTypes,
-	hasUpdateObjectDefinitionPermission,
 	ffOneToOneRelationshipConfigurationEnabled,
 	formName,
+	hasUpdateObjectDefinitionPermission,
 	id,
 	items,
 	objectDefinitionExternalReferenceCode,
-	objectRelationship,
 	parameterEndpoint,
 	parameterRequired,
 	style,
@@ -76,7 +75,9 @@ export default function Relationships({
 	const [creationLanguageId, setCreationLanguageId] = useState<
 		Liferay.Language.Locale
 	>();
-	const [objectRelationshipId, setObjetRelationshipId] = useState<number>();
+	const [objectRelationshipEdited, setObjectRelationshipEdited] = useState<
+		ObjectRelationship
+	>();
 
 	const sidePanelitems = [
 		{
@@ -128,19 +129,19 @@ export default function Relationships({
 		}, 500);
 	}
 
+	const handleEditField = (itemData: ObjectRelationship) => {
+		setShowVerticalBar(true);
+		setTriggerSideBarAnimation(true);
+		setObjectRelationshipEdited(itemData);
+	};
+
 	function objectFieldLabelDataRenderer({
 		itemData,
 		value,
-	}: fdsItem<ItemData>) {
-		const handleEditField = () => {
-			setShowVerticalBar(true);
-			setTriggerSideBarAnimation(true);
-			setObjetRelationshipId(itemData.id);
-		};
-
+	}: fdsItem<ObjectRelationship>) {
 		return (
 			<div className="table-list-title">
-				<a href="#" onClick={handleEditField}>
+				<a href="#" onClick={() => handleEditField(itemData)}>
 					{getLocalizableLabel(
 						creationLanguageId as Liferay.Language.Locale,
 						value
@@ -172,6 +173,10 @@ export default function Relationships({
 		}) {
 			if (action.data.id === 'deleteObjectRelationship') {
 				Liferay.fire('deleteObjectRelationship', {itemData});
+			}
+
+			if (action.data.id === 'editRelationship') {
+				handleEditField(itemData);
 			}
 		},
 		portletId:
@@ -229,8 +234,8 @@ export default function Relationships({
 				<VerticalBar
 					className={classNames(
 						triggerSideBarAnimation
-							? 'lfr__edit-object-field-side-bar-open'
-							: 'lfr__edit-object-field-side-bar-closed'
+							? 'lfr__edit-object-relationship-side-bar-open'
+							: 'lfr__edit-object-relationship-side-bar-closed'
 					)}
 					defaultActive="editObjectFieldSideBar"
 					defaultPanelWidth={1200}
@@ -240,14 +245,18 @@ export default function Relationships({
 					position="right"
 					resize
 				>
-					<div className="lfr__object-edit-field-side-panel">
+					<div className="lfr__object-edit-relationship-side-panel">
 						<VerticalBar.Content items={sidePanelitems}>
 							{(item) => (
 								<VerticalBar.Panel key={item.title}>
-									<EditRelationship 
+									<EditRelationship
 										deletionTypes={deletionTypes}
-										hasUpdateObjectDefinitionPermission={hasUpdateObjectDefinitionPermission}
-										objectRelationship={objectRelationship}
+										hasUpdateObjectDefinitionPermission={
+											hasUpdateObjectDefinitionPermission
+										}
+										objectRelationshipEdited={
+											objectRelationshipEdited as ObjectRelationship
+										}
 										parameterEndpoint={parameterEndpoint}
 										parameterRequired={parameterRequired}
 									/>
@@ -258,7 +267,7 @@ export default function Relationships({
 				</VerticalBar>
 			)}
 			{isModalVisible && (
-				<AddRelationship
+				<ModalAddObjectRelationship
 					ffOneToOneRelationshipConfigurationEnabled={
 						ffOneToOneRelationshipConfigurationEnabled
 					}

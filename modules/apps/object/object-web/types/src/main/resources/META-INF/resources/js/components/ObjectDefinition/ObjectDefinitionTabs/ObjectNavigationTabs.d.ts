@@ -63,7 +63,6 @@ interface ObjectNavigationProps {
 	};
 	relationshipDropdownItems: [];
 	relationshipId: string;
-	relationshipUrl: string;
 	relationshipsApiURL: string;
 	screenNavigationCategoryKey: string;
 	setValues: (values: Partial<ObjectDefinition>) => void;
@@ -103,7 +102,6 @@ export declare function ObjectNavigationTabs({
 	objectFieldTypes,
 	objectFields,
 	objectRelationship,
-	objectRelationshipId,
 	parameterEndpoint,
 	parameterRequired,
 	pluralLabel,
@@ -113,7 +111,6 @@ export declare function ObjectNavigationTabs({
 	relationshipCreationMenu,
 	relationshipDropdownItems,
 	relationshipId,
-	relationshipUrl,
 	relationshipsApiURL,
 	setValues,
 	shortName,

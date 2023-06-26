@@ -83,8 +83,6 @@ renderResponse.setTitle(LanguageUtil.format(request, "edit-x", objectDefinition.
 			).put(
 				"objectFieldTypes", objectDefinitionsFieldsDisplayContext.getObjectFieldBusinessTypeMaps(false, locale)
 			).put(
-				"objectRelationship", objectDefinitionsRelationshipsDisplayContext.getObjectRelationshipJSONObject(objectRelationship)
-			).put(
 				"parameterEndpoint", objectDefinitionsRelationshipsDisplayContext.getRESTContextPath(objectDefinition)
 			).put(
 				"pluralLabel", LocalizationUtil.getLocalizationMap(objectDefinition.getPluralLabel())
@@ -102,8 +100,6 @@ renderResponse.setTitle(LanguageUtil.format(request, "edit-x", objectDefinition.
 				"relationshipId", ObjectDefinitionsFDSNames.OBJECT_RELATIONSHIPS
 			).put(
 				"relationshipsApiURL", objectDefinitionsRelationshipsDisplayContext.getAPIURL()
-			).put(
-				"relationshipUrl", objectDefinitionsRelationshipsDisplayContext.getEditObjectRelationshipURL()
 			).put(
 				"screenNavigationCategoryKey", ParamUtil.getString(request, "screenNavigationCategoryKey")
 			).put(
