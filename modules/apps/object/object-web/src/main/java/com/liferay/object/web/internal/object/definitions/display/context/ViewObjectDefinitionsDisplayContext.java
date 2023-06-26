@@ -90,7 +90,7 @@ public class ViewObjectDefinitionsDisplayContext {
 	public List<FDSActionDropdownItem> getFDSActionDropdownItems()
 		throws Exception {
 
-		return Arrays.asList(
+		List FDSAction = Arrays.asList(
 			new FDSActionDropdownItem(
 				PortletURLBuilder.create(
 					getPortletURL()
@@ -123,6 +123,20 @@ public class ViewObjectDefinitionsDisplayContext {
 				LanguageUtil.get(
 					_objectRequestHelper.getRequest(), "permissions"),
 				"get", "permissions", "modal-permissions"));
+
+			//if(_hasUpdateModelBuilderPermission())
+			if(true) {
+				FDSAction.add(
+					new FDSActionDropdownItem(
+						_getPermissionsURL(), "pencil", "move",
+						LanguageUtil.get(
+							_objectRequestHelper.getRequest(), "move"),
+						"get", "update", null
+					)
+				);
+			}
+
+		return FDSAction;
 	}
 
 	public FDSSortItemList getFDSSortItemList() {
