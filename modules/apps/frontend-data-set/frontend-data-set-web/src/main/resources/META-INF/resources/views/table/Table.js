@@ -265,11 +265,14 @@ const RowWithActions = ({
 					columnName="item-selector"
 				>
 					<SelectionComponent
+						aria-label={Liferay.Language.get("select")}
+						aria-labelledby={`table-list-seleted-${itemId} table-list-title-${itemId}`}
 						checked={
 							!!selectedItemsValue.find(
 								(element) => String(element) === String(itemId)
 							)
 						}
+						id={`table-list-seleted-${itemId}`}
 						onChange={() => selectItems(itemId)}
 						title={Liferay.Language.get('select-item')}
 						value={itemId}
@@ -285,7 +288,7 @@ const RowWithActions = ({
 				itemsChanges[itemId]
 			)}
 
-			<DndTable.Cell className="item-actions" columnName="item-actions">
+			<DndTable.Cell className="item-actions igor-action" columnName="item-actions">
 				{(itemsActions?.length > 0 ||
 					item.actionDropdownItems?.length > 0) && (
 					<Actions

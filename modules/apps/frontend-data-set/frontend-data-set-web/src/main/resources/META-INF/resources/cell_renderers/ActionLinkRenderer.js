@@ -130,7 +130,10 @@ function ActionLinkRenderer({actions, itemData, itemId, options, value}) {
 	}
 
 	return (
-		<div className="table-list-title">
+		<div 
+			className="table-list-title"
+			id={`table-list-title-${itemId}`}
+		>
 			<ClayLink
 				data-senna-off
 				href={formattedHref || '#'}
