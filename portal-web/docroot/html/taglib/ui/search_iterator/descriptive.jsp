@@ -110,11 +110,12 @@
 					data = new HashMap<String, Object>();
 				}
 			%>
-
+				<!-- Linha da tabela -->
 				<dd class="list-group-item list-group-item-flex <%= GetterUtil.getString(row.getClassName()) %> <%= row.getCssClass() %> <%= rowIsChecked ? "active" : StringPool.BLANK %> <%= Validator.isNotNull(row.getState()) ? "list-group-item-" + row.getState() : StringPool.BLANK %>" data-qa-id="row" <%= AUIUtil.buildData(data) %>>
 					<c:if test="<%= rowChecker != null %>">
+						<!-- Checkbox -->
 						<div class="autofit-col">
-							<div class="checkbox">
+							<div class="checkbox" aria-labelledby="<%= curArticle.getArticleId() %>">
 								<label>
 									<%= rowChecker.getRowCheckBox(request, row) %>
 								</label>
@@ -125,12 +126,11 @@
 					<%
 					for (int j = 0; j < entries.size(); j++) {
 						com.liferay.portal.kernel.dao.search.SearchEntry entry = (com.liferay.portal.kernel.dao.search.SearchEntry)entries.get(j);
-
 						entry.setIndex(j);
 
 						request.setAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW_ENTRY, entry);
 					%>
-
+						<!-- Conteudo da linha -->
 						<div class="<%= entry.getCssClass() %> <%= (entry.getColspan() > 1) ? "autofit-col autofit-col-expand" : "autofit-col" %>" data-qa-id="rowItemContent">
 
 							<%

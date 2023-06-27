@@ -112,7 +112,9 @@ Map<String, Object> componentContext = journalDisplayContext.getComponentContext
 							<div class="d-flex">
 								<c:choose>
 									<c:when test="<%= editURL != StringPool.BLANK %>">
+										<!-- Titulo da linha -->
 										<clay:link
+											id="<%= curArticle.getArticleId() %>"
 											cssClass="d-block lfr-portal-tooltip text-dark text-truncate"
 											href="<%= editURL %>"
 											label="<%= title %>"
