@@ -19,7 +19,10 @@ import {
 	ExpressionBuilderModal,
 	SidebarCategory,
 } from '@liferay/object-js-components-web';
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
+
+import {filterSideBarElements} from '../../../../utils/expressionBuilderUtil';
+import {READ_ONLY_SIDE_BAR_ELEMENTS_MAP} from './readOnlyUtil';
 
 interface ReadOnlyContainerProps {
 	disabled?: boolean;
@@ -50,6 +53,13 @@ export function ReadOnlyContainer({
 					: requiredField,
 		});
 	};
+
+	const filteredSideBarElements = useMemo(() => {
+		return filterSideBarElements(
+			readOnlySidebarElements,
+			READ_ONLY_SIDE_BAR_ELEMENTS_MAP
+		);
+	}, [readOnlySidebarElements]);
 
 	return (
 		<>
@@ -120,7 +130,7 @@ export function ReadOnlyContainer({
 							placeholder={`<#-- ${Liferay.Language.get(
 								'create-the-condition-of-the-read-only-state-using-expression-builder'
 							)} -->`}
-							sidebarElements={readOnlySidebarElements}
+							sidebarElements={filteredSideBarElements}
 							source={values.readOnlyConditionExpression ?? ''}
 							validateExpressionURL=""
 						/>

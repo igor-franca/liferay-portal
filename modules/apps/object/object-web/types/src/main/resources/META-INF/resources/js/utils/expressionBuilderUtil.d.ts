@@ -12,9 +12,8 @@
  * details.
  */
 
-export declare type FormulaOutput = {
-	description: string;
-	label: string;
-	value: string;
-};
-export declare const FORMULA_OUTPUT_OPTIONS: FormulaOutput[];
+import {SidebarCategory} from '@liferay/object-js-components-web';
+export declare function filterSideBarElements(
+	sidebarElemets: SidebarCategory[],
+	filterSidebarElementsMap: Map<string, string[]>
+): SidebarCategory[];

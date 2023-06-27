@@ -12,30 +12,10 @@
  * details.
  */
 
-import CodeMirror from 'codemirror';
-import {ReactNode, RefObject} from 'react';
-import './Sidebar.scss';
-interface SidebarElement {
-	content: string;
-	helpText?: string;
+export declare type FormulaOutput = {
+	description: string;
 	label: string;
-	name: string;
-	tooltip?: string;
-}
-export interface SidebarCategory {
-	items: SidebarElement[];
-	label: string;
-	name: string;
-}
-interface IProps {
-	CustomSidebarContent?: ReactNode;
-	editorRef: RefObject<CodeMirror.Editor>;
-	elements: SidebarCategory[];
-	otherProps?: unknown;
-}
-export declare function Sidebar({
-	CustomSidebarContent,
-	editorRef,
-	elements,
-}: IProps): JSX.Element;
-export {};
+	value: string;
+};
+export declare const FORMULA_OUTPUT_OPTIONS: FormulaOutput[];
+export declare const FORMULA_FIELD_SIDEBAR_ELEMENTS_MAP: Map<string, string[]>;

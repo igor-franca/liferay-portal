@@ -47,3 +47,8 @@ export const FORMULA_OUTPUT_OPTIONS: FormulaOutput[] = [
 		value: 'Text',
 	},
 ];
+
+export const FORMULA_FIELD_SIDEBAR_ELEMENTS_MAP = new Map<string, string[]>([
+	['fields', ['id']],
+	['operators', ['divided-by', 'minus', 'plus', 'times']],
+]);

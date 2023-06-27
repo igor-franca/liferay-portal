@@ -18,9 +18,11 @@ import {
 	ExpressionBuilderModal,
 	SidebarCategory,
 } from '@liferay/object-js-components-web';
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 
+import {filterSideBarElements} from '../../../../utils/expressionBuilderUtil';
 import {ObjectFieldErrors} from '../../ObjectFieldFormBase';
+import {FORMULA_FIELD_SIDEBAR_ELEMENTS_MAP} from './formulaFieldUtil';
 
 interface FormulaContainerProps {
 	errors: ObjectFieldErrors;
@@ -57,6 +59,13 @@ export function FormulaContainer({
 		showExpressionBuilderModal,
 		setShowExpressionBuilderModal,
 	] = useState(false);
+
+	const filteredSideBarElements = useMemo(() => {
+		return filterSideBarElements(
+			sidebarElements,
+			FORMULA_FIELD_SIDEBAR_ELEMENTS_MAP
+		);
+	}, [sidebarElements]);
 
 	return (
 		<>
@@ -104,7 +113,7 @@ export function FormulaContainer({
 						),
 						['"${"']
 					)}`}
-					sidebarElements={sidebarElements}
+					sidebarElements={filteredSideBarElements}
 					source={(currentScript?.value as string) ?? ''}
 					validateExpressionURL=""
 				/>

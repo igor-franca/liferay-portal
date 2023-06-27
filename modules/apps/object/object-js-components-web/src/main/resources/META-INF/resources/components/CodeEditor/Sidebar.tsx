@@ -24,12 +24,14 @@ interface SidebarElement {
 	content: string;
 	helpText?: string;
 	label: string;
+	name: string;
 	tooltip?: string;
 }
 
 export interface SidebarCategory {
 	items: SidebarElement[];
 	label: string;
+	name: string;
 }
 interface IProps {
 	CustomSidebarContent?: ReactNode;

@@ -79,6 +79,8 @@ public class ObjectCodeEditorUtil {
 						"helpText", StringPool.BLANK
 					).put(
 						"label", objectField.getLabel(locale)
+					).put(
+						"name", objectField.getName()
 					).build()),
 				"fields", locale));
 
@@ -92,6 +94,8 @@ public class ObjectCodeEditorUtil {
 							"helpText", StringPool.BLANK
 						).put(
 							"label", LanguageUtil.get(locale, "current-user")
+						).put(
+							"name", "current-user"
 						).build()),
 					"general-variables", locale));
 		}
@@ -253,6 +257,8 @@ public class ObjectCodeEditorUtil {
 						).put(
 							"label",
 							LanguageUtil.get(locale, ddmExpressionFunction._key)
+						).put(
+							"name", ddmExpressionFunction._key
 						).build());
 				}
 			}
@@ -322,6 +328,8 @@ public class ObjectCodeEditorUtil {
 						).put(
 							"label",
 							LanguageUtil.get(locale, ddmExpressionOperator._key)
+						).put(
+							"name", ddmExpressionOperator._key
 						).build());
 				}
 			}
@@ -350,6 +358,8 @@ public class ObjectCodeEditorUtil {
 			"items", items
 		).put(
 			"label", LanguageUtil.get(locale, key)
+		).put(
+			"name", key
 		).build();
 	}
 

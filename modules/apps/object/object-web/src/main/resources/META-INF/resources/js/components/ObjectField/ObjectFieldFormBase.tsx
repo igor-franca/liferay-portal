@@ -39,9 +39,12 @@ import {removeFieldSettings} from '../../utils/fieldSettings';
 import {toCamelCase} from '../../utils/string';
 import {AggregationFormBase} from './AggregationFormBase';
 import {AttachmentFormBase} from './AttachmentFormBase';
+import {
+	FORMULA_OUTPUT_OPTIONS,
+	FormulaOutput,
+} from './Tabs/BasicInfo/formulaFieldUtil';
 import {TimeStorage} from './TimeStorage';
 import {UniqueValues} from './UniqueValues';
-import {FORMULA_OUTPUT_OPTIONS, FormulaOutput} from './formulaFieldUtil';
 
 import './ObjectFieldFormBase.scss';
 
