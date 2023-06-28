@@ -320,7 +320,11 @@ export default function Fields({
 					objectFieldTypes={
 						!Liferay.FeatureFlags['LPS-164948']
 							? applyFormulaFieldFeatureFlag()
-							: objectFieldTypes
+							: objectFieldTypes.filter(
+									(fieldType) =>
+										fieldType.businessType !==
+										'Relationship'
+							  )
 					}
 					objectName={objectName}
 					onVisibilityChange={setShowAddFieldModal}

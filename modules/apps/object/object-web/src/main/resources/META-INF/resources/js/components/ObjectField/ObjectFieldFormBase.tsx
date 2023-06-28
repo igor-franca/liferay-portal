@@ -188,8 +188,12 @@ export default function ObjectFieldFormBase({
 			businessTypeMap.set(type.businessType, type);
 		});
 
+		if (values.businessType !== 'Relationship') {
+			businessTypeMap.delete('Relationship');
+		}
+
 		return businessTypeMap;
-	}, [objectFieldTypes]);
+	}, [objectFieldTypes, values.businessType]);
 
 	const [pickLists, setPickLists] = useState<Partial<PickList>[]>([]);
 	const [picklistQuery, setPicklistQuery] = useState<string>('');

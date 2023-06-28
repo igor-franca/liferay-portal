@@ -78,7 +78,7 @@ renderResponse.setTitle(LanguageUtil.format(request, "edit-x", objectDefinition.
 			).put(
 				"objectDefinitionId", objectDefinition.getObjectDefinitionId()
 			).put(
-				"objectFieldTypes", objectDefinitionsFieldsDisplayContext.getObjectFieldBusinessTypeMaps(false, locale)
+				"objectFieldTypes", objectDefinitionsFieldsDisplayContext.getObjectFieldBusinessTypeMaps(true, locale)
 			).put(
 				"pluralLabel", LocalizationUtil.getLocalizationMap(objectDefinition.getPluralLabel())
 			).put(
