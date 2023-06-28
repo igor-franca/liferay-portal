@@ -25,8 +25,8 @@ import React, {useEffect, useState} from 'react';
 
 import {defaultLanguageId} from '../../utils/constants';
 import {IFDSTableProps, defaultDataSetProps, fdsItem} from '../../utils/fds';
-import AddObjectField from './AddObjectField';
 import EditObjectField from './EditObjectField';
+import {ModalAddObjectField} from './ModalAddObjectField';
 import {ModalDeleteObjectField} from './ModalDeleteObjectField';
 import {deleteObjectField} from './deleteObjectFieldUtil';
 
@@ -156,6 +156,14 @@ export default function Fields({
 			? Liferay.Language.get('yes')
 			: Liferay.Language.get('no');
 	}
+
+	const applyFormulaFieldFeatureFlag = () => {
+		return objectFieldTypes.filter((objectFieldType) => {
+			if (!Liferay.FeatureFlags['LPS-164948']) {
+				return objectFieldType.businessType !== 'Formula';
+			}
+		});
+	};
 
 	const dataSetProps = {
 		...defaultDataSetProps,
@@ -326,13 +334,17 @@ export default function Fields({
 			)}
 
 			{showAddModalField && (
-				<AddObjectField
+				<ModalAddObjectField
 					apiURL={apiURL as string}
-					creationLanguageId="ar_SA"
+					creationLanguageId={creationLanguageId}
 					objectDefinitionExternalReferenceCode={
 						objectDefinitionExternalReferenceCode
 					}
-					objectFieldTypes={objectFieldTypes}
+					objectFieldTypes={
+						!Liferay.FeatureFlags['LPS-164948']
+							? applyFormulaFieldFeatureFlag()
+							: objectFieldTypes
+					}
 					objectName={objectName}
 					onVisibilityChange={setShowAddFieldModal}
 				/>

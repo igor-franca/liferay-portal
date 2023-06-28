@@ -14,8 +14,8 @@
 
 /// <reference types="react" />
 
-import './AddObjectField.scss';
-interface IProps {
+import './ModalAddObjectField.scss';
+interface ModalAddObjectFieldProps {
 	apiURL: string;
 	creationLanguageId: Liferay.Language.Locale;
 	objectDefinitionExternalReferenceCode: string;
@@ -23,12 +23,12 @@ interface IProps {
 	objectName: string;
 	onVisibilityChange: (value: boolean) => void;
 }
-export default function AddObjectField({
+export declare function ModalAddObjectField({
 	apiURL,
 	creationLanguageId,
 	objectDefinitionExternalReferenceCode,
 	objectFieldTypes,
 	objectName,
 	onVisibilityChange,
-}: IProps): JSX.Element;
+}: ModalAddObjectFieldProps): JSX.Element;
 export {};
