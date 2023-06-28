@@ -26,6 +26,8 @@ import React, {useEffect, useState} from 'react';
 import {defaultLanguageId} from '../../utils/constants';
 import {IFDSTableProps, defaultDataSetProps, fdsItem} from '../../utils/fds';
 import EditObjectField from './EditObjectField';
+import objectFieldMandatoryDataRenderer from './FDSDataRenders/ObjectFieldMandatoryDataRenderer';
+import objectFieldSourceDataRenderer from './FDSDataRenders/ObjectFieldSourceDataRenderer';
 import {ModalAddObjectField} from './ModalAddObjectField';
 import {ModalDeleteObjectField} from './ModalDeleteObjectField';
 import {deleteObjectField} from './deleteObjectFieldUtil';
@@ -130,31 +132,6 @@ export default function Fields({
 				</a>
 			</div>
 		);
-	}
-
-	function objectFieldSourceDataRenderer({itemData}: {itemData: ItemData}) {
-		return (
-			<strong
-				className={classNames(
-					itemData.system ? 'label-info' : 'label-warning',
-					'label'
-				)}
-			>
-				{itemData.system
-					? Liferay.Language.get('system')
-					: Liferay.Language.get('custom')}
-			</strong>
-		);
-	}
-
-	function objectFieldMandatoryDataRenderer({
-		itemData,
-	}: {
-		itemData: ItemData;
-	}) {
-		return itemData.required
-			? Liferay.Language.get('yes')
-			: Liferay.Language.get('no');
 	}
 
 	const applyFormulaFieldFeatureFlag = () => {

@@ -12,34 +12,12 @@
  * details.
  */
 
-/// <reference types="react" />
-
-interface ObjectFieldSourceDataRenderer {
-	value: boolean;
-}
-declare function ObjectFieldSourceDataRenderer({
-	value,
-}: ObjectFieldSourceDataRenderer): JSX.Element;
-export default function ObjectFieldsFDSPropsTransformer({
-	...otherProps
+export default function ObjectFieldMandatoryDataRenderer({
+	itemData,
 }: {
-	[x: string]: any;
-}): {
-	customDataRenderers: {
-		objectFieldSourceDataRenderer: typeof ObjectFieldSourceDataRenderer;
-	};
-	onActionDropdownItemClick({
-		action,
-		itemData,
-	}: {
-		action: {
-			data: {
-				id: string;
-			};
-		};
-		itemData: {
-			id: string;
-		};
-	}): void;
-};
-export {};
+	itemData: ObjectField;
+}) {
+	return itemData.required
+		? Liferay.Language.get('yes')
+		: Liferay.Language.get('no');
+}

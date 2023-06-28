@@ -15,41 +15,21 @@
 import classNames from 'classnames';
 import React from 'react';
 
-interface ObjectFieldSourceDataRenderer {
-	value: boolean;
-}
-
-function ObjectFieldSourceDataRenderer({value}: ObjectFieldSourceDataRenderer) {
+export default function ObjectFieldSourceDataRenderer({
+	itemData,
+}: {
+	itemData: ObjectField;
+}) {
 	return (
 		<strong
 			className={classNames(
-				value ? 'label-info' : 'label-warning',
+				itemData.system ? 'label-info' : 'label-warning',
 				'label'
 			)}
 		>
-			{value
+			{itemData.system
 				? Liferay.Language.get('system')
 				: Liferay.Language.get('custom')}
 		</strong>
 	);
-}
-
-export default function ObjectFieldsFDSPropsTransformer({...otherProps}) {
-	return {
-		...otherProps,
-		customDataRenderers: {
-			objectFieldSourceDataRenderer: ObjectFieldSourceDataRenderer,
-		},
-		onActionDropdownItemClick({
-			action,
-			itemData,
-		}: {
-			action: {data: {id: string}};
-			itemData: {id: string};
-		}) {
-			if (action.data.id === 'deleteObjectField') {
-				Liferay.fire('deleteObjectField', {itemData});
-			}
-		},
-	};
 }
