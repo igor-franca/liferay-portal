@@ -45,9 +45,9 @@ public class EmptyOnClickRowChecker extends RowChecker {
 	protected String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
 		boolean disabled, String name, String value, String checkBoxRowIds,
-		String checkBoxAllRowIds, String checkBoxPostOnClick) {
+		String checkBoxAllRowIds, String checkBoxPostOnClick, String rowTitle) {
 
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("<input ");
 
@@ -67,6 +67,10 @@ public class EmptyOnClickRowChecker extends RowChecker {
 		sb.append(name);
 		sb.append("\" title=\"");
 		sb.append(LanguageUtil.get(httpServletRequest.getLocale(), "select"));
+		sb.append("\" aria-label=\"");
+		sb.append(LanguageUtil.get(httpServletRequest.getLocale(), "select"));
+		sb.append(StringPool.SPACE);
+		sb.append(rowTitle);
 		sb.append("\" type=\"checkbox\" value=\"");
 		sb.append(HtmlUtil.escapeAttribute(value));
 		sb.append("\" ");

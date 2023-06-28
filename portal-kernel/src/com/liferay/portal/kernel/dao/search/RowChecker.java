@@ -18,6 +18,7 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -102,20 +103,23 @@ public class RowChecker {
 
 	public String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String primaryKey) {
+		boolean disabled, String primaryKey, String rowTitle) {
 
 		return getRowCheckBox(
 			httpServletRequest, checked, disabled, _rowIds, primaryKey,
 			StringUtil.quote(_rowIds), StringUtil.quote(_allRowIds),
-			StringPool.BLANK);
+			StringPool.BLANK, rowTitle);
 	}
 
 	public String getRowCheckBox(
 		HttpServletRequest httpServletRequest, ResultRow resultRow) {
 
+		Map<String, Object> rowData = resultRow.getData();
+
 		return getRowCheckBox(
 			httpServletRequest, isChecked(resultRow.getObject()),
-			isDisabled(resultRow.getObject()), resultRow.getPrimaryKey());
+			isDisabled(resultRow.getObject()), resultRow.getPrimaryKey(),
+			GetterUtil.getString(rowData.get("title")));
 	}
 
 	public String getRowId() {
@@ -268,7 +272,7 @@ public class RowChecker {
 	protected String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
 		boolean disabled, String name, String value, String checkBoxRowIds,
-		String checkBoxAllRowIds, String checkBoxPostOnClick) {
+		String checkBoxAllRowIds, String checkBoxPostOnClick, String rowTitle) {
 
 		StringBundler sb = new StringBundler(14);
 
