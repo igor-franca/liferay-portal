@@ -16,6 +16,10 @@
 
 import {SidebarCategory} from '@liferay/object-js-components-web';
 import {KeyValuePair} from '../ObjectDetails/EditObjectDetails';
+export declare type CreationMenu = {
+	primaryItems?: any[];
+	secondaryItems?: any[];
+};
 interface EditObjectDefinitionProps {
 	backURL: string;
 	baseResourceURL: string;
@@ -25,12 +29,8 @@ interface EditObjectDefinitionProps {
 	externalReferenceCode: string;
 	fieldDropdownItems: [];
 	fieldId: string;
-	fieldUrl: string;
 	fieldsApiURL: string;
-	fieldsCreationMenu: {
-		primaryItems?: any[];
-		secondaryItems?: any[];
-	};
+	fieldsCreationMenu: CreationMenu;
 	filterOperators: TFilterOperators;
 	forbiddenChars: string[];
 	forbiddenLastChars: string[];
@@ -40,6 +40,10 @@ interface EditObjectDefinitionProps {
 	isApproved: boolean;
 	isDefaultStorageType: boolean;
 	label: LocalizedValue<string>;
+	layoutDropdownitems: [];
+	layoutFDSId: string;
+	layoutsApiURL: string;
+	layoutsCreationMenu: CreationMenu;
 	nonRelationshipObjectFieldsInfo: {
 		label: LocalizedValue<string>;
 		name: string;
@@ -79,6 +83,10 @@ export default function EditObjectDefinition({
 	isApproved,
 	isDefaultStorageType,
 	label,
+	layoutDropdownitems,
+	layoutFDSId,
+	layoutsApiURL,
+	layoutsCreationMenu,
 	nonRelationshipObjectFieldsInfo,
 	objectDefinitionId,
 	objectFieldTypes,

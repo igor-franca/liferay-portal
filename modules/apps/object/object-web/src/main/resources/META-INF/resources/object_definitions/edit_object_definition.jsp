@@ -22,6 +22,7 @@ String backURL = ParamUtil.getString(request, "backURL", String.valueOf(renderRe
 ObjectDefinition objectDefinition = (ObjectDefinition)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITION);
 ObjectDefinitionsDetailsDisplayContext objectDefinitionsDetailsDisplayContext = (ObjectDefinitionsDetailsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_DETAILS_DISPLAY_CONTEXT);
 ObjectDefinitionsFieldsDisplayContext objectDefinitionsFieldsDisplayContext = (ObjectDefinitionsFieldsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_FIELDS_DISPLAY_CONTEXT);
+ObjectDefinitionsLayoutsDisplayContext objectDefinitionsLayoutsDisplayContext = (ObjectDefinitionsLayoutsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_LAYOUTS_DISPLAY_CONTEXT);
 
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(backURL);
@@ -73,6 +74,14 @@ renderResponse.setTitle(LanguageUtil.format(request, "edit-x", objectDefinition.
 				"isDefaultStorageType", objectDefinition.isDefaultStorageType()
 			).put(
 				"label", LocalizationUtil.getLocalizationMap(objectDefinition.getLabel())
+			).put(
+				"layoutDropdownitems", objectDefinitionsLayoutsDisplayContext.getFDSActionDropdownItems()
+			).put(
+				"layoutFDSId", ObjectDefinitionsFDSNames.OBJECT_LAYOUTS
+			).put(
+				"layoutsApiURL", objectDefinitionsLayoutsDisplayContext.getAPIURL()
+			).put(
+				"layoutsCreationMenu", objectDefinitionsLayoutsDisplayContext.getCreationMenu()
 			).put(
 				"nonRelationshipObjectFieldsInfo", objectDefinitionsDetailsDisplayContext.getNonrelationshipObjectFieldsInfo()
 			).put(

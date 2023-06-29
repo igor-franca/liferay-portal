@@ -28,6 +28,7 @@ import com.liferay.object.service.ObjectFieldSettingLocalService;
 import com.liferay.object.service.ObjectRelationshipLocalService;
 import com.liferay.object.web.internal.object.definitions.display.context.ObjectDefinitionsDetailsDisplayContext;
 import com.liferay.object.web.internal.object.definitions.display.context.ObjectDefinitionsFieldsDisplayContext;
+import com.liferay.object.web.internal.object.definitions.display.context.ObjectDefinitionsLayoutsDisplayContext;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
@@ -86,6 +87,12 @@ public class EditObjectDefinitionMVCRenderCommand implements MVCRenderCommand {
 					_objectFieldBusinessTypeRegistry,
 					_objectFieldSettingLocalService,
 					_objectRelationshipLocalService));
+			renderRequest.setAttribute(
+				ObjectWebKeys.OBJECT_DEFINITIONS_LAYOUTS_DISPLAY_CONTEXT,
+				new ObjectDefinitionsLayoutsDisplayContext(
+					_portal.getHttpServletRequest(renderRequest),
+					_objectDefinitionModelResourcePermission,
+					_objectFieldBusinessTypeRegistry));
 			renderRequest.setAttribute(
 				ObjectWebKeys.OBJECT_FIELDS,
 				_objectFieldLocalService.getObjectFields(objectDefinitionId));

@@ -16,6 +16,7 @@ import {FormError, SidebarCategory} from '@liferay/object-js-components-web';
 import React from 'react';
 import './ObjectNavigationTabs.scss';
 import {KeyValuePair} from '../../ObjectDetails/EditObjectDetails';
+import {CreationMenu} from '../EditObjectDefinition';
 interface ObjectNavigationProps {
 	baseResourceURL: string;
 	companyKeyValuePair: KeyValuePair[];
@@ -26,10 +27,7 @@ interface ObjectNavigationProps {
 	fieldDropdownItems: [];
 	fieldId: string;
 	fieldsApiURL: string;
-	fieldsCreationMenu: {
-		primaryItems?: any[];
-		secondaryItems?: any[];
-	};
+	fieldsCreationMenu: CreationMenu;
 	filterOperators: TFilterOperators;
 	forbiddenChars: string[];
 	forbiddenLastChars: string[];
@@ -40,6 +38,10 @@ interface ObjectNavigationProps {
 	isApproved: boolean;
 	isDefaultStorageType: boolean;
 	label: LocalizedValue<string>;
+	layoutDropdownitems: [];
+	layoutFDSId: string;
+	layoutsApiURL: string;
+	layoutsCreationMenu: CreationMenu;
 	nonRelationshipObjectFieldsInfo: {
 		label: LocalizedValue<string>;
 		name: string;
@@ -81,6 +83,10 @@ export declare function ObjectNavigationTabs({
 	isApproved,
 	isDefaultStorageType,
 	label,
+	layoutDropdownitems,
+	layoutFDSId,
+	layoutsApiURL,
+	layoutsCreationMenu,
 	nonRelationshipObjectFieldsInfo,
 	objectDefinitionId,
 	objectFieldTypes,

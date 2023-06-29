@@ -17,10 +17,12 @@ import {FormError, SidebarCategory} from '@liferay/object-js-components-web';
 import React, {useState} from 'react';
 
 import './ObjectNavigationTabs.scss';
+import Layouts from '../../Layout/Layouts';
 import EditObjectDetails, {
 	KeyValuePair,
 } from '../../ObjectDetails/EditObjectDetails';
 import Fields from '../../ObjectField/Fields';
+import {CreationMenu} from '../EditObjectDefinition';
 
 interface ObjectNavigationProps {
 	baseResourceURL: string;
@@ -32,10 +34,7 @@ interface ObjectNavigationProps {
 	fieldDropdownItems: [];
 	fieldId: string;
 	fieldsApiURL: string;
-	fieldsCreationMenu: {
-		primaryItems?: any[];
-		secondaryItems?: any[];
-	};
+	fieldsCreationMenu: CreationMenu;
 	filterOperators: TFilterOperators;
 	forbiddenChars: string[];
 	forbiddenLastChars: string[];
@@ -46,6 +45,10 @@ interface ObjectNavigationProps {
 	isApproved: boolean;
 	isDefaultStorageType: boolean;
 	label: LocalizedValue<string>;
+	layoutDropdownitems: [];
+	layoutFDSId: string;
+	layoutsApiURL: string;
+	layoutsCreationMenu: CreationMenu;
 	nonRelationshipObjectFieldsInfo: {
 		label: LocalizedValue<string>;
 		name: string;
@@ -88,6 +91,10 @@ export function ObjectNavigationTabs({
 	isApproved,
 	isDefaultStorageType,
 	label,
+	layoutDropdownitems,
+	layoutFDSId,
+	layoutsApiURL,
+	layoutsCreationMenu,
 	nonRelationshipObjectFieldsInfo,
 	objectDefinitionId,
 	objectFieldTypes,
@@ -127,6 +134,14 @@ export function ObjectNavigationTabs({
 						}}
 					>
 						{Liferay.Language.get('fields')}
+					</ClayTabs.Item>
+
+					<ClayTabs.Item
+						innerProps={{
+							'aria-controls': 'tabpanel-2',
+						}}
+					>
+						{Liferay.Language.get('layouts')}
 					</ClayTabs.Item>
 				</ClayTabs>
 			</div>
@@ -185,6 +200,18 @@ export function ObjectNavigationTabs({
 							readOnly={readOnly}
 							sidebarElements={sidebarElements}
 							workflowStatusJSONArray={workflowStatusJSONArray}
+						/>
+					</ClayTabs.TabPane>
+
+					<ClayTabs.TabPane aria-labelledby="layouts-tab">
+						<Layouts
+							apiURL={layoutsApiURL}
+							creationMenu={layoutsCreationMenu}
+							id={layoutFDSId}
+							items={layoutDropdownitems}
+							objectDefinitionExternalReferenceCode={
+								externalReferenceCode
+							}
 						/>
 					</ClayTabs.TabPane>
 				</ClayTabs.Content>

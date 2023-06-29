@@ -22,6 +22,5 @@ export default function Layouts({
 	id,
 	items,
 	objectDefinitionExternalReferenceCode,
-	style,
 	url,
 }: IFDSTableProps): JSX.Element;

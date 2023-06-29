@@ -40,7 +40,6 @@ export default function Layouts({
 	id,
 	items,
 	objectDefinitionExternalReferenceCode,
-	style,
 	url,
 }: IFDSTableProps) {
 	const [creationLanguageId, setCreationLanguageId] = useState<
@@ -103,7 +102,7 @@ export default function Layouts({
 			'_com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet_',
 		portletId:
 			'com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet',
-		style,
+		style: 'fluid' as 'fluid',
 		views: [
 			{
 				contentRenderer: 'table',
