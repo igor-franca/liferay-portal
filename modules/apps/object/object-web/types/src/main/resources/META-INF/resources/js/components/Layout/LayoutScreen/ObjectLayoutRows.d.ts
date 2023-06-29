@@ -13,10 +13,9 @@
  */
 
 import React from 'react';
-import {TObjectLayoutRow} from '../types';
 interface ObjectLayoutRowsProps extends React.HTMLAttributes<HTMLElement> {
 	boxIndex: number;
-	objectLayoutRows: TObjectLayoutRow[];
+	objectLayoutRows: ObjectLayoutRow[];
 	tabIndex: number;
 }
 export declare function ObjectLayoutRows({

@@ -23,22 +23,19 @@ import {
 import React, {useEffect, useState} from 'react';
 
 import {defaultLanguageId} from '../../utils/constants';
-import {TabsVisitor} from '../../utils/visitor';
 import InfoScreen from './InfoScreen/InfoScreen';
 import LayoutScreen from './LayoutScreen/LayoutScreen';
+import {
+	normalizeObjectFields,
+	normalizeObjectRelationships,
+} from './layoutUtil';
 import {
 	LayoutContextProvider,
 	TYPES,
 	useLayoutContext,
 } from './objectLayoutContext';
-import {
-	TObjectField,
-	TObjectLayout,
-	TObjectLayoutTab,
-	TObjectRelationship,
-} from './types';
 
-const TABS = [
+const LAYOUT_TABS = [
 	{
 		Component: InfoScreen,
 		label: Liferay.Language.get('info'),
@@ -49,68 +46,13 @@ const TABS = [
 	},
 ];
 
-type TNormalizeObjectFields = ({
-	objectFields,
-	objectLayout,
-}: {
-	objectFields: TObjectField[];
-	objectLayout: TObjectLayout;
-}) => TObjectField[];
+interface LayoutProps {
+	closeVerticalbar: () => void;
+}
 
-const normalizeObjectFields: TNormalizeObjectFields = ({
-	objectFields,
-	objectLayout,
-}) => {
-	const visitor = new TabsVisitor(objectLayout);
-
-	const objectFieldNames = objectFields.map(({name}) => name);
-
-	const normalizedObjectFields = [...objectFields];
-
-	visitor.mapFields((field) => {
-		const objectFieldIndex = objectFieldNames.indexOf(
-			field.objectFieldName
-		);
-		normalizedObjectFields[objectFieldIndex].inLayout = true;
-	});
-
-	return normalizedObjectFields;
-};
-
-type TNormalizeObjectRelationships = ({
-	objectLayoutTabs,
-	objectRelationships,
-}: {
-	objectLayoutTabs: TObjectLayoutTab[];
-	objectRelationships: TObjectRelationship[];
-}) => TObjectRelationship[];
-
-const normalizeObjectRelationships: TNormalizeObjectRelationships = ({
-	objectLayoutTabs,
-	objectRelationships,
-}) => {
-	const objectRelationshipIds = objectRelationships.map(({id}) => id);
-
-	const normalizedObjectRelationships = [...objectRelationships];
-
-	objectLayoutTabs.forEach(({objectRelationshipId}) => {
-		if (objectRelationshipId) {
-			const objectRelationshipIndex = objectRelationshipIds.indexOf(
-				objectRelationshipId
-			);
-
-			normalizedObjectRelationships[
-				objectRelationshipIndex
-			].inLayout = true;
-		}
-	});
-
-	return normalizedObjectRelationships;
-};
-
-const Layout: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
+function Layout({closeVerticalbar}: LayoutProps) {
 	const [
-		{isViewOnly, objectFields, objectLayout, objectLayoutId},
+		{objectFields, objectLayout, objectLayoutId, readOnly},
 		dispatch,
 	] = useLayoutContext();
 	const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -123,7 +65,7 @@ const Layout: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 				name,
 				objectDefinitionExternalReferenceCode,
 				objectLayoutTabs,
-			} = await API.fetchJSON<TObjectLayout>(
+			} = await API.fetchJSON<ObjectLayout>(
 				`/o/object-admin/v1.0/object-layouts/${objectLayoutId}`
 			);
 
@@ -184,7 +126,7 @@ const Layout: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 			(objectField) => objectField.inLayout
 		);
 
-		if (invalidateRequired(objectLayout.name[defaultLanguageId])) {
+		if (invalidateRequired(objectLayout?.name[defaultLanguageId])) {
 			openToast({
 				message: Liferay.Language.get('a-name-is-required'),
 				type: 'danger',
@@ -234,12 +176,13 @@ const Layout: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 
 	return (
 		<SidePanelContent
+			closeVerticalBar={closeVerticalbar}
 			onSave={saveObjectLayout}
-			readOnly={isViewOnly || loading}
+			readOnly={readOnly || loading}
 			title={Liferay.Language.get('layout')}
 		>
 			<ClayTabs className="side-panel-iframe__tabs">
-				{TABS.map(({label}, index) => (
+				{LAYOUT_TABS.map(({label}, index) => (
 					<ClayTabs.Item
 						active={activeIndex === index}
 						key={index}
@@ -251,7 +194,7 @@ const Layout: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 			</ClayTabs>
 
 			<ClayTabs.Content activeIndex={activeIndex} fade>
-				{TABS.map(({Component}, index) => (
+				{LAYOUT_TABS.map(({Component}, index) => (
 					<ClayTabs.TabPane key={index}>
 						{!loading && <Component />}
 					</ClayTabs.TabPane>
@@ -259,28 +202,30 @@ const Layout: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 			</ClayTabs.Content>
 		</SidePanelContent>
 	);
-};
-
-interface ILayoutWrapperProps extends React.HTMLAttributes<HTMLElement> {
-	isViewOnly: boolean;
-	objectFieldTypes: ObjectFieldType[];
-	objectLayoutId: string;
 }
 
-export default function LayoutWrapper({
-	isViewOnly,
+interface EditObjectLayoutProps {
+	closeVerticalbar: () => void;
+	objectFieldTypes: ObjectFieldType[];
+	objectLayoutId: number;
+	readOnly: boolean;
+}
+
+export function EditObjectLayout({
+	closeVerticalbar,
 	objectFieldTypes,
 	objectLayoutId,
-}: ILayoutWrapperProps) {
+	readOnly,
+}: EditObjectLayoutProps) {
 	return (
 		<LayoutContextProvider
 			value={{
-				isViewOnly,
 				objectFieldTypes,
 				objectLayoutId,
+				readOnly,
 			}}
 		>
-			<Layout />
+			<Layout closeVerticalbar={closeVerticalbar} />
 		</LayoutContextProvider>
 	);
 }

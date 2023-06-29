@@ -12,27 +12,35 @@
  * details.
  */
 
+import {FrontendDataSet} from '@liferay/frontend-data-set-web';
 import {
-	FrontendDataSet,
-
-	// @ts-ignore
-
-} from '@liferay/frontend-data-set-web';
-import {API, getLocalizableLabel} from '@liferay/object-js-components-web';
+	API,
+	ObjectVerticalBar,
+	getLocalizableLabel,
+} from '@liferay/object-js-components-web';
 import React, {useEffect, useState} from 'react';
 
-import {
-	IFDSTableProps,
-	defaultDataSetProps,
-	fdsItem,
-	formatActionURL,
-} from '../../utils/fds';
+import {IFDSTableProps, defaultDataSetProps, fdsItem} from '../../utils/fds';
+import {EditObjectLayout} from './EditObjectLayout';
 import {ModalAddObjectLayout} from './ModalAddObjectLayout';
+
+import './Layouts.scss';
 
 interface ItemData {
 	defaultObjectLayout: boolean;
 	id: number;
 }
+
+interface LayoutsProps extends IFDSTableProps {
+	objectFieldTypes: ObjectFieldType[];
+	readOnly: boolean;
+}
+
+const verticalBarItems = [
+	{
+		title: 'editObjectLayoutVerticalBar',
+	},
+];
 
 export default function Layouts({
 	apiURL,
@@ -41,12 +49,46 @@ export default function Layouts({
 	id,
 	items,
 	objectDefinitionExternalReferenceCode,
-	url,
-}: IFDSTableProps) {
+	objectFieldTypes,
+	readOnly,
+}: LayoutsProps) {
 	const [creationLanguageId, setCreationLanguageId] = useState<
 		Liferay.Language.Locale
 	>();
+	const [editObjectLayoutId, setEditObjectLayoutId] = useState<number>();
 	const [showAddLayoutModal, setShowAddLayoutModal] = useState(false);
+	const [showVerticalBar, setShowVerticalBar] = useState<boolean>(false);
+	const [triggerSideBarAnimation, settriggerSideBarAnimation] = useState<
+		boolean
+	>(false);
+
+	function objectLayoutLabelDataRenderer({
+		itemData,
+		value,
+	}: fdsItem<ItemData>) {
+		const handleEditField = () => {
+			setEditObjectLayoutId(itemData.id);
+			setShowVerticalBar(true);
+			settriggerSideBarAnimation(true);
+		};
+
+		return (
+			<div className="table-list-title">
+				<a href="#" onClick={handleEditField}>
+					{getLocalizableLabel(
+						creationLanguageId as Liferay.Language.Locale,
+						value
+					)}
+				</a>
+			</div>
+		);
+	}
+
+	function objectLayoutDefaultDataRenderer({itemData}: {itemData: ItemData}) {
+		return itemData.defaultObjectLayout
+			? Liferay.Language.get('yes')
+			: Liferay.Language.get('no');
+	}
 
 	useEffect(() => {
 		const makeFetch = async () => {
@@ -68,33 +110,11 @@ export default function Layouts({
 		};
 	}, []);
 
-	function objectLayoutLabelDataRenderer({
-		itemData,
-		openSidePanel,
-		value,
-	}: fdsItem<ItemData>) {
-		const handleEditField = () => {
-			openSidePanel({
-				url: formatActionURL(url as string, itemData.id),
-			});
-		};
-
-		return (
-			<div className="table-list-title">
-				<a href="#" onClick={handleEditField}>
-					{getLocalizableLabel(
-						creationLanguageId as Liferay.Language.Locale,
-						value
-					)}
-				</a>
-			</div>
-		);
-	}
-
-	function objectLayoutDefaultDataRenderer({itemData}: {itemData: ItemData}) {
-		return itemData.defaultObjectLayout
-			? Liferay.Language.get('yes')
-			: Liferay.Language.get('no');
+	function closeVerticalBar() {
+		settriggerSideBarAnimation(false);
+		setTimeout(() => {
+			setShowVerticalBar(false);
+		}, 500);
 	}
 
 	const dataSetProps = {
@@ -110,6 +130,19 @@ export default function Layouts({
 		itemsActions: items,
 		namespace:
 			'_com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet_',
+		onActionDropdownItemClick({
+			action,
+			itemData,
+		}: {
+			action: {data: {id: string}};
+			itemData: ObjectLayout;
+		}) {
+			if (action.data.id === 'editObjectLayout') {
+				setEditObjectLayoutId(itemData.id);
+				setShowVerticalBar(true);
+				settriggerSideBarAnimation(true);
+			}
+		},
 		portletId:
 			'com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet',
 		style: 'fluid' as 'fluid',
@@ -146,6 +179,21 @@ export default function Layouts({
 	return (
 		<>
 			<FrontendDataSet {...dataSetProps} />
+
+			{showVerticalBar && (
+				<ObjectVerticalBar
+					defaultActive="editObjectLayoutVerticalBar"
+					triggerSideBarAnimation={triggerSideBarAnimation}
+					verticalBaritems={verticalBarItems}
+				>
+					<EditObjectLayout
+						closeVerticalbar={closeVerticalBar}
+						objectFieldTypes={objectFieldTypes}
+						objectLayoutId={editObjectLayoutId as number}
+						readOnly={readOnly as boolean}
+					/>
+				</ObjectVerticalBar>
+			)}
 
 			{showAddLayoutModal && (
 				<ModalAddObjectLayout

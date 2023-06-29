@@ -21,7 +21,7 @@ import {useLayoutContext} from '../objectLayoutContext';
 import {ModalAddObjectLayoutTab} from './ModalAddObjectLayoutTab';
 
 export function AddNewTabButton() {
-	const [{isViewOnly}] = useLayoutContext();
+	const [{readOnly}] = useLayoutContext();
 	const [visibleModal, setVisibleModal] = useState(false);
 	const {observer, onClose} = useModal({
 		onClose: () => setVisibleModal(false),
@@ -31,7 +31,7 @@ export function AddNewTabButton() {
 		<>
 			<div className="layout-tab__add-tab-btn">
 				<ClayButton
-					disabled={isViewOnly}
+					disabled={readOnly}
 					displayType="secondary"
 					onClick={() => setVisibleModal(true)}
 				>

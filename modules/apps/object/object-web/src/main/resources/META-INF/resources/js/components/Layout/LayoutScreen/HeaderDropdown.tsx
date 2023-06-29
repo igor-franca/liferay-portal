@@ -33,8 +33,8 @@ export function HeaderDropdown({
 	const [
 		{
 			enableCategorization,
-			isViewOnly,
 			objectLayout: {objectLayoutTabs},
+			readOnly,
 		},
 	] = useLayoutContext();
 
@@ -79,7 +79,7 @@ export function HeaderDropdown({
 				)}
 
 				<ClayDropDown.Item
-					disabled={isViewOnly}
+					disabled={readOnly}
 					onClick={() => handleOnClick(deleteElement)}
 				>
 					{Liferay.Language.get('delete')}

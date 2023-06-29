@@ -12,37 +12,31 @@
  * details.
  */
 
-import {
-	TObjectLayout,
-	TObjectLayoutBox,
-	TObjectLayoutColumn,
-	TObjectLayoutTab,
-} from '../components/Layout/types';
 declare class TabsVisitor {
 	private _layout;
-	constructor(layout: TObjectLayout);
+	constructor(layout: ObjectLayout);
 	dispose(): void;
-	setLayout(layout: TObjectLayout): void;
+	setLayout(layout: ObjectLayout): void;
 	mapFields(
-		mapper: (field: TObjectLayoutColumn) => void
+		mapper: (field: ObjectLayoutColumns) => void
 	): void[][][][] | undefined;
 }
 declare class BoxesVisitor {
 	private _tab;
-	constructor(tab: TObjectLayoutTab);
+	constructor(tab: ObjectLayoutTab);
 	dispose(): void;
-	setTab(tab: TObjectLayoutTab): void;
+	setTab(tab: ObjectLayoutTab): void;
 	mapFields(
-		mapper: (field: TObjectLayoutColumn) => void
+		mapper: (field: ObjectLayoutColumns) => void
 	): void[][][] | undefined;
 }
 declare class RowsVisitor {
 	private _box;
-	constructor(box: TObjectLayoutBox);
+	constructor(box: ObjectLayoutBox);
 	dispose(): void;
-	setBox(box: TObjectLayoutBox): void;
+	setBox(box: ObjectLayoutBox): void;
 	mapFields(
-		mapper: (field: TObjectLayoutColumn) => void
+		mapper: (field: ObjectLayoutColumns) => void
 	): void[][] | undefined;
 }
 export {BoxesVisitor, RowsVisitor, TabsVisitor};

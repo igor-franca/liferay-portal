@@ -109,6 +109,45 @@ interface ObjectField {
 	system?: boolean;
 }
 
+interface ObjectLayout {
+	defaultObjectLayout: boolean;
+	id?: number;
+	name: LocalizedValue<string>;
+	objectDefinitionExternalReferenceCode: string;
+	objectDefinitionId?: number;
+	objectLayoutTabs: ObjectLayoutTab[];
+}
+
+interface ObjectLayoutTab {
+	id?: number;
+	name: LocalizedValue<string>;
+	objectLayoutBoxes: ObjectLayoutBox[];
+	objectRelationshipId: number;
+	priority: number;
+}
+
+interface ObjectLayoutBox {
+	collapsable: boolean;
+	id?: number;
+	name: LocalizedValue<string>;
+	objectLayoutRows: ObjectLayoutRow[];
+	priority: number;
+	type: 'regular' | 'categorization';
+}
+
+interface ObjectLayoutRow {
+	id?: number;
+	objectLayoutColumns: ObjectLayoutColumns[];
+	priority: number;
+}
+
+interface ObjectLayoutColumns {
+	id?: number;
+	objectFieldName: string;
+	priority: number;
+	size: number;
+}
+
 interface ObjectFieldView extends ObjectField {
 	checked?: boolean;
 	filtered?: boolean;

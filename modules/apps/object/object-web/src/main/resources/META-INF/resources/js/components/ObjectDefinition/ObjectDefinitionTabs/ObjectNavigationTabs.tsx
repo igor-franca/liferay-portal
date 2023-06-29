@@ -110,7 +110,7 @@ export function ObjectNavigationTabs({
 	values,
 	workflowStatusJSONArray,
 }: ObjectNavigationProps) {
-	const [active, setActive] = useState(1);
+	const [active, setActive] = useState(2);
 
 	return (
 		<>
@@ -212,6 +212,8 @@ export function ObjectNavigationTabs({
 							objectDefinitionExternalReferenceCode={
 								externalReferenceCode
 							}
+							objectFieldTypes={objectFieldTypes}
+							readOnly={readOnly}
 						/>
 					</ClayTabs.TabPane>
 				</ClayTabs.Content>

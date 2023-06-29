@@ -27,7 +27,7 @@ import {TYPES, useLayoutContext} from '../objectLayoutContext';
 
 const InfoScreen: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 	const [
-		{creationLanguageId, isViewOnly, objectLayout},
+		{creationLanguageId, objectLayout, readOnly},
 		dispatch,
 	] = useLayoutContext();
 
@@ -47,7 +47,7 @@ const InfoScreen: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 	return (
 		<Card title={Liferay.Language.get('basic-info')}>
 			<Input
-				disabled={isViewOnly}
+				disabled={readOnly}
 				error={error}
 				label={Liferay.Language.get('name')}
 				name="name"
@@ -67,7 +67,7 @@ const InfoScreen: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 			<ClayForm.Group className="mb-0">
 				<ClayCheckbox
 					checked={objectLayout.defaultObjectLayout}
-					disabled={isViewOnly}
+					disabled={readOnly}
 					label={Liferay.Language.get('mark-as-default')}
 					onChange={({target: {checked}}) => {
 						dispatch({

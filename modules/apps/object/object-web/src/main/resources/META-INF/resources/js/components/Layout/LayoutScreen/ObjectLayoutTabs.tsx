@@ -33,7 +33,7 @@ import {ObjectLayoutRelationship} from './ObjectLayoutRelationship';
 
 const ObjectLayoutTabs: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 	const [
-		{creationLanguageId, isViewOnly, objectLayout},
+		{creationLanguageId, objectLayout, readOnly},
 		dispatch,
 	] = useLayoutContext();
 	const [visibleModal, setVisibleModal] = useState(false);
@@ -71,7 +71,7 @@ const ObjectLayoutTabs: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 									<>
 										{!isRelationshipType && (
 											<ClayButton
-												disabled={isViewOnly}
+												disabled={readOnly}
 												displayType="secondary"
 												onClick={() => {
 													setVisibleModal(true);

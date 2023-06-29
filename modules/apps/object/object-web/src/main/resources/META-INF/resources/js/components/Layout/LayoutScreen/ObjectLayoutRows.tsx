@@ -14,12 +14,11 @@
 
 import React from 'react';
 
-import {TObjectLayoutRow} from '../types';
 import {ObjectLayoutColumns} from './ObjectLayoutColumns';
 
 interface ObjectLayoutRowsProps extends React.HTMLAttributes<HTMLElement> {
 	boxIndex: number;
-	objectLayoutRows: TObjectLayoutRow[];
+	objectLayoutRows: ObjectLayoutRow[];
 	tabIndex: number;
 }
 

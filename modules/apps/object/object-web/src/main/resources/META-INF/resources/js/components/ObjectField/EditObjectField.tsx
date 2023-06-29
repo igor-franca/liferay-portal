@@ -237,7 +237,7 @@ export default function EditObjectField({
 								errors={errors}
 								isDefaultStorageType={isDefaultStorageType}
 								readOnlySidebarElements={
-									readOnlySidebarElements
+									sidebarElements
 								}
 								setValues={setValues}
 								sidebarElements={sidebarElements}

@@ -12,15 +12,18 @@
  * details.
  */
 
-import React from 'react';
-interface ILayoutWrapperProps extends React.HTMLAttributes<HTMLElement> {
-	isViewOnly: boolean;
+/// <reference types="react" />
+
+interface EditObjectLayoutProps {
+	closeVerticalbar: () => void;
 	objectFieldTypes: ObjectFieldType[];
-	objectLayoutId: string;
+	objectLayoutId: number;
+	readOnly: boolean;
 }
-export default function LayoutWrapper({
-	isViewOnly,
+export declare function EditObjectLayout({
+	closeVerticalbar,
 	objectFieldTypes,
 	objectLayoutId,
-}: ILayoutWrapperProps): JSX.Element;
+	readOnly,
+}: EditObjectLayoutProps): JSX.Element;
 export {};

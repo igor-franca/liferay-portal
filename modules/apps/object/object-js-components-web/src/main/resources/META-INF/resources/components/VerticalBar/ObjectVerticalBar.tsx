@@ -20,6 +20,7 @@ import './ObjectVerticalBar.scss';
 
 interface ObjectVerticalBarProps {
 	children: ReactNode;
+	defaultActive: string;
 	triggerSideBarAnimation: boolean;
 	verticalBaritems: {
 		title: string;
@@ -28,6 +29,7 @@ interface ObjectVerticalBarProps {
 
 export function ObjectVerticalBar({
 	children,
+	defaultActive,
 	triggerSideBarAnimation,
 	verticalBaritems,
 }: ObjectVerticalBarProps) {
@@ -38,7 +40,7 @@ export function ObjectVerticalBar({
 					? 'lfr__object-vertical-bar--open'
 					: 'lfr__object-vertical-bar--closed'
 			)}
-			defaultActive="editObjectFieldSideBar"
+			defaultActive={defaultActive}
 			defaultPanelWidth={1000}
 			panelWidthMax={1200}
 			panelWidthMin={400}

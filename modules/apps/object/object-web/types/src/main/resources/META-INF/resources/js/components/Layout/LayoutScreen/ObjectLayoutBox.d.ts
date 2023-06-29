@@ -13,12 +13,12 @@
  */
 
 import React from 'react';
-import {BoxType, TObjectLayoutRow} from '../types';
+import {BoxType} from '../types';
 interface ObjectLayoutBoxProps extends React.HTMLAttributes<HTMLElement> {
 	boxIndex: number;
 	collapsable: boolean;
 	label: string;
-	objectLayoutRows?: TObjectLayoutRow[];
+	objectLayoutRows?: ObjectLayoutRow[];
 	tabIndex: number;
 	type: BoxType;
 }

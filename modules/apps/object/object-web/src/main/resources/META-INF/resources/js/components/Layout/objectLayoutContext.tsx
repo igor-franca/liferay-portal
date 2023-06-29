@@ -20,22 +20,17 @@ import {
 	findObjectLayoutRowIndex,
 } from '../../utils/layout';
 import {BoxesVisitor, RowsVisitor} from '../../utils/visitor';
-import {
-	BoxType,
-	TObjectField,
-	TObjectLayout,
-	TObjectRelationship,
-} from './types';
+import {BoxType, TObjectField, TObjectRelationship} from './types';
 
 type TState = {
 	creationLanguageId: Liferay.Language.Locale;
 	enableCategorization: boolean;
-	isViewOnly: boolean;
 	objectFieldTypes: ObjectFieldType[];
 	objectFields: TObjectField[];
-	objectLayout: TObjectLayout;
-	objectLayoutId: string;
+	objectLayout: ObjectLayout;
+	objectLayoutId: number;
 	objectRelationships: TObjectRelationship[];
+	readOnly: boolean;
 };
 
 type TAction =
@@ -43,7 +38,7 @@ type TAction =
 			payload: {
 				creationLanguageId: Liferay.Language.Locale;
 				enableCategorization: boolean;
-				objectLayout: TObjectLayout;
+				objectLayout: ObjectLayout;
 				objectRelationships: TObjectRelationship[];
 			};
 			type: TYPES.ADD_OBJECT_LAYOUT;
@@ -150,7 +145,7 @@ export enum TYPES {
 
 const initialState = {
 	objectFields: [] as TObjectField[],
-	objectLayout: {} as TObjectLayout,
+	objectLayout: {} as ObjectLayout,
 	objectRelationships: [] as TObjectRelationship[],
 } as TState;
 
@@ -474,9 +469,9 @@ const layoutReducer = (state: TState, action: TAction) => {
 interface ILayoutContextProviderProps
 	extends React.HTMLAttributes<HTMLElement> {
 	value: {
-		isViewOnly: boolean;
 		objectFieldTypes: ObjectFieldType[];
-		objectLayoutId: string;
+		objectLayoutId: number;
+		readOnly: boolean;
 	};
 }
 

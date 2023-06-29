@@ -16,6 +16,7 @@ import {ReactNode} from 'react';
 import './ObjectVerticalBar.scss';
 interface ObjectVerticalBarProps {
 	children: ReactNode;
+	defaultActive: string;
 	triggerSideBarAnimation: boolean;
 	verticalBaritems: {
 		title: string;
@@ -23,6 +24,7 @@ interface ObjectVerticalBarProps {
 }
 export declare function ObjectVerticalBar({
 	children,
+	defaultActive,
 	triggerSideBarAnimation,
 	verticalBaritems,
 }: ObjectVerticalBarProps): JSX.Element;

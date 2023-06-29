@@ -15,6 +15,11 @@
 /// <reference types="react" />
 
 import {IFDSTableProps} from '../../utils/fds';
+import './Layouts.scss';
+interface LayoutsProps extends IFDSTableProps {
+	objectFieldTypes: ObjectFieldType[];
+	readOnly: boolean;
+}
 export default function Layouts({
 	apiURL,
 	creationMenu,
@@ -22,5 +27,7 @@ export default function Layouts({
 	id,
 	items,
 	objectDefinitionExternalReferenceCode,
-	url,
-}: IFDSTableProps): JSX.Element;
+	objectFieldTypes,
+	readOnly,
+}: LayoutsProps): JSX.Element;
+export {};

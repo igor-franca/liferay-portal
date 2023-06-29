@@ -23,7 +23,7 @@ import {
 import React, {useState} from 'react';
 
 import {TYPES, useLayoutContext} from '../objectLayoutContext';
-import {BoxType, TObjectLayoutRow} from '../types';
+import {BoxType} from '../types';
 import {HeaderDropdown} from './HeaderDropdown';
 import ModalAddObjectLayoutField from './ModalAddObjectLayoutField';
 import {ObjectLayoutRows} from './ObjectLayoutRows';
@@ -32,7 +32,7 @@ interface ObjectLayoutBoxProps extends React.HTMLAttributes<HTMLElement> {
 	boxIndex: number;
 	collapsable: boolean;
 	label: string;
-	objectLayoutRows?: TObjectLayoutRow[];
+	objectLayoutRows?: ObjectLayoutRow[];
 	tabIndex: number;
 	type: BoxType;
 }
@@ -45,14 +45,14 @@ export function ObjectLayoutBox({
 	tabIndex,
 	type,
 }: ObjectLayoutBoxProps) {
-	const [{enableCategorization, isViewOnly}, dispatch] = useLayoutContext();
+	const [{enableCategorization, readOnly}, dispatch] = useLayoutContext();
 	const [visibleModal, setVisibleModal] = useState(false);
 	const {observer, onClose} = useModal({
 		onClose: () => setVisibleModal(false),
 	});
 
 	const disabled =
-		(type === 'categorization' && !enableCategorization) || isViewOnly;
+		(type === 'categorization' && !enableCategorization) || readOnly;
 
 	return (
 		<>
@@ -84,7 +84,7 @@ export function ObjectLayoutBox({
 							{type === 'regular' && (
 								<ClayButton
 									className="ml-4"
-									disabled={isViewOnly}
+									disabled={readOnly}
 									displayType="secondary"
 									onClick={() => setVisibleModal(true)}
 									small

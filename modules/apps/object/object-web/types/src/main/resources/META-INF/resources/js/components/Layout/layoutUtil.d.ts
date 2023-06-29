@@ -12,10 +12,21 @@
  * details.
  */
 
-export declare type BoxType = 'regular' | 'categorization';
-export interface TObjectField extends ObjectField {
-	inLayout?: boolean;
+import {TObjectField, TObjectRelationship} from './types';
+interface NormalizeObjectFieldsProps {
+	objectFields: TObjectField[];
+	objectLayout: Partial<ObjectLayout>;
 }
-export interface TObjectRelationship extends ObjectRelationship {
-	inLayout?: boolean;
+export declare function normalizeObjectFields({
+	objectFields,
+	objectLayout,
+}: NormalizeObjectFieldsProps): TObjectField[];
+interface NormalizeObjectRelationshipsProps {
+	objectLayoutTabs: ObjectLayoutTab[];
+	objectRelationships: TObjectRelationship[];
 }
+export declare function normalizeObjectRelationships({
+	objectLayoutTabs,
+	objectRelationships,
+}: NormalizeObjectRelationshipsProps): TObjectRelationship[];
+export {};

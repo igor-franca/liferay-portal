@@ -12,13 +12,9 @@
  * details.
  */
 
-import {
-	TObjectField,
-	TObjectLayoutRow,
-	TObjectRelationship,
-} from '../components/Layout/types';
+import {TObjectField, TObjectRelationship} from '../components/Layout/types';
 export declare function findObjectLayoutRowIndex(
-	objectLayoutRows: TObjectLayoutRow[],
+	objectLayoutRows: ObjectLayoutRow[],
 	fieldSize: number
 ): number;
 export declare function findObjectFieldIndexById(

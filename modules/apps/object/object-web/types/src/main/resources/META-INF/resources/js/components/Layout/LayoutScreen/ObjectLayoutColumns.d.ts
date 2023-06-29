@@ -13,10 +13,9 @@
  */
 
 import React from 'react';
-import {TObjectLayoutColumn} from '../types';
 interface ObjectLayoutColumnsProps extends React.HTMLAttributes<HTMLElement> {
 	boxIndex: number;
-	objectLayoutColumns?: TObjectLayoutColumn[];
+	objectLayoutColumns?: ObjectLayoutColumns[];
 	rowIndex: number;
 	tabIndex: number;
 }

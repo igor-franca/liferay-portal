@@ -14,39 +14,6 @@
 
 export type BoxType = 'regular' | 'categorization';
 
-export type TObjectLayout = {
-	defaultObjectLayout: boolean;
-	name: LocalizedValue<string>;
-	objectDefinitionExternalReferenceCode: string;
-	objectLayoutTabs: TObjectLayoutTab[];
-};
-
-export type TObjectLayoutTab = {
-	name: LocalizedValue<string>;
-	objectLayoutBoxes: TObjectLayoutBox[];
-	objectRelationshipId: number;
-	priority: number;
-};
-
-export type TObjectLayoutBox = {
-	collapsable: boolean;
-	name: LocalizedValue<string>;
-	objectLayoutRows: TObjectLayoutRow[];
-	priority: number;
-	type: BoxType;
-};
-
-export type TObjectLayoutRow = {
-	objectLayoutColumns: TObjectLayoutColumn[];
-	priority: number;
-};
-
-export type TObjectLayoutColumn = {
-	objectFieldName: string;
-	priority: number;
-	size: number;
-};
-
 export interface TObjectField extends ObjectField {
 	inLayout?: boolean;
 }

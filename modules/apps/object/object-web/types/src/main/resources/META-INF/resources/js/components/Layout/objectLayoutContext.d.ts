@@ -13,28 +13,23 @@
  */
 
 import React from 'react';
-import {
-	BoxType,
-	TObjectField,
-	TObjectLayout,
-	TObjectRelationship,
-} from './types';
+import {BoxType, TObjectField, TObjectRelationship} from './types';
 declare type TState = {
 	creationLanguageId: Liferay.Language.Locale;
 	enableCategorization: boolean;
-	isViewOnly: boolean;
 	objectFieldTypes: ObjectFieldType[];
 	objectFields: TObjectField[];
-	objectLayout: TObjectLayout;
-	objectLayoutId: string;
+	objectLayout: ObjectLayout;
+	objectLayoutId: number;
 	objectRelationships: TObjectRelationship[];
+	readOnly: boolean;
 };
 declare type TAction =
 	| {
 			payload: {
 				creationLanguageId: Liferay.Language.Locale;
 				enableCategorization: boolean;
-				objectLayout: TObjectLayout;
+				objectLayout: ObjectLayout;
 				objectRelationships: TObjectRelationship[];
 			};
 			type: TYPES.ADD_OBJECT_LAYOUT;
@@ -144,9 +139,9 @@ declare const initialState: TState;
 interface ILayoutContextProviderProps
 	extends React.HTMLAttributes<HTMLElement> {
 	value: {
-		isViewOnly: boolean;
 		objectFieldTypes: ObjectFieldType[];
-		objectLayoutId: string;
+		objectLayoutId: number;
+		readOnly: boolean;
 	};
 }
 export declare function LayoutContextProvider({

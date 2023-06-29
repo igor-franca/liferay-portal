@@ -55,6 +55,12 @@ interface FieldsProps extends IFDSTableProps {
 	workflowStatusJSONArray: LabelValueObject[];
 }
 
+const verticalBarItems = [
+	{
+		title: 'editObjectFieldVerticalBar',
+	},
+];
+
 export default function Fields({
 	apiURL,
 	baseResourceURL,
@@ -91,12 +97,6 @@ export default function Fields({
 	] = useState<boolean>(false);
 	const [showVerticalBar, setShowVerticalBar] = useState<boolean>(false);
 	const [objectFieldId, setObjetFieldId] = useState<number>();
-
-	const verticalBarItems = [
-		{
-			title: 'editObjectFieldSideBar',
-		},
-	];
 
 	useEffect(() => {
 		Liferay.on('addObjectField', () => setShowAddFieldModal(true));
@@ -262,6 +262,7 @@ export default function Fields({
 			<FrontendDataSet {...dataSetProps} />
 			{showVerticalBar && (
 				<ObjectVerticalBar
+					defaultActive="editObjectFieldVerticalBar"
 					triggerSideBarAnimation={triggerSideBarAnimation}
 					verticalBaritems={verticalBarItems}
 				>

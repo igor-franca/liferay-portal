@@ -15,12 +15,11 @@
 import classNames from 'classnames';
 import React from 'react';
 
-import {TObjectLayoutColumn} from '../types';
 import {ObjectLayoutField} from './ObjectLayoutField';
 
 interface ObjectLayoutColumnsProps extends React.HTMLAttributes<HTMLElement> {
 	boxIndex: number;
-	objectLayoutColumns?: TObjectLayoutColumn[];
+	objectLayoutColumns?: ObjectLayoutColumns[];
 	rowIndex: number;
 	tabIndex: number;
 }
