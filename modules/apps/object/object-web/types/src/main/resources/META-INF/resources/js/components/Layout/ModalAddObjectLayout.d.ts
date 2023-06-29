@@ -12,12 +12,14 @@
  * details.
  */
 
-import {Observer} from '@clayui/modal/lib/types';
-import React from 'react';
-interface IProps extends React.HTMLAttributes<HTMLElement> {
+/// <reference types="react" />
+
+interface ModalAddObjectLayoutProps {
 	apiURL: string;
-	observer: Observer;
-	onClose: () => void;
+	onVisibilityChange: (value: boolean) => void;
 }
-declare const ModalWithProvider: React.FC<IProps>;
-export default ModalWithProvider;
+export declare function ModalAddObjectLayout({
+	apiURL,
+	onVisibilityChange,
+}: ModalAddObjectLayoutProps): JSX.Element;
+export {};

@@ -27,6 +27,7 @@ import {
 	fdsItem,
 	formatActionURL,
 } from '../../utils/fds';
+import {ModalAddObjectLayout} from './ModalAddObjectLayout';
 
 interface ItemData {
 	defaultObjectLayout: boolean;
@@ -45,6 +46,7 @@ export default function Layouts({
 	const [creationLanguageId, setCreationLanguageId] = useState<
 		Liferay.Language.Locale
 	>();
+	const [showAddLayoutModal, setShowAddLayoutModal] = useState(false);
 
 	useEffect(() => {
 		const makeFetch = async () => {
@@ -57,6 +59,14 @@ export default function Layouts({
 
 		makeFetch();
 	}, [objectDefinitionExternalReferenceCode]);
+
+	useEffect(() => {
+		Liferay.on('addObjectLayout', () => setShowAddLayoutModal(true));
+
+		return () => {
+			Liferay.detach('addObjectLayout');
+		};
+	}, []);
 
 	function objectLayoutLabelDataRenderer({
 		itemData,
@@ -133,5 +143,16 @@ export default function Layouts({
 		],
 	};
 
-	return <FrontendDataSet {...dataSetProps} />;
+	return (
+		<>
+			<FrontendDataSet {...dataSetProps} />
+
+			{showAddLayoutModal && (
+				<ModalAddObjectLayout
+					apiURL={apiURL as string}
+					onVisibilityChange={setShowAddLayoutModal}
+				/>
+			)}
+		</>
+	);
 }
