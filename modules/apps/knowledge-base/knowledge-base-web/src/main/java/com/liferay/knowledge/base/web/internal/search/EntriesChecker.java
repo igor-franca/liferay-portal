@@ -71,7 +71,7 @@ public class EntriesChecker extends EmptyOnClickRowChecker {
 	@Override
 	public String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String primaryKey) {
+		boolean disabled, String primaryKey, String rowTitle) {
 
 		try {
 			KBArticle kbArticle = null;
@@ -123,7 +123,7 @@ public class EntriesChecker extends EmptyOnClickRowChecker {
 				_liferayPortletResponse.getNamespace() + RowChecker.ROW_IDS +
 					name,
 				primaryKey, checkBoxRowIds, checkBoxAllRowIds,
-				checkBoxPostOnClick);
+				checkBoxPostOnClick, rowTitle);
 		}
 		catch (Exception exception) {
 			if (_log.isDebugEnabled()) {

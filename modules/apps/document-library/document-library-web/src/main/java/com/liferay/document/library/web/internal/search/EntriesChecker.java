@@ -76,7 +76,7 @@ public class EntriesChecker extends RowChecker {
 	@Override
 	public String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String primaryKey) {
+		boolean disabled, String primaryKey, String rowTitle) {
 
 		Object result = _getModel(primaryKey);
 
@@ -91,7 +91,7 @@ public class EntriesChecker extends RowChecker {
 			_liferayPortletResponse.getNamespace() + RowChecker.ROW_IDS + name,
 			primaryKey, _getEntryRowIds(), "'#" + getAllRowIds() + "'",
 			_liferayPortletResponse.getNamespace() + "toggleActionsButton();",
-			getData(result));
+			getData(result), rowTitle);
 	}
 
 	@Override
@@ -99,10 +99,15 @@ public class EntriesChecker extends RowChecker {
 		HttpServletRequest httpServletRequest, ResultRow resultRow) {
 
 		Object result = resultRow.getObject();
+		String rowTitle = GetterUtil.getString(
+			resultRow.getData(
+			).get(
+				"title"
+			));
 
 		return getRowCheckBox(
 			httpServletRequest, isChecked(result), isDisabled(result),
-			resultRow.getPrimaryKey());
+			resultRow.getPrimaryKey(), rowTitle);
 	}
 
 	@Override
@@ -173,9 +178,9 @@ public class EntriesChecker extends RowChecker {
 		HttpServletRequest httpServletRequest, boolean checked,
 		boolean disabled, String name, String value, String checkBoxRowIds,
 		String checkBoxAllRowIds, String checkBoxPostOnClick,
-		Map<String, Object> data) {
+		Map<String, Object> data, String rowTitle) {
 
-		StringBundler sb = new StringBundler(16);
+		StringBundler sb = new StringBundler(18);
 
 		sb.append("<input ");
 
@@ -195,6 +200,10 @@ public class EntriesChecker extends RowChecker {
 		sb.append(name);
 		sb.append("\" title=\"");
 		sb.append(LanguageUtil.get(httpServletRequest.getLocale(), "select"));
+		sb.append("\" aria-label=\"");
+		sb.append(
+			LanguageUtil.format(
+				httpServletRequest.getLocale(), "select-x", rowTitle));
 		sb.append("\" type=\"checkbox\" value=\"");
 		sb.append(HtmlUtil.escapeAttribute(value));
 		sb.append("\" ");
