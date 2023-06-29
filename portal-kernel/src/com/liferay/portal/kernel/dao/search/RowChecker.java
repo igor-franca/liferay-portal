@@ -102,10 +102,10 @@ public class RowChecker {
 
 	public String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String primaryKey) {
+		boolean disabled, ResultRow resultRow) {
 
 		return getRowCheckBox(
-			httpServletRequest, checked, disabled, _rowIds, primaryKey,
+			httpServletRequest, checked, disabled, _rowIds, resultRow,
 			StringUtil.quote(_rowIds), StringUtil.quote(_allRowIds),
 			StringPool.BLANK);
 	}
@@ -115,7 +115,7 @@ public class RowChecker {
 
 		return getRowCheckBox(
 			httpServletRequest, isChecked(resultRow.getObject()),
-			isDisabled(resultRow.getObject()), resultRow.getPrimaryKey());
+			isDisabled(resultRow.getObject()), resultRow);
 	}
 
 	public String getRowId() {
@@ -267,7 +267,7 @@ public class RowChecker {
 
 	protected String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String name, String value, String checkBoxRowIds,
+		boolean disabled, String name, ResultRow resultRow, String checkBoxRowIds,
 		String checkBoxAllRowIds, String checkBoxPostOnClick) {
 
 		StringBundler sb = new StringBundler(14);
@@ -289,7 +289,7 @@ public class RowChecker {
 		sb.append("\" title=\"");
 		sb.append(LanguageUtil.get(httpServletRequest.getLocale(), "select"));
 		sb.append("\" type=\"checkbox\" value=\"");
-		sb.append(HtmlUtil.escapeAttribute(value));
+		sb.append(HtmlUtil.escapeAttribute(resultRow.getPrimaryKey()));
 		sb.append("\" ");
 
 		if (Validator.isNotNull(_allRowIds)) {

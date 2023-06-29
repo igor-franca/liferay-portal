@@ -17,6 +17,7 @@ package com.liferay.wiki.web.internal.search;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
+import com.liferay.portal.kernel.dao.search.ResultRow;
 import com.liferay.portal.kernel.dao.search.RowChecker;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -67,14 +68,15 @@ public class PagesChecker extends EmptyOnClickRowChecker {
 	@Override
 	public String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String primaryKey) {
+		boolean disabled, ResultRow resultRow) {
 
-		long pageId = GetterUtil.getLong(primaryKey);
+		long pageId = GetterUtil.getLong(resultRow.getPrimaryKey());
 
 		WikiPage page = null;
 
 		try {
 			page = WikiPageLocalServiceUtil.getPageByPageId(pageId);
+			resultRow.setPrimaryKey(page.getTitle());
 		}
 		catch (PortalException portalException) {
 
@@ -125,7 +127,7 @@ public class PagesChecker extends EmptyOnClickRowChecker {
 			StringBundler.concat(
 				_liferayPortletResponse.getNamespace(), RowChecker.ROW_IDS,
 				name, ""),
-			page.getTitle(), checkBoxRowIds, "'#" + getAllRowIds() + "'",
+			resultRow, checkBoxRowIds, "'#" + getAllRowIds() + "'",
 			StringPool.BLANK);
 	}
 

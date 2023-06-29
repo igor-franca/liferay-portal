@@ -16,6 +16,7 @@ package com.liferay.user.associated.data.web.internal.search;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
+import com.liferay.portal.kernel.dao.search.ResultRow;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -42,19 +43,19 @@ public class UADHierarchyChecker extends EmptyOnClickRowChecker {
 	@Override
 	protected String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String name, String value, String checkBoxRowIds,
+		boolean disabled, String name, ResultRow resultRow, String checkBoxRowIds,
 		String checkBoxAllRowIds, String checkBoxPostOnClick) {
 
 		for (UADDisplay<?> uadDisplay : _uadDisplays) {
 			try {
-				long primaryKey = GetterUtil.getLong(value);
+				long primaryKey = GetterUtil.getLong(resultRow.getPrimaryKey());
 
 				uadDisplay.get(primaryKey);
 
 				name += AUIUtil.normalizeId(uadDisplay.getTypeKey());
 
 				return super.getRowCheckBox(
-					httpServletRequest, checked, disabled, name, value,
+					httpServletRequest, checked, disabled, name, resultRow,
 					checkBoxRowIds, checkBoxAllRowIds, checkBoxPostOnClick);
 			}
 			catch (Exception exception) {

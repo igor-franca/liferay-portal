@@ -23,6 +23,7 @@ import com.liferay.journal.web.internal.security.permission.resource.JournalFold
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
+import com.liferay.portal.kernel.dao.search.ResultRow;
 import com.liferay.portal.kernel.dao.search.RowChecker;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -69,7 +70,7 @@ public class EntriesChecker extends EmptyOnClickRowChecker {
 	@Override
 	public String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String primaryKey) {
+		boolean disabled, ResultRow resultRow) {
 
 		ThemeDisplay themeDisplay =
 			(ThemeDisplay)httpServletRequest.getAttribute(
@@ -77,13 +78,13 @@ public class EntriesChecker extends EmptyOnClickRowChecker {
 
 		JournalFolder folder = null;
 
-		String articleId = GetterUtil.getString(primaryKey);
+		String articleId = GetterUtil.getString(resultRow.getPrimaryKey());
 
 		JournalArticle article = JournalArticleLocalServiceUtil.fetchArticle(
 			themeDisplay.getScopeGroupId(), articleId);
 
 		if (article == null) {
-			long folderId = GetterUtil.getLong(primaryKey);
+			long folderId = GetterUtil.getLong(resultRow.getPrimaryKey());
 
 			folder = JournalFolderLocalServiceUtil.fetchFolder(folderId);
 		}
@@ -143,7 +144,7 @@ public class EntriesChecker extends EmptyOnClickRowChecker {
 			StringBundler.concat(
 				_liferayPortletResponse.getNamespace(), RowChecker.ROW_IDS,
 				name, StringPool.BLANK),
-			primaryKey, checkBoxRowIds, "'#" + getAllRowIds() + "'",
+			resultRow, checkBoxRowIds, "'#" + getAllRowIds() + "'",
 			StringPool.BLANK);
 	}
 

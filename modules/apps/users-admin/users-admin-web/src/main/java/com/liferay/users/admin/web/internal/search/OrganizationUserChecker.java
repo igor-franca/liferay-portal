@@ -16,6 +16,7 @@ package com.liferay.users.admin.web.internal.search;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
+import com.liferay.portal.kernel.dao.search.ResultRow;
 import com.liferay.portal.kernel.exception.NoSuchOrganizationException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -85,7 +86,7 @@ public class OrganizationUserChecker extends EmptyOnClickRowChecker {
 	@Override
 	protected String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String name, String value, String checkBoxRowIds,
+		boolean disabled, String name, ResultRow value, String checkBoxRowIds,
 		String checkBoxAllRowIds, String checkBoxPostOnClick) {
 
 		try {

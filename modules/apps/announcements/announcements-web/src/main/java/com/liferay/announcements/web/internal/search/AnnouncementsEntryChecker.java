@@ -19,6 +19,7 @@ import com.liferay.announcements.kernel.service.AnnouncementsEntryLocalServiceUt
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
+import com.liferay.portal.kernel.dao.search.ResultRow;
 import com.liferay.portal.kernel.dao.search.RowChecker;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -67,9 +68,9 @@ public class AnnouncementsEntryChecker extends EmptyOnClickRowChecker {
 	@Override
 	public String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String primaryKey) {
+		boolean disabled, ResultRow resultRow) {
 
-		long entryId = GetterUtil.getLong(primaryKey);
+		long entryId = GetterUtil.getLong(resultRow.getPrimaryKey());
 
 		AnnouncementsEntry entry = null;
 
@@ -122,7 +123,7 @@ public class AnnouncementsEntryChecker extends EmptyOnClickRowChecker {
 			StringBundler.concat(
 				_liferayPortletResponse.getNamespace(), RowChecker.ROW_IDS,
 				AnnouncementsEntry.class.getSimpleName()),
-			primaryKey, checkBoxRowIds, checkBoxAllRowIds, StringPool.BLANK);
+			resultRow, checkBoxRowIds, checkBoxAllRowIds, StringPool.BLANK);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

@@ -17,6 +17,7 @@ package com.liferay.wiki.web.internal.search;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
+import com.liferay.portal.kernel.dao.search.ResultRow;
 import com.liferay.portal.kernel.dao.search.RowChecker;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -67,9 +68,9 @@ public class NodesChecker extends EmptyOnClickRowChecker {
 	@Override
 	public String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String primaryKey) {
+		boolean disabled, ResultRow resultRow) {
 
-		long nodeId = GetterUtil.getLong(primaryKey);
+		long nodeId = GetterUtil.getLong(resultRow.getPrimaryKey());
 
 		WikiNode node = null;
 
@@ -125,7 +126,7 @@ public class NodesChecker extends EmptyOnClickRowChecker {
 			StringBundler.concat(
 				_liferayPortletResponse.getNamespace(), RowChecker.ROW_IDS,
 				name, ""),
-			primaryKey, checkBoxRowIds, "'#" + getAllRowIds() + "'",
+			resultRow, checkBoxRowIds, "'#" + getAllRowIds() + "'",
 			StringPool.BLANK);
 	}
 

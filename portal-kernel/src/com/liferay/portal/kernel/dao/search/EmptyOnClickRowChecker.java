@@ -17,6 +17,7 @@ package com.liferay.portal.kernel.dao.search;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -44,11 +45,12 @@ public class EmptyOnClickRowChecker extends RowChecker {
 	@Override
 	protected String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String name, String value, String checkBoxRowIds,
+		boolean disabled, String name, ResultRow resultRow, String checkBoxRowIds,
 		String checkBoxAllRowIds, String checkBoxPostOnClick) {
 
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(19);
 
+		String rowTitle = GetterUtil.getString(resultRow.getData().get("title"));
 		sb.append("<input ");
 
 		if (checked) {
@@ -67,8 +69,12 @@ public class EmptyOnClickRowChecker extends RowChecker {
 		sb.append(name);
 		sb.append("\" title=\"");
 		sb.append(LanguageUtil.get(httpServletRequest.getLocale(), "select"));
+		sb.append("\" aria-label=\"");
+		sb.append(LanguageUtil.get(httpServletRequest.getLocale(), "select"));
+		sb.append(StringPool.BLANK);
+		sb.append(rowTitle);
 		sb.append("\" type=\"checkbox\" value=\"");
-		sb.append(HtmlUtil.escapeAttribute(value));
+		sb.append(HtmlUtil.escapeAttribute(resultRow.getPrimaryKey()));
 		sb.append("\" ");
 
 		if (Validator.isNotNull(getAllRowIds())) {

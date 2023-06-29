@@ -76,9 +76,9 @@ public class EntriesChecker extends RowChecker {
 	@Override
 	public String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String primaryKey) {
+		boolean disabled, ResultRow resultRow) {
 
-		Object result = _getModel(primaryKey);
+		Object result = _getModel(resultRow.getPrimaryKey());
 
 		String name = _getName(result);
 
@@ -89,7 +89,7 @@ public class EntriesChecker extends RowChecker {
 		return _getRowCheckBox(
 			httpServletRequest, checked, disabled,
 			_liferayPortletResponse.getNamespace() + RowChecker.ROW_IDS + name,
-			primaryKey, _getEntryRowIds(), "'#" + getAllRowIds() + "'",
+			resultRow, _getEntryRowIds(), "'#" + getAllRowIds() + "'",
 			_liferayPortletResponse.getNamespace() + "toggleActionsButton();",
 			getData(result));
 	}
@@ -102,7 +102,7 @@ public class EntriesChecker extends RowChecker {
 
 		return getRowCheckBox(
 			httpServletRequest, isChecked(result), isDisabled(result),
-			resultRow.getPrimaryKey());
+			resultRow);
 	}
 
 	@Override
@@ -171,11 +171,12 @@ public class EntriesChecker extends RowChecker {
 
 	private String _getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String name, String value, String checkBoxRowIds,
+		boolean disabled, String name, ResultRow resultRow, String checkBoxRowIds,
 		String checkBoxAllRowIds, String checkBoxPostOnClick,
 		Map<String, Object> data) {
 
-		StringBundler sb = new StringBundler(16);
+		StringBundler sb = new StringBundler(20);
+		String rowTitle = GetterUtil.getString(resultRow.getData().get("title"));
 
 		sb.append("<input ");
 
@@ -195,8 +196,12 @@ public class EntriesChecker extends RowChecker {
 		sb.append(name);
 		sb.append("\" title=\"");
 		sb.append(LanguageUtil.get(httpServletRequest.getLocale(), "select"));
+		sb.append("\" aria-label=\"");
+		sb.append(LanguageUtil.get(httpServletRequest.getLocale(), "select"));
+		sb.append(StringPool.BLANK);
+		sb.append(rowTitle);
 		sb.append("\" type=\"checkbox\" value=\"");
-		sb.append(HtmlUtil.escapeAttribute(value));
+		sb.append(HtmlUtil.escapeAttribute(resultRow.getPrimaryKey()));
 		sb.append("\" ");
 
 		if (Validator.isNotNull(getAllRowIds())) {

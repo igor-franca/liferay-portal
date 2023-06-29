@@ -18,6 +18,7 @@ import com.liferay.expando.kernel.model.ExpandoColumn;
 import com.liferay.expando.kernel.service.ExpandoColumnLocalServiceUtil;
 import com.liferay.expando.kernel.service.permission.ExpandoColumnPermissionUtil;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
+import com.liferay.portal.kernel.dao.search.ResultRow;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -50,15 +51,17 @@ public class CustomFieldChecker extends EmptyOnClickRowChecker {
 	@Override
 	public String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String primaryKey) {
+		boolean disabled, ResultRow resultRow) {
 
 		ExpandoColumn expandoColumn =
 			ExpandoColumnLocalServiceUtil.getDefaultTableColumn(
-				_companyId, _modelResource, primaryKey);
+				_companyId, _modelResource, resultRow.getPrimaryKey());
+
+		resultRow.setPrimaryKey(String.valueOf(expandoColumn.getColumnId()));
 
 		return super.getRowCheckBox(
 			httpServletRequest, checked, disabled,
-			String.valueOf(expandoColumn.getColumnId()));
+			resultRow);
 	}
 
 	@Override

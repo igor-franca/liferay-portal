@@ -20,9 +20,11 @@ import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
+import com.liferay.portal.kernel.dao.search.ResultRow;
 import com.liferay.portal.kernel.dao.search.RowChecker;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.ratings.kernel.service.RatingsEntryService;
 
 import javax.portlet.PortletResponse;
 
@@ -55,14 +57,14 @@ public class JournalRowChecker extends EmptyOnClickRowChecker {
 	@Override
 	public String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String primaryKey) {
+		boolean disabled, ResultRow resultRow) {
 
 		ThemeDisplay themeDisplay =
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
 		JournalArticle article = JournalArticleLocalServiceUtil.fetchArticle(
-			themeDisplay.getScopeGroupId(), primaryKey);
+			themeDisplay.getScopeGroupId(), resultRow.getPrimaryKey());
 
 		if (article == null) {
 			return StringPool.BLANK;
@@ -73,7 +75,7 @@ public class JournalRowChecker extends EmptyOnClickRowChecker {
 			StringBundler.concat(
 				_portletResponse.getNamespace(), RowChecker.ROW_IDS,
 				JournalArticle.class.getSimpleName(), StringPool.BLANK),
-			primaryKey,
+			resultRow,
 			StringBundler.concat(
 				_portletResponse.getNamespace(), RowChecker.ROW_IDS,
 				JournalArticle.class.getSimpleName(), "']"),

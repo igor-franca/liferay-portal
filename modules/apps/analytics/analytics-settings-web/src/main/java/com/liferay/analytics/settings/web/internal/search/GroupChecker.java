@@ -15,6 +15,7 @@
 package com.liferay.analytics.settings.web.internal.search;
 
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
+import com.liferay.portal.kernel.dao.search.ResultRow;
 import com.liferay.portal.kernel.model.Group;
 
 import java.util.Objects;
@@ -51,15 +52,15 @@ public class GroupChecker extends EmptyOnClickRowChecker {
 	@Override
 	protected String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String name, String value, String checkBoxRowIds,
+		boolean disabled, String name, ResultRow resultRow, String checkBoxRowIds,
 		String checkBoxAllRowIds, String checkBoxPostOnClick) {
 
-		if (!checked && _ids.contains(value)) {
+		if (!checked && _ids.contains(resultRow.getPrimaryKey())) {
 			disabled = true;
 		}
 
 		return super.getRowCheckBox(
-			httpServletRequest, checked, disabled, name, value, checkBoxRowIds,
+			httpServletRequest, checked, disabled, name, resultRow, checkBoxRowIds,
 			checkBoxAllRowIds, checkBoxPostOnClick);
 	}
 

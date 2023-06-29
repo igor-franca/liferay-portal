@@ -20,6 +20,7 @@ import com.liferay.knowledge.base.web.internal.security.permission.resource.KBCo
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
+import com.liferay.portal.kernel.dao.search.ResultRow;
 import com.liferay.portal.kernel.dao.search.RowChecker;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -31,6 +32,7 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.ratings.kernel.service.RatingsEntryService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -68,10 +70,10 @@ public class KBCommentsChecker extends EmptyOnClickRowChecker {
 	@Override
 	public String getRowCheckBox(
 		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String primaryKey) {
+		boolean disabled, ResultRow resultRow) {
 
 		try {
-			long kbCommentId = GetterUtil.getLong(primaryKey);
+			long kbCommentId = GetterUtil.getLong(resultRow.getPrimaryKey());
 
 			KBCommentPermission.contains(
 				_permissionChecker,
@@ -86,7 +88,7 @@ public class KBCommentsChecker extends EmptyOnClickRowChecker {
 				httpServletRequest, checked, disabled,
 				_liferayPortletResponse.getNamespace() + RowChecker.ROW_IDS +
 					KBComment.class.getSimpleName(),
-				primaryKey, checkBoxRowIds, getAllRowIds(), StringPool.BLANK);
+				resultRow, checkBoxRowIds, getAllRowIds(), StringPool.BLANK);
 		}
 		catch (PortalException portalException) {
 
