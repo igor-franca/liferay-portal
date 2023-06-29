@@ -1,0 +1,35 @@
+.c-slideout-end {
+	top: 9.9rem;
+}
+
+.lfr__object-vertical-bar {
+	&-content {
+		overflow: auto;
+	}
+
+	&--closed {
+		animation: close-vertical-bar 0.5s;
+	}
+
+	&--open {
+		animation: open-vertical-bar 0.5s;
+	}
+}
+
+@keyframes close-vertical-bar {
+	from {
+		right: 0;
+	}
+	to {
+		right: -50%;
+	}
+}
+
+@keyframes open-vertical-bar {
+	from {
+		right: -50%;
+	}
+	to {
+		right: 0;
+	}
+}

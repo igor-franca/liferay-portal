@@ -33,6 +33,7 @@ export {InputLocalized} from './components/InputLocalized';
 export {ManagementToolbar} from './components/ManagementToolbar/index';
 export {ManagementToolbarSearch} from './components/ManagementToolbar/ManagementToolbarSearch';
 export {ModalEditExternalReferenceCode} from './components/ManagementToolbar/ModalEditExternalReferenceCode';
+export {ObjectVerticalBar} from './components/VerticalBar/ObjectVerticalBar';
 export {PicklistEntryBaseField} from './components/BaseEntryFields/PicklistEntryBaseField';
 export {RichTextLocalized} from './components/RichTextLocalized';
 export {Select} from './components/Select';

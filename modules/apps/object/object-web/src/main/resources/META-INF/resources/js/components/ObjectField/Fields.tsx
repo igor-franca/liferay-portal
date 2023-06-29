@@ -12,14 +12,13 @@
  * details.
  */
 
-import {VerticalBar} from '@clayui/core';
 import {FrontendDataSet} from '@liferay/frontend-data-set-web';
 import {
 	API,
+	ObjectVerticalBar,
 	SidebarCategory,
 	getLocalizableLabel,
 } from '@liferay/object-js-components-web';
-import classNames from 'classnames';
 import {createResourceURL} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
 
@@ -93,7 +92,7 @@ export default function Fields({
 	const [showVerticalBar, setShowVerticalBar] = useState<boolean>(false);
 	const [objectFieldId, setObjetFieldId] = useState<number>();
 
-	const sidePanelitems = [
+	const verticalBarItems = [
 		{
 			title: 'editObjectFieldSideBar',
 		},
@@ -262,52 +261,30 @@ export default function Fields({
 		<>
 			<FrontendDataSet {...dataSetProps} />
 			{showVerticalBar && (
-				<VerticalBar
-					className={classNames(
-						triggerSideBarAnimation
-							? 'lfr__edit-object-field-side-bar-open'
-							: 'lfr__edit-object-field-side-bar-closed'
-					)}
-					defaultActive="editObjectFieldSideBar"
-					defaultPanelWidth={1200}
-					panelWidth={700}
-					panelWidthMax={1200}
-					panelWidthMin={150}
-					position="right"
-					resize
+				<ObjectVerticalBar
+					triggerSideBarAnimation={triggerSideBarAnimation}
+					verticalBaritems={verticalBarItems}
 				>
-					<div className="lfr__object-edit-field-side-panel">
-						<VerticalBar.Content items={sidePanelitems}>
-							{(item) => (
-								<VerticalBar.Panel key={item.title}>
-									<EditObjectField
-										closeVerticalBar={closeVerticalBar}
-										creationLanguageId={creationLanguageId}
-										filterOperators={filterOperators}
-										forbiddenChars={forbiddenChars}
-										forbiddenLastChars={forbiddenLastChars}
-										forbiddenNames={forbiddenNames}
-										isApproved={isApproved}
-										isDefaultStorageType={
-											isDefaultStorageType
-										}
-										objectDefinitionExternalReferenceCode={
-											objectDefinitionExternalReferenceCode
-										}
-										objectFieldId={objectFieldId as number}
-										objectFieldTypes={objectFieldTypes}
-										objectName={objectName}
-										readOnly={readOnly}
-										sidebarElements={sidebarElements}
-										workflowStatusJSONArray={
-											workflowStatusJSONArray
-										}
-									/>
-								</VerticalBar.Panel>
-							)}
-						</VerticalBar.Content>
-					</div>
-				</VerticalBar>
+					<EditObjectField
+						closeVerticalBar={closeVerticalBar}
+						creationLanguageId={creationLanguageId}
+						filterOperators={filterOperators}
+						forbiddenChars={forbiddenChars}
+						forbiddenLastChars={forbiddenLastChars}
+						forbiddenNames={forbiddenNames}
+						isApproved={isApproved}
+						isDefaultStorageType={isDefaultStorageType}
+						objectDefinitionExternalReferenceCode={
+							objectDefinitionExternalReferenceCode
+						}
+						objectFieldId={objectFieldId as number}
+						objectFieldTypes={objectFieldTypes}
+						objectName={objectName}
+						readOnly={readOnly}
+						sidebarElements={sidebarElements}
+						workflowStatusJSONArray={workflowStatusJSONArray}
+					/>
+				</ObjectVerticalBar>
 			)}
 
 			{showAddModalField && (

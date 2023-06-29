@@ -31,8 +31,8 @@ export declare function useObjectFieldForm({
 	errors: import('@liferay/object-js-components-web').FormError<
 		ObjectField & {
 			function: unknown;
-			defaultValue: unknown;
 			acceptedFileExtensions: unknown;
+			defaultValue: unknown;
 			defaultValueType: unknown;
 			fileSource: unknown;
 			filters: unknown;
