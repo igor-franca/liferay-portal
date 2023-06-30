@@ -14,13 +14,20 @@
 
 /// <reference types="react" />
 
-import {SidebarCategory} from '@liferay/object-js-components-web';
+import {CustomItem, SidebarCategory} from '@liferay/object-js-components-web';
 import {KeyValuePair} from '../ObjectDetails/EditObjectDetails';
 export declare type CreationMenu = {
 	primaryItems?: any[];
 	secondaryItems?: any[];
 };
 interface EditObjectDefinitionProps {
+	actionDropdownItems: [];
+	actionId: string;
+	actionsApiURL: string;
+	actionsCreationMenu: {
+		primaryItems?: any[];
+		secondaryItems?: any[];
+	};
 	backURL: string;
 	baseResourceURL: string;
 	companyKeyValuePair: KeyValuePair[];
@@ -48,7 +55,10 @@ interface EditObjectDefinitionProps {
 		label: LocalizedValue<string>;
 		name: string;
 	}[];
+	objectActionExecutors: CustomItem[];
+	objectActionTriggers: CustomItem[];
 	objectDefinitionId: number;
+	objectDefinitionsRelationshipsURL: string;
 	objectFieldTypes: ObjectFieldType[];
 	onSubmit: (draft: boolean) => void;
 	pluralLabel: LocalizedValue<string>;
@@ -61,6 +71,7 @@ interface EditObjectDefinitionProps {
 	siteKeyValuePair: KeyValuePair[];
 	storageTypes: LabelValueObject[];
 	system: boolean;
+	validateActionExpressionURL: string;
 	viewsApiURL: string;
 	viewsCreationMenu: CreationMenu;
 	viewsDropdownItems: [];
@@ -68,6 +79,10 @@ interface EditObjectDefinitionProps {
 	workflowStatusJSONArray: LabelValueObject[];
 }
 export default function EditObjectDefinition({
+	actionDropdownItems,
+	actionId,
+	actionsApiURL,
+	actionsCreationMenu,
 	backURL,
 	baseResourceURL,
 	companyKeyValuePair,
@@ -92,7 +107,10 @@ export default function EditObjectDefinition({
 	layoutsApiURL,
 	layoutsCreationMenu,
 	nonRelationshipObjectFieldsInfo,
+	objectActionExecutors,
+	objectActionTriggers,
 	objectDefinitionId,
+	objectDefinitionsRelationshipsURL,
 	objectFieldTypes,
 	pluralLabel,
 	portletNamespace,
@@ -103,6 +121,7 @@ export default function EditObjectDefinition({
 	siteKeyValuePair,
 	storageTypes,
 	system,
+	validateActionExpressionURL,
 	viewsApiURL,
 	viewsCreationMenu,
 	viewsDropdownItems,

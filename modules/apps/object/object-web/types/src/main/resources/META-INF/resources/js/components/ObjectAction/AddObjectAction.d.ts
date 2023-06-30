@@ -17,6 +17,7 @@
 import {CustomItem, SidebarCategory} from '@liferay/object-js-components-web';
 interface AddObjectActionProps {
 	apiURL: string;
+	closeVerticalBar: () => void;
 	objectActionCodeEditorElements: SidebarCategory[];
 	objectActionExecutors: CustomItem[];
 	objectActionTriggers: CustomItem[];
@@ -28,6 +29,7 @@ interface AddObjectActionProps {
 }
 export default function AddObjectAction({
 	apiURL,
+	closeVerticalBar,
 	objectActionCodeEditorElements,
 	objectActionExecutors,
 	objectActionTriggers,

@@ -45,6 +45,9 @@ interface ObjectAction {
 	objectDefinitionsRelationshipsURL: string;
 	parameters: ObjectActionParameters;
 	script?: string;
+	status: {
+		label: string;
+	};
 }
 
 interface ObjectActionParameters {

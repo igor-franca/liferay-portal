@@ -16,6 +16,9 @@ package com.liferay.object.web.internal.object.definitions.portlet.action;
 
 import com.liferay.application.list.PanelCategoryRegistry;
 import com.liferay.list.type.service.ListTypeDefinitionService;
+import com.liferay.notification.service.NotificationTemplateLocalService;
+import com.liferay.object.action.executor.ObjectActionExecutorRegistry;
+import com.liferay.object.action.trigger.ObjectActionTriggerRegistry;
 import com.liferay.object.constants.ObjectPortletKeys;
 import com.liferay.object.constants.ObjectWebKeys;
 import com.liferay.object.field.business.type.ObjectFieldBusinessTypeRegistry;
@@ -26,11 +29,13 @@ import com.liferay.object.service.ObjectDefinitionLocalService;
 import com.liferay.object.service.ObjectFieldLocalService;
 import com.liferay.object.service.ObjectFieldSettingLocalService;
 import com.liferay.object.service.ObjectRelationshipLocalService;
+import com.liferay.object.web.internal.object.definitions.display.context.ObjectDefinitionsActionsDisplayContext;
 import com.liferay.object.web.internal.object.definitions.display.context.ObjectDefinitionsDetailsDisplayContext;
 import com.liferay.object.web.internal.object.definitions.display.context.ObjectDefinitionsFieldsDisplayContext;
 import com.liferay.object.web.internal.object.definitions.display.context.ObjectDefinitionsLayoutsDisplayContext;
 import com.liferay.object.web.internal.object.definitions.display.context.ObjectDefinitionsViewsDisplayContext;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
@@ -71,6 +76,14 @@ public class EditObjectDefinitionMVCRenderCommand implements MVCRenderCommand {
 				ObjectWebKeys.OBJECT_DEFINITION,
 				_objectDefinitionLocalService.getObjectDefinition(
 					objectDefinitionId));
+			renderRequest.setAttribute(
+				ObjectWebKeys.OBJECT_DEFINITIONS_ACTIONS_DISPLAY_CONTEXT,
+				new ObjectDefinitionsActionsDisplayContext(
+					_portal.getHttpServletRequest(renderRequest), _jsonFactory,
+					_notificationTemplateLocalService,
+					_objectActionExecutorRegistry, _objectActionTriggerRegistry,
+					_objectDefinitionLocalService,
+					_objectDefinitionModelResourcePermission));
 			renderRequest.setAttribute(
 				ObjectWebKeys.OBJECT_DEFINITIONS_DETAILS_DISPLAY_CONTEXT,
 				new ObjectDefinitionsDetailsDisplayContext(
@@ -114,7 +127,19 @@ public class EditObjectDefinitionMVCRenderCommand implements MVCRenderCommand {
 	private ConfigurationProvider _configurationProvider;
 
 	@Reference
+	private JSONFactory _jsonFactory;
+
+	@Reference
 	private ListTypeDefinitionService _listTypeDefinitionService;
+
+	@Reference
+	private NotificationTemplateLocalService _notificationTemplateLocalService;
+
+	@Reference
+	private ObjectActionExecutorRegistry _objectActionExecutorRegistry;
+
+	@Reference
+	private ObjectActionTriggerRegistry _objectActionTriggerRegistry;
 
 	@Reference
 	private ObjectDefinitionLocalService _objectDefinitionLocalService;

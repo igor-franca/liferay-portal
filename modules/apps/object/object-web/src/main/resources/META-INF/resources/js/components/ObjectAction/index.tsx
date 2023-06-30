@@ -35,6 +35,7 @@ const TABS = [
 ];
 
 interface ActionProps {
+	closeVerticalBar: () => void;
 	isApproved?: boolean;
 	objectAction: Partial<ObjectAction>;
 	objectActionCodeEditorElements: SidebarCategory[];
@@ -69,6 +70,7 @@ export type ActionError = FormError<ObjectAction & ObjectActionParameters> & {
 };
 
 export default function Action({
+	closeVerticalBar,
 	isApproved,
 	objectAction: initialValues,
 	objectActionCodeEditorElements,
@@ -160,7 +162,9 @@ export default function Action({
 
 	return (
 		<SidePanelForm
+			closeVerticalBar={closeVerticalBar}
 			onSubmit={handleSubmit}
+			readOnly={readOnly}
 			title={Liferay.Language.get('new-action')}
 		>
 			<ClayTabs>

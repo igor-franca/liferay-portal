@@ -14,6 +14,7 @@
 
 import {
 	API,
+	CustomItem,
 	ManagementToolbar,
 	SidebarCategory,
 } from '@liferay/object-js-components-web';
@@ -31,6 +32,13 @@ export type CreationMenu = {
 };
 
 interface EditObjectDefinitionProps {
+	actionDropdownItems: [];
+	actionId: string;
+	actionsApiURL: string;
+	actionsCreationMenu: {
+		primaryItems?: any[];
+		secondaryItems?: any[];
+	};
 	backURL: string;
 	baseResourceURL: string;
 	companyKeyValuePair: KeyValuePair[];
@@ -58,7 +66,10 @@ interface EditObjectDefinitionProps {
 		label: LocalizedValue<string>;
 		name: string;
 	}[];
+	objectActionExecutors: CustomItem[];
+	objectActionTriggers: CustomItem[];
 	objectDefinitionId: number;
+	objectDefinitionsRelationshipsURL: string;
 	objectFieldTypes: ObjectFieldType[];
 	onSubmit: (draft: boolean) => void;
 	pluralLabel: LocalizedValue<string>;
@@ -71,6 +82,7 @@ interface EditObjectDefinitionProps {
 	siteKeyValuePair: KeyValuePair[];
 	storageTypes: LabelValueObject[];
 	system: boolean;
+	validateActionExpressionURL: string;
 	viewsApiURL: string;
 	viewsCreationMenu: CreationMenu;
 	viewsDropdownItems: [];
@@ -79,6 +91,10 @@ interface EditObjectDefinitionProps {
 }
 
 export default function EditObjectDefinition({
+	actionDropdownItems,
+	actionId,
+	actionsApiURL,
+	actionsCreationMenu,
 	backURL,
 	baseResourceURL,
 	companyKeyValuePair,
@@ -103,7 +119,10 @@ export default function EditObjectDefinition({
 	layoutsApiURL,
 	layoutsCreationMenu,
 	nonRelationshipObjectFieldsInfo,
+	objectActionExecutors,
+	objectActionTriggers,
 	objectDefinitionId,
+	objectDefinitionsRelationshipsURL,
 	objectFieldTypes,
 	pluralLabel,
 	portletNamespace,
@@ -114,6 +133,7 @@ export default function EditObjectDefinition({
 	siteKeyValuePair,
 	storageTypes,
 	system,
+	validateActionExpressionURL,
 	viewsApiURL,
 	viewsCreationMenu,
 	viewsDropdownItems,
@@ -196,6 +216,10 @@ export default function EditObjectDefinition({
 			/>
 
 			<ObjectNavigationTabs
+				actionDropdownItems={actionDropdownItems}
+				actionId={actionId}
+				actionsApiURL={actionsApiURL}
+				actionsCreationMenu={actionsCreationMenu}
 				baseResourceURL={baseResourceURL}
 				companyKeyValuePair={companyKeyValuePair}
 				creationLanguageId={creationLanguageId}
@@ -225,7 +249,12 @@ export default function EditObjectDefinition({
 				nonRelationshipObjectFieldsInfo={
 					nonRelationshipObjectFieldsInfo
 				}
+				objectActionExecutors={objectActionExecutors}
+				objectActionTriggers={objectActionTriggers}
 				objectDefinitionId={objectDefinitionId}
+				objectDefinitionsRelationshipsURL={
+					objectDefinitionsRelationshipsURL
+				}
 				objectFieldTypes={objectFieldTypes}
 				objectFields={objectFields}
 				pluralLabel={pluralLabel}
@@ -238,6 +267,7 @@ export default function EditObjectDefinition({
 				siteKeyValuePair={siteKeyValuePair}
 				storageTypes={storageTypes}
 				system={system}
+				validateActionExpressionURL={validateActionExpressionURL}
 				values={values}
 				viewsApiURL={viewsApiURL}
 				viewsCreationMenu={viewsCreationMenu}

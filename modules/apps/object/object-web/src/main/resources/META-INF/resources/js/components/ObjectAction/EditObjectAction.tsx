@@ -18,6 +18,7 @@ import React from 'react';
 import ObjectAction from './index';
 
 interface EditObjectActionProps {
+	closeVerticalBar: () => void;
 	isApproved: boolean;
 	objectAction: ObjectAction;
 	objectActionCodeEditorElements: SidebarCategory[];
@@ -32,6 +33,7 @@ interface EditObjectActionProps {
 }
 
 export default function EditObjectAction({
+	closeVerticalBar,
 	isApproved,
 	objectAction: {id, ...values},
 	objectActionCodeEditorElements,
@@ -46,6 +48,7 @@ export default function EditObjectAction({
 }: EditObjectActionProps) {
 	return (
 		<ObjectAction
+			closeVerticalBar={closeVerticalBar}
 			isApproved={isApproved}
 			objectAction={values}
 			objectActionCodeEditorElements={objectActionCodeEditorElements}

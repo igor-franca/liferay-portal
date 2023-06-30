@@ -20,6 +20,7 @@
 String backURL = ParamUtil.getString(request, "backURL", String.valueOf(renderResponse.createRenderURL()));
 
 ObjectDefinition objectDefinition = (ObjectDefinition)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITION);
+ObjectDefinitionsActionsDisplayContext objectDefinitionsActionsDisplayContext = (ObjectDefinitionsActionsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_ACTIONS_DISPLAY_CONTEXT);
 ObjectDefinitionsDetailsDisplayContext objectDefinitionsDetailsDisplayContext = (ObjectDefinitionsDetailsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_DETAILS_DISPLAY_CONTEXT);
 ObjectDefinitionsFieldsDisplayContext objectDefinitionsFieldsDisplayContext = (ObjectDefinitionsFieldsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_FIELDS_DISPLAY_CONTEXT);
 ObjectDefinitionsLayoutsDisplayContext objectDefinitionsLayoutsDisplayContext = (ObjectDefinitionsLayoutsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_LAYOUTS_DISPLAY_CONTEXT);
@@ -38,6 +39,14 @@ renderResponse.setTitle(LanguageUtil.format(request, "edit-x", objectDefinition.
 		module="js/components/ObjectDefinition/EditObjectDefinition"
 		props='<%=
 			HashMapBuilder.<String, Object>put(
+				"actionDropdownItems", objectDefinitionsActionsDisplayContext.getFDSActionDropdownItems()
+			).put(
+				"actionId", ObjectDefinitionsFDSNames.OBJECT_ACTIONS
+			).put(
+				"actionsApiURL", objectDefinitionsActionsDisplayContext.getAPIURL()
+			).put(
+				"actionsCreationMenu", objectDefinitionsActionsDisplayContext.getCreationMenu()
+			).put(
 				"backURL", ParamUtil.getString(request, "backURL", String.valueOf(renderResponse.createRenderURL()))
 			).put(
 				"baseResourceURL", String.valueOf(baseResourceURL)
@@ -86,7 +95,13 @@ renderResponse.setTitle(LanguageUtil.format(request, "edit-x", objectDefinition.
 			).put(
 				"nonRelationshipObjectFieldsInfo", objectDefinitionsDetailsDisplayContext.getNonrelationshipObjectFieldsInfo()
 			).put(
+				"objectActionExecutors", objectDefinitionsActionsDisplayContext.getObjectActionExecutorsJSONArray()
+			).put(
+				"objectActionTriggers", objectDefinitionsActionsDisplayContext.getObjectActionTriggersJSONArray()
+			).put(
 				"objectDefinitionId", objectDefinition.getObjectDefinitionId()
+			).put(
+				"objectDefinitionsRelationshipsURL", objectDefinitionsActionsDisplayContext.getObjectDefinitionsRelationshipsURL()
 			).put(
 				"objectFieldTypes", objectDefinitionsFieldsDisplayContext.getObjectFieldBusinessTypeMaps(true, locale)
 			).put(
@@ -109,6 +124,8 @@ renderResponse.setTitle(LanguageUtil.format(request, "edit-x", objectDefinition.
 				"storageTypes", objectDefinitionsDetailsDisplayContext.getStoragesJSONArray()
 			).put(
 				"system", objectDefinition.isSystem()
+			).put(
+				"validateActionExpressionURL", objectDefinitionsActionsDisplayContext.getValidateExpressionURL()
 			).put(
 				"viewsApiURL", objectDefinitionsViewsDisplayContext.getAPIURL()
 			).put(

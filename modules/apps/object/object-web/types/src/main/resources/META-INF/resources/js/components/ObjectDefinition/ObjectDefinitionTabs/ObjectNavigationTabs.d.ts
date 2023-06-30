@@ -12,12 +12,23 @@
  * details.
  */
 
-import {FormError, SidebarCategory} from '@liferay/object-js-components-web';
+import {
+	CustomItem,
+	FormError,
+	SidebarCategory,
+} from '@liferay/object-js-components-web';
 import React from 'react';
 import './ObjectNavigationTabs.scss';
 import {KeyValuePair} from '../../ObjectDetails/EditObjectDetails';
 import {CreationMenu} from '../EditObjectDefinition';
 interface ObjectNavigationProps {
+	actionDropdownItems: [];
+	actionId: string;
+	actionsApiURL: string;
+	actionsCreationMenu: {
+		primaryItems?: any[];
+		secondaryItems?: any[];
+	};
 	baseResourceURL: string;
 	companyKeyValuePair: KeyValuePair[];
 	creationLanguageId: Liferay.Language.Locale;
@@ -46,7 +57,10 @@ interface ObjectNavigationProps {
 		label: LocalizedValue<string>;
 		name: string;
 	}[];
+	objectActionExecutors: CustomItem[];
+	objectActionTriggers: CustomItem[];
 	objectDefinitionId: number;
+	objectDefinitionsRelationshipsURL: string;
 	objectFieldTypes: ObjectFieldType[];
 	objectFields: ObjectField[];
 	pluralLabel: LocalizedValue<string>;
@@ -59,6 +73,7 @@ interface ObjectNavigationProps {
 	siteKeyValuePair: KeyValuePair[];
 	storageTypes: LabelValueObject[];
 	system: boolean;
+	validateActionExpressionURL: string;
 	values: Partial<ObjectDefinition>;
 	viewsApiURL: string;
 	viewsCreationMenu: CreationMenu;
@@ -67,6 +82,10 @@ interface ObjectNavigationProps {
 	workflowStatusJSONArray: LabelValueObject[];
 }
 export declare function ObjectNavigationTabs({
+	actionDropdownItems,
+	actionId,
+	actionsApiURL,
+	actionsCreationMenu,
 	baseResourceURL,
 	companyKeyValuePair,
 	creationLanguageId,
@@ -92,7 +111,10 @@ export declare function ObjectNavigationTabs({
 	layoutsApiURL,
 	layoutsCreationMenu,
 	nonRelationshipObjectFieldsInfo,
+	objectActionExecutors,
+	objectActionTriggers,
 	objectDefinitionId,
+	objectDefinitionsRelationshipsURL,
 	objectFieldTypes,
 	objectFields,
 	pluralLabel,
@@ -103,6 +125,8 @@ export declare function ObjectNavigationTabs({
 	sidebarElements,
 	siteKeyValuePair,
 	storageTypes,
+	system,
+	validateActionExpressionURL,
 	values,
 	viewsApiURL,
 	viewsCreationMenu,

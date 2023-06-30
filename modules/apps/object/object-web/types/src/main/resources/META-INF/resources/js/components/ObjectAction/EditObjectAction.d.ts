@@ -16,6 +16,7 @@
 
 import {CustomItem, SidebarCategory} from '@liferay/object-js-components-web';
 interface EditObjectActionProps {
+	closeVerticalBar: () => void;
 	isApproved: boolean;
 	objectAction: ObjectAction;
 	objectActionCodeEditorElements: SidebarCategory[];
@@ -29,6 +30,7 @@ interface EditObjectActionProps {
 	validateExpressionURL: string;
 }
 export default function EditObjectAction({
+	closeVerticalBar,
 	isApproved,
 	objectAction: {id, ...values},
 	objectActionCodeEditorElements,

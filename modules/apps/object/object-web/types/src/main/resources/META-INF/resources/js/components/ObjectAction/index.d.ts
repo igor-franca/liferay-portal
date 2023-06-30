@@ -21,6 +21,7 @@ import {
 	SidebarCategory,
 } from '@liferay/object-js-components-web';
 interface ActionProps {
+	closeVerticalBar: () => void;
 	isApproved?: boolean;
 	objectAction: Partial<ObjectAction>;
 	objectActionCodeEditorElements: SidebarCategory[];
@@ -47,6 +48,7 @@ export declare type ActionError = FormError<
 	};
 };
 export default function Action({
+	closeVerticalBar,
 	isApproved,
 	objectAction: initialValues,
 	objectActionCodeEditorElements,

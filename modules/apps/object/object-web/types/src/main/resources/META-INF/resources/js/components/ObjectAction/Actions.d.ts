@@ -14,14 +14,37 @@
 
 /// <reference types="react" />
 
+import {CustomItem, SidebarCategory} from '@liferay/object-js-components-web';
 import {IFDSTableProps} from '../../utils/fds';
+interface ObjectActionProps extends IFDSTableProps {
+	creationLanguageId: Liferay.Language.Locale;
+	isApproved: boolean;
+	objectActionExecutors: CustomItem[];
+	objectActionTriggers: CustomItem[];
+	objectDefinitionExternalReferenceCode: string;
+	objectDefinitionId: number;
+	objectDefinitionsRelationshipsURL: string;
+	readOnly?: boolean;
+	sidebarElements: SidebarCategory[];
+	systemObject: boolean;
+	validateActionExpressionURL: string;
+}
 export default function Actions({
 	apiURL,
+	creationLanguageId,
 	creationMenu,
 	formName,
 	id,
+	isApproved,
 	items,
+	objectActionExecutors,
+	objectActionTriggers,
 	objectDefinitionExternalReferenceCode,
-	style,
-	url,
-}: IFDSTableProps): JSX.Element;
+	objectDefinitionId,
+	objectDefinitionsRelationshipsURL,
+	readOnly,
+	sidebarElements,
+	systemObject,
+	validateActionExpressionURL,
+}: ObjectActionProps): JSX.Element;
+export {};

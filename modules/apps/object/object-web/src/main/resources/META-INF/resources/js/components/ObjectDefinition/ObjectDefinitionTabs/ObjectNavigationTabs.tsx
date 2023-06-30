@@ -13,11 +13,16 @@
  */
 
 import ClayTabs from '@clayui/tabs';
-import {FormError, SidebarCategory} from '@liferay/object-js-components-web';
+import {
+	CustomItem,
+	FormError,
+	SidebarCategory,
+} from '@liferay/object-js-components-web';
 import React, {useState} from 'react';
 
 import './ObjectNavigationTabs.scss';
 import Layouts from '../../Layout/Layouts';
+import Actions from '../../ObjectAction/Actions';
 import EditObjectDetails, {
 	KeyValuePair,
 } from '../../ObjectDetails/EditObjectDetails';
@@ -26,6 +31,13 @@ import Views from '../../ObjectView/Views';
 import {CreationMenu} from '../EditObjectDefinition';
 
 interface ObjectNavigationProps {
+	actionDropdownItems: [];
+	actionId: string;
+	actionsApiURL: string;
+	actionsCreationMenu: {
+		primaryItems?: any[];
+		secondaryItems?: any[];
+	};
 	baseResourceURL: string;
 	companyKeyValuePair: KeyValuePair[];
 	creationLanguageId: Liferay.Language.Locale;
@@ -54,7 +66,10 @@ interface ObjectNavigationProps {
 		label: LocalizedValue<string>;
 		name: string;
 	}[];
+	objectActionExecutors: CustomItem[];
+	objectActionTriggers: CustomItem[];
 	objectDefinitionId: number;
+	objectDefinitionsRelationshipsURL: string;
 	objectFieldTypes: ObjectFieldType[];
 	objectFields: ObjectField[];
 	pluralLabel: LocalizedValue<string>;
@@ -67,6 +82,7 @@ interface ObjectNavigationProps {
 	siteKeyValuePair: KeyValuePair[];
 	storageTypes: LabelValueObject[];
 	system: boolean;
+	validateActionExpressionURL: string;
 	values: Partial<ObjectDefinition>;
 	viewsApiURL: string;
 	viewsCreationMenu: CreationMenu;
@@ -76,6 +92,10 @@ interface ObjectNavigationProps {
 }
 
 export function ObjectNavigationTabs({
+	actionDropdownItems,
+	actionId,
+	actionsApiURL,
+	actionsCreationMenu,
 	baseResourceURL,
 	companyKeyValuePair,
 	creationLanguageId,
@@ -101,7 +121,10 @@ export function ObjectNavigationTabs({
 	layoutsApiURL,
 	layoutsCreationMenu,
 	nonRelationshipObjectFieldsInfo,
+	objectActionExecutors,
+	objectActionTriggers,
 	objectDefinitionId,
+	objectDefinitionsRelationshipsURL,
 	objectFieldTypes,
 	objectFields,
 	pluralLabel,
@@ -112,6 +135,8 @@ export function ObjectNavigationTabs({
 	sidebarElements,
 	siteKeyValuePair,
 	storageTypes,
+	system,
+	validateActionExpressionURL,
 	values,
 	viewsApiURL,
 	viewsCreationMenu,
@@ -147,7 +172,7 @@ export function ObjectNavigationTabs({
 
 					<ClayTabs.Item
 						innerProps={{
-							'aria-controls': 'tabpanel-2',
+							'aria-controls': 'tabpanel-3',
 						}}
 					>
 						{Liferay.Language.get('layouts')}
@@ -155,7 +180,15 @@ export function ObjectNavigationTabs({
 
 					<ClayTabs.Item
 						innerProps={{
-							'aria-controls': 'tabpanel-2',
+							'aria-controls': 'tabpanel-4',
+						}}
+					>
+						{Liferay.Language.get('actions')}
+					</ClayTabs.Item>
+
+					<ClayTabs.Item
+						innerProps={{
+							'aria-controls': 'tabpanel-5',
 						}}
 					>
 						{Liferay.Language.get('views')}
@@ -231,6 +264,31 @@ export function ObjectNavigationTabs({
 							}
 							objectFieldTypes={objectFieldTypes}
 							readOnly={readOnly}
+						/>
+					</ClayTabs.TabPane>
+
+					<ClayTabs.TabPane aria-labelledby="actions-tab">
+						<Actions
+							apiURL={actionsApiURL}
+							creationLanguageId={creationLanguageId}
+							creationMenu={actionsCreationMenu}
+							id={actionId}
+							isApproved={isApproved}
+							items={actionDropdownItems}
+							objectActionExecutors={objectActionExecutors}
+							objectActionTriggers={objectActionTriggers}
+							objectDefinitionExternalReferenceCode={
+								externalReferenceCode
+							}
+							objectDefinitionId={objectDefinitionId}
+							objectDefinitionsRelationshipsURL={
+								objectDefinitionsRelationshipsURL
+							}
+							sidebarElements={sidebarElements}
+							systemObject={system}
+							validateActionExpressionURL={
+								validateActionExpressionURL
+							}
 						/>
 					</ClayTabs.TabPane>
 

@@ -19,6 +19,7 @@ import ObjectAction from './index';
 
 interface AddObjectActionProps {
 	apiURL: string;
+	closeVerticalBar: () => void;
 	objectActionCodeEditorElements: SidebarCategory[];
 	objectActionExecutors: CustomItem[];
 	objectActionTriggers: CustomItem[];
@@ -31,6 +32,7 @@ interface AddObjectActionProps {
 
 export default function AddObjectAction({
 	apiURL,
+	closeVerticalBar,
 	objectActionCodeEditorElements,
 	objectActionExecutors = [],
 	objectActionTriggers = [],
@@ -42,6 +44,7 @@ export default function AddObjectAction({
 }: AddObjectActionProps) {
 	return (
 		<ObjectAction
+			closeVerticalBar={closeVerticalBar}
 			objectAction={{active: true}}
 			objectActionCodeEditorElements={objectActionCodeEditorElements}
 			objectActionExecutors={objectActionExecutors}

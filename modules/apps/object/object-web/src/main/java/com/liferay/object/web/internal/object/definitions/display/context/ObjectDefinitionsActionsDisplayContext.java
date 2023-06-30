@@ -34,8 +34,6 @@ import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.portlet.LiferayWindowState;
-import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.portlet.url.builder.ResourceURLBuilder;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 
@@ -86,18 +84,9 @@ public class ObjectDefinitionsActionsDisplayContext
 
 		return Arrays.asList(
 			new FDSActionDropdownItem(
-				PortletURLBuilder.create(
-					getPortletURL()
-				).setMVCRenderCommandName(
-					"/object_definitions/edit_object_action"
-				).setParameter(
-					"objectActionId", "{id}"
-				).setWindowState(
-					LiferayWindowState.POP_UP
-				).buildString(),
-				"view", "view",
+				"#", "view", "editObjectAction",
 				LanguageUtil.get(objectRequestHelper.getRequest(), "view"),
-				"get", null, "sidePanel"),
+				"get", null, null),
 			new FDSActionDropdownItem(
 				"/o/object-admin/v1.0/object-actions/{id}", "trash", "delete",
 				LanguageUtil.get(objectRequestHelper.getRequest(), "delete"),
@@ -267,18 +256,11 @@ public class ObjectDefinitionsActionsDisplayContext
 		getCreationMenuDropdownItemUnsafeConsumer() {
 
 		return dropdownItem -> {
-			dropdownItem.setHref(
-				PortletURLBuilder.create(
-					getPortletURL()
-				).setMVCRenderCommandName(
-					"/object_definitions/add_object_action"
-				).setWindowState(
-					LiferayWindowState.POP_UP
-				).buildString());
+			dropdownItem.setHref("addObjectAction");
 			dropdownItem.setLabel(
 				LanguageUtil.get(
 					objectRequestHelper.getRequest(), "add-object-action"));
-			dropdownItem.setTarget("sidePanel");
+			dropdownItem.setTarget("event");
 		};
 	}
 

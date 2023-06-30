@@ -12,113 +12,103 @@
  * details.
  */
 
+import {FrontendDataSet} from '@liferay/frontend-data-set-web';
 import {
-	FrontendDataSet,
-
-	// @ts-ignore
-
-} from '@liferay/frontend-data-set-web';
-import {API, getLocalizableLabel} from '@liferay/object-js-components-web';
-import classNames from 'classnames';
+	CustomItem,
+	ObjectVerticalBar,
+	SidebarCategory,
+	getLocalizableLabel,
+} from '@liferay/object-js-components-web';
 import React, {useEffect, useState} from 'react';
 
-import {
-	IFDSTableProps,
-	defaultDataSetProps,
-	fdsItem,
-	formatActionURL,
-} from '../../utils/fds';
+import {IFDSTableProps, defaultDataSetProps, fdsItem} from '../../utils/fds';
+import AddObjectAction from './AddObjectAction';
+import EditObjectAction from './EditObjectAction';
+import objectActionActiveDataRenderer from './FDSDataRenders/ObjectActionActiveDataRenderer';
+import objectActionLastExecutionDataRenderer from './FDSDataRenders/ObjectActionLastExecutionDataRenderer';
 
-type Status = {
-	code: number;
-	label: string;
-	label_i18n: string;
-};
-interface ItemData {
-	active: boolean;
-	defaultObjectAction: boolean;
-	id: number;
-	label: LocalizedValue<string>;
-	status: Status;
+interface ObjectActionProps extends IFDSTableProps {
+	creationLanguageId: Liferay.Language.Locale;
+	isApproved: boolean;
+	objectActionExecutors: CustomItem[];
+	objectActionTriggers: CustomItem[];
+	objectDefinitionExternalReferenceCode: string;
+	objectDefinitionId: number;
+	objectDefinitionsRelationshipsURL: string;
+	readOnly?: boolean;
+	sidebarElements: SidebarCategory[];
+	systemObject: boolean;
+	validateActionExpressionURL: string;
 }
 
 export default function Actions({
 	apiURL,
+	creationLanguageId,
 	creationMenu,
 	formName,
 	id,
+	isApproved,
 	items,
+	objectActionExecutors,
+	objectActionTriggers,
 	objectDefinitionExternalReferenceCode,
-	style,
-	url,
-}: IFDSTableProps) {
-	const [creationLanguageId, setCreationLanguageId] = useState<
-		Liferay.Language.Locale
-	>();
+	objectDefinitionId,
+	objectDefinitionsRelationshipsURL,
+	readOnly,
+	sidebarElements,
+	systemObject,
+	validateActionExpressionURL,
+}: ObjectActionProps) {
+	const [showVerticalBar, setShowVerticalBar] = useState<boolean>(false);
+	const [newObjectAction, setNewObjectAction] = useState<boolean>(false);
+	const [triggerSideBarAnimation, settriggerSideBarAnimation] = useState<
+		boolean
+	>(false);
+	const [objectAction, setObjectAction] = useState<Partial<ObjectAction>>();
+
+	const verticalBarItems = [
+		{
+			title: 'editObjectActionSideBar',
+		},
+	];
+
+	function closeVerticalBar() {
+		settriggerSideBarAnimation(false);
+		setTimeout(() => {
+			setShowVerticalBar(false);
+			setNewObjectAction(false);
+		}, 500);
+	}
 
 	useEffect(() => {
-		const makeFetch = async () => {
-			const objectDefinition = await API.getObjectDefinitionByExternalReferenceCode(
-				objectDefinitionExternalReferenceCode
-			);
+		Liferay.on('addObjectAction', () => {
+			settriggerSideBarAnimation(true);
+			setShowVerticalBar(true);
+			setNewObjectAction(true);
+		});
 
-			setCreationLanguageId(objectDefinition.defaultLanguageId);
+		return () => {
+			Liferay.detach('addObjectAction');
 		};
-
-		makeFetch();
-	}, [objectDefinitionExternalReferenceCode]);
-
-	function objectActionActiveDataRenderer({itemData}: {itemData: ItemData}) {
-		return itemData.active
-			? Liferay.Language.get('yes')
-			: Liferay.Language.get('no');
-	}
+	}, []);
 
 	function objectActionLabelDataRenderer({
 		itemData,
-		openSidePanel,
 		value,
-	}: fdsItem<ItemData>) {
+	}: fdsItem<ObjectAction>) {
 		const handleEditAction = () => {
-			openSidePanel({
-				url: formatActionURL(url as string, itemData.id),
-			});
+			setObjectAction(itemData);
+			setNewObjectAction(false);
+			setShowVerticalBar(true);
+			settriggerSideBarAnimation(true);
 		};
 
 		return (
 			<div className="table-list-title">
 				<a href="#" onClick={handleEditAction}>
-					{getLocalizableLabel(
-						creationLanguageId as Liferay.Language.Locale,
-						value
-					)}
+					{getLocalizableLabel(creationLanguageId, value)}
 				</a>
 			</div>
-		);
-	}
-
-	function objectActionLastExecutionDataRenderer({
-		itemData,
-	}: {
-		itemData: ItemData;
-	}) {
-		return (
-			<strong
-				className={classNames(
-					'label',
-					itemData.status.label === 'never-ran'
-						? 'label-info'
-						: itemData.status.label === 'failed'
-						? 'label-danger'
-						: 'label-success'
-				)}
-			>
-				{itemData.status.label === 'never-ran'
-					? Liferay.Language.get('never-ran')
-					: itemData.status.label === 'failed'
-					? Liferay.Language.get('failed')
-					: Liferay.Language.get('success')}
-			</strong>
 		);
 	}
 
@@ -136,9 +126,23 @@ export default function Actions({
 		itemsActions: items,
 		namespace:
 			'_com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet_',
+		onActionDropdownItemClick({
+			action,
+			itemData,
+		}: {
+			action: {data: {id: string}};
+			itemData: ObjectField;
+		}) {
+			if (action.data.id === 'editObjectAction') {
+				setObjectAction(itemData);
+				setNewObjectAction(false);
+				setShowVerticalBar(true);
+				settriggerSideBarAnimation(true);
+			}
+		},
 		portletId:
 			'com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet',
-		style,
+		style: 'fluid' as 'fluid',
 		views: [
 			{
 				contentRenderer: 'table',
@@ -185,5 +189,54 @@ export default function Actions({
 		],
 	};
 
-	return <FrontendDataSet {...dataSetProps} />;
+	return (
+		<>
+			<FrontendDataSet {...dataSetProps} />
+			{showVerticalBar && (
+				<ObjectVerticalBar
+					defaultActive="editObjectActionSideBar"
+					triggerSideBarAnimation={triggerSideBarAnimation}
+					verticalBaritems={verticalBarItems}
+				>
+					{newObjectAction ? (
+						<AddObjectAction
+							apiURL={apiURL as string}
+							closeVerticalBar={closeVerticalBar}
+							objectActionCodeEditorElements={sidebarElements}
+							objectActionExecutors={objectActionExecutors}
+							objectActionTriggers={objectActionTriggers}
+							objectDefinitionExternalReferenceCode={
+								objectDefinitionExternalReferenceCode
+							}
+							objectDefinitionId={objectDefinitionId}
+							objectDefinitionsRelationshipsURL={
+								objectDefinitionsRelationshipsURL
+							}
+							systemObject={systemObject}
+							validateExpressionURL={validateActionExpressionURL}
+						/>
+					) : (
+						<EditObjectAction
+							closeVerticalBar={closeVerticalBar}
+							isApproved={isApproved}
+							objectAction={objectAction as ObjectAction}
+							objectActionCodeEditorElements={sidebarElements}
+							objectActionExecutors={objectActionExecutors}
+							objectActionTriggers={objectActionTriggers}
+							objectDefinitionExternalReferenceCode={
+								objectDefinitionExternalReferenceCode
+							}
+							objectDefinitionId={objectDefinitionId}
+							objectDefinitionsRelationshipsURL={
+								objectDefinitionsRelationshipsURL
+							}
+							readOnly={readOnly}
+							systemObject={systemObject}
+							validateExpressionURL={validateActionExpressionURL}
+						/>
+					)}
+				</ObjectVerticalBar>
+			)}
+		</>
+	);
 }
