@@ -15,8 +15,7 @@
 import ClayAlert from '@clayui/alert';
 import ClayButton from '@clayui/button';
 import ClayForm from '@clayui/form';
-import ClayModal from '@clayui/modal';
-import {Observer} from '@clayui/modal/lib/types';
+import ClayModal, {ClayModalProvider, useModal} from '@clayui/modal';
 import {
 	API,
 	FormError,
@@ -28,31 +27,32 @@ import React, {useState} from 'react';
 
 import {defaultLanguageId} from '../utils/constants';
 
-interface IProps extends React.HTMLAttributes<HTMLElement> {
+interface ModalBasicWithFieldNameProps {
 	apiURL: string;
-	inputId: string;
 	label: string;
-	observer: Observer;
-	onClose: () => void;
+	onVisibilityChange: (value: boolean) => void;
 }
 
-type TInitialValues = {
+type InitialValues = {
 	name: LocalizedValue<string>;
+};
+
+const initialValues: InitialValues = {
+	name: {[defaultLanguageId]: ''},
 };
 
 export function ModalBasicWithFieldName({
 	apiURL,
-	inputId,
 	label,
-	observer,
-	onClose,
-}: IProps) {
-	const initialValues: TInitialValues = {
-		name: {[defaultLanguageId]: ''},
-	};
+	onVisibilityChange,
+}: ModalBasicWithFieldNameProps) {
 	const [error, setError] = useState<string>('');
 
-	const onSubmit = async ({name}: TInitialValues) => {
+	const {observer, onClose} = useModal({
+		onClose: () => onVisibilityChange(false),
+	});
+
+	const onSubmit = async ({name}: InitialValues) => {
 		try {
 			await API.save(apiURL, {name: {[defaultLanguageId]: name}}, 'POST');
 
@@ -64,8 +64,8 @@ export function ModalBasicWithFieldName({
 		}
 	};
 
-	const validate = ({name}: TInitialValues) => {
-		const errors: FormError<TInitialValues> = {};
+	const validate = ({name}: InitialValues) => {
+		const errors: FormError<InitialValues> = {};
 
 		if (name[defaultLanguageId] === '') {
 			errors.name = REQUIRED_MSG;
@@ -81,7 +81,7 @@ export function ModalBasicWithFieldName({
 	});
 
 	return (
-		<>
+		<ClayModalProvider>
 			<ClayModal observer={observer}>
 				<ClayForm onSubmit={handleSubmit}>
 					<ClayModal.Header>{label}</ClayModal.Header>
@@ -93,7 +93,6 @@ export function ModalBasicWithFieldName({
 
 						<Input
 							error={errors.name}
-							id={inputId}
 							label={Liferay.Language.get('name')}
 							name="name"
 							onChange={handleChange}
@@ -120,8 +119,6 @@ export function ModalBasicWithFieldName({
 					/>
 				</ClayForm>
 			</ClayModal>
-		</>
+		</ClayModalProvider>
 	);
 }
-
-export default ModalBasicWithFieldName;

@@ -48,17 +48,6 @@ renderResponse.setTitle(objectDefinition.getLabel(locale, true));
 	/>
 </div>
 
-<div id="<portlet:namespace />AddObjectView">
-	<react:component
-		module="js/components/ModalAddObjectCustomView"
-		props='<%=
-			HashMapBuilder.<String, Object>put(
-				"apiURL", objectDefinitionsViewsDisplayContext.getAPIURL()
-			).build()
-		%>'
-	/>
-</div>
-
 <div>
 	<react:component
 		module="js/components/ModalAddColumns"

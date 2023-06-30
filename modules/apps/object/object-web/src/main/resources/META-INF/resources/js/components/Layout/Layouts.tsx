@@ -21,8 +21,8 @@ import {
 import React, {useEffect, useState} from 'react';
 
 import {IFDSTableProps, defaultDataSetProps, fdsItem} from '../../utils/fds';
+import {ModalBasicWithFieldName} from '../ModalBasicWithFieldName';
 import {EditObjectLayout} from './EditObjectLayout';
-import {ModalAddObjectLayout} from './ModalAddObjectLayout';
 
 import './Layouts.scss';
 
@@ -196,8 +196,9 @@ export default function Layouts({
 			)}
 
 			{showAddLayoutModal && (
-				<ModalAddObjectLayout
+				<ModalBasicWithFieldName
 					apiURL={apiURL as string}
+					label={Liferay.Language.get('new-layout')}
 					onVisibilityChange={setShowAddLayoutModal}
 				/>
 			)}

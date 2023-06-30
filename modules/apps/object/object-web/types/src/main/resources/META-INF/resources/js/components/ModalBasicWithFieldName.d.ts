@@ -12,20 +12,16 @@
  * details.
  */
 
-import {Observer} from '@clayui/modal/lib/types';
-import React from 'react';
-interface IProps extends React.HTMLAttributes<HTMLElement> {
+/// <reference types="react" />
+
+interface ModalBasicWithFieldNameProps {
 	apiURL: string;
-	inputId: string;
 	label: string;
-	observer: Observer;
-	onClose: () => void;
+	onVisibilityChange: (value: boolean) => void;
 }
 export declare function ModalBasicWithFieldName({
 	apiURL,
-	inputId,
 	label,
-	observer,
-	onClose,
-}: IProps): JSX.Element;
-export default ModalBasicWithFieldName;
+	onVisibilityChange,
+}: ModalBasicWithFieldNameProps): JSX.Element;
+export {};

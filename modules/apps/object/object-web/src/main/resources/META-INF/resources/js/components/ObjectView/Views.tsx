@@ -22,6 +22,7 @@ import {
 	fdsItem,
 	formatActionURL,
 } from '../../utils/fds';
+import {ModalBasicWithFieldName} from '../ModalBasicWithFieldName';
 
 interface ItemData {
 	defaultObjectView: boolean;
@@ -40,18 +41,7 @@ export default function Views({
 	const [creationLanguageId, setCreationLanguageId] = useState<
 		Liferay.Language.Locale
 	>();
-
-	useEffect(() => {
-		const makeFetch = async () => {
-			const objectDefinition = await API.getObjectDefinitionByExternalReferenceCode(
-				objectDefinitionExternalReferenceCode
-			);
-
-			setCreationLanguageId(objectDefinition.defaultLanguageId);
-		};
-
-		makeFetch();
-	}, [objectDefinitionExternalReferenceCode]);
+	const [showAddViewModal, setShowAddViewModal] = useState(false);
 
 	function objectLayoutLabelDataRenderer({
 		itemData,
@@ -81,6 +71,26 @@ export default function Views({
 			? Liferay.Language.get('yes')
 			: Liferay.Language.get('no');
 	}
+
+	useEffect(() => {
+		Liferay.on('addObjectView', () => setShowAddViewModal(true));
+
+		return () => {
+			Liferay.detach('addObjectView');
+		};
+	}, []);
+
+	useEffect(() => {
+		const makeFetch = async () => {
+			const objectDefinition = await API.getObjectDefinitionByExternalReferenceCode(
+				objectDefinitionExternalReferenceCode
+			);
+
+			setCreationLanguageId(objectDefinition.defaultLanguageId);
+		};
+
+		makeFetch();
+	}, [objectDefinitionExternalReferenceCode]);
 
 	const dataSetProps = {
 		...defaultDataSetProps,
@@ -128,5 +138,17 @@ export default function Views({
 		],
 	};
 
-	return <FrontendDataSet {...dataSetProps} />;
+	return (
+		<>
+			<FrontendDataSet {...dataSetProps} />
+
+			{showAddViewModal && (
+				<ModalBasicWithFieldName
+					apiURL={apiURL as string}
+					label={Liferay.Language.get('new-view')}
+					onVisibilityChange={setShowAddViewModal}
+				/>
+			)}
+		</>
+	);
 }
