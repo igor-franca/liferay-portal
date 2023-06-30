@@ -23,6 +23,7 @@ ObjectDefinition objectDefinition = (ObjectDefinition)request.getAttribute(Objec
 ObjectDefinitionsDetailsDisplayContext objectDefinitionsDetailsDisplayContext = (ObjectDefinitionsDetailsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_DETAILS_DISPLAY_CONTEXT);
 ObjectDefinitionsFieldsDisplayContext objectDefinitionsFieldsDisplayContext = (ObjectDefinitionsFieldsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_FIELDS_DISPLAY_CONTEXT);
 ObjectDefinitionsLayoutsDisplayContext objectDefinitionsLayoutsDisplayContext = (ObjectDefinitionsLayoutsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_LAYOUTS_DISPLAY_CONTEXT);
+ObjectDefinitionsViewsDisplayContext objectDefinitionsViewsDisplayContext = (ObjectDefinitionsViewsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_VIEWS_DISPLAY_CONTEXT);
 
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(backURL);
@@ -108,6 +109,14 @@ renderResponse.setTitle(LanguageUtil.format(request, "edit-x", objectDefinition.
 				"storageTypes", objectDefinitionsDetailsDisplayContext.getStoragesJSONArray()
 			).put(
 				"system", objectDefinition.isSystem()
+			).put(
+				"viewsApiURL", objectDefinitionsViewsDisplayContext.getAPIURL()
+			).put(
+				"viewsCreationMenu", objectDefinitionsViewsDisplayContext.getCreationMenu()
+			).put(
+				"viewsDropdownItems", objectDefinitionsViewsDisplayContext.getFDSActionDropdownItems()
+			).put(
+				"viewsFDSId", ObjectDefinitionsFDSNames.OBJECT_VIEWS
 			).put(
 				"workflowStatusJSONArray", LocalizedJSONArrayUtil.getWorkflowStatusJSONArray(locale)
 			).build()

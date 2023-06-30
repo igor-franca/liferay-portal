@@ -43,12 +43,6 @@ renderResponse.setTitle(objectDefinition.getLabel(locale, true));
 				"id", ObjectDefinitionsFDSNames.OBJECT_VIEWS
 			).put(
 				"items", objectDefinitionsViewsDisplayContext.getFDSActionDropdownItems()
-			).put(
-				"objectDefinitionExternalReferenceCode", objectDefinition.getExternalReferenceCode()
-			).put(
-				"style", "fluid"
-			).put(
-				"url", objectDefinitionsViewsDisplayContext.getEditObjectViewsURL()
 			).build()
 		%>'
 	/>

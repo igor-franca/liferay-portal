@@ -12,12 +12,7 @@
  * details.
  */
 
-import {
-	FrontendDataSet,
-
-	// @ts-ignore
-
-} from '@liferay/frontend-data-set-web';
+import {FrontendDataSet} from '@liferay/frontend-data-set-web';
 import {API, getLocalizableLabel} from '@liferay/object-js-components-web';
 import React, {useEffect, useState} from 'react';
 
@@ -40,7 +35,6 @@ export default function Views({
 	id,
 	items,
 	objectDefinitionExternalReferenceCode,
-	style,
 	url,
 }: IFDSTableProps) {
 	const [creationLanguageId, setCreationLanguageId] = useState<
@@ -103,7 +97,7 @@ export default function Views({
 			'_com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet_',
 		portletId:
 			'com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet',
-		style,
+		style: 'fluid' as 'fluid',
 		views: [
 			{
 				contentRenderer: 'table',

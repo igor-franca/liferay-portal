@@ -61,6 +61,10 @@ interface EditObjectDefinitionProps {
 	siteKeyValuePair: KeyValuePair[];
 	storageTypes: LabelValueObject[];
 	system: boolean;
+	viewsApiURL: string;
+	viewsCreationMenu: CreationMenu;
+	viewsDropdownItems: [];
+	viewsFDSId: string;
 	workflowStatusJSONArray: LabelValueObject[];
 }
 export default function EditObjectDefinition({
@@ -99,6 +103,10 @@ export default function EditObjectDefinition({
 	siteKeyValuePair,
 	storageTypes,
 	system,
+	viewsApiURL,
+	viewsCreationMenu,
+	viewsDropdownItems,
+	viewsFDSId,
 	workflowStatusJSONArray,
 }: EditObjectDefinitionProps): JSX.Element;
 export {};

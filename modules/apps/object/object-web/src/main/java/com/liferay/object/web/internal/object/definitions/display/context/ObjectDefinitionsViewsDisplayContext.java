@@ -20,8 +20,6 @@ import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.web.internal.display.context.helper.ObjectRequestHelper;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.portlet.LiferayWindowState;
-import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 
 import java.util.Arrays;
@@ -45,26 +43,14 @@ public class ObjectDefinitionsViewsDisplayContext
 		_objectRequestHelper = new ObjectRequestHelper(httpServletRequest);
 	}
 
-	public String getEditObjectViewsURL() throws Exception {
-		return PortletURLBuilder.create(
-			getPortletURL()
-		).setMVCRenderCommandName(
-			"/object_definitions/edit_object_view"
-		).setParameter(
-			"objectViewId", "{id}"
-		).setWindowState(
-			LiferayWindowState.POP_UP
-		).buildString();
-	}
-
 	public List<FDSActionDropdownItem> getFDSActionDropdownItems()
 		throws Exception {
 
 		return Arrays.asList(
 			new FDSActionDropdownItem(
-				getEditObjectViewsURL(), "view", "view",
+				"#", "view", "editObjectView",
 				LanguageUtil.get(objectRequestHelper.getRequest(), "view"),
-				"get", null, "sidePanel"),
+				"get", null, null),
 			new FDSActionDropdownItem(
 				"/o/object-admin/v1.0/object-views/{id}/copy", "copy", "copy",
 				LanguageUtil.get(objectRequestHelper.getRequest(), "duplicate"),

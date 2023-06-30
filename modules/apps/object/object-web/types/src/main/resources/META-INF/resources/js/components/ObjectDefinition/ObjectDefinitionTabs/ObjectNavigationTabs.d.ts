@@ -60,6 +60,10 @@ interface ObjectNavigationProps {
 	storageTypes: LabelValueObject[];
 	system: boolean;
 	values: Partial<ObjectDefinition>;
+	viewsApiURL: string;
+	viewsCreationMenu: CreationMenu;
+	viewsDropdownItems: [];
+	viewsFDSId: string;
 	workflowStatusJSONArray: LabelValueObject[];
 }
 export declare function ObjectNavigationTabs({
@@ -100,6 +104,10 @@ export declare function ObjectNavigationTabs({
 	siteKeyValuePair,
 	storageTypes,
 	values,
+	viewsApiURL,
+	viewsCreationMenu,
+	viewsDropdownItems,
+	viewsFDSId,
 	workflowStatusJSONArray,
 }: ObjectNavigationProps): JSX.Element;
 export {};

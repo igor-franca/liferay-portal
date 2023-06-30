@@ -22,6 +22,7 @@ import EditObjectDetails, {
 	KeyValuePair,
 } from '../../ObjectDetails/EditObjectDetails';
 import Fields from '../../ObjectField/Fields';
+import Views from '../../ObjectView/Views';
 import {CreationMenu} from '../EditObjectDefinition';
 
 interface ObjectNavigationProps {
@@ -67,6 +68,10 @@ interface ObjectNavigationProps {
 	storageTypes: LabelValueObject[];
 	system: boolean;
 	values: Partial<ObjectDefinition>;
+	viewsApiURL: string;
+	viewsCreationMenu: CreationMenu;
+	viewsDropdownItems: [];
+	viewsFDSId: string;
 	workflowStatusJSONArray: LabelValueObject[];
 }
 
@@ -108,9 +113,13 @@ export function ObjectNavigationTabs({
 	siteKeyValuePair,
 	storageTypes,
 	values,
+	viewsApiURL,
+	viewsCreationMenu,
+	viewsDropdownItems,
+	viewsFDSId,
 	workflowStatusJSONArray,
 }: ObjectNavigationProps) {
-	const [active, setActive] = useState(2);
+	const [active, setActive] = useState(3);
 
 	return (
 		<>
@@ -142,6 +151,14 @@ export function ObjectNavigationTabs({
 						}}
 					>
 						{Liferay.Language.get('layouts')}
+					</ClayTabs.Item>
+
+					<ClayTabs.Item
+						innerProps={{
+							'aria-controls': 'tabpanel-2',
+						}}
+					>
+						{Liferay.Language.get('views')}
 					</ClayTabs.Item>
 				</ClayTabs>
 			</div>
@@ -214,6 +231,18 @@ export function ObjectNavigationTabs({
 							}
 							objectFieldTypes={objectFieldTypes}
 							readOnly={readOnly}
+						/>
+					</ClayTabs.TabPane>
+
+					<ClayTabs.TabPane aria-labelledby="views-tab">
+						<Views
+							apiURL={viewsApiURL}
+							creationMenu={viewsCreationMenu}
+							id={viewsFDSId}
+							items={viewsDropdownItems}
+							objectDefinitionExternalReferenceCode={
+								externalReferenceCode
+							}
 						/>
 					</ClayTabs.TabPane>
 				</ClayTabs.Content>

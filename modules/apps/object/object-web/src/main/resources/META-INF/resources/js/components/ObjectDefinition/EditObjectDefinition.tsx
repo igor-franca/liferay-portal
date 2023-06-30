@@ -71,6 +71,10 @@ interface EditObjectDefinitionProps {
 	siteKeyValuePair: KeyValuePair[];
 	storageTypes: LabelValueObject[];
 	system: boolean;
+	viewsApiURL: string;
+	viewsCreationMenu: CreationMenu;
+	viewsDropdownItems: [];
+	viewsFDSId: string;
 	workflowStatusJSONArray: LabelValueObject[];
 }
 
@@ -110,6 +114,10 @@ export default function EditObjectDefinition({
 	siteKeyValuePair,
 	storageTypes,
 	system,
+	viewsApiURL,
+	viewsCreationMenu,
+	viewsDropdownItems,
+	viewsFDSId,
 	workflowStatusJSONArray,
 }: EditObjectDefinitionProps) {
 	const [objectFields, setObjectFields] = useState<ObjectField[]>([]);
@@ -231,6 +239,10 @@ export default function EditObjectDefinition({
 				storageTypes={storageTypes}
 				system={system}
 				values={values}
+				viewsApiURL={viewsApiURL}
+				viewsCreationMenu={viewsCreationMenu}
+				viewsDropdownItems={viewsDropdownItems}
+				viewsFDSId={viewsFDSId}
 				workflowStatusJSONArray={workflowStatusJSONArray}
 			/>
 		</>
