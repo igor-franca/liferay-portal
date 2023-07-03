@@ -12,6 +12,6 @@
  * details.
  */
 
-import React from 'react';
-declare const ViewBuilderScreen: React.FC<{}>;
-export default ViewBuilderScreen;
+/// <reference types="react" />
+
+export declare function ViewBuilderScreen(): JSX.Element;

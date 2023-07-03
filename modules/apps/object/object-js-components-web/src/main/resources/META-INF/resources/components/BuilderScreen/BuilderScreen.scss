@@ -16,6 +16,13 @@
 		}
 	}
 
+	&__object-builder-screen-managment-toolbar-container {
+		left: 0 !important;
+		position: sticky !important;
+		top: 0 !important;
+		width: auto !important;
+	}
+
 	&__object-builder-screen-third-column {
 		&--not-draggable {
 			left: 620px;

@@ -26,7 +26,7 @@ import {defaultLanguageId} from '../../utils/constants';
 import BasicInfoScreen from './BasicInfoScreen/BasicInfoScreen';
 import {DefaultSortScreen} from './DefaultSortScreen/DefaultSortScreen';
 import {FilterScreen} from './FilterScreen/FilterScreen';
-import ViewBuilderScreen from './ViewBuilderScreen/ViewBuilderScreen';
+import {ViewBuilderScreen} from './ViewBuilderScreen/ViewBuilderScreen';
 import {TYPES, ViewContextProvider, useViewContext} from './objectViewContext';
 
 const TABS = [

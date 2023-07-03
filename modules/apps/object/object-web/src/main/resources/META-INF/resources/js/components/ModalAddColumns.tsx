@@ -19,56 +19,51 @@ import ClayList from '@clayui/list';
 import ClayModal, {useModal} from '@clayui/modal';
 import {ManagementToolbarSearch} from '@liferay/object-js-components-web';
 import {ManagementToolbar} from 'frontend-js-components-web';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 
 import './ModalAddColumns.scss';
 
-function ModalAddColumns<T extends ModalItem>() {
-	const [
-		{
-			disableRequired,
-			disableRequiredChecked,
-			getLabel,
-			getName,
-			header,
-			items,
-			onSave,
-			searchTerm,
-			selected,
-			title,
-		},
-		setState,
-	] = useState<IState<T>>({items: [], searchTerm: '', selected: []});
+interface ModalAddColumnsProps {
+	disableRequired?: boolean;
+	disableRequiredChecked?: boolean;
+	getLabel?: (label: ObjectField) => string;
+	getName?: (name: ObjectField) => string;
+	header?: string;
+	items: ObjectField[];
+	onSave?: (selected: ObjectField[]) => void;
+	onVisibilityChange: (value: boolean) => void;
+	selected: ObjectField[];
+	title?: string;
+}
 
-	const resetModal = () => {
-		setState({items: [], searchTerm: '', selected: []});
-	};
+interface ObjectFieldWithCheck extends ObjectField {
+	checked: boolean;
+}
 
-	const {observer} = useModal({
-		onClose: resetModal,
+export function ModalAddColumns({
+	disableRequired,
+	disableRequiredChecked,
+	getLabel,
+	getName,
+	header,
+	items,
+	onSave,
+	onVisibilityChange,
+	selected,
+	title,
+}: ModalAddColumnsProps) {
+	const [searchTerm, setSearchTerm] = useState('');
+	const [selectedItems, setSelectedItems] = useState(selected);
+
+	const {observer, onClose} = useModal({
+		onClose: () => onVisibilityChange(false),
 	});
-
-	useEffect(() => {
-		const openModal = ({
-			items = [],
-			searchTerm = '',
-			selected = [],
-			...otherProps
-		}: Partial<IState<T>>) => {
-			setState({items, searchTerm, selected, ...otherProps});
-		};
-
-		Liferay.on('openModalAddColumns', openModal);
-
-		return () =>
-			Liferay.detach('openModalAddColumns', openModal as () => void);
-	}, []);
 
 	const filteredItems = useMemo(() => {
 		const loweredTerm = searchTerm.toLowerCase();
-		const selectedIds = new Set(selected.map(({id}) => id));
+		const selectedIds = new Set(selectedItems.map(({id}) => id));
 
-		const filtered: T[] = [];
+		const filtered: ObjectFieldWithCheck[] = [];
 		items.forEach((item) => {
 			if (getName?.(item).toLowerCase().includes(loweredTerm)) {
 				filtered.push({
@@ -89,20 +84,21 @@ function ModalAddColumns<T extends ModalItem>() {
 		disableRequiredChecked,
 		getName,
 		searchTerm,
-		selected,
+		selectedItems,
 		items,
 	]);
 
 	const toggleFieldCheckbox = (id: unknown, checked: boolean) => {
-		let selectedItems: T[];
+		let newSelectedItems: ObjectField[];
 		if (checked) {
-			const item = items.find((item) => item.id === id) as T;
-			selectedItems = [...selected, item];
+			const item = items.find((item) => item.id === id) as ObjectField;
+			newSelectedItems = [...selectedItems, item];
 		}
 		else {
-			selectedItems = selected.filter((item) => item.id !== id);
+			newSelectedItems = selectedItems.filter((item) => item.id !== id);
 		}
-		setState((state) => ({...state, selected: selectedItems}));
+
+		setSelectedItems(newSelectedItems);
 	};
 
 	return items.length ? (
@@ -121,24 +117,23 @@ function ModalAddColumns<T extends ModalItem>() {
 					<ManagementToolbar.ItemList>
 						<ManagementToolbar.Item>
 							<ClayCheckbox
-								checked={items.length === selected.length}
+								checked={items.length === selectedItems.length}
 								indeterminate={
-									!!selected.length &&
-									items.length !== selected.length
+									!!selectedItems.length &&
+									items.length !== selectedItems.length
 								}
 								onChange={() => {
-									const requiredFields = selected.filter(
+									const requiredFields = selectedItems.filter(
 										(item) => item.required
 									);
-									const selectedItems =
+									const newSelectedItems =
 										items.length - requiredFields.length ===
-										selected.length - requiredFields.length
+										selectedItems.length -
+											requiredFields.length
 											? [...requiredFields]
 											: [...items];
-									setState((state) => ({
-										...state,
-										selected: selectedItems,
-									}));
+
+									setSelectedItems(newSelectedItems);
 								}}
 							/>
 						</ManagementToolbar.Item>
@@ -146,9 +141,7 @@ function ModalAddColumns<T extends ModalItem>() {
 
 					<ManagementToolbarSearch
 						query={searchTerm}
-						setQuery={(searchTerm) =>
-							setState((state) => ({...state, searchTerm}))
-						}
+						setQuery={(query) => setSearchTerm(query)}
 					/>
 				</ManagementToolbar.Container>
 			</ClayModal.Body>
@@ -181,18 +174,15 @@ function ModalAddColumns<T extends ModalItem>() {
 			<ClayModal.Footer
 				last={
 					<ClayButton.Group spaced>
-						<ClayButton
-							displayType="secondary"
-							onClick={resetModal}
-						>
+						<ClayButton displayType="secondary" onClick={onClose}>
 							{Liferay.Language.get('cancel')}
 						</ClayButton>
 
 						<ClayButton
 							displayType="primary"
 							onClick={() => {
-								onSave?.(selected);
-								resetModal();
+								onSave?.(selectedItems);
+								onClose();
 							}}
 						>
 							{Liferay.Language.get('save')}
@@ -202,26 +192,4 @@ function ModalAddColumns<T extends ModalItem>() {
 			/>
 		</ClayModal>
 	) : null;
-}
-
-export default ModalAddColumns;
-
-interface ModalItem {
-	checked?: boolean;
-	id?: unknown;
-	label: LocalizedValue<string>;
-	required?: boolean;
-}
-
-interface IState<T extends ModalItem> {
-	disableRequired?: boolean;
-	disableRequiredChecked?: boolean;
-	getLabel?: (label: T) => string;
-	getName?: (name: T) => string;
-	header?: string;
-	items: T[];
-	onSave?: (selected: T[]) => void;
-	searchTerm: string;
-	selected: T[];
-	title?: string;
 }

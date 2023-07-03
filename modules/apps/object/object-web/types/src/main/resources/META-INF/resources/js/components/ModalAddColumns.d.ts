@@ -15,11 +15,28 @@
 /// <reference types="react" />
 
 import './ModalAddColumns.scss';
-declare function ModalAddColumns<T extends ModalItem>(): JSX.Element | null;
-export default ModalAddColumns;
-interface ModalItem {
-	checked?: boolean;
-	id?: unknown;
-	label: LocalizedValue<string>;
-	required?: boolean;
+interface ModalAddColumnsProps {
+	disableRequired?: boolean;
+	disableRequiredChecked?: boolean;
+	getLabel?: (label: ObjectField) => string;
+	getName?: (name: ObjectField) => string;
+	header?: string;
+	items: ObjectField[];
+	onSave?: (selected: ObjectField[]) => void;
+	onVisibilityChange: (value: boolean) => void;
+	selected: ObjectField[];
+	title?: string;
 }
+export declare function ModalAddColumns({
+	disableRequired,
+	disableRequiredChecked,
+	getLabel,
+	getName,
+	header,
+	items,
+	onSave,
+	onVisibilityChange,
+	selected,
+	title,
+}: ModalAddColumnsProps): JSX.Element | null;
+export {};

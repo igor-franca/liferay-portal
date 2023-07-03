@@ -19,11 +19,13 @@ import {
 } from '@liferay/object-js-components-web';
 import React, {useState} from 'react';
 
+import {ModalAddColumns} from '../../ModalAddColumns';
 import {ModalEditViewColumn} from '../ModalEditViewColumn/ModalEditViewColumn';
 import {TYPES, useViewContext} from '../objectViewContext';
 
-const ViewBuilderScreen: React.FC<{}> = () => {
+export function ViewBuilderScreen() {
 	const [visibleEditModal, setVisibleEditModal] = useState(false);
+	const [showAddColumnsModal, setShowAddColumnsModal] = useState(false);
 	const [editingObjectFieldName, setEditingObjectFieldName] = useState('');
 
 	const {observer, onClose} = useModal({
@@ -46,27 +48,6 @@ const ViewBuilderScreen: React.FC<{}> = () => {
 	const selected = objectFields.filter(({name}) =>
 		objectFieldNames.has(name)
 	);
-
-	const handleAddColumns = () => {
-		const parentWindow = Liferay.Util.getOpener();
-
-		parentWindow.Liferay.fire('openModalAddColumns', {
-			getName: ({label, name}: ObjectField) =>
-				getLocalizableLabel(creationLanguageId, label, name),
-			header: Liferay.Language.get('add-columns'),
-			items: objectFields,
-			onSave: (selectedObjectFields: ObjectField[]) =>
-				dispatch({
-					payload: {
-						creationLanguageId,
-						selectedObjectFields,
-					},
-					type: TYPES.ADD_OBJECT_VIEW_COLUMN,
-				}),
-			selected,
-			title: Liferay.Language.get('select-the-columns'),
-		});
-	};
 
 	const handleChangeColumnOrder = (
 		draggedIndex: number,
@@ -107,7 +88,7 @@ const ViewBuilderScreen: React.FC<{}> = () => {
 				onDeleteColumn={handleDeleteColumn}
 				onEditingObjectFieldName={setEditingObjectFieldName}
 				onVisibleEditModal={setVisibleEditModal}
-				openModal={handleAddColumns}
+				openModal={() => setShowAddColumnsModal(true)}
 				secondColumnHeader={Liferay.Language.get('column-label')}
 				title={Liferay.Language.get('columns')}
 			/>
@@ -119,8 +100,28 @@ const ViewBuilderScreen: React.FC<{}> = () => {
 					onClose={onClose}
 				/>
 			)}
+
+			{showAddColumnsModal && (
+				<ModalAddColumns
+					getName={({label, name}: ObjectField) =>
+						getLocalizableLabel(creationLanguageId, label, name)
+					}
+					header={Liferay.Language.get('add-columns')}
+					items={objectFields}
+					onSave={(selectedObjectFields: ObjectField[]) =>
+						dispatch({
+							payload: {
+								creationLanguageId,
+								selectedObjectFields,
+							},
+							type: TYPES.ADD_OBJECT_VIEW_COLUMN,
+						})
+					}
+					onVisibilityChange={setShowAddColumnsModal}
+					selected={selected}
+					title={Liferay.Language.get('select-the-columns')}
+				/>
+			)}
 		</>
 	);
-};
-
-export default ViewBuilderScreen;
+}

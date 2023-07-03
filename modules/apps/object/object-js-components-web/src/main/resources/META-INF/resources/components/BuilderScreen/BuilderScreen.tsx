@@ -62,7 +62,7 @@ export function BuilderScreen({
 
 	return (
 		<Card title={title}>
-			<ManagementToolbar.Container>
+			<ManagementToolbar.Container className="lfr-object__object-builder-screen-managment-toolbar-container">
 				<ManagementToolbar.ItemList expand>
 					<ManagementToolbarSearch
 						query={query}
