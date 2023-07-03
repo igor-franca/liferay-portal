@@ -13,45 +13,72 @@
  */
 
 import {FrontendDataSet} from '@liferay/frontend-data-set-web';
-import {API, getLocalizableLabel} from '@liferay/object-js-components-web';
+import {
+	API,
+	ObjectVerticalBar,
+	getLocalizableLabel,
+} from '@liferay/object-js-components-web';
 import React, {useEffect, useState} from 'react';
 
-import {
-	IFDSTableProps,
-	defaultDataSetProps,
-	fdsItem,
-	formatActionURL,
-} from '../../utils/fds';
+import {IFDSTableProps, defaultDataSetProps, fdsItem} from '../../utils/fds';
 import {ModalBasicWithFieldName} from '../ModalBasicWithFieldName';
+import {EditObjectView} from './EditObjectView';
+
+import './Views.scss';
 
 interface ItemData {
 	defaultObjectView: boolean;
 	id: number;
 }
 
+interface ViewsProps extends IFDSTableProps {
+	filterOperators: TFilterOperators;
+	readOnly: boolean;
+	workflowStatusJSONArray: LabelValueObject[];
+}
+
+const verticalBarItems = [
+	{
+		title: 'editObjectViewVerticalBar',
+	},
+];
+
 export default function Views({
 	apiURL,
 	creationMenu,
+	filterOperators,
 	formName,
 	id,
 	items,
 	objectDefinitionExternalReferenceCode,
-	url,
-}: IFDSTableProps) {
+	readOnly,
+	workflowStatusJSONArray,
+}: ViewsProps) {
 	const [creationLanguageId, setCreationLanguageId] = useState<
 		Liferay.Language.Locale
 	>();
 	const [showAddViewModal, setShowAddViewModal] = useState(false);
+	const [editObjectViewId, setEditObjectViewId] = useState<number>();
+	const [showVerticalBar, setShowVerticalBar] = useState<boolean>(false);
+	const [triggerSideBarAnimation, settriggerSideBarAnimation] = useState<
+		boolean
+	>(false);
+
+	function closeVerticalBar() {
+		settriggerSideBarAnimation(false);
+		setTimeout(() => {
+			setShowVerticalBar(false);
+		}, 500);
+	}
 
 	function objectLayoutLabelDataRenderer({
 		itemData,
-		openSidePanel,
 		value,
 	}: fdsItem<ItemData>) {
 		const handleEditField = () => {
-			openSidePanel({
-				url: formatActionURL(url as string, itemData.id),
-			});
+			setEditObjectViewId(itemData.id);
+			setShowVerticalBar(true);
+			settriggerSideBarAnimation(true);
 		};
 
 		return (
@@ -105,6 +132,19 @@ export default function Views({
 		itemsActions: items,
 		namespace:
 			'_com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet_',
+		onActionDropdownItemClick({
+			action,
+			itemData,
+		}: {
+			action: {data: {id: string}};
+			itemData: ObjectView;
+		}) {
+			if (action.data.id === 'editObjectView') {
+				setEditObjectViewId(itemData.id);
+				setShowVerticalBar(true);
+				settriggerSideBarAnimation(true);
+			}
+		},
 		portletId:
 			'com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet',
 		style: 'fluid' as 'fluid',
@@ -148,6 +188,25 @@ export default function Views({
 					label={Liferay.Language.get('new-view')}
 					onVisibilityChange={setShowAddViewModal}
 				/>
+			)}
+
+			{showVerticalBar && (
+				<ObjectVerticalBar
+					defaultActive="editObjectViewVerticalBar"
+					triggerSideBarAnimation={triggerSideBarAnimation}
+					verticalBaritems={verticalBarItems}
+				>
+					<EditObjectView
+						filterOperators={filterOperators}
+						isViewOnly={readOnly}
+						objectDefinitionExternalReferenceCode={
+							objectDefinitionExternalReferenceCode
+						}
+						objectViewId={editObjectViewId as number}
+						onVerticalBarClose={closeVerticalBar}
+						workflowStatusJSONArray={workflowStatusJSONArray}
+					/>
+				</ObjectVerticalBar>
 			)}
 		</>
 	);

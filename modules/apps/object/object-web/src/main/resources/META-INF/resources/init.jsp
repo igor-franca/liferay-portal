@@ -42,7 +42,6 @@ page import="com.liferay.object.model.ObjectLayoutBox" %><%@
 page import="com.liferay.object.model.ObjectLayoutTab" %><%@
 page import="com.liferay.object.model.ObjectRelationship" %><%@
 page import="com.liferay.object.model.ObjectValidationRule" %><%@
-page import="com.liferay.object.model.ObjectView" %><%@
 page import="com.liferay.object.web.internal.list.type.constants.ListTypeFDSNames" %><%@
 page import="com.liferay.object.web.internal.list.type.display.context.ViewListTypeDefinitionsDisplayContext" %><%@
 page import="com.liferay.object.web.internal.list.type.display.context.ViewListTypeEntriesDisplayContext" %><%@

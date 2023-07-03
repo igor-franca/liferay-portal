@@ -13,12 +13,16 @@
  */
 
 import React from 'react';
-import {
-	TObjectView,
-	TObjectViewSortColumn,
-	TState,
-	TWorkflowStatus,
-} from './types';
+declare type TState = {
+	creationLanguageId: Liferay.Language.Locale;
+	filterOperators: TFilterOperators;
+	isViewOnly: boolean;
+	objectDefinitionExternalReferenceCode: string;
+	objectFields: ObjectField[];
+	objectView: ObjectView;
+	objectViewId: number;
+	workflowStatusJSONArray: LabelValueObject[];
+};
 interface IViewContextProps extends Array<TState | Function> {
 	0: typeof initialState;
 	1: React.Dispatch<React.ReducerAction<React.Reducer<TState, TAction>>>;
@@ -52,7 +56,7 @@ export declare type TAction =
 			payload: {
 				creationLanguageId: Liferay.Language.Locale;
 				objectFields: ObjectField[];
-				objectView: TObjectView;
+				objectView: ObjectView;
 			};
 			type: TYPES.ADD_OBJECT_VIEW;
 	  }
@@ -77,7 +81,7 @@ export declare type TAction =
 				creationLanguageId: Liferay.Language.Locale;
 				objectFieldName: string;
 				objectFields: ObjectField[];
-				objectViewSortColumns?: TObjectViewSortColumn[];
+				objectViewSortColumns?: ObjectViewSortColumn[];
 				selectedObjetSort: TSortOptions;
 			};
 			type: TYPES.ADD_OBJECT_VIEW_SORT_COLUMN;
@@ -153,8 +157,8 @@ interface IViewContextProviderProps extends React.HTMLAttributes<HTMLElement> {
 		filterOperators: TFilterOperators;
 		isViewOnly: boolean;
 		objectDefinitionExternalReferenceCode: string;
-		objectViewId: string;
-		workflowStatusJSONArray: TWorkflowStatus[];
+		objectViewId: number;
+		workflowStatusJSONArray: LabelValueObject[];
 	};
 }
 export declare function ViewContextProvider({

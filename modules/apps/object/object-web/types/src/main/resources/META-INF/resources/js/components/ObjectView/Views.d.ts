@@ -15,12 +15,21 @@
 /// <reference types="react" />
 
 import {IFDSTableProps} from '../../utils/fds';
+import './Views.scss';
+interface ViewsProps extends IFDSTableProps {
+	filterOperators: TFilterOperators;
+	readOnly: boolean;
+	workflowStatusJSONArray: LabelValueObject[];
+}
 export default function Views({
 	apiURL,
 	creationMenu,
+	filterOperators,
 	formName,
 	id,
 	items,
 	objectDefinitionExternalReferenceCode,
-	url,
-}: IFDSTableProps): JSX.Element;
+	readOnly,
+	workflowStatusJSONArray,
+}: ViewsProps): JSX.Element;
+export {};

@@ -24,7 +24,6 @@ import {
 import React, {FormEvent, useEffect, useMemo, useState} from 'react';
 
 import {TYPES, useViewContext} from '../objectViewContext';
-import {TObjectViewColumn, TObjectViewSortColumn} from '../types';
 
 interface IProps extends React.HTMLAttributes<HTMLElement> {
 	editingObjectFieldName: string;
@@ -67,7 +66,7 @@ export function ModalAddDefaultSortColumn({
 	] = useViewContext();
 
 	const [availableViewColumns, setAvailableViewColumns] = useState<
-		TObjectViewColumn[]
+		ObjectViewColumn[]
 	>(objectViewColumns);
 
 	useEffect(() => {
@@ -86,7 +85,7 @@ export function ModalAddDefaultSortColumn({
 	}, [objectViewColumns]);
 
 	const [selectedObjectSortColumn, setSelectedObjectSortColumn] = useState<
-		TObjectViewSortColumn
+		ObjectViewSortColumn
 	>();
 	const [selectedObjetSort, setSelectedObjetSort] = useState(SORT_OPTIONS[0]);
 	const [query, setQuery] = useState<string>('');
@@ -140,7 +139,7 @@ export function ModalAddDefaultSortColumn({
 
 				<ClayModal.Body>
 					{!isEditingSort && (
-						<AutoComplete<TObjectViewColumn>
+						<AutoComplete<ObjectViewColumn>
 							emptyStateMessage={Liferay.Language.get(
 								'there-are-no-columns-added-in-this-view-yet'
 							)}

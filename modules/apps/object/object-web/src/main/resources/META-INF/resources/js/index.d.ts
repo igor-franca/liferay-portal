@@ -195,6 +195,46 @@ interface ObjectDefinition {
 	titleObjectFieldName: string;
 }
 
+interface ObjectView {
+	defaultObjectView: boolean;
+	id?: number;
+	name: LocalizedValue<string>;
+	objectDefinitionId: number;
+	objectViewColumns: ObjectViewColumn[];
+	objectViewFilterColumns: ObjectViewFilterColumn[];
+	objectViewSortColumns: ObjectViewSortColumn[];
+}
+
+interface ObjectViewColumn {
+	defaultSort?: boolean;
+	fieldLabel?: string;
+	label: LocalizedValue<string>;
+	objectFieldBusinessType?: string;
+	objectFieldName: string;
+	priority?: number;
+}
+
+interface ObjectViewFilterColumn {
+	definition: {[key: string]: string[]} | null;
+	disableEdit?: boolean;
+	fieldLabel?: string;
+	filterBy?: string;
+	filterType: string | null;
+	label: LocalizedValue<string>;
+	objectFieldBusinessType?: string;
+	objectFieldName: string;
+	value?: string;
+	valueList?: LabelValueObject[];
+}
+
+interface ObjectViewSortColumn {
+	fieldLabel?: string;
+	label: LocalizedValue<string>;
+	objectFieldName: string;
+	priority?: number;
+	sortOrder?: string;
+}
+
 type ReadOnlyFieldValue = '' | 'conditional' | 'false' | 'true';
 
 type ObjectFieldSettingValue =

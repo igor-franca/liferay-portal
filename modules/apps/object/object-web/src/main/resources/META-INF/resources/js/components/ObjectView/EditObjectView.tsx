@@ -28,7 +28,6 @@ import {DefaultSortScreen} from './DefaultSortScreen/DefaultSortScreen';
 import {FilterScreen} from './FilterScreen/FilterScreen';
 import ViewBuilderScreen from './ViewBuilderScreen/ViewBuilderScreen';
 import {TYPES, ViewContextProvider, useViewContext} from './objectViewContext';
-import {TObjectView, TWorkflowStatus} from './types';
 
 const TABS = [
 	{
@@ -49,7 +48,19 @@ const TABS = [
 	},
 ];
 
-const CustomView: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
+interface EditObjectViewProps {
+	filterOperators: TFilterOperators;
+	isViewOnly: boolean;
+	objectDefinitionExternalReferenceCode: string;
+	objectViewId: number;
+	onVerticalBarClose: () => void;
+	workflowStatusJSONArray: LabelValueObject[];
+}
+
+interface CustomViewProps
+	extends Pick<EditObjectViewProps, 'onVerticalBarClose'> {}
+
+function CustomView({onVerticalBarClose}: CustomViewProps) {
 	const [
 		{
 			isViewOnly,
@@ -72,7 +83,7 @@ const CustomView: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 				objectViewColumns,
 				objectViewFilterColumns,
 				objectViewSortColumns,
-			} = await API.fetchJSON<TObjectView>(
+			} = await API.fetchJSON<ObjectView>(
 				`/o/object-admin/v1.0/object-views/${objectViewId}`
 			);
 
@@ -109,7 +120,7 @@ const CustomView: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 	}, [objectDefinitionExternalReferenceCode, objectViewId, dispatch]);
 
 	const removeUnnecessaryPropertiesFromObjectView = (
-		objectView: TObjectView
+		objectView: ObjectView
 	) => {
 		const {
 			objectViewColumns,
@@ -204,6 +215,7 @@ const CustomView: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 
 	return (
 		<SidePanelContent
+			closeVerticalBar={onVerticalBarClose}
 			onSave={handleSaveObjectView}
 			readOnly={isViewOnly || loading}
 			title={Liferay.Language.get('custom-view')}
@@ -229,22 +241,16 @@ const CustomView: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 			</ClayTabs.Content>
 		</SidePanelContent>
 	);
-};
-interface ICustomViewWrapperProps extends React.HTMLAttributes<HTMLElement> {
-	filterOperators: TFilterOperators;
-	isViewOnly: boolean;
-	objectDefinitionExternalReferenceCode: string;
-	objectViewId: string;
-	workflowStatusJSONArray: TWorkflowStatus[];
 }
 
-const CustomViewWrapper: React.FC<ICustomViewWrapperProps> = ({
+export function EditObjectView({
 	filterOperators,
 	isViewOnly,
 	objectDefinitionExternalReferenceCode,
 	objectViewId,
+	onVerticalBarClose,
 	workflowStatusJSONArray,
-}) => {
+}: EditObjectViewProps) {
 	return (
 		<ViewContextProvider
 			value={{
@@ -255,9 +261,7 @@ const CustomViewWrapper: React.FC<ICustomViewWrapperProps> = ({
 				workflowStatusJSONArray,
 			}}
 		>
-			<CustomView />
+			<CustomView onVerticalBarClose={onVerticalBarClose} />
 		</ViewContextProvider>
 	);
-};
-
-export default CustomViewWrapper;
+}

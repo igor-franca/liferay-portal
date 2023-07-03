@@ -12,14 +12,22 @@
  * details.
  */
 
-import React from 'react';
-import {TWorkflowStatus} from './types';
-interface ICustomViewWrapperProps extends React.HTMLAttributes<HTMLElement> {
+/// <reference types="react" />
+
+interface EditObjectViewProps {
 	filterOperators: TFilterOperators;
 	isViewOnly: boolean;
 	objectDefinitionExternalReferenceCode: string;
-	objectViewId: string;
-	workflowStatusJSONArray: TWorkflowStatus[];
+	objectViewId: number;
+	onVerticalBarClose: () => void;
+	workflowStatusJSONArray: LabelValueObject[];
 }
-declare const CustomViewWrapper: React.FC<ICustomViewWrapperProps>;
-export default CustomViewWrapper;
+export declare function EditObjectView({
+	filterOperators,
+	isViewOnly,
+	objectDefinitionExternalReferenceCode,
+	objectViewId,
+	onVerticalBarClose,
+	workflowStatusJSONArray,
+}: EditObjectViewProps): JSX.Element;
+export {};

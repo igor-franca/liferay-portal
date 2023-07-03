@@ -238,11 +238,14 @@ export function ObjectNavigationTabs({
 						<Views
 							apiURL={viewsApiURL}
 							creationMenu={viewsCreationMenu}
+							filterOperators={filterOperators}
 							id={viewsFDSId}
 							items={viewsDropdownItems}
 							objectDefinitionExternalReferenceCode={
 								externalReferenceCode
 							}
+							readOnly={readOnly}
+							workflowStatusJSONArray={workflowStatusJSONArray}
 						/>
 					</ClayTabs.TabPane>
 				</ClayTabs.Content>
