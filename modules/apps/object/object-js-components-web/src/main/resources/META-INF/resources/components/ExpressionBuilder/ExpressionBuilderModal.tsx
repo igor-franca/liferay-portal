@@ -72,6 +72,9 @@ export function ExpressionBuilderModal({
 			if (!valid) {
 				setExpressionError(Liferay.Language.get('syntax-error'));
 			}
+
+			onSave(source ?? '');
+			onClose();
 		}
 		else {
 			onSave(source ?? '');

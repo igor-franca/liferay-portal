@@ -15,14 +15,17 @@
 /// <reference types="react" />
 
 import {ActionError} from '..';
+import {SidebarCategory} from '@liferay/object-js-components-web';
 interface ConditionContainerProps {
 	errors: ActionError;
+	objectActionCodeEditorElements: SidebarCategory[];
 	setValues: (values: Partial<ObjectAction>) => void;
 	validateExpressionURL: string;
 	values: Partial<ObjectAction>;
 }
 export declare function ConditionContainer({
 	errors,
+	objectActionCodeEditorElements,
 	setValues,
 	validateExpressionURL,
 	values,

@@ -272,6 +272,9 @@ export default function ActionBuilder({
 			{showConditionContainer && (
 				<ConditionContainer
 					errors={errors}
+					objectActionCodeEditorElements={
+						objectActionCodeEditorElements
+					}
 					setValues={setValues}
 					validateExpressionURL={validateExpressionURL}
 					values={values}

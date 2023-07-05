@@ -267,6 +267,9 @@ export function ActionContainer({
 								[key: string]: string;
 							}
 						}
+						objectActionCodeEditorElements={
+							objectActionCodeEditorElements
+						}
 						objectFieldsMap={objectFieldsMap}
 						setValues={setValues}
 						title={
