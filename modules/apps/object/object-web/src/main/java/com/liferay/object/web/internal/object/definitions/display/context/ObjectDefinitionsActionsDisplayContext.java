@@ -67,18 +67,6 @@ public class ObjectDefinitionsActionsDisplayContext
 		_objectDefinitionLocalService = objectDefinitionLocalService;
 	}
 
-	public String getEditObjectActionURL() throws Exception {
-		return PortletURLBuilder.create(
-			getPortletURL()
-		).setMVCRenderCommandName(
-			"/object_definitions/edit_object_action"
-		).setParameter(
-			"objectActionId", "{id}"
-		).setWindowState(
-			LiferayWindowState.POP_UP
-		).buildString();
-	}
-
 	public List<FDSActionDropdownItem> getFDSActionDropdownItems()
 		throws Exception {
 
