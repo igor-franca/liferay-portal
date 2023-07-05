@@ -14,12 +14,14 @@
 
 /// <reference types="react" />
 
+import {SidebarCategory} from '@liferay/object-js-components-web';
 import './PredefinedValuesTable.scss';
 export default function PredefinedValuesTable({
 	creationLanguageId,
 	currentObjectDefinitionFields,
 	disableRequiredChecked,
 	errors,
+	objectActionCodeEditorElements,
 	objectFieldsMap,
 	setValues,
 	title,
@@ -33,6 +35,7 @@ interface IProps {
 	errors: {
 		[key: string]: string;
 	};
+	objectActionCodeEditorElements: SidebarCategory[];
 	objectFieldsMap: Map<string, ObjectField>;
 	predefinedValues?: PredefinedValue[];
 	setValues: (params: Partial<ObjectAction>) => void;
