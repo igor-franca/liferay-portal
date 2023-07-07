@@ -63,6 +63,7 @@ interface ObjectNavigationProps {
 	objectDefinitionsRelationshipsURL: string;
 	objectFieldTypes: ObjectFieldType[];
 	objectFields: ObjectField[];
+	objectValidationRuleEngines: ObjectValidationType[];
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
 	readOnly: boolean;
@@ -74,6 +75,10 @@ interface ObjectNavigationProps {
 	storageTypes: LabelValueObject[];
 	system: boolean;
 	validateActionExpressionURL: string;
+	validationsApiURL: string;
+	validationsCreationMenu: CreationMenu;
+	validationsDropdownItems: [];
+	validationsFDSId: string;
 	values: Partial<ObjectDefinition>;
 	viewsApiURL: string;
 	viewsCreationMenu: CreationMenu;
@@ -117,6 +122,7 @@ export declare function ObjectNavigationTabs({
 	objectDefinitionsRelationshipsURL,
 	objectFieldTypes,
 	objectFields,
+	objectValidationRuleEngines,
 	pluralLabel,
 	portletNamespace,
 	readOnly,
@@ -127,6 +133,10 @@ export declare function ObjectNavigationTabs({
 	storageTypes,
 	system,
 	validateActionExpressionURL,
+	validationsApiURL,
+	validationsCreationMenu,
+	validationsDropdownItems,
+	validationsFDSId,
 	values,
 	viewsApiURL,
 	viewsCreationMenu,

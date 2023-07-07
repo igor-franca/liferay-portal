@@ -71,6 +71,7 @@ interface EditObjectDefinitionProps {
 	objectDefinitionId: number;
 	objectDefinitionsRelationshipsURL: string;
 	objectFieldTypes: ObjectFieldType[];
+	objectValidationRuleEngines: ObjectValidationType[];
 	onSubmit: (draft: boolean) => void;
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
@@ -83,6 +84,10 @@ interface EditObjectDefinitionProps {
 	storageTypes: LabelValueObject[];
 	system: boolean;
 	validateActionExpressionURL: string;
+	validationsApiURL: string;
+	validationsCreationMenu: CreationMenu;
+	validationsDropdownItems: [];
+	validationsFDSId: string;
 	viewsApiURL: string;
 	viewsCreationMenu: CreationMenu;
 	viewsDropdownItems: [];
@@ -124,6 +129,7 @@ export default function EditObjectDefinition({
 	objectDefinitionId,
 	objectDefinitionsRelationshipsURL,
 	objectFieldTypes,
+	objectValidationRuleEngines,
 	pluralLabel,
 	portletNamespace,
 	readOnly,
@@ -134,6 +140,10 @@ export default function EditObjectDefinition({
 	storageTypes,
 	system,
 	validateActionExpressionURL,
+	validationsApiURL,
+	validationsCreationMenu,
+	validationsDropdownItems,
+	validationsFDSId,
 	viewsApiURL,
 	viewsCreationMenu,
 	viewsDropdownItems,
@@ -257,6 +267,7 @@ export default function EditObjectDefinition({
 				}
 				objectFieldTypes={objectFieldTypes}
 				objectFields={objectFields}
+				objectValidationRuleEngines={objectValidationRuleEngines}
 				pluralLabel={pluralLabel}
 				portletNamespace={portletNamespace}
 				readOnly={readOnly}
@@ -268,6 +279,10 @@ export default function EditObjectDefinition({
 				storageTypes={storageTypes}
 				system={system}
 				validateActionExpressionURL={validateActionExpressionURL}
+				validationsApiURL={validationsApiURL}
+				validationsCreationMenu={validationsCreationMenu}
+				validationsDropdownItems={validationsDropdownItems}
+				validationsFDSId={validationsFDSId}
 				values={values}
 				viewsApiURL={viewsApiURL}
 				viewsCreationMenu={viewsCreationMenu}

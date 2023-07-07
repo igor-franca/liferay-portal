@@ -31,6 +31,9 @@ import {
 	fdsItem,
 	formatActionURL,
 } from '../../utils/fds';
+import AddObjectValidation from './AddObjectValidation';
+import ModalAddObjectValidation from './AddObjectValidation';
+import ClayModal, {ClayModalProvider, useModal} from '@clayui/modal';
 
 interface ItemData {
 	active: boolean;
@@ -39,6 +42,11 @@ interface ItemData {
 
 const language = Liferay.ThemeDisplay.getBCP47LanguageId();
 
+interface ObjectValidations extends IFDSTableProps {
+	apiURL: string;
+	objectValidationRuleEngines: ObjectValidationType[];
+}
+
 export default function Validations({
 	apiURL,
 	creationMenu,
@@ -46,12 +54,27 @@ export default function Validations({
 	id,
 	items,
 	objectDefinitionExternalReferenceCode,
+	objectValidationRuleEngines,
 	style,
 	url,
-}: IFDSTableProps) {
+}: ObjectValidations) {
 	const [creationLanguageId, setCreationLanguageId] = useState<
 		Liferay.Language.Locale
 	>();
+	const [showAddObjectValidationModal, setShowAddObjectValidationModal] = useState<boolean>(
+		false
+	);
+	const {observer, onClose} = useModal({onClose: () => setShowAddObjectValidationModal(false)});
+
+	useEffect(() => {
+		Liferay.on('addObjectValidation', () => {
+			setShowAddObjectValidationModal(true);
+		});
+
+		return () => {
+			Liferay.detach('addObjectValidation');
+		};
+	}, []);
 
 	useEffect(() => {
 		const makeFetch = async () => {
@@ -165,5 +188,19 @@ export default function Validations({
 		],
 	};
 
-	return <FrontendDataSet {...dataSetProps} />;
+	return (
+		<>
+			<FrontendDataSet {...dataSetProps} />
+			<ClayModalProvider>
+			{showAddObjectValidationModal && (
+				<ModalAddObjectValidation
+						apiURL={apiURL}
+						objectValidationRuleEngines={objectValidationRuleEngines}
+						observer={observer}
+						onClose={onClose}
+				/>
+			)}
+		</ClayModalProvider>
+		</>
+	);
 }

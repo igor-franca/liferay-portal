@@ -27,13 +27,10 @@ import React, {FormEvent, useEffect, useState} from 'react';
 
 import {defaultLanguageId} from '../../utils/constants';
 
-interface ModalAddObjectValidationProps extends AddObjectValidationProps {
+interface ModalAddObjectValidationProps {
+	apiURL: string;
 	observer: Observer;
 	onClose: () => void;
-}
-
-interface AddObjectValidationProps {
-	apiURL: string;
 	objectValidationRuleEngines: ObjectValidationType[];
 }
 
@@ -48,7 +45,7 @@ interface ObjectValidationErrors {
 
 const requiredLabel = REQUIRED_MSG;
 
-function ModalAddObjectValidation({
+export default function ModalAddObjectValidation({
 	apiURL,
 	objectValidationRuleEngines,
 	observer,
@@ -182,34 +179,5 @@ function ModalAddObjectValidation({
 				/>
 			</ClayForm>
 		</ClayModal>
-	);
-}
-
-export default function AddObjectValidation({
-	apiURL,
-	objectValidationRuleEngines,
-}: AddObjectValidationProps) {
-	const [isVisible, setVisibility] = useState<boolean>(false);
-	const {observer, onClose} = useModal({onClose: () => setVisibility(false)});
-
-	useEffect(() => {
-		Liferay.on('addObjectValidation', () => setVisibility(true));
-
-		return () => Liferay.detach('addObjectValidation');
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	return (
-		<ClayModalProvider>
-			{isVisible && (
-				<ModalAddObjectValidation
-					apiURL={apiURL}
-					objectValidationRuleEngines={objectValidationRuleEngines}
-					observer={observer}
-					onClose={onClose}
-				/>
-			)}
-		</ClayModalProvider>
 	);
 }

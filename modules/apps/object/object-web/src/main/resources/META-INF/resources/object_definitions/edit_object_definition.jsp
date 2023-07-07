@@ -25,6 +25,7 @@ ObjectDefinitionsDetailsDisplayContext objectDefinitionsDetailsDisplayContext = 
 ObjectDefinitionsFieldsDisplayContext objectDefinitionsFieldsDisplayContext = (ObjectDefinitionsFieldsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_FIELDS_DISPLAY_CONTEXT);
 ObjectDefinitionsLayoutsDisplayContext objectDefinitionsLayoutsDisplayContext = (ObjectDefinitionsLayoutsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_LAYOUTS_DISPLAY_CONTEXT);
 ObjectDefinitionsViewsDisplayContext objectDefinitionsViewsDisplayContext = (ObjectDefinitionsViewsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_VIEWS_DISPLAY_CONTEXT);
+ObjectDefinitionsValidationsDisplayContext objectDefinitionsValidationsDisplayContext = (ObjectDefinitionsValidationsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_VALIDATIONS_DISPLAY_CONTEXT);
 
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(backURL);
@@ -75,6 +76,8 @@ renderResponse.setTitle(LanguageUtil.format(request, "edit-x", objectDefinition.
 			).put(
 				"forbiddenNames", PropsUtil.getArray(PropsKeys.DL_NAME_BLACKLIST)
 			).put(
+				"formName", "fm"
+			).put(
 				"hasPublishObjectPermission", objectDefinitionsDetailsDisplayContext.hasPublishObjectPermission()
 			).put(
 				"hasUpdateObjectDefinitionPermission", objectDefinitionsDetailsDisplayContext.hasUpdateObjectDefinitionPermission()
@@ -105,6 +108,8 @@ renderResponse.setTitle(LanguageUtil.format(request, "edit-x", objectDefinition.
 			).put(
 				"objectFieldTypes", objectDefinitionsFieldsDisplayContext.getObjectFieldBusinessTypeMaps(true, locale)
 			).put(
+				"objectValidationRuleEngines", objectDefinitionsValidationsDisplayContext.getObjectValidationRuleEngines()
+			).put(
 				"pluralLabel", LocalizationUtil.getLocalizationMap(objectDefinition.getPluralLabel())
 			).put(
 				"portletNamespace", liferayPortletResponse.getNamespace()
@@ -126,6 +131,14 @@ renderResponse.setTitle(LanguageUtil.format(request, "edit-x", objectDefinition.
 				"system", objectDefinition.isSystem()
 			).put(
 				"validateActionExpressionURL", objectDefinitionsActionsDisplayContext.getValidateExpressionURL()
+			).put(
+				"validationsApiURL", objectDefinitionsValidationsDisplayContext.getAPIURL()
+			).put(
+				"validationsCreationMenu", objectDefinitionsValidationsDisplayContext.getCreationMenu()
+			).put(
+				"validationsFDSId", ObjectDefinitionsFDSNames.OBJECT_VALIDATIONS
+			).put(
+				"validationsDropdownItems", objectDefinitionsValidationsDisplayContext.getFDSActionDropdownItems()
 			).put(
 				"viewsApiURL", objectDefinitionsViewsDisplayContext.getAPIURL()
 			).put(

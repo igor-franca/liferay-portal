@@ -14,12 +14,17 @@
 
 /// <reference types="react" />
 
-interface AddObjectValidationProps {
+import {Observer} from '@clayui/modal/lib/types';
+interface ModalAddObjectValidationProps {
 	apiURL: string;
+	observer: Observer;
+	onClose: () => void;
 	objectValidationRuleEngines: ObjectValidationType[];
 }
-export default function AddObjectValidation({
+export default function ModalAddObjectValidation({
 	apiURL,
 	objectValidationRuleEngines,
-}: AddObjectValidationProps): JSX.Element;
+	observer,
+	onClose,
+}: ModalAddObjectValidationProps): JSX.Element;
 export {};

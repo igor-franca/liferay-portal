@@ -27,6 +27,7 @@ import EditObjectDetails, {
 	KeyValuePair,
 } from '../../ObjectDetails/EditObjectDetails';
 import Fields from '../../ObjectField/Fields';
+import Validations from '../../ObjectValidation/Validations';
 import Views from '../../ObjectView/Views';
 import {CreationMenu} from '../EditObjectDefinition';
 
@@ -72,6 +73,7 @@ interface ObjectNavigationProps {
 	objectDefinitionsRelationshipsURL: string;
 	objectFieldTypes: ObjectFieldType[];
 	objectFields: ObjectField[];
+	objectValidationRuleEngines: ObjectValidationType[];
 	pluralLabel: LocalizedValue<string>;
 	portletNamespace: string;
 	readOnly: boolean;
@@ -83,6 +85,10 @@ interface ObjectNavigationProps {
 	storageTypes: LabelValueObject[];
 	system: boolean;
 	validateActionExpressionURL: string;
+	validationsApiURL: string;
+	validationsCreationMenu: CreationMenu;
+	validationsDropdownItems: [];
+	validationsFDSId: string;
 	values: Partial<ObjectDefinition>;
 	viewsApiURL: string;
 	viewsCreationMenu: CreationMenu;
@@ -127,6 +133,7 @@ export function ObjectNavigationTabs({
 	objectDefinitionsRelationshipsURL,
 	objectFieldTypes,
 	objectFields,
+	objectValidationRuleEngines,
 	pluralLabel,
 	portletNamespace,
 	readOnly,
@@ -137,6 +144,10 @@ export function ObjectNavigationTabs({
 	storageTypes,
 	system,
 	validateActionExpressionURL,
+	validationsApiURL,
+	validationsCreationMenu,
+	validationsDropdownItems,
+	validationsFDSId,
 	values,
 	viewsApiURL,
 	viewsCreationMenu,
@@ -144,7 +155,7 @@ export function ObjectNavigationTabs({
 	viewsFDSId,
 	workflowStatusJSONArray,
 }: ObjectNavigationProps) {
-	const [active, setActive] = useState(3);
+	const [active, setActive] = useState(5);
 
 	return (
 		<>
@@ -192,6 +203,14 @@ export function ObjectNavigationTabs({
 						}}
 					>
 						{Liferay.Language.get('views')}
+					</ClayTabs.Item>
+
+					<ClayTabs.Item
+						innerProps={{
+							'aria-controls': 'tabpanel-6',
+						}}
+					>
+						{Liferay.Language.get('validations')}
 					</ClayTabs.Item>
 				</ClayTabs>
 			</div>
@@ -306,6 +325,21 @@ export function ObjectNavigationTabs({
 							}
 							readOnly={readOnly}
 							workflowStatusJSONArray={workflowStatusJSONArray}
+						/>
+					</ClayTabs.TabPane>
+
+					<ClayTabs.TabPane aria-labelledby="views-tab">
+						<Validations
+							apiURL={validationsApiURL}
+							creationMenu={validationsCreationMenu}
+							id={validationsFDSId}
+							items={validationsDropdownItems}
+							objectDefinitionExternalReferenceCode={
+								externalReferenceCode
+							}
+							objectValidationRuleEngines={
+								objectValidationRuleEngines
+							}
 						/>
 					</ClayTabs.TabPane>
 				</ClayTabs.Content>

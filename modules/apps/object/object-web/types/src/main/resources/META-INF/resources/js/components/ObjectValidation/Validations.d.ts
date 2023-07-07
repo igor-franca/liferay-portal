@@ -15,6 +15,10 @@
 /// <reference types="react" />
 
 import {IFDSTableProps} from '../../utils/fds';
+interface ObjectValidations extends IFDSTableProps {
+	apiURL: string;
+	objectValidationRuleEngines: ObjectValidationType[];
+}
 export default function Validations({
 	apiURL,
 	creationMenu,
@@ -22,6 +26,8 @@ export default function Validations({
 	id,
 	items,
 	objectDefinitionExternalReferenceCode,
+	objectValidationRuleEngines,
 	style,
 	url,
-}: IFDSTableProps): JSX.Element;
+}: ObjectValidations): JSX.Element;
+export {};
