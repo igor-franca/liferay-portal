@@ -295,6 +295,7 @@ export function ObjectNavigationTabs({
 					<ClayTabs.TabPane aria-labelledby="views-tab">
 						<Views
 							apiURL={viewsApiURL}
+							creationLanguageId={creationLanguageId}
 							creationMenu={viewsCreationMenu}
 							filterOperators={filterOperators}
 							id={viewsFDSId}

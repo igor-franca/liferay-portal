@@ -12,26 +12,12 @@
  * details.
  */
 
-/// <reference types="react" />
-
-import {IFDSTableProps} from '../../utils/fds';
-import './Views.scss';
-interface ViewsProps extends IFDSTableProps {
-	creationLanguageId: Liferay.Language.Locale;
-	filterOperators: TFilterOperators;
-	readOnly: boolean;
-	workflowStatusJSONArray: LabelValueObject[];
+export default function ObjectLayoutDefaultDataRenderer({
+	itemData,
+}: {
+	itemData: ObjectView;
+}) {
+	return itemData.defaultObjectView
+		? Liferay.Language.get('yes')
+		: Liferay.Language.get('no');
 }
-export default function Views({
-	apiURL,
-	creationLanguageId,
-	creationMenu,
-	filterOperators,
-	formName,
-	id,
-	items,
-	objectDefinitionExternalReferenceCode,
-	readOnly,
-	workflowStatusJSONArray,
-}: ViewsProps): JSX.Element;
-export {};

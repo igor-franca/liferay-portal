@@ -14,7 +14,6 @@
 
 import {FrontendDataSet} from '@liferay/frontend-data-set-web';
 import {
-	API,
 	ObjectVerticalBar,
 	getLocalizableLabel,
 } from '@liferay/object-js-components-web';
@@ -23,15 +22,12 @@ import React, {useEffect, useState} from 'react';
 import {IFDSTableProps, defaultDataSetProps, fdsItem} from '../../utils/fds';
 import {ModalBasicWithFieldName} from '../ModalBasicWithFieldName';
 import {EditObjectView} from './EditObjectView';
+import objectLayoutDefaultDataRenderer from './FDSDataRender/ObjectLayoutDefaultDataRenderer';
 
 import './Views.scss';
 
-interface ItemData {
-	defaultObjectView: boolean;
-	id: number;
-}
-
 interface ViewsProps extends IFDSTableProps {
+	creationLanguageId: Liferay.Language.Locale;
 	filterOperators: TFilterOperators;
 	readOnly: boolean;
 	workflowStatusJSONArray: LabelValueObject[];
@@ -45,6 +41,7 @@ const verticalBarItems = [
 
 export default function Views({
 	apiURL,
+	creationLanguageId,
 	creationMenu,
 	filterOperators,
 	formName,
@@ -54,9 +51,6 @@ export default function Views({
 	readOnly,
 	workflowStatusJSONArray,
 }: ViewsProps) {
-	const [creationLanguageId, setCreationLanguageId] = useState<
-		Liferay.Language.Locale
-	>();
 	const [showAddViewModal, setShowAddViewModal] = useState(false);
 	const [editObjectViewId, setEditObjectViewId] = useState<number>();
 	const [showVerticalBar, setShowVerticalBar] = useState<boolean>(false);
@@ -74,7 +68,7 @@ export default function Views({
 	function objectLayoutLabelDataRenderer({
 		itemData,
 		value,
-	}: fdsItem<ItemData>) {
+	}: fdsItem<ObjectView>) {
 		const handleEditField = () => {
 			setEditObjectViewId(itemData.id);
 			setShowVerticalBar(true);
@@ -93,12 +87,6 @@ export default function Views({
 		);
 	}
 
-	function objectLayoutDefaultDataRenderer({itemData}: {itemData: ItemData}) {
-		return itemData.defaultObjectView
-			? Liferay.Language.get('yes')
-			: Liferay.Language.get('no');
-	}
-
 	useEffect(() => {
 		Liferay.on('addObjectView', () => setShowAddViewModal(true));
 
@@ -106,18 +94,6 @@ export default function Views({
 			Liferay.detach('addObjectView');
 		};
 	}, []);
-
-	useEffect(() => {
-		const makeFetch = async () => {
-			const objectDefinition = await API.getObjectDefinitionByExternalReferenceCode(
-				objectDefinitionExternalReferenceCode
-			);
-
-			setCreationLanguageId(objectDefinition.defaultLanguageId);
-		};
-
-		makeFetch();
-	}, [objectDefinitionExternalReferenceCode]);
 
 	const dataSetProps = {
 		...defaultDataSetProps,
