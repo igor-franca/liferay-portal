@@ -256,6 +256,7 @@ export function ObjectNavigationTabs({
 					<ClayTabs.TabPane aria-labelledby="layouts-tab">
 						<Layouts
 							apiURL={layoutsApiURL}
+							creationLanguageId={creationLanguageId}
 							creationMenu={layoutsCreationMenu}
 							id={layoutFDSId}
 							items={layoutDropdownitems}

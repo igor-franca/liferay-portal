@@ -78,10 +78,7 @@ export default function Views({
 		return (
 			<div className="table-list-title">
 				<a href="#" onClick={handleEditField}>
-					{getLocalizableLabel(
-						creationLanguageId as Liferay.Language.Locale,
-						value
-					)}
+					{getLocalizableLabel(creationLanguageId, value)}
 				</a>
 			</div>
 		);

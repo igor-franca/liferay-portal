@@ -12,23 +12,8 @@
  * details.
  */
 
-/// <reference types="react" />
-
-import {IFDSTableProps} from '../../utils/fds';
-import './Layouts.scss';
-interface LayoutsProps extends IFDSTableProps {
-	creationLanguageId: Liferay.Language.Locale;
-	objectFieldTypes: ObjectFieldType[];
-	readOnly: boolean;
-}
-export default function Layouts({
-	apiURL,
-	creationLanguageId,
-	creationMenu,
-	formName,
-	id,
-	items,
-	objectFieldTypes,
-	readOnly,
-}: LayoutsProps): JSX.Element;
-export {};
+export default function objectLayoutDefaultDataRenderer({
+	itemData,
+}: {
+	itemData: ObjectLayout;
+}): string;

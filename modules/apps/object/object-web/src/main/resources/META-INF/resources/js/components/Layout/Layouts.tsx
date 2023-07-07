@@ -14,7 +14,6 @@
 
 import {FrontendDataSet} from '@liferay/frontend-data-set-web';
 import {
-	API,
 	ObjectVerticalBar,
 	getLocalizableLabel,
 } from '@liferay/object-js-components-web';
@@ -23,15 +22,12 @@ import React, {useEffect, useState} from 'react';
 import {IFDSTableProps, defaultDataSetProps, fdsItem} from '../../utils/fds';
 import {ModalBasicWithFieldName} from '../ModalBasicWithFieldName';
 import {EditObjectLayout} from './EditObjectLayout';
+import objectLayoutDefaultDataRenderer from './FDSDataRender/ObjectLayoutDefaultDataRenderer';
 
 import './Layouts.scss';
 
-interface ItemData {
-	defaultObjectLayout: boolean;
-	id: number;
-}
-
 interface LayoutsProps extends IFDSTableProps {
+	creationLanguageId: Liferay.Language.Locale;
 	objectFieldTypes: ObjectFieldType[];
 	readOnly: boolean;
 }
@@ -44,17 +40,14 @@ const verticalBarItems = [
 
 export default function Layouts({
 	apiURL,
+	creationLanguageId,
 	creationMenu,
 	formName,
 	id,
 	items,
-	objectDefinitionExternalReferenceCode,
 	objectFieldTypes,
 	readOnly,
 }: LayoutsProps) {
-	const [creationLanguageId, setCreationLanguageId] = useState<
-		Liferay.Language.Locale
-	>();
 	const [editObjectLayoutId, setEditObjectLayoutId] = useState<number>();
 	const [showAddLayoutModal, setShowAddLayoutModal] = useState(false);
 	const [showVerticalBar, setShowVerticalBar] = useState<boolean>(false);
@@ -62,10 +55,17 @@ export default function Layouts({
 		boolean
 	>(false);
 
+	function closeVerticalBar() {
+		settriggerSideBarAnimation(false);
+		setTimeout(() => {
+			setShowVerticalBar(false);
+		}, 500);
+	}
+
 	function objectLayoutLabelDataRenderer({
 		itemData,
 		value,
-	}: fdsItem<ItemData>) {
+	}: fdsItem<ObjectLayout>) {
 		const handleEditField = () => {
 			setEditObjectLayoutId(itemData.id);
 			setShowVerticalBar(true);
@@ -75,32 +75,11 @@ export default function Layouts({
 		return (
 			<div className="table-list-title">
 				<a href="#" onClick={handleEditField}>
-					{getLocalizableLabel(
-						creationLanguageId as Liferay.Language.Locale,
-						value
-					)}
+					{getLocalizableLabel(creationLanguageId, value)}
 				</a>
 			</div>
 		);
 	}
-
-	function objectLayoutDefaultDataRenderer({itemData}: {itemData: ItemData}) {
-		return itemData.defaultObjectLayout
-			? Liferay.Language.get('yes')
-			: Liferay.Language.get('no');
-	}
-
-	useEffect(() => {
-		const makeFetch = async () => {
-			const objectDefinition = await API.getObjectDefinitionByExternalReferenceCode(
-				objectDefinitionExternalReferenceCode
-			);
-
-			setCreationLanguageId(objectDefinition.defaultLanguageId);
-		};
-
-		makeFetch();
-	}, [objectDefinitionExternalReferenceCode]);
 
 	useEffect(() => {
 		Liferay.on('addObjectLayout', () => setShowAddLayoutModal(true));
@@ -109,13 +88,6 @@ export default function Layouts({
 			Liferay.detach('addObjectLayout');
 		};
 	}, []);
-
-	function closeVerticalBar() {
-		settriggerSideBarAnimation(false);
-		setTimeout(() => {
-			setShowVerticalBar(false);
-		}, 500);
-	}
 
 	const dataSetProps = {
 		...defaultDataSetProps,
