@@ -39,6 +39,7 @@ import {ModalMoveObjectDefinition} from './ModalMoveObjectDefinition';
 
 interface ViewObjectDefinitionsProps extends IFDSTableProps {
 	baseResourceURL: string;
+	editObjectFolderURL: string;
 	objectFolderPermissionsURL: string;
 	storages: LabelTypeObject[];
 }
@@ -60,6 +61,7 @@ export interface DeletedObjectDefinition extends ObjectDefinition {
 export default function ViewObjectDefinitions({
 	apiURL,
 	baseResourceURL,
+	editObjectFolderURL,
 	id,
 	items,
 	objectFolderPermissionsURL,
@@ -386,6 +388,9 @@ export default function ViewObjectDefinitions({
 								className="lfr__object-web-view-object-definitions-card"
 								header={
 									<CardHeader
+										editObjectFolderURL={
+											editObjectFolderURL
+										}
 										externalReferenceCode={
 											selectedFolder.externalReferenceCode
 										}

@@ -12,6 +12,7 @@ import React from 'react';
 import {defaultLanguageId} from '../../utils/constants';
 
 interface CardHeaderProps {
+	editObjectFolderURL: string;
 	externalReferenceCode?: string;
 	items: IItem[];
 	label?: LocalizedValue<string>;
@@ -19,6 +20,7 @@ interface CardHeaderProps {
 }
 
 export default function CardHeader({
+	editObjectFolderURL,
 	externalReferenceCode,
 	items,
 	label,
@@ -72,6 +74,9 @@ export default function CardHeader({
 				aria-label={Liferay.Language.get('view-in-model-builder')}
 				className="lfr__object-web-view-object-definitions-view-in-model-builder-button"
 				displayType="secondary"
+				onClick={() => {
+					window.location.href = editObjectFolderURL;
+				}}
 			>
 				{Liferay.Language.get('view-in-model-builder')}
 			</ClayButton>

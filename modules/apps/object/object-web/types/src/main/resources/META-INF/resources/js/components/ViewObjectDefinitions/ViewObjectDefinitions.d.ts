@@ -9,6 +9,7 @@ import {IFDSTableProps} from '../../utils/fds';
 import './ViewObjectDefinitions.scss';
 interface ViewObjectDefinitionsProps extends IFDSTableProps {
 	baseResourceURL: string;
+	editObjectFolderURL: string;
 	objectFolderPermissionsURL: string;
 	storages: LabelTypeObject[];
 }
@@ -27,6 +28,7 @@ export interface DeletedObjectDefinition extends ObjectDefinition {
 export default function ViewObjectDefinitions({
 	apiURL,
 	baseResourceURL,
+	editObjectFolderURL,
 	id,
 	items,
 	objectFolderPermissionsURL,

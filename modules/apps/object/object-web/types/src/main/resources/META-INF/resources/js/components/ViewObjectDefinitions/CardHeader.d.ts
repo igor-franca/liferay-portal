@@ -6,12 +6,14 @@
 /// <reference types="react" />
 
 interface CardHeaderProps {
+	editObjectFolderURL: string;
 	externalReferenceCode?: string;
 	items: IItem[];
 	label?: LocalizedValue<string>;
 	name?: string;
 }
 export default function CardHeader({
+	editObjectFolderURL,
 	externalReferenceCode,
 	items,
 	label,
