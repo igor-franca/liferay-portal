@@ -14,8 +14,15 @@
 
 /// <reference types="react" />
 
+<<<<<<<< HEAD:modules/apps/layout/layout-content-page-editor-web/types/src/main/resources/META-INF/resources/page_editor/common/components/WarningMessage.d.ts
 export declare function WarningMessage({
 	message,
 }: {
 	message: string;
+========
+export default function objectDefinitionStatusDataRenderer({
+	itemData,
+}: {
+	itemData: ObjectDefinition;
+>>>>>>>> b0c0a29 (LPS-189081 Migrate View Object Definitions page to React):modules/apps/object/object-web/types/src/main/resources/META-INF/resources/js/components/ViewObjectDefinitions/FDSDataRenderers/ObjectDefinitionStatusDataRenderer.d.ts
 }): JSX.Element;
