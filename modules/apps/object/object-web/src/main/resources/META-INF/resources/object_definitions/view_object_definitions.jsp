@@ -17,6 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
+ObjectFolderDisplayContext objectFolderDisplayContext = (ObjectFolderDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_FOLDER);
 ViewObjectDefinitionsDisplayContext viewObjectDefinitionsDisplayContext = (ViewObjectDefinitionsDisplayContext)request.getAttribute(WebKeys.PORTLET_DISPLAY_CONTEXT);
 %>
 
@@ -37,6 +38,8 @@ ViewObjectDefinitionsDisplayContext viewObjectDefinitionsDisplayContext = (ViewO
 		props='<%=
 			HashMapBuilder.<String, Object>put(
 				"apiURL", viewObjectDefinitionsDisplayContext.getAPIURL()
+			).put(
+				"editObjectFolderURL", objectFolderDisplayContext.getEditObjectFolderURL()
 			).put(
 				"storages", viewObjectDefinitionsDisplayContext.getStoragesJSONArray()
 			).build()
