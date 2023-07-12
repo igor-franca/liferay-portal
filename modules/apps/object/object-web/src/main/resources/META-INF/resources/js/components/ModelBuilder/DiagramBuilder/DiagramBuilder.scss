@@ -1,0 +1,10 @@
+.lfr-objects__object-diagram {
+	height: 88.5vh;
+	position: relative;
+	width: 100vw;
+
+	&-controls {
+		display: flex;
+		flex-direction: column;
+	}
+}
