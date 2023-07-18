@@ -12,10 +12,8 @@
  * details.
  */
 
-export type TState = {
-	objectDefinitions: ObjectDefinition[];
-};
+/// <reference types="react" />
 
-export interface FieldNode extends ObjectField {
-	selected: boolean;
-}
+import {NodeProps} from 'react-flow-renderer';
+import './DefinitionNode.scss';
+export declare function DefinitionNode(props: NodeProps): JSX.Element;
