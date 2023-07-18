@@ -12,10 +12,23 @@
  * details.
  */
 
-export type TState = {
-	objectDefinitions: ObjectDefinition[];
-};
+/// <reference types="react" />
 
-export interface FieldNode extends ObjectField {
-	selected: boolean;
+import './NodeHeader.scss';
+interface INodeHeader {
+	hasDeleteResourcePermission: boolean;
+	hasManagePermissionsResourcePermission: boolean;
+	hasObjectDefinitionPublished: boolean;
+	isLinkedNode: boolean;
+	objectDefinitionLabel: string;
+	system: boolean;
 }
+export default function NodeHeader({
+	hasDeleteResourcePermission,
+	hasManagePermissionsResourcePermission,
+	hasObjectDefinitionPublished,
+	isLinkedNode,
+	objectDefinitionLabel,
+	system,
+}: INodeHeader): JSX.Element;
+export {};

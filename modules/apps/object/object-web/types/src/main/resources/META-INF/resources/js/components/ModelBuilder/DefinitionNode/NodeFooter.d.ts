@@ -12,10 +12,15 @@
  * details.
  */
 
-export type TState = {
-	objectDefinitions: ObjectDefinition[];
-};
+/// <reference types="react" />
 
-export interface FieldNode extends ObjectField {
-	selected: boolean;
+import './NodeFooter.scss';
+interface NodeFooter {
+	setShowAllFields: (value: boolean) => void;
+	showAllFields: boolean;
 }
+export default function NodeFooter({
+	setShowAllFields,
+	showAllFields,
+}: NodeFooter): JSX.Element;
+export {};

@@ -12,10 +12,16 @@
  * details.
  */
 
-export type TState = {
-	objectDefinitions: ObjectDefinition[];
-};
+/// <reference types="react" />
 
-export interface FieldNode extends ObjectField {
-	selected: boolean;
+import {FieldNode} from '../types';
+import './NodeFields.scss';
+interface INodeFields {
+	objectFields: FieldNode[];
+	showAll: boolean;
 }
+export default function NodeFields({
+	objectFields,
+	showAll,
+}: INodeFields): JSX.Element;
+export {};
