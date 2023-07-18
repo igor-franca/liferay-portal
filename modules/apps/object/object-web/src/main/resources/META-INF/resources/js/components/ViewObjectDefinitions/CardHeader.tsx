@@ -7,6 +7,7 @@ import ClayButton from '@clayui/button';
 import {ClayDropDownWithItems} from '@clayui/drop-down';
 import ClayIcon from '@clayui/icon';
 import {getLocalizableLabel} from '@liferay/object-js-components-web';
+import {sub} from 'frontend-js-web';
 import React from 'react';
 
 import {defaultLanguageId} from '../../utils/constants';
@@ -61,8 +62,11 @@ export default function CardHeader({
 
 					<span
 						className="ml-3 text-secondary"
-						title={Liferay.Language.get(
-							'unique-key-for-referencing-the-objects-folder'
+						title={sub(
+							Liferay.Language.get(
+								'unique-key-for-referencing-the-x'
+							),
+							Liferay.Language.get('objects-folder')
 						)}
 					>
 						<ClayIcon symbol="question-circle" />

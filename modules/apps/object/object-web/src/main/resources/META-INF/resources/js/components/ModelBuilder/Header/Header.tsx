@@ -43,8 +43,11 @@ export default function ({
 
 					<span
 						role="tooltip"
-						title={Liferay.Language.get(
-							'unique-key-for-referencing-the-object-folder'
+						title={sub(
+							Liferay.Language.get(
+								'unique-key-for-referencing-the-x'
+							),
+							Liferay.Language.get('object-folder')
 						)}
 					>
 						<ClayIcon symbol="question-circle" />
