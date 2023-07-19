@@ -12,19 +12,8 @@
  * details.
  */
 
-import {Observer} from '@clayui/modal/lib/types';
-import React from 'react';
-import './ModalAddObjectDefinition.scss';
-declare type Storage = {
-	label: string;
-	type: string;
-};
-interface IProps extends React.HTMLAttributes<HTMLElement> {
-	apiURL: string;
-	editObjectFolderURL: string;
-	observer: Observer;
-	onClose: () => void;
-	storages: Storage[];
-}
-declare const ModalWithProvider: React.FC<IProps>;
-export default ModalWithProvider;
+/// <reference types="react" />
+
+import {NodeProps} from 'react-flow-renderer';
+import './ObjectDefinitionNode.scss';
+export declare function ObjectDefinitionNode(props: NodeProps): JSX.Element;

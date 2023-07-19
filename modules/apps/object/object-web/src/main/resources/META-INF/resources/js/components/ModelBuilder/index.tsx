@@ -15,7 +15,7 @@
 import React from 'react';
 
 import EditObjectFolder from './EditObjectFolder';
-import {FolderContextProvider} from './objectFolderContext';
+import {FolderContextProvider} from './manege-model-builder-state/ModelBuilderManageState';
 
 interface ICustomFolderWrapperProps extends React.HTMLAttributes<HTMLElement> {
 	objectDefinitions: ObjectDefinition[];

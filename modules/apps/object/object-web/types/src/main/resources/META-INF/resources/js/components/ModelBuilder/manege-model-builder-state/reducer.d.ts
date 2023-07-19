@@ -12,19 +12,12 @@
  * details.
  */
 
-import {Observer} from '@clayui/modal/lib/types';
-import React from 'react';
-import './ModalAddObjectDefinition.scss';
-declare type Storage = {
-	label: string;
-	type: string;
+import {TYPES} from './actionTypes';
+export declare type TAction = {
+	payload?: any;
+	type: TYPES;
 };
-interface IProps extends React.HTMLAttributes<HTMLElement> {
-	apiURL: string;
-	editObjectFolderURL: string;
-	observer: Observer;
-	onClose: () => void;
-	storages: Storage[];
-}
-declare const ModalWithProvider: React.FC<IProps>;
-export default ModalWithProvider;
+export declare type TState = {
+	creationLanguageId: Liferay.Language.Locale;
+	filterOperators: TFilterOperators;
+};

@@ -1,0 +1,133 @@
+.lfr-objects__model-builder-node {
+	&-button-container {
+		align-items: center;
+		display: flex;
+		justify-content: center;
+		padding: 0.5rem;
+
+		button {
+			align-items: center;
+			border-color: #cdced9;
+			display: flex;
+			height: 2rem;
+			justify-content: center;
+			width: 16.5rem;
+		}
+
+		:focus,
+		.btn.focus {
+			box-shadow: none;
+		}
+
+		span {
+			font-size: 12px;
+		}
+	}
+
+	&-container {
+		background: #fff;
+		border: 0.125rem solid #d3d6e0;
+		border-radius: 0.25rem;
+		height: auto;
+
+		&:hover {
+			border: 0.125rem solid #b3cdff;
+		}
+
+		&:active {
+			border: 0.125rem solid #0b5fff;
+		}
+	}
+
+	&-header-container {
+		background: #f7f8f9;
+		border-radius: 0.25rem 0.25rem 0 0;
+		height: 5.3rem;
+		padding: 1rem;
+		width: 17.5rem;
+	}
+
+	&-handle {
+		width: 20px;
+		height: 20px;
+		border: #0b5fff;
+	}
+
+	&-label-container {
+		align-items: center;
+		display: flex;
+		justify-content: space-between;
+	}
+
+	&-label-title {
+		align-items: baseline;
+		display: flex;
+		justify-content: space-between;
+		font-size: 14px;
+		font-weight: 600;
+		gap: 4px;
+		line-height: 1.3rem;
+	}
+
+	&-field {
+		align-items: center;
+		border-top: 1px solid #f1f2f5;
+		color: #6b6c7e;
+		cursor: pointer;
+		display: flex;
+		justify-content: space-between;
+		padding: 0.5rem 1rem 0.5rem 0.5rem;
+
+		&:hover {
+			color: #0b5fff !important;
+			background: #f0f5ff;
+		}
+
+		&-label {
+			display: flex;
+			gap: 0.5rem;
+			font-size: 14px;
+			font-weight: 400;
+		}
+
+		&-business-type {
+			font-size: 10px;
+			font-weight: 600;
+			text-transform: uppercase;
+		}
+
+		&-selected {
+			background: #f0f5ff;
+		}
+	}
+
+	&-selected {
+		border: 0.125rem solid #0b5fff;
+	}
+
+	&-show-all-fields {
+		&-container {
+			align-items: center;
+			display: flex;
+			justify-content: center;
+		}
+		&-button {
+			align-items: center;
+			color: #6b6c7e;
+			cursor: pointer;
+			display: flex;
+			font-size: 12px;
+			font-weight: 400;
+			gap: 6px;
+			margin-bottom: 0.5rem;
+
+			&:hover {
+				color: #0b5fff !important;
+			}
+		}
+	}
+}
+
+hr {
+	margin: 6px;
+}

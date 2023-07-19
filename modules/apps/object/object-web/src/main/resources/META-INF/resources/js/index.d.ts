@@ -105,6 +105,7 @@ interface ObjectField {
 	relationshipId?: number;
 	relationshipType?: unknown;
 	required: boolean;
+	selected?: boolean;
 	state: boolean;
 	system?: boolean;
 }
