@@ -14,6 +14,17 @@
 
 import React from 'react';
 
+import DiagramBuilder from './DiagramBuilder/DiagramBuilder';
+import Header from './Header/Header';
+
 export default function EditObjectFolder() {
-	return <></>;
+	return (
+		<>
+			<Header
+				folderExternalRefecenceCode="f0170e8e-325e-92f4-771b-2a901530534b"
+				hasDraftObjectDefinitions={true}
+			/>
+			<DiagramBuilder />
+		</>
+	);
 }

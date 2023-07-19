@@ -48,6 +48,7 @@ const normalizeName: TNormalizeName = (str) => {
 
 const ModalAddObjectDefinition: React.FC<IProps> = ({
 	apiURL,
+	editObjectFolderURL,
 	observer,
 	onClose,
 	storages,
@@ -226,6 +227,16 @@ const ModalAddObjectDefinition: React.FC<IProps> = ({
 							<ClayButton displayType="primary" type="submit">
 								{Liferay.Language.get('save')}
 							</ClayButton>
+
+							<ClayButton
+								displayType="primary"
+								onClick={() =>
+									(window.location.href = editObjectFolderURL)
+								}
+								type="submit"
+							>
+								Go to Model Builder
+							</ClayButton>
 						</ClayButton.Group>
 					}
 				/>
@@ -241,6 +252,7 @@ type Storage = {
 
 interface IProps extends React.HTMLAttributes<HTMLElement> {
 	apiURL: string;
+	editObjectFolderURL: string;
 	observer: Observer;
 	onClose: () => void;
 	storages: Storage[];
@@ -264,7 +276,11 @@ type ObjectDefinition = {
 
 type TNormalizeName = (str: string) => string;
 
-const ModalWithProvider: React.FC<IProps> = ({apiURL, storages}) => {
+const ModalWithProvider: React.FC<IProps> = ({
+	apiURL,
+	editObjectFolderURL,
+	storages,
+}) => {
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 	const {observer, onClose} = useModal({
 		onClose: () => setVisibleModal(false),
@@ -283,6 +299,7 @@ const ModalWithProvider: React.FC<IProps> = ({apiURL, storages}) => {
 			{visibleModal && (
 				<ModalAddObjectDefinition
 					apiURL={apiURL}
+					editObjectFolderURL={editObjectFolderURL}
 					observer={observer}
 					onClose={onClose}
 					storages={storages}
