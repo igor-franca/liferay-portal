@@ -16,6 +16,7 @@
 
 import {IFDSTableProps} from '../../utils/fds';
 interface ViewObjectDefinitionsProps extends IFDSTableProps {
+	editObjectFolderURL: string;
 	baseResourceURL: string;
 	storages: LabelTypeObject[];
 }
@@ -32,6 +33,7 @@ export default function ViewObjectDefinitions({
 	apiURL,
 	baseResourceURL,
 	creationMenu,
+	editObjectFolderURL,
 	id,
 	items,
 	sorting,

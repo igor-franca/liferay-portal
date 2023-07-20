@@ -17,11 +17,13 @@
 import './ModalAddObjectDefinition.scss';
 interface ModalAddObjectDefinitionProps {
 	apiURL: string;
+	editObjectFolderURL: string;
 	handleOnClose: () => void;
 	storages: LabelTypeObject[];
 }
 export declare function ModalAddObjectDefinition({
 	apiURL,
+	editObjectFolderURL,
 	handleOnClose,
 	storages,
 }: ModalAddObjectDefinitionProps): JSX.Element;
