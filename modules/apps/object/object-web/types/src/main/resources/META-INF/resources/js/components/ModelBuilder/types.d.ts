@@ -14,7 +14,13 @@
 
 export declare type TState = {
 	objectDefinitions: ObjectDefinition[];
+	selectedDefinitionNode: DefinitionNode;
+	selectedFieldNode: FieldNode;
+	rightSidebarType: 'definitionNode' | 'fieldNode' | 'empty';
 };
 export interface FieldNode extends ObjectField {
+	selected: boolean;
+}
+export interface DefinitionNode extends ObjectDefinition {
 	selected: boolean;
 }

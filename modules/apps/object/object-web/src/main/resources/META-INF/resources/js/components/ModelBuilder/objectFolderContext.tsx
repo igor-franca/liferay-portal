@@ -14,7 +14,7 @@
 
 import React, {createContext, useContext, useReducer} from 'react';
 
-import {TState} from './types';
+import {DefinitionNode, TState} from './types';
 
 interface IFolderContextProps extends Array<TState | Function> {
 	0: typeof initialState;
@@ -43,6 +43,9 @@ const FolderContext = createContext({} as IFolderContextProps);
 
 const initialState = {
 	objectDefinitions: {} as ObjectDefinition[],
+	rightSidebarType: 'empty',
+	selectedDefinitionNode: {},
+	selectedFieldNode: {},
 } as TState;
 
 const folderReducer = (state: TState, action: TAction) => {
