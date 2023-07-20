@@ -16,16 +16,29 @@ import React from 'react';
 
 import Header from './Header/Header';
 import LeftSidebar from './LeftSidebar/LeftSidebar';
+import Diagram from './Diagram/Diagram';
+import {RightSideBar} from './RightSidebar/index';
+
+import { useFolderContext } from './objectFolderContext';
 
 export default function EditObjectFolder() {
+
+	const [{rightSidebarType}] = useFolderContext();
 	return (
 		<>
 			<Header
 				folderExternalReferenceCode="uncategorized"
 				hasDraftObjectDefinitions={false}
 			/>
-
-			<LeftSidebar />
+			<div className="lfr-objects__model-builder-diagram-container">
+				<LeftSidebar />
+				<Diagram/>
+				<RightSideBar.Root>
+					{rightSidebarType === 'empty' && 
+						<RightSideBar.Empty/>
+					}
+				</RightSideBar.Root>
+			</div>
 		</>
 	);
 }
