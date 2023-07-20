@@ -16,6 +16,8 @@ import React from 'react';
 
 import Header from './Header/Header';
 import LeftSidebar from './LeftSidebar/LeftSidebar';
+import Diagram from './Diagram/Diagram';
+import RightSideBar from './RightSidebar/RightSidebar';
 
 export default function EditObjectFolder() {
 	return (
@@ -24,8 +26,11 @@ export default function EditObjectFolder() {
 				folderExternalReferenceCode="uncategorized"
 				hasDraftObjectDefinitions={false}
 			/>
-
-			<LeftSidebar />
+			<div className="lfr-objects__model-builder-diagram-container">
+				<LeftSidebar />
+				<Diagram/>
+				<RightSideBar />
+			</div>
 		</>
 	);
 }
