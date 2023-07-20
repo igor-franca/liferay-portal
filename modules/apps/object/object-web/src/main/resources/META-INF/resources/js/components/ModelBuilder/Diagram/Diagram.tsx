@@ -12,23 +12,112 @@
  * details.
  */
 
-import React from 'react';
 import ReactFlow, {Background, Controls, MiniMap} from 'react-flow-renderer';
+
+import {DefinitionNode} from '../DefinitionNode/DefinitionNode';
 
 import './Diagram.scss';
 
-function Diagram() {
+import React from 'react';
+
+function DiagramBuilder() {
+	const NODE_TYPES = {
+		square: DefinitionNode,
+	};
+
+	const INITIAL_NODES = [
+		{
+			id: 'A',
+			type: 'square',
+			position: {
+				x: 450,
+				y: 370,
+			},
+			data: {
+				objectDefinitionLabel: 'Postal Address',
+				objectDefinitionName: 'portalAddress',
+				system: false,
+				hasDeleteResourcePermission: true,
+				hasObjectDefinitionPublished: false,
+				hasManagePermissionsResourcePermission: true,
+				isLinkedNode: true,
+				objectFields: [
+					{
+						label: 'ID',
+						name: 'id',
+						primaryKey: true,
+						businessType: 'LongInteger',
+						selected: false,
+					},
+					{
+						label: 'External Reference Code',
+						name: 'erc',
+						primaryKey: false,
+						businessType: 'Text',
+						selected: true,
+					},
+					{
+						label: 'Name',
+						name: 'name',
+						primaryKey: false,
+						businessType: 'Text',
+						selected: false,
+					},
+					{
+						label: 'Street 1',
+						name: 'street1',
+						primaryKey: false,
+						businessType: 'Text',
+						selected: false,
+					},
+					{
+						label: 'Author',
+						name: 'author',
+						primaryKey: false,
+						businessType: 'Text',
+						selected: false,
+					},
+					{
+						label: 'Create Date',
+						name: 'createDate',
+						primaryKey: false,
+						businessType: 'Date',
+						selected: false,
+					},
+					{
+						label: 'Modified Date',
+						name: 'modifiedDate',
+						primaryKey: false,
+						businessType: 'Date',
+						selected: false,
+					},
+					{
+						label: 'Status',
+						name: 'status',
+						primaryKey: false,
+						businessType: 'Text',
+						selected: false,
+					},
+				],
+				nodeSelected: true,
+			},
+		},
+	];
+
 	return (
-		<div className="lfr-objects__model-builder-diagram">
-			<ReactFlow elements={[]} minZoom={0.1}>
-				<Background size={1} />
+		<div className="lfr-objects__model-builder-diagram-area">
+				<ReactFlow
+					elements={INITIAL_NODES}
+					minZoom={0.1}
+					nodeTypes={NODE_TYPES}
+				>
+					<Background size={1} />
+						<Controls showInteractive={false} />
 
-				<Controls showInteractive={false} />
-
-				<MiniMap />
-			</ReactFlow>
+						<MiniMap />
+				</ReactFlow>
 		</div>
 	);
 }
 
-export default Diagram;
+export default DiagramBuilder;
