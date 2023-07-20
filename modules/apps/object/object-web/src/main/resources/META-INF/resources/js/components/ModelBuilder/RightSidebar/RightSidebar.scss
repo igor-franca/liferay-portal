@@ -1,0 +1,14 @@
+.lfr-objects__model-builder-right-sidebar{
+    align-items: center;
+    display: flex;
+    height: inherit;
+    justify-content: center;
+
+    .text-truncate-inline .text-truncate {
+        white-space: break-spaces;
+    }
+}
+
+.lfr__objects-custom-vertical-bar--right-open {
+    position: inherit;
+}
