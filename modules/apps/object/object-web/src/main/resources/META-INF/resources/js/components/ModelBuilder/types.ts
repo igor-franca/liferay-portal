@@ -16,7 +16,7 @@ export type TState = {
 	objectDefinitions: ObjectDefinition[];
 	selectedDefinitionNode: DefinitionNode;
 	selectedFieldNode: FieldNode;
-	rightSidebarType: 'definitionNode' | 'fieldNode' | 'empty'
+	rightSidebarType: 'definitionNode' | 'fieldNode' | 'empty';
 };
 
 export interface FieldNode extends ObjectField {

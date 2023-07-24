@@ -14,7 +14,7 @@
 
 import React, {createContext, useContext, useReducer} from 'react';
 
-import {DefinitionNode, TState} from './types';
+import {TState} from './types';
 
 interface IFolderContextProps extends Array<TState | Function> {
 	0: typeof initialState;
@@ -43,8 +43,22 @@ const FolderContext = createContext({} as IFolderContextProps);
 
 const initialState = {
 	objectDefinitions: {} as ObjectDefinition[],
-	rightSidebarType: 'empty',
-	selectedDefinitionNode: {},
+	rightSidebarType: 'definitionNode',
+	selectedDefinitionNode: {
+		dbTableName: 'P_Address_',
+		defaultLanguageId: 'en_US',
+		modifiable: true,
+		system: false,
+		status: {
+			label: 'Approved',
+		},
+		name: 'Address',
+		objectFields: [{}],
+		label: {en_US: 'Postal Address'},
+		pluralLabel: {en_US: 'Postal Addresses'},
+		active: false,
+		scope: 'company',
+	},
 	selectedFieldNode: {},
 } as TState;
 
