@@ -12,20 +12,16 @@
  * details.
  */
 
-import ClayEmptyState from '@clayui/empty-state';
-import React from 'react';
+/// <reference types="react" />
 
-export function RightSidebarEmpty() {
-	return (
-		<div className="lfr-objects__model-builder-right-sidebar-empty-state">
-			<ClayEmptyState
-				description={Liferay.Language.get(
-					'select-an-object-or-relationship-to-activate-this-panel'
-				)}
-				imgSrc={`${Liferay.ThemeDisplay.getPathThemeImages()}/states/empty_state.gif`}
-				small
-				title={Liferay.Language.get('select-an-object-or-relationship')}
-			/>
-		</div>
-	);
+import './RightSidebarDefinitionNode.scss';
+import {KeyValuePair} from '../../ObjectDetails/EditObjectDetails';
+interface RightSidebarDefinitionNode {
+	companyKeyValuePair: KeyValuePair[];
+	siteKeyValuePair: KeyValuePair[];
 }
+export declare function RightSidebarDefinitionNode({
+	companyKeyValuePair,
+	siteKeyValuePair,
+}: RightSidebarDefinitionNode): JSX.Element;
+export {};

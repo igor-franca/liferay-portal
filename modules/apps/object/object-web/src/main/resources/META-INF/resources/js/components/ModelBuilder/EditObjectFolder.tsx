@@ -14,16 +14,23 @@
 
 import React from 'react';
 
+import {KeyValuePair} from '../ObjectDetails/EditObjectDetails';
+import Diagram from './Diagram/Diagram';
 import Header from './Header/Header';
 import LeftSidebar from './LeftSidebar/LeftSidebar';
-import Diagram from './Diagram/Diagram';
 import {RightSideBar} from './RightSidebar/index';
+import {useFolderContext} from './objectFolderContext';
 
-import { useFolderContext } from './objectFolderContext';
-
-export default function EditObjectFolder() {
-
+interface EditObjectFolder {
+	companyKeyValuePair: KeyValuePair[];
+	siteKeyValuePair: KeyValuePair[];
+}
+export default function EditObjectFolder({
+	companyKeyValuePair,
+	siteKeyValuePair,
+}: EditObjectFolder) {
 	const [{rightSidebarType}] = useFolderContext();
+
 	return (
 		<>
 			<Header
@@ -32,11 +39,18 @@ export default function EditObjectFolder() {
 			/>
 			<div className="lfr-objects__model-builder-diagram-container">
 				<LeftSidebar />
-				<Diagram/>
+
+				<Diagram />
+
 				<RightSideBar.Root>
-					{rightSidebarType === 'empty' && 
-						<RightSideBar.Empty/>
-					}
+					{rightSidebarType === 'empty' && <RightSideBar.Empty />}
+
+					{rightSidebarType === 'definitionNode' && (
+						<RightSideBar.DefinitionNode
+							companyKeyValuePair={companyKeyValuePair}
+							siteKeyValuePair={siteKeyValuePair}
+						/>
+					)}
 				</RightSideBar.Root>
 			</div>
 		</>

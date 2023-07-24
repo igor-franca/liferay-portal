@@ -1,16 +1,16 @@
-.lfr-objects__model-builder-right-sidebar{
-    &-empty-state{
-        align-items: center;
-        display: flex;
-        height: inherit;
-        justify-content: center;
-    }
+.lfr-objects__model-builder-right-sidebar {
+	&-empty-state {
+		align-items: center;
+		display: flex;
+		height: inherit;
+		justify-content: center;
+	}
 }
 
 .lfr__objects-custom-vertical-bar--right-open {
-    position: inherit;
+	position: inherit;
 }
 
 .text-truncate-inline .text-truncate {
-    white-space: break-spaces;
+	white-space: break-spaces;
 }
