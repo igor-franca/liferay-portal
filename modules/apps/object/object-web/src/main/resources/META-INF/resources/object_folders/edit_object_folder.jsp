@@ -9,6 +9,7 @@
 
 <%
 String backURL = ParamUtil.getString(request, "backURL", String.valueOf(renderResponse.createRenderURL()));
+ObjectDefinitionsDetailsDisplayContext objectDefinitionsDetailsDisplayContext = (ObjectDefinitionsDetailsDisplayContext)request.getAttribute(WebKeys.PORTLET_DISPLAY_CONTEXT);
 
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(backURL);
@@ -16,4 +17,11 @@ portletDisplay.setURLBack(backURL);
 
 <react:component
 	module="js/components/ModelBuilder/index"
+	props='<%=
+		HashMapBuilder.<String, Object>put(
+			"companyKeyValuePair", objectDefinitionsDetailsDisplayContext.getScopeKeyValuePairs("company")
+		).put(
+			"siteKeyValuePair", objectDefinitionsDetailsDisplayContext.getScopeKeyValuePairs("site")
+		).build()
+	%>'
 />
