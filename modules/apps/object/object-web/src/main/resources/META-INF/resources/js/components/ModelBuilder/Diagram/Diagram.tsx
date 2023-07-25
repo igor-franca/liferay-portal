@@ -1,15 +1,6 @@
 /**
- * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
- *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- *
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * SPDX-FileCopyrightText: (c) 2023 Liferay, Inc. https://liferay.com
+ * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
 import ReactFlow, {Background, Controls, MiniMap} from 'react-flow-renderer';
@@ -27,95 +18,96 @@ function DiagramBuilder() {
 
 	const INITIAL_NODES = [
 		{
+			data: {
+				hasDeleteResourcePermission: true,
+				hasManagePermissionsResourcePermission: true,
+				hasObjectDefinitionPublished: false,
+				isLinkedNode: true,
+				nodeSelected: true,
+				objectDefinitionLabel: 'Postal Address',
+				objectDefinitionName: 'portalAddress',
+				objectFields: [
+					{
+						businessType: 'LongInteger',
+						label: 'ID',
+						name: 'id',
+						primaryKey: true,
+						selected: false,
+					},
+					{
+						businessType: 'Text',
+						label: 'External Reference Code',
+						name: 'erc',
+						primaryKey: false,
+						selected: true,
+					},
+					{
+						businessType: 'Text',
+						label: 'Name',
+						name: 'name',
+						primaryKey: false,
+						selected: false,
+					},
+					{
+						businessType: 'Text',
+						label: 'Street 1',
+						name: 'street1',
+						primaryKey: false,
+						selected: false,
+					},
+					{
+						businessType: 'Text',
+						label: 'Author',
+						name: 'author',
+						primaryKey: false,
+						selected: false,
+					},
+					{
+						businessType: 'Date',
+						label: 'Create Date',
+						name: 'createDate',
+						primaryKey: false,
+						selected: false,
+					},
+					{
+						businessType: 'Date',
+						label: 'Modified Date',
+						name: 'modifiedDate',
+						primaryKey: false,
+						selected: false,
+					},
+					{
+						businessType: 'Text',
+						label: 'Status',
+						name: 'status',
+						primaryKey: false,
+						selected: false,
+					},
+				],
+				system: false,
+			},
 			id: 'A',
-			type: 'square',
 			position: {
 				x: 450,
 				y: 370,
 			},
-			data: {
-				objectDefinitionLabel: 'Postal Address',
-				objectDefinitionName: 'portalAddress',
-				system: false,
-				hasDeleteResourcePermission: true,
-				hasObjectDefinitionPublished: false,
-				hasManagePermissionsResourcePermission: true,
-				isLinkedNode: true,
-				objectFields: [
-					{
-						label: 'ID',
-						name: 'id',
-						primaryKey: true,
-						businessType: 'LongInteger',
-						selected: false,
-					},
-					{
-						label: 'External Reference Code',
-						name: 'erc',
-						primaryKey: false,
-						businessType: 'Text',
-						selected: true,
-					},
-					{
-						label: 'Name',
-						name: 'name',
-						primaryKey: false,
-						businessType: 'Text',
-						selected: false,
-					},
-					{
-						label: 'Street 1',
-						name: 'street1',
-						primaryKey: false,
-						businessType: 'Text',
-						selected: false,
-					},
-					{
-						label: 'Author',
-						name: 'author',
-						primaryKey: false,
-						businessType: 'Text',
-						selected: false,
-					},
-					{
-						label: 'Create Date',
-						name: 'createDate',
-						primaryKey: false,
-						businessType: 'Date',
-						selected: false,
-					},
-					{
-						label: 'Modified Date',
-						name: 'modifiedDate',
-						primaryKey: false,
-						businessType: 'Date',
-						selected: false,
-					},
-					{
-						label: 'Status',
-						name: 'status',
-						primaryKey: false,
-						businessType: 'Text',
-						selected: false,
-					},
-				],
-				nodeSelected: true,
-			},
+			type: 'square',
 		},
 	];
 
 	return (
 		<div className="lfr-objects__model-builder-diagram-area">
-				<ReactFlow
-					elements={INITIAL_NODES}
-					minZoom={0.1}
-					nodeTypes={NODE_TYPES}
-				>
-					<Background size={1} />
-						<Controls showInteractive={false} />
+			<ReactFlow
+				elements={INITIAL_NODES}
+				minZoom={0.1}
+				nodeTypes={NODE_TYPES}
+			>
+				<Background size={1} />
 
-						<MiniMap />
-				</ReactFlow>
+				<Controls showInteractive={false} />
+
+				<MiniMap />
+			</ReactFlow>
 		</div>
 	);
 }

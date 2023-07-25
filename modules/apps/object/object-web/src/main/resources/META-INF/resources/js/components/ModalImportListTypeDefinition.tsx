@@ -214,9 +214,7 @@ export default function ModalImportListTypeDefinition({
 								Liferay.Language.get(
 									'unique-key-for-referencing-the-x'
 								),
-								Liferay.Language.get(
-									'picklist-definition'
-								)
+								Liferay.Language.get('picklist-definition')
 							)}
 							id="externalReferenceCode"
 							label={Liferay.Language.get(
