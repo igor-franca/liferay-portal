@@ -8,6 +8,7 @@
 import {IFDSTableProps} from '../../utils/fds';
 interface ViewObjectDefinitionsProps extends IFDSTableProps {
 	baseResourceURL: string;
+	editObjectFolderURL: string;
 	storages: LabelTypeObject[];
 }
 export declare type ViewObjectDefinitionsModals = {
@@ -23,6 +24,7 @@ export default function ViewObjectDefinitions({
 	apiURL,
 	baseResourceURL,
 	creationMenu,
+	editObjectFolderURL,
 	id,
 	items,
 	sorting,

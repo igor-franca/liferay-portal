@@ -23,6 +23,7 @@ import {deleteObjectDefinition} from './objectDefinitionUtil';
 
 interface ViewObjectDefinitionsProps extends IFDSTableProps {
 	baseResourceURL: string;
+	editObjectFolderURL: string;
 	storages: LabelTypeObject[];
 }
 
@@ -41,6 +42,7 @@ export default function ViewObjectDefinitions({
 	apiURL,
 	baseResourceURL,
 	creationMenu,
+	editObjectFolderURL,
 	id,
 	items,
 	sorting,
@@ -224,6 +226,7 @@ export default function ViewObjectDefinitions({
 			{showModal.addObjectDefinition && (
 				<ModalAddObjectDefinition
 					apiURL={apiURL as string}
+					editObjectFolderURL={editObjectFolderURL}
 					handleOnClose={() => {
 						setShowModal(
 							(previousState: ViewObjectDefinitionsModals) => ({

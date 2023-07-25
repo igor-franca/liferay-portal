@@ -25,6 +25,7 @@ import {normalizeName} from './objectDefinitionUtil';
 
 interface ModalAddObjectDefinitionProps {
 	apiURL: string;
+	editObjectFolderURL: string;
 	handleOnClose: () => void;
 	storages: LabelTypeObject[];
 }
@@ -38,6 +39,7 @@ type TInitialValues = {
 
 export function ModalAddObjectDefinition({
 	apiURL,
+	editObjectFolderURL,
 	handleOnClose,
 	storages,
 }: ModalAddObjectDefinitionProps) {
@@ -225,6 +227,15 @@ export function ModalAddObjectDefinition({
 
 								<ClayButton displayType="primary" type="submit">
 									{Liferay.Language.get('save')}
+								</ClayButton>
+
+								<ClayButton
+									displayType="primary"
+									onClick={() => {
+										window.location.href = editObjectFolderURL;
+									}}
+								>
+									Go to Model Builder
 								</ClayButton>
 							</ClayButton.Group>
 						}
