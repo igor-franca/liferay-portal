@@ -12,7 +12,6 @@
  * details.
  */
 
-import ClayPanel from '@clayui/panel';
 import {
 	FormError,
 	SingleSelect,
@@ -75,35 +74,26 @@ export function EntryDisplayContainer({
 	}, [values.titleObjectFieldName, objectFields]);
 
 	return (
-		<ClayPanel
-			collapsable
-			defaultExpanded
-			displayTitle={Liferay.Language.get('entry-display')}
-			displayType="unstyled"
-		>
-			<ClayPanel.Body>
-				<SingleSelect<{label: string; name: string}>
-					error={errors.titleObjectFieldId}
-					label={Liferay.Language.get('title-object-field-id')}
-					onChange={(target: {label: string; name: string}) => {
-						const field = objectFields.find(
-							({name}) => name === target.name
-						);
+		<SingleSelect<{label: string; name: string}>
+			error={errors.titleObjectFieldId}
+			label={Liferay.Language.get('title-object-field-id')}
+			onChange={(target: {label: string; name: string}) => {
+				const field = objectFields.find(
+					({name}) => name === target.name
+				);
 
-						setSelectedObjectField(field);
+				setSelectedObjectField(field);
 
-						setValues({
-							titleObjectFieldName: field?.name,
-						});
-					}}
-					options={titleFieldOptions}
-					value={getLocalizableLabel(
-						values.defaultLanguageId as Liferay.Language.Locale,
-						selectedObjectField?.label,
-						selectedObjectField?.name
-					)}
-				/>
-			</ClayPanel.Body>
-		</ClayPanel>
+				setValues({
+					titleObjectFieldName: field?.name,
+				});
+			}}
+			options={titleFieldOptions}
+			value={getLocalizableLabel(
+				values.defaultLanguageId as Liferay.Language.Locale,
+				selectedObjectField?.label,
+				selectedObjectField?.name
+			)}
+		/>
 	);
 }

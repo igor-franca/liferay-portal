@@ -12,7 +12,6 @@
  * details.
  */
 
-import ClayPanel from '@clayui/panel';
 import {
 	FormError,
 	SingleSelect,
@@ -118,56 +117,48 @@ export function AccountRestrictionContainer({
 	]);
 
 	return (
-		<ClayPanel
-			collapsable
-			defaultExpanded
-			displayTitle={Liferay.Language.get('account-restriction')}
-			displayType="unstyled"
-		>
-			<ClayPanel.Body>
-				<Toggle
-					disabled={
-						!accountRelationshipFields.length ||
-						disableAccountToggle
-					}
-					label={Liferay.Language.get('active')}
-					name="accountEntryRestricted"
-					onToggle={() =>
-						setValues({
-							accountEntryRestricted: !values.accountEntryRestricted,
-							accountEntryRestrictedObjectFieldName:
-								!values.accountEntryRestricted === false
-									? ''
-									: values.accountEntryRestrictedObjectFieldName,
-						})
-					}
-					toggled={values.accountEntryRestricted}
-				/>
+		<>
+			<Toggle
+				disabled={
+					!accountRelationshipFields.length || disableAccountToggle
+				}
+				label={Liferay.Language.get('active')}
+				name="accountEntryRestricted"
+				onToggle={() =>
+					setValues({
+						accountEntryRestricted: !values.accountEntryRestricted,
+						accountEntryRestrictedObjectFieldName:
+							!values.accountEntryRestricted === false
+								? ''
+								: values.accountEntryRestrictedObjectFieldName,
+					})
+				}
+				toggled={values.accountEntryRestricted}
+			/>
 
-				<SingleSelect<LabelValueObject>
-					disabled={
-						!accountRelationshipFields.length ||
-						!values.accountEntryRestricted ||
-						disableAccountSelect
-					}
-					error={errors.accountEntryRestrictedObjectFieldName}
-					label={Liferay.Language.get(
-						'account-entry-restricted-object-field-id'
-					)}
-					onChange={({value}) => {
-						setValues({
-							accountEntryRestrictedObjectFieldName: value,
-						});
-					}}
-					options={accountRelationshipFields}
-					required={
-						!!accountRelationshipFields.length &&
-						values.accountEntryRestricted &&
-						!disableAccountSelect
-					}
-					value={selectedAccount}
-				/>
-			</ClayPanel.Body>
-		</ClayPanel>
+			<SingleSelect<LabelValueObject>
+				disabled={
+					!accountRelationshipFields.length ||
+					!values.accountEntryRestricted ||
+					disableAccountSelect
+				}
+				error={errors.accountEntryRestrictedObjectFieldName}
+				label={Liferay.Language.get(
+					'account-entry-restricted-object-field-id'
+				)}
+				onChange={({value}) => {
+					setValues({
+						accountEntryRestrictedObjectFieldName: value,
+					});
+				}}
+				options={accountRelationshipFields}
+				required={
+					!!accountRelationshipFields.length &&
+					values.accountEntryRestricted &&
+					!disableAccountSelect
+				}
+				value={selectedAccount}
+			/>
+		</>
 	);
 }
