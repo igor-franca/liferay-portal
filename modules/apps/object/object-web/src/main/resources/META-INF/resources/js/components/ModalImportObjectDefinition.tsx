@@ -217,9 +217,7 @@ export default function ModalImportObjectDefinition({
 								Liferay.Language.get(
 									'unique-key-for-referencing-the-x'
 								),
-								Liferay.Language.get(
-									'object-definition'
-								)
+								Liferay.Language.get('object-definition')
 							)}
 							id="externalReferenceCode"
 							label={Liferay.Language.get(

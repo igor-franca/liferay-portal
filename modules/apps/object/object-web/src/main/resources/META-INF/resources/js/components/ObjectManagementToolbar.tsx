@@ -53,12 +53,8 @@ export default function ObjectManagementToolbar({
 			hasPublishPermission={hasPublishObjectPermission}
 			hasUpdatePermission={hasUpdateObjectDefinitionPermission}
 			helpMessage={sub(
-				Liferay.Language.get(
-					'unique-key-for-referencing-the-x'
-				),
-				Liferay.Language.get(
-					'object-definition'
-				)
+				Liferay.Language.get('unique-key-for-referencing-the-x'),
+				Liferay.Language.get('object-definition')
 			)}
 			isApproved={isApproved}
 			label={label}
