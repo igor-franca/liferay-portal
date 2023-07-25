@@ -91,9 +91,7 @@ export default function EditListTypeDefinition({
 								Liferay.Language.get(
 									'unique-key-for-referencing-the-x'
 								),
-								Liferay.Language.get(
-									'picklist-definition'
-								)
+								Liferay.Language.get('picklist-definition')
 							)}
 							label={Liferay.Language.get(
 								'external-reference-code'
