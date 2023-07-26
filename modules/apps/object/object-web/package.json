@@ -9,6 +9,7 @@
 		"frontend-js-components-web": "*",
 		"frontend-js-web": "*",
 		"moment": "2.29.4",
+		"react-flow-renderer": "^10.3.17",
 		"text-mask-core": "^5.1.2"
 	},
 	"main": "index.js",
