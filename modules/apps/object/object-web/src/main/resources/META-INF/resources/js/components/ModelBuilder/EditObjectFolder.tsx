@@ -11,13 +11,16 @@ import Header from './Header/Header';
 import LeftSidebar from './LeftSidebar/LeftSidebar';
 import {RightSideBar} from './RightSidebar/index';
 import {useFolderContext} from './objectFolderContext';
+import { TDeletionType } from '../ObjectRelationship/EditRelationship';
 
 interface EditObjectFolder {
 	companyKeyValuePair: KeyValuePair[];
+	deletionTypes: TDeletionType[];
 	siteKeyValuePair: KeyValuePair[];
 }
 export default function EditObjectFolder({
 	companyKeyValuePair,
+	deletionTypes,
 	siteKeyValuePair,
 }: EditObjectFolder) {
 	const [{rightSidebarType}] = useFolderContext();
@@ -36,10 +39,16 @@ export default function EditObjectFolder({
 				<RightSideBar.Root>
 					{rightSidebarType === 'empty' && <RightSideBar.Empty />}
 
-					{rightSidebarType === 'definitionNode' && (
+					{rightSidebarType === 'objectDefinitionDetails' && (
 						<RightSideBar.DefinitionNode
 							companyKeyValuePair={companyKeyValuePair}
 							siteKeyValuePair={siteKeyValuePair}
+						/>
+					)}
+
+					{rightSidebarType === 'objectRelationship' && (
+						<RightSideBar.Relationship
+							deletionTypes={deletionTypes}
 						/>
 					)}
 				</RightSideBar.Root>

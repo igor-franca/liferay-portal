@@ -5,9 +5,13 @@
 
 export declare type TState = {
 	objectDefinitions: ObjectDefinition[];
-	rightSidebarType: 'definitionNode' | 'fieldNode' | 'empty';
+	rightSidebarType:
+		| 'objectDefinitionDetails'
+		| 'objectFieldDetails'
+		| 'objectRelationship'
+		| 'empty';
 	selectedDefinitionNode: DefinitionNode;
-	selectedFieldNode: FieldNode;
+	selectedObjectRelationship: ObjectRelationship;
 };
 export interface FieldNode extends ObjectField {
 	selected: boolean;

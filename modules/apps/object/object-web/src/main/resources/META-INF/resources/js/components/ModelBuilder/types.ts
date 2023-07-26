@@ -5,9 +5,9 @@
 
 export type TState = {
 	objectDefinitions: ObjectDefinition[];
-	rightSidebarType: 'definitionNode' | 'fieldNode' | 'empty';
+	rightSidebarType: 'objectDefinitionDetails' | 'objectFieldDetails' | 'objectRelationship' | 'empty';
 	selectedDefinitionNode: DefinitionNode;
-	selectedFieldNode: FieldNode;
+	selectedObjectRelationship: ObjectRelationship
 };
 
 export interface FieldNode extends ObjectField {
@@ -16,4 +16,5 @@ export interface FieldNode extends ObjectField {
 
 export interface DefinitionNode extends ObjectDefinition {
 	selected: boolean;
+	hasUpdateObjectDefinitionPermission: boolean
 }

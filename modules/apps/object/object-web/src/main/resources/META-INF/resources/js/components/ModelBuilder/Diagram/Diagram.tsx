@@ -19,6 +19,7 @@ function DiagramBuilder() {
 	const INITIAL_NODES = [
 		{
 			data: {
+				creationLanguageId: 'en_US',
 				hasDeleteResourcePermission: true,
 				hasManagePermissionsResourcePermission: true,
 				hasObjectDefinitionPublished: false,
@@ -29,56 +30,56 @@ function DiagramBuilder() {
 				objectFields: [
 					{
 						businessType: 'LongInteger',
-						label: 'ID',
+						label: {en_US: 'ID'},
 						name: 'id',
 						primaryKey: true,
 						selected: false,
 					},
 					{
 						businessType: 'Text',
-						label: 'External Reference Code',
+						label: {en_US: 'External Reference Code'},
 						name: 'erc',
 						primaryKey: false,
 						selected: true,
 					},
 					{
 						businessType: 'Text',
-						label: 'Name',
+						label: {en_US: 'Name'},
 						name: 'name',
 						primaryKey: false,
 						selected: false,
 					},
 					{
 						businessType: 'Text',
-						label: 'Street 1',
+						label: {en_US: 'Street 1'},
 						name: 'street1',
 						primaryKey: false,
 						selected: false,
 					},
 					{
 						businessType: 'Text',
-						label: 'Author',
+						label: {en_US: 'Author'},
 						name: 'author',
 						primaryKey: false,
 						selected: false,
 					},
 					{
 						businessType: 'Date',
-						label: 'Create Date',
+						label: {en_US: 'Create Date'},
 						name: 'createDate',
 						primaryKey: false,
 						selected: false,
 					},
 					{
 						businessType: 'Date',
-						label: 'Modified Date',
+						label: {en_US: 'Modified Date'},
 						name: 'modifiedDate',
 						primaryKey: false,
 						selected: false,
 					},
 					{
 						businessType: 'Text',
-						label: 'Status',
+						label: {en_US: 'Status'},
 						name: 'status',
 						primaryKey: false,
 						selected: false,

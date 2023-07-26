@@ -20,6 +20,8 @@ portletDisplay.setURLBack(backURL);
 	props='<%=
 		HashMapBuilder.<String, Object>put(
 			"companyKeyValuePair", objectDefinitionsDetailsDisplayContext.getScopeKeyValuePairs("company")
+		)put(
+			"deletionTypes", objectDefinitionsRelationshipsDisplayContext.getObjectRelationshipDeletionTypesJSONArray()
 		).put(
 			"siteKeyValuePair", objectDefinitionsDetailsDisplayContext.getScopeKeyValuePairs("site")
 		).build()

@@ -34,11 +34,12 @@ const FolderContext = createContext({} as IFolderContextProps);
 
 const initialState = {
 	objectDefinitions: {} as ObjectDefinition[],
-	rightSidebarType: 'definitionNode',
+	rightSidebarType: 'objectRelationship',
 	selectedDefinitionNode: {
 		active: false,
 		dbTableName: 'P_Address_',
 		defaultLanguageId: 'en_US',
+		hasUpdateObjectDefinitionPermission: false,
 		label: {en_US: 'Postal Address'},
 		modifiable: true,
 		name: 'Address',
@@ -50,7 +51,13 @@ const initialState = {
 		},
 		system: false,
 	},
-	selectedFieldNode: {},
+	selectedObjectRelationship: {
+		deletionType: 'Prevent',
+		label: {en_US: 'External Reference Code'},
+		name: 'erc',
+		objectDefinitionName2: 'User',
+		type: 'manyToMany'
+	},
 } as TState;
 
 const folderReducer = (state: TState, action: TAction) => {
