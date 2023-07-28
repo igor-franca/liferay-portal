@@ -286,18 +286,18 @@ export default function ViewObjectDefinitions({
 	};
 
 	useEffect(() => {
-		const makeFetch = async () => {
-			API.getAllObjectsFolders().then((response) => {
-				setfoldersList(response);
-				setSelectedFolder(response[0]);
-				setLoading(false);
-			});
-		};
+		if (Liferay.FeatureFlags['LPS-148856']) {
+			const makeFetch = async () => {
+				API.getAllObjectsFolders().then((response) => {
+					setfoldersList(response);
+					setSelectedFolder(response[0]);
+					setLoading(false);
+				});
+			};
 
-		makeFetch();
-	}, []);
+			makeFetch();
+		}
 
-	useEffect(() => {
 		Liferay.on('addObjectDefinition', () =>
 			setShowModal((previousState: ViewObjectDefinitionsModals) => ({
 				...previousState,
@@ -494,7 +494,7 @@ export default function ViewObjectDefinitions({
 
 			{showModal.moveObjectDefinition && (
 				<ModalMoveObjectDefinition
-					folderList={foldersList as Folder[]}
+					foldersList={foldersList as Folder[]}
 					handleOnClose={() => {
 						setShowModal(
 							(previousState: ViewObjectDefinitionsModals) => ({
@@ -504,6 +504,7 @@ export default function ViewObjectDefinitions({
 						);
 					}}
 					objectDefinition={moveObjectDefinition as ObjectDefinition}
+					selectedFolder={selectedFolder}
 					setMoveObjectDefinition={setMoveObjectDefinition}
 				/>
 			)}

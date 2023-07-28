@@ -24,16 +24,18 @@ import {defaultLanguageId} from '../../utils/constants';
 import './ModalMoveObjectDefinition.scss';
 
 interface ModalMoveObjectDefinitionProps {
-	folderList: Folder[];
+	foldersList: Folder[];
 	handleOnClose: () => void;
 	objectDefinition: ObjectDefinition;
+	selectedFolder: Partial<Folder>;
 	setMoveObjectDefinition: (value: ObjectDefinition | null) => void;
 }
 
 export function ModalMoveObjectDefinition({
-	folderList,
+	foldersList,
 	handleOnClose,
 	objectDefinition,
+	selectedFolder,
 	setMoveObjectDefinition,
 }: ModalMoveObjectDefinitionProps) {
 	const [query, setQuery] = useState('');
@@ -47,15 +49,20 @@ export function ModalMoveObjectDefinition({
 		},
 	});
 
+	const filteredFoldersList = foldersList.filter(
+		(item) =>
+			item.externalReferenceCode !== selectedFolder.externalReferenceCode
+	);
+
 	const modalItems = useMemo(() => {
 		const filteredItems = filterArrayByQuery({
-			array: folderList,
+			array: filteredFoldersList,
 			query,
 			str: 'label',
 		});
 
-		return query ? filteredItems : folderList;
-	}, [query, folderList]);
+		return query ? filteredItems : filteredFoldersList;
+	}, [query, filteredFoldersList]);
 
 	const handleMoveObject = async () => {
 		const movedObjectDefinition: ObjectDefinition = {
@@ -106,87 +113,112 @@ export function ModalMoveObjectDefinition({
 						<ClayAlert displayType="danger">{error}</ClayAlert>
 					)}
 
-					<ManagementToolbar.Container className="lfr-object__object-web-view-modal-move-object-definition-toolbar">
-						<ManagementToolbar.ItemList expand>
-							<ManagementToolbarSearch
-								query={query}
-								setQuery={setQuery}
-							/>
-						</ManagementToolbar.ItemList>
-					</ManagementToolbar.Container>
-
-					{!modalItems.length && query ? (
-						<div className="lfr-object__object-web-view-modal-move-object-definition-empty-state">
-							<ClayEmptyState
-								description={Liferay.Language.get(
-									'sorry,-no-results-were-found'
-								)}
-								title={Liferay.Language.get('no-results-found')}
-							/>
-						</div>
-					) : (
-						<ClayList className="lfr-object__object-web-view-modal-move-object-definition-list">
-							{modalItems.map(
-								({externalReferenceCode, label, name}) => (
-									<ClayList.Item
-										action
-										active={
-											selectedFolderERC ===
-											externalReferenceCode
-										}
-										className="cursor-pointer lfr-object__object-web-view-modal-move-object-definition-list-item"
-										flex
-										key={name}
-										onClick={() => {
-											setSelectedFolderERC(
-												externalReferenceCode
-											);
-										}}
-									>
-										<div>
-											<ClayIcon symbol="diagram" />
-
-											<span className="lfr-object__object-web-view-modal-move-object-definition-list-item-label">
-												{getLocalizableLabel(
-													defaultLanguageId,
-													label,
-													name
-												)}
-											</span>
-										</div>
-									</ClayList.Item>
-								)
+					{!filteredFoldersList.length ? (
+						<p>
+							{Liferay.Language.get(
+								'it-is-not-possible-to-move-this-object-definition-because-there-are-no-object-folders-available'
 							)}
-						</ClayList>
+						</p>
+					) : (
+						<>
+							<ManagementToolbar.Container className="lfr-object__object-web-view-modal-move-object-definition-toolbar">
+								<ManagementToolbar.ItemList expand>
+									<ManagementToolbarSearch
+										query={query}
+										setQuery={setQuery}
+									/>
+								</ManagementToolbar.ItemList>
+							</ManagementToolbar.Container>
+
+							{!modalItems.length && query ? (
+								<div className="lfr-object__object-web-view-modal-move-object-definition-empty-state">
+									<ClayEmptyState
+										description={Liferay.Language.get(
+											'sorry,-no-results-were-found'
+										)}
+										title={Liferay.Language.get(
+											'no-results-found'
+										)}
+									/>
+								</div>
+							) : (
+								<ClayList className="lfr-object__object-web-view-modal-move-object-definition-list">
+									{modalItems.map(
+										({
+											externalReferenceCode,
+											label,
+											name,
+										}) => (
+											<ClayList.Item
+												action
+												active={
+													selectedFolderERC ===
+													externalReferenceCode
+												}
+												className="cursor-pointer lfr-object__object-web-view-modal-move-object-definition-list-item"
+												flex
+												key={name}
+												onClick={() => {
+													setSelectedFolderERC(
+														externalReferenceCode
+													);
+												}}
+											>
+												<div>
+													<ClayIcon symbol="diagram" />
+
+													<span className="lfr-object__object-web-view-modal-move-object-definition-list-item-label">
+														{getLocalizableLabel(
+															defaultLanguageId,
+															label,
+															name
+														)}
+													</span>
+												</div>
+											</ClayList.Item>
+										)
+									)}
+								</ClayList>
+							)}
+						</>
 					)}
 				</ClayModal.Body>
 
 				<ClayModal.Footer
 					last={
-						<ClayButton.Group key={1} spaced>
+						!filteredFoldersList.length ? (
 							<ClayButton
 								displayType="secondary"
 								onClick={() => onClose()}
 							>
-								{Liferay.Language.get('cancel')}
+								{Liferay.Language.get('close')}
 							</ClayButton>
+						) : (
+							<ClayButton.Group key={1} spaced>
+								<ClayButton
+									displayType="secondary"
+									onClick={() => onClose()}
+								>
+									{Liferay.Language.get('cancel')}
+								</ClayButton>
 
-							<ClayButton
-								displayType="primary"
-								onClick={() => {
-									handleMoveObject();
+								<ClayButton
+									displayType="primary"
+									onClick={() => {
+										handleMoveObject();
 
-									setTimeout(
-										() => window.location.reload(),
-										1500
-									);
-									onClose();
-								}}
-								type="submit"
-							>
-								{Liferay.Language.get('move')}
-							</ClayButton>
-						</ClayButton.Group>
+										setTimeout(
+											() => window.location.reload(),
+											1500
+										);
+										onClose();
+									}}
+									type="submit"
+								>
+									{Liferay.Language.get('move')}
+								</ClayButton>
+							</ClayButton.Group>
+						)
 					}
 				/>
 			</ClayModal>
