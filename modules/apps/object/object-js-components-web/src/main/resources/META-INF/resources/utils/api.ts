@@ -20,6 +20,16 @@ interface Actions {
 	update: HTTPMethod;
 }
 
+interface ObjectFolder {
+	actions: [];
+	dateCreated: string;
+	dateModified: string;
+	externalReferenceCode: string;
+	id: number;
+	label: LocalizedValue<string>;
+	name: string;
+}
+
 interface ErrorDetails extends Error {
 	detail?: string;
 }
@@ -160,6 +170,23 @@ export async function fetchJSON<T>(input: RequestInfo, init?: RequestInit) {
 	const result = await fetch(input, {headers, method: 'GET', ...init});
 
 	return (await result.json()) as T;
+}
+
+export async function getAllFolders() {
+	return await getList<ObjectFolder>('/o/object-admin/v1.0/object-folders');
+}
+
+export async function getDefinitionsByFolderERC(folderErc: string) {
+	const folderDefinitionsResponse = await fetch(
+		`/o/object-admin/v1.0/object-folders/by-external-reference-code/${folderErc}/object-definitions`,
+		{method: 'GET'}
+	);
+
+	const {items} = (await folderDefinitionsResponse.json()) as {
+		items: ObjectDefinition[];
+	};
+
+	return items;
 }
 
 export async function getAllObjectDefinitions() {

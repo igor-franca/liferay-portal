@@ -6,20 +6,14 @@
 import React from 'react';
 
 import EditObjectFolder from './EditObjectFolder';
-import {FolderContextProvider} from './objectFolderContext';
+import {FolderContextProvider} from './ModelBuilderContext/objectFolderContext';
 
-interface ICustomFolderWrapperProps extends React.HTMLAttributes<HTMLElement> {
-	objectDefinitions: ObjectDefinition[];
-}
-
-const CustomFolderWrapper: React.FC<ICustomFolderWrapperProps> = ({
-	objectDefinitions,
-}) => {
+function CustomFolderWrapper() {
 	return (
-		<FolderContextProvider value={{objectDefinitions}}>
+		<FolderContextProvider value={{}}>
 			<EditObjectFolder />
 		</FolderContextProvider>
 	);
-};
+}
 
 export default CustomFolderWrapper;
