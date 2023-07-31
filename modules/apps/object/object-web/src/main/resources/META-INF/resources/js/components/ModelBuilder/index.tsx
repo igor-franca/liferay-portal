@@ -10,7 +10,7 @@ import {FolderContextProvider} from './ModelBuilderContext/objectFolderContext';
 
 function CustomFolderWrapper() {
 	return (
-		<FolderContextProvider value={{}}>
+		<FolderContextProvider value={{selectedFolderERC: 'uncategorized'}}>
 			<EditObjectFolder />
 		</FolderContextProvider>
 	);

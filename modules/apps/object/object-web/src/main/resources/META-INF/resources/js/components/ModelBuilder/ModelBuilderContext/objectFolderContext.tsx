@@ -5,7 +5,12 @@
 
 import React, {createContext, useContext, useReducer} from 'react';
 
-import {TAction, TState} from '../types';
+import {
+	LeftSidebarItemType,
+	ObjectDefinitionNode,
+	TAction,
+	TState,
+} from '../types';
 import {objectFolderReducer} from './objectFolderReducer';
 
 interface IFolderContextProps extends Array<TState | Function> {
@@ -21,8 +26,11 @@ interface IFolderContextProviderProps
 const FolderContext = createContext({} as IFolderContextProps);
 
 const initialState = {
-	objectDefinitions: {} as ObjectDefinition[],
+	leftSidebarItems: [] as LeftSidebarItemType[],
+	objectDefinitionNodes: [] as ObjectDefinitionNode[],
+	objectDefinitions: [] as ObjectDefinition[],
 	objectFolders: [] as ObjectFolder[],
+	selectedFolderERC: '',
 } as TState;
 
 export function FolderContextProvider({
