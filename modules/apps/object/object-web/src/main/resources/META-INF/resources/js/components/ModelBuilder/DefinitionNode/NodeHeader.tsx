@@ -13,20 +13,24 @@ import React from 'react';
 import './NodeHeader.scss';
 
 interface NodeHeaderProps {
-	hasDeleteResourcePermission: boolean;
-	hasManagePermissionsResourcePermission: boolean;
-	hasObjectDefinitionPublished: boolean;
+	hasObjectDefinitionDeleteResourcePermission: boolean;
+	hasObjectDefinitionManagePermissionsResourcePermission: boolean;
 	isLinkedNode: boolean;
 	objectDefinitionLabel: string;
+	status: {
+		code: number;
+		label: string;
+		label_i18n: string;
+	};
 	system: boolean;
 }
 
 export default function NodeHeader({
-	hasDeleteResourcePermission,
-	hasManagePermissionsResourcePermission,
-	hasObjectDefinitionPublished,
+	hasObjectDefinitionDeleteResourcePermission,
+	hasObjectDefinitionManagePermissionsResourcePermission,
 	isLinkedNode,
 	objectDefinitionLabel,
+	status,
 	system,
 }: NodeHeaderProps) {
 	return (
@@ -72,7 +76,7 @@ export default function NodeHeader({
 
 						<hr />
 
-						{hasManagePermissionsResourcePermission && (
+						{hasObjectDefinitionManagePermissionsResourcePermission && (
 							<>
 								<DropDown.Item>
 									<ClayIcon
@@ -89,7 +93,7 @@ export default function NodeHeader({
 							</>
 						)}
 
-						{hasDeleteResourcePermission && (
+						{hasObjectDefinitionDeleteResourcePermission && (
 							<DropDown.Item>
 								<ClayIcon
 									className="c-mr-3 text-4"
@@ -113,11 +117,11 @@ export default function NodeHeader({
 
 				<ClayLabel
 					displayType={
-						hasObjectDefinitionPublished ? 'success' : 'info'
+						status?.label === 'approved' ? 'success' : 'info'
 					}
 				>
 					{Liferay.Language.get(
-						hasObjectDefinitionPublished ? 'approved' : 'draft'
+						status?.label === 'approved' ? 'approved' : 'draft'
 					)}
 				</ClayLabel>
 			</div>

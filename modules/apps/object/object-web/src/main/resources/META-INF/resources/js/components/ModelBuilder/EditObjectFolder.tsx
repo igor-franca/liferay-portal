@@ -11,9 +11,9 @@ import {TDeletionType} from '../ObjectRelationship/EditRelationship';
 import Diagram from './Diagram/Diagram';
 import Header from './Header/Header';
 import LeftSidebar from './LeftSidebar/LeftSidebar';
-import {RightSideBar} from './RightSidebar/index';
 import {useFolderContext} from './ModelBuilderContext/objectFolderContext';
 import {TYPES} from './ModelBuilderContext/typesEnum';
+import {RightSideBar} from './RightSidebar/index';
 
 interface EditObjectFolder {
 	companyKeyValuePair: KeyValuePair[];
