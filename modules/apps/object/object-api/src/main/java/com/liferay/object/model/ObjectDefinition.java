@@ -72,6 +72,8 @@ public interface ObjectDefinition
 
 	public boolean isDefaultStorageType();
 
+	public boolean isLinkedDefinition(long objectFolderId);
+
 	public boolean isUnmodifiableSystemObject();
 
 }
