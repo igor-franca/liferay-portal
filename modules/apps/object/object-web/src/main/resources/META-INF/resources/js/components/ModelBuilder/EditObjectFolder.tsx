@@ -57,10 +57,7 @@ export default function EditObjectFolder({
 
 	return (
 		<>
-			<Header
-				folderExternalReferenceCode="uncategorized"
-				hasDraftObjectDefinitions={false}
-			/>
+			<Header hasDraftObjectDefinitions={false} />
 			<div className="lfr-objects__model-builder-diagram-container">
 				<LeftSidebar />
 

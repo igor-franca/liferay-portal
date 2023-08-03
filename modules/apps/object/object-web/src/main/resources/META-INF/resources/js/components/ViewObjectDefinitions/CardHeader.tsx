@@ -79,7 +79,9 @@ export default function CardHeader({
 				className="lfr__object-web-view-object-definitions-view-in-model-builder-button"
 				displayType="secondary"
 				onClick={() => {
-					window.location.href = editObjectFolderURL;
+					window.location.href =
+						`${editObjectFolderURL}` +
+						`&folderERC=${externalReferenceCode}`;
 				}}
 			>
 				{Liferay.Language.get('view-in-model-builder')}
