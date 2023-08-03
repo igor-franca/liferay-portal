@@ -103,11 +103,14 @@ export declare function fetchJSON<T>(
 	init?: RequestInit
 ): Promise<T>;
 export declare function getAllFolders(): Promise<ObjectFolder[]>;
+export declare function getAllObjectDefinitions(): Promise<ObjectDefinition[]>;
+export declare function getAllObjectFolders(): Promise<Folder[]>;
 export declare function getDefinitionsByFolderERC(
 	folderErc: string
 ): Promise<ObjectDefinition[]>;
-export declare function getAllObjectDefinitions(): Promise<ObjectDefinition[]>;
-export declare function getAllObjectFolders(): Promise<Folder[]>;
+export declare function getFolderByERC(
+	folderErc: string
+): Promise<ObjectFolder>;
 export declare function getList<T>(url: string): Promise<T[]>;
 export declare function getNotificationTemplateByExternalReferenceCode(
 	notificationTemplateExternalReferenceCode: string
