@@ -34,7 +34,7 @@ export default function NodeFields({objectFields, showAll}: NodeFieldsProps) {
 							key={objectField.name}
 						>
 							<div className="lfr-objects__model-builder-node-field-label">
-								<span>{objectField.label},</span>
+								<span>{objectField.label}</span>
 
 								{objectField.name === 'id' && <span>key</span>}
 							</div>
