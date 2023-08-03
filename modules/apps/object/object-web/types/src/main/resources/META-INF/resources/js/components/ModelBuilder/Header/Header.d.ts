@@ -7,11 +7,7 @@
 
 import './Header.scss';
 interface Header {
-	folderExternalReferenceCode: string;
 	hasDraftObjectDefinitions: boolean;
 }
-export default function ({
-	folderExternalReferenceCode,
-	hasDraftObjectDefinitions,
-}: Header): JSX.Element;
+export default function ({hasDraftObjectDefinitions}: Header): JSX.Element;
 export {};

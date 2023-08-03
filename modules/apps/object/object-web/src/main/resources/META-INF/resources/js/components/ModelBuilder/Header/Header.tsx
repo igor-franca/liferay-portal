@@ -11,15 +11,15 @@ import './Header.scss';
 
 import {sub} from 'frontend-js-web';
 
+import {useFolderContext} from '../ModelBuilderContext/objectFolderContext';
+
 interface Header {
-	folderExternalReferenceCode: string;
 	hasDraftObjectDefinitions: boolean;
 }
 
-export default function ({
-	folderExternalReferenceCode,
-	hasDraftObjectDefinitions,
-}: Header) {
+export default function ({hasDraftObjectDefinitions}: Header) {
+	const [{selectedFolderERC}] = useFolderContext();
+
 	return (
 		<div className="lfr-objects__model-builder-header">
 			<div className="lfr-objects__model-builder-header-container">
@@ -29,7 +29,7 @@ export default function ({
 							{Liferay.Language.get('erc')}:&nbsp;
 						</span>
 
-						<strong>{folderExternalReferenceCode}</strong>
+						<strong>{selectedFolderERC}</strong>
 					</div>
 
 					<span
@@ -44,7 +44,7 @@ export default function ({
 						<ClayIcon symbol="question-circle" />
 					</span>
 
-					{folderExternalReferenceCode !== 'uncategorized' && (
+					{selectedFolderERC !== 'uncategorized' && (
 						<ClayButtonWithIcon
 							aria-label={sub(
 								Liferay.Language.get('edit-x'),
