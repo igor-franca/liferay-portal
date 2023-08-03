@@ -121,6 +121,7 @@ interface ObjectDefinition {
 	accountEntryRestricted: boolean;
 	accountEntryRestrictedObjectFieldId: string;
 	accountEntryRestrictedObjectFieldName: string;
+	actions: {method: string};
 	active: boolean;
 	dateCreated: string;
 	dateModified: string;
