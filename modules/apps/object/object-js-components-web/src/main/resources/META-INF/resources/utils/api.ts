@@ -176,6 +176,18 @@ export async function getAllFolders() {
 	return await getList<ObjectFolder>('/o/object-admin/v1.0/object-folders');
 }
 
+export async function getAllObjectDefinitions() {
+	return await getList<ObjectDefinition>(
+		'/o/object-admin/v1.0/object-definitions?page=-1'
+	);
+}
+
+export async function getAllObjectFolders() {
+	return await getList<Folder>(
+		'/o/object-admin/v1.0/object-folders?pageSize=-1'
+	);
+}
+
 export async function getDefinitionsByFolderERC(folderErc: string) {
 	const folderDefinitionsResponse = await fetch(
 		`/o/object-admin/v1.0/object-folders/by-external-reference-code/${folderErc}/object-definitions`,
@@ -189,16 +201,15 @@ export async function getDefinitionsByFolderERC(folderErc: string) {
 	return items;
 }
 
-export async function getAllObjectDefinitions() {
-	return await getList<ObjectDefinition>(
-		'/o/object-admin/v1.0/object-definitions?page=-1'
+export async function getFolderByERC(folderErc: string) {
+	const folderResponse = await fetch(
+		`/o/object-admin/v1.0/object-folders/by-external-reference-code/${folderErc}`,
+		{method: 'GET'}
 	);
-}
 
-export async function getAllObjectFolders() {
-	return await getList<Folder>(
-		'/o/object-admin/v1.0/object-folders?pageSize=-1'
-	);
+	const folder = (await folderResponse.json()) as ObjectFolder;
+
+	return folder;
 }
 
 export async function getList<T>(url: string) {
