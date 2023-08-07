@@ -85,14 +85,6 @@ public class ViewObjectDefinitionsDisplayContext {
 		).buildString();
 	}
 
-	public String getEditObjectFolderURL() throws Exception {
-		return PortletURLBuilder.create(
-			getPortletURL()
-		).setMVCRenderCommandName(
-			"/object_definitions/edit_object_folder"
-		).buildString();
-	}
-
 	public List<FDSActionDropdownItem> getFDSActionDropdownItems()
 		throws Exception {
 
@@ -122,6 +114,14 @@ public class ViewObjectDefinitionsDisplayContext {
 				LanguageUtil.get(
 					_objectRequestHelper.getRequest(), "permissions"),
 				"get", "permissions", "modal-permissions"));
+	}
+
+	public String getModelBuilderURL() throws Exception {
+		return PortletURLBuilder.create(
+			getPortletURL()
+		).setMVCRenderCommandName(
+			"/object_definitions/edit_object_folder"
+		).buildString();
 	}
 
 	public PortletURL getPortletURL() throws PortletException {
