@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {Edge, Elements, Node} from 'react-flow-renderer';
 import {TYPES} from './ModelBuilderContext/typesEnum';
 export declare type TAction =
 	| {
@@ -13,20 +14,28 @@ export declare type TAction =
 	  }
 	| {
 			payload: {
+				edges: Edge<ObjectRelationshipEdgeData>[];
+				nodes: Node<ObjectDefinitionNodeData>[];
 				selectedObjectDefinitionName: string;
 			};
 			type: TYPES.SET_SELECTED_NODE;
+	  }
+	| {
+			payload: {
+				newElements: any;
+			};
+			type: TYPES.SET_ELEMENTS;
 	  };
 export declare type TState = {
+	elements: Elements<ObjectDefinitionNodeData | ObjectRelationshipEdgeData>;
 	leftSidebarItems: LeftSidebarItemType[];
-	objectDefinitionNodes: ObjectDefinitionNode[];
 	objectDefinitions: ObjectDefinition[];
 	objectFolders: ObjectFolder[];
 	rightSidebarType:
 		| 'objectDefinitionDetails'
 		| 'objectRelationshipDetails'
 		| 'empty';
-	selectedDefinitionNode: ObjectDefinitionNode;
+	selectedDefinitionNode: Node<ObjectDefinitionNodeData>;
 	selectedFolderERC: string;
 	selectedObjectRelationship: ObjectRelationship;
 };
@@ -59,12 +68,11 @@ export interface ObjectDefinitionNodeData
 	nodeSelected: boolean;
 	objectFields: ObjectFieldNode[];
 }
-export declare type ObjectDefinitionNode = {
-	data: ObjectDefinitionNodeData;
-	id: string;
-	position: {
-		x: number;
-		y: number;
-	};
-	type: ObjectDefinitionNodeTypes;
-};
+export interface ObjectRelationshipEdgeData {
+	label: string;
+	markerEndId: string;
+	markerStartId: string;
+	sourceY: number;
+	targetY: number;
+	type: string;
+}

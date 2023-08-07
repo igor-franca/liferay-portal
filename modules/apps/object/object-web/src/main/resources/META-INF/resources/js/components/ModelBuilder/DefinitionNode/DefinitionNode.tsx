@@ -5,12 +5,12 @@
 
 import classNames from 'classnames';
 import React, {useState} from 'react';
-import {NodeProps} from 'react-flow-renderer';
+import {Handle, NodeProps, Position, useStore} from 'react-flow-renderer';
 
 import './DefinitionNode.scss';
 import {useFolderContext} from '../ModelBuilderContext/objectFolderContext';
 import {TYPES} from '../ModelBuilderContext/typesEnum';
-import {ObjectDefinitionNodeData} from '../types';
+import {ObjectDefinitionNodeData, ObjectFieldNode} from '../types';
 import NodeFields from './NodeFields';
 import NodeFooter from './NodeFooter';
 import NodeHeader from './NodeHeader';
@@ -31,6 +31,7 @@ export function DefinitionNode({
 }: NodeProps<ObjectDefinitionNodeData>) {
 	const [showAllFields, setShowAllFields] = useState<boolean>(false);
 	const [_, dispatch] = useFolderContext();
+	const store = useStore();
 
 	return (
 		<div
@@ -38,8 +39,12 @@ export function DefinitionNode({
 				'lfr-objects__model-builder-node-container--selected': nodeSelected,
 			})}
 			onClick={() => {
+				const {edges, nodes} = store.getState();
+
 				dispatch({
 					payload: {
+						edges,
+						nodes,
 						selectedObjectDefinitionName: name as string,
 					},
 					type: TYPES.SET_SELECTED_NODE,
@@ -48,26 +53,40 @@ export function DefinitionNode({
 		>
 			<NodeHeader
 				hasObjectDefinitionDeleteResourcePermission={
-					hasObjectDefinitionDeleteResourcePermission
+					hasObjectDefinitionDeleteResourcePermission as boolean
 				}
 				hasObjectDefinitionManagePermissionsResourcePermission={
-					hasObjectDefinitionManagePermissionsResourcePermission
+					hasObjectDefinitionManagePermissionsResourcePermission as boolean
 				}
-				isLinkedNode={isLinkedNode}
-				objectDefinitionLabel={label}
+				isLinkedNode={isLinkedNode as boolean}
+				objectDefinitionLabel={label as string}
 				status={status!}
 				system={system as boolean}
 			/>
 
 			<NodeFields
 				defaultLanguageId={defaultLanguageId as Liferay.Language.Locale}
-				objectFields={objectFields}
+				objectFields={objectFields as ObjectFieldNode[]}
 				showAll={showAllFields}
 			/>
 
 			<NodeFooter
 				setShowAllFields={setShowAllFields}
 				showAllFields={showAllFields}
+			/>
+
+			<Handle
+				className="lfr-objects__model-builder-node-handle"
+				hidden
+				id={name}
+				position={Position.Left}
+				style={{
+					background: '#80ACFF',
+					height: '12px',
+					left: '-30px',
+					width: '12px',
+				}}
+				type="source"
 			/>
 		</div>
 	);

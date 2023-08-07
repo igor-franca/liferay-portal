@@ -4,46 +4,24 @@
  */
 
 import {getLocalizableLabel} from '@liferay/object-js-components-web';
+import {Edge, Node} from 'react-flow-renderer';
 
 import {defaultLanguageId} from '../../../utils/constants';
+import {manyMarkerId} from '../Edges/ManyMarkerEnd';
+import {oneMarkerId} from '../Edges/OneMarkerEnd';
 import {
 	LeftSidebarItemType,
-	ObjectDefinitionNode,
+	ObjectDefinitionNodeData,
 	ObjectFieldNode,
+	ObjectRelationshipEdgeData,
 	TAction,
 	TState,
 } from '../types';
+import {
+	fieldsCustomSort,
+	getNonOverlappingEdges,
+} from './objectFolderReducerUtil';
 import {TYPES} from './typesEnum';
-
-function fieldsCustomSort(objectFields: ObjectFieldNode[]) {
-	const fieldOrder = ['id', 'externalReferenceCode'];
-
-	const compareFields = (a: ObjectFieldNode, b: ObjectFieldNode) => {
-		const aIndex = fieldOrder.indexOf(a.name as string);
-		const bIndex = fieldOrder.indexOf(b.name as string);
-
-		if (aIndex !== -1 && bIndex !== -1) {
-			return aIndex - bIndex;
-		}
-		else if (aIndex !== -1) {
-			return -1;
-		}
-		else if (bIndex !== -1) {
-			return 1;
-		}
-
-		if (a.required && !b.required) {
-			return -1;
-		}
-		else if (!a.required && b.required) {
-			return 1;
-		}
-
-		return 0;
-	};
-
-	return objectFields.sort(compareFields);
-}
 
 export function objectFolderReducer(state: TState, action: TAction) {
 	switch (action.type) {
@@ -83,7 +61,8 @@ export function objectFolderReducer(state: TState, action: TAction) {
 				(folder) => folder.externalReferenceCode === selectedFolderERC
 			);
 
-			let newObjectDefinitionNodes: ObjectDefinitionNode[] = [];
+			let newObjectDefinitionNodes: Node<ObjectDefinitionNodeData>[] = [];
+			const allEdges: Edge<ObjectRelationshipEdgeData>[] = [];
 
 			if (currentFolder) {
 				const positionColumn = {x: 1, y: 0};
@@ -108,6 +87,39 @@ export function objectFolderReducer(state: TState, action: TAction) {
 								} as ObjectFieldNode;
 							}
 						);
+
+						if (objectDefinition.objectRelationships.length) {
+							objectDefinition.objectRelationships.forEach(
+								(relationship) => {
+									if (!relationship.reverse) {
+										allEdges.push({
+											data: {
+												label: getLocalizableLabel(
+													objectDefinition.defaultLanguageId,
+													relationship.label,
+													relationship.name
+												),
+												markerEndId: manyMarkerId,
+												markerStartId:
+													relationship.type ===
+													'manyToMany'
+														? manyMarkerId
+														: oneMarkerId,
+												sourceY: 0,
+												targetY: 0,
+												type: relationship.type,
+											},
+											id: `reactflow__edge-object-relationship-${relationship.name}-parent-${relationship.objectDefinitionExternalReferenceCode1}-child-${relationship.objectDefinitionExternalReferenceCode2}`,
+											source: `${objectDefinition.name}`,
+											sourceHandle: `${objectDefinition.name}`,
+											target: `${relationship.objectDefinitionName2}`,
+											targetHandle: `${relationship.objectDefinitionName2}`,
+											type: 'floating',
+										});
+									}
+								}
+							);
+						}
 
 						if (index % 4 === 0) {
 							positionColumn.y++;
@@ -142,33 +154,33 @@ export function objectFolderReducer(state: TState, action: TAction) {
 								y: positionColumn.y * 400,
 							},
 							type: 'objectDefinition',
-						} as ObjectDefinitionNode;
+						} as Node<ObjectDefinitionNodeData>;
 					}
 				);
 			}
 
+			const newEdges = getNonOverlappingEdges(allEdges);
+
 			return {
 				...state,
+				elements: [...newObjectDefinitionNodes, ...newEdges],
 				leftSidebarItems: newLeftSidebar,
-				objectDefinitionNodes: newObjectDefinitionNodes,
 			};
 		}
 		case TYPES.SET_SELECTED_NODE: {
-			const {selectedObjectDefinitionName} = action.payload;
+			const {edges, nodes, selectedObjectDefinitionName} = action.payload;
 
-			const {leftSidebarItems, objectDefinitionNodes} = state;
+			const {leftSidebarItems} = state;
 
-			const newObjectDefinitionNodes = objectDefinitionNodes.map(
-				(definitionNode) => ({
-					...definitionNode,
-					data: {
-						...definitionNode.data,
-						nodeSelected:
-							definitionNode.data.name ===
-							selectedObjectDefinitionName,
-					},
-				})
-			);
+			const newObjectDefinitionNodes = nodes.map((definitionNode) => ({
+				...definitionNode,
+				data: {
+					...definitionNode.data,
+					nodeSelected:
+						definitionNode.data?.name ===
+						selectedObjectDefinitionName,
+				},
+			}));
 
 			const newLeftSidebarItems = leftSidebarItems.map((sidebarItem) => {
 				const newLeftSidebarDefinitions = sidebarItem.objectDefinitions?.map(
@@ -188,8 +200,16 @@ export function objectFolderReducer(state: TState, action: TAction) {
 
 			return {
 				...state,
+				elements: [...edges, ...newObjectDefinitionNodes],
 				leftSidebarItems: newLeftSidebarItems,
-				objectDefinitionNodes: newObjectDefinitionNodes,
+			};
+		}
+		case TYPES.SET_ELEMENTS: {
+			const {newElements} = action.payload;
+
+			return {
+				...state,
+				elements: newElements,
 			};
 		}
 		default:
