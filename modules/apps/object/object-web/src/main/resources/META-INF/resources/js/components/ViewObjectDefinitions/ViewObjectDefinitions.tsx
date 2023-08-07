@@ -39,6 +39,7 @@ import {ModalMoveObjectDefinition} from './ModalMoveObjectDefinition';
 
 interface ViewObjectDefinitionsProps extends IFDSTableProps {
 	baseResourceURL: string;
+	modelBuilderURL: string;
 	objectFolderPermissionsURL: string;
 	storages: LabelTypeObject[];
 }
@@ -62,6 +63,7 @@ export default function ViewObjectDefinitions({
 	baseResourceURL,
 	id,
 	items,
+	modelBuilderURL,
 	objectFolderPermissionsURL,
 	sorting,
 	storages,
@@ -396,6 +398,7 @@ export default function ViewObjectDefinitions({
 											) as IItem[]
 										}
 										label={selectedFolder.label}
+										modelBuilderURL={modelBuilderURL}
 									/>
 								}
 								viewMode="no-header-border"
