@@ -29,9 +29,11 @@ import com.liferay.object.service.ObjectDefinitionLocalService;
 import com.liferay.object.service.ObjectEntryLocalService;
 import com.liferay.object.service.ObjectFieldLocalService;
 import com.liferay.object.service.ObjectFieldSettingLocalService;
+import com.liferay.object.service.ObjectFolderItemLocalService;
 import com.liferay.object.service.base.ObjectRelationshipLocalServiceBaseImpl;
 import com.liferay.object.service.persistence.ObjectDefinitionPersistence;
 import com.liferay.object.service.persistence.ObjectFieldPersistence;
+import com.liferay.object.service.persistence.ObjectFolderItemPK;
 import com.liferay.object.service.persistence.ObjectLayoutTabPersistence;
 import com.liferay.object.system.JaxRsApplicationDescriptor;
 import com.liferay.object.system.SystemObjectDefinitionManager;
@@ -290,6 +292,22 @@ public class ObjectRelationshipLocalServiceImpl
 			objectRelationship.getObjectDefinitionId1(), objectRelationship);
 		_deleteObjectFields(
 			objectRelationship.getObjectDefinitionId2(), objectRelationship);
+
+		ObjectDefinition objectDefinition1 =
+			_objectDefinitionPersistence.findByPrimaryKey(
+				objectRelationship.getObjectDefinitionId1());
+
+		_objectFolderItemLocalService.deleteObjectFolderItem(
+			objectRelationship.getObjectDefinitionId2(),
+			objectDefinition1.getObjectFolderId());
+
+		ObjectDefinition objectDefinition2 =
+			_objectDefinitionPersistence.findByPrimaryKey(
+				objectRelationship.getObjectDefinitionId2());
+
+		_objectFolderItemLocalService.deleteObjectFolderItem(
+			objectRelationship.getObjectDefinitionId1(),
+			objectDefinition2.getObjectFolderId());
 
 		_objectLayoutTabPersistence.removeByObjectRelationshipId(
 			objectRelationship.getObjectRelationshipId());
@@ -832,6 +850,22 @@ public class ObjectRelationshipLocalServiceImpl
 		return objectField;
 	}
 
+	private void _addObjectFolderItem(
+			long objectDefinitionId, long objectFolderId, long userId)
+		throws PortalException {
+
+		if (Validator.isNotNull(
+				_objectFolderItemLocalService.fetchObjectFolderItem(
+					new ObjectFolderItemPK(
+						objectDefinitionId, objectFolderId)))) {
+
+			return;
+		}
+
+		_objectFolderItemLocalService.addObjectFolderItem(
+			objectDefinitionId, objectFolderId, userId, 0, 0);
+	}
+
 	private ObjectRelationship _addObjectRelationship(
 			long userId, long objectDefinitionId1, long objectDefinitionId2,
 			long parameterObjectFieldId, String deletionType,
@@ -871,6 +905,13 @@ public class ObjectRelationshipLocalServiceImpl
 		objectRelationship.setName(name);
 		objectRelationship.setReverse(reverse);
 		objectRelationship.setType(type);
+
+		_addObjectFolderItem(
+			objectDefinition1.getObjectDefinitionId(),
+			objectDefinition2.getObjectFolderId(), userId);
+		_addObjectFolderItem(
+			objectDefinition2.getObjectDefinitionId(),
+			objectDefinition1.getObjectFolderId(), userId);
 
 		if (Objects.equals(type, ObjectRelationshipConstants.TYPE_ONE_TO_ONE) ||
 			Objects.equals(
@@ -1231,6 +1272,9 @@ public class ObjectRelationshipLocalServiceImpl
 
 	@Reference
 	private ObjectFieldSettingLocalService _objectFieldSettingLocalService;
+
+	@Reference
+	private ObjectFolderItemLocalService _objectFolderItemLocalService;
 
 	@Reference
 	private ObjectLayoutTabPersistence _objectLayoutTabPersistence;
