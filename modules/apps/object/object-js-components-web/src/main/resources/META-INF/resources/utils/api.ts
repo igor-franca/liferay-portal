@@ -178,7 +178,7 @@ export async function getAllFolders() {
 
 export async function getDefinitionsByFolderERC(folderErc: string) {
 	const folderDefinitionsResponse = await fetch(
-		`/o/object-admin/v1.0/object-folders/by-external-reference-code/${folderErc}/object-definitions`,
+		`/o/object-admin/v1.0/object-folders/by-external-reference-code/${folderErc}/object-definitions?page=-1`,
 		{method: 'GET'}
 	);
 
