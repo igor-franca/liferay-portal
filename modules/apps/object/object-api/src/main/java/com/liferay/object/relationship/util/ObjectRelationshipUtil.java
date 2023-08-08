@@ -10,6 +10,7 @@ import com.liferay.object.exception.NoSuchObjectRelationshipException;
 import com.liferay.object.exception.ObjectRelationshipReverseException;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectRelationship;
+import com.liferay.object.service.ObjectDefinitionLocalServiceUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -89,6 +90,21 @@ public class ObjectRelationshipUtil {
 			"pkObjectFieldDBColumnName2",
 			pkObjectFieldDBColumnName2.concat(reverse ? "1" : "2")
 		).build();
+	}
+
+	public static ObjectDefinition getRelatedObjectDefinition(
+		ObjectDefinition objectDefinition,
+		ObjectRelationship objectRelationship) {
+
+		if (objectRelationship.getObjectDefinitionId1() ==
+				objectDefinition.getObjectDefinitionId()) {
+
+			return ObjectDefinitionLocalServiceUtil.fetchObjectDefinition(
+				objectRelationship.getObjectDefinitionId2());
+		}
+
+		return ObjectDefinitionLocalServiceUtil.fetchObjectDefinition(
+			objectRelationship.getObjectDefinitionId1());
 	}
 
 	private static final Set<String> _defaultObjectRelationshipTypes =
