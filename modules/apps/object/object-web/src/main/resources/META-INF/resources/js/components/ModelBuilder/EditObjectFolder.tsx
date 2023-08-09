@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import ClayLoadingIndicator from '@clayui/loading-indicator';
 import {API} from '@liferay/object-js-components-web';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {KeyValuePair} from '../ObjectDetails/EditObjectDetails';
 import {TDeletionType} from '../ObjectRelationship/EditRelationship';
@@ -26,9 +27,11 @@ export default function EditObjectFolder({
 	siteKeyValuePair,
 }: EditObjectFolder) {
 	const [{rightSidebarType}, dispatch] = useFolderContext();
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		const makeFetch = async () => {
+			setLoading(true);
 			const folderResponse = await API.getAllFolders();
 
 			const objectFoldersWithDefinitions: ObjectFolder[] = await Promise.all(
@@ -48,6 +51,8 @@ export default function EditObjectFolder({
 				payload: {objectFolders: objectFoldersWithDefinitions},
 				type: TYPES.CREATE_MODEL_BUILDER_STRUCTURE,
 			});
+
+			setLoading(false);
 		};
 
 		makeFetch();
@@ -62,26 +67,42 @@ export default function EditObjectFolder({
 				hasDraftObjectDefinitions={false}
 			/>
 			<div className="lfr-objects__model-builder-diagram-container">
-				<LeftSidebar />
+				{loading ? (
+					<ClayLoadingIndicator
+						displayType="primary"
+						shape="squares"
+						size="lg"
+						style={{
+							alignSelf: 'center',
+						}}
+					/>
+				) : (
+					<>
+						<LeftSidebar />
 
-				<Diagram />
+						<Diagram />
 
-				<RightSideBar.Root>
-					{rightSidebarType === 'empty' && <RightSideBar.Empty />}
+						<RightSideBar.Root>
+							{rightSidebarType === 'empty' && (
+								<RightSideBar.Empty />
+							)}
 
-					{rightSidebarType === 'objectDefinitionDetails' && (
-						<RightSideBar.ObjectDefinitionDetails
-							companyKeyValuePair={companyKeyValuePair}
-							siteKeyValuePair={siteKeyValuePair}
-						/>
-					)}
+							{rightSidebarType === 'objectDefinitionDetails' && (
+								<RightSideBar.ObjectDefinitionDetails
+									companyKeyValuePair={companyKeyValuePair}
+									siteKeyValuePair={siteKeyValuePair}
+								/>
+							)}
 
-					{rightSidebarType === 'objectRelationshipDetails' && (
-						<RightSideBar.Relationship
-							deletionTypes={deletionTypes}
-						/>
-					)}
-				</RightSideBar.Root>
+							{rightSidebarType ===
+								'objectRelationshipDetails' && (
+								<RightSideBar.Relationship
+									deletionTypes={deletionTypes}
+								/>
+							)}
+						</RightSideBar.Root>
+					</>
+				)}
 			</div>
 		</>
 	);
