@@ -17,6 +17,8 @@ interface ICustomFolderWrapperProps extends React.HTMLAttributes<HTMLElement> {
 	editObjectDefinitionURL: string;
 	objectDefinitionPermissionsURL: string;
 	siteKeyValuePair: KeyValuePair[];
+	storages: LabelTypeObject[];
+	viewApiUrl: string;
 }
 
 const CustomFolderWrapper: React.FC<ICustomFolderWrapperProps> = ({
@@ -26,6 +28,8 @@ const CustomFolderWrapper: React.FC<ICustomFolderWrapperProps> = ({
 	editObjectDefinitionURL,
 	objectDefinitionPermissionsURL,
 	siteKeyValuePair,
+	storages,
+	viewApiUrl,
 }) => {
 	const urlParams = new URLSearchParams(window.location.search);
 	const folderERC = urlParams.get('folderERC');
@@ -33,12 +37,9 @@ const CustomFolderWrapper: React.FC<ICustomFolderWrapperProps> = ({
 	return (
 		<ReactFlowProvider>
 			<FolderContextProvider
-				value={{
-					baseResourceURL,
+				value={{baseResourceURL,
 					editObjectDefinitionURL,
-					objectDefinitionPermissionsURL,
-					selectedFolderERC: folderERC,
-				}}
+					objectDefinitionPermissionsURL, selectedFolderERC: folderERC, storages, viewApiUrl}}
 			>
 				<EditObjectFolder
 					companyKeyValuePair={companyKeyValuePair}

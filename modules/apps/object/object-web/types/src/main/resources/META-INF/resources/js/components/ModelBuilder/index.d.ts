@@ -13,6 +13,8 @@ interface ICustomFolderWrapperProps extends React.HTMLAttributes<HTMLElement> {
 	editObjectDefinitionURL: string;
 	objectDefinitionPermissionsURL: string;
 	siteKeyValuePair: KeyValuePair[];
+	storages: LabelTypeObject[];
+	viewApiUrl: string;
 }
 declare const CustomFolderWrapper: React.FC<ICustomFolderWrapperProps>;
 export default CustomFolderWrapper;
