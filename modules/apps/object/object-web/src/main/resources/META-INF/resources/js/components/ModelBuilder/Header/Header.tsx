@@ -12,29 +12,24 @@ import './Header.scss';
 import {sub} from 'frontend-js-web';
 
 interface Header {
-	folderExternalReferenceCode: string;
-	folderName: string;
+	folder: ObjectFolder;
 	hasDraftObjectDefinitions: boolean;
 }
 
-export default function ({
-	folderExternalReferenceCode,
-	folderName,
-	hasDraftObjectDefinitions,
-}: Header) {
+export default function ({folder, hasDraftObjectDefinitions}: Header) {
 	return (
 		<div className="lfr-objects__model-builder-header">
 			<div className="lfr-objects__model-builder-header-container">
 				<div className="lfr-objects__model-builder-header-folder-info">
 					<div className="lfr-objects__model-builder-header-folder-info-name">
-						<span>{folderName}</span>
+						<span>{folder?.name ?? ''}</span>
 					</div>
 
 					<span className="lfr-objects__model-builder-header-folder-info-erc">
 						{Liferay.Language.get('erc')}:
 					</span>
 
-					<strong>{folderExternalReferenceCode}</strong>
+					<strong>{folder?.externalReferenceCode ?? ''}</strong>
 
 					<span
 						role="tooltip"
@@ -45,7 +40,7 @@ export default function ({
 						<ClayIcon symbol="question-circle" />
 					</span>
 
-					{folderExternalReferenceCode !== 'uncategorized' && (
+					{folder?.externalReferenceCode !== 'uncategorized' && (
 						<ClayButtonWithIcon
 							aria-label={sub(
 								Liferay.Language.get('edit-x'),

@@ -4,7 +4,7 @@
  */
 
 import {API} from '@liferay/object-js-components-web';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {KeyValuePair} from '../ObjectDetails/EditObjectDetails';
 import {TDeletionType} from '../ObjectRelationship/EditRelationship';
@@ -25,7 +25,11 @@ export default function EditObjectFolder({
 	deletionTypes,
 	siteKeyValuePair,
 }: EditObjectFolder) {
-	const [{rightSidebarType}, dispatch] = useFolderContext();
+	const [
+		{rightSidebarType, selectedFolderERC},
+		dispatch,
+	] = useFolderContext();
+	const [currentFolder, setCurrentFolder] = useState<ObjectFolder>();
 
 	useEffect(() => {
 		const makeFetch = async () => {
@@ -33,6 +37,9 @@ export default function EditObjectFolder({
 
 			const objectFoldersWithDefinitions: ObjectFolder[] = await Promise.all(
 				folderResponse.map(async (folder) => {
+					if (folder.externalReferenceCode === selectedFolderERC) {
+						setCurrentFolder(folder);
+					}
 					const folderDefinitions = await API.getDefinitionsByFolderERC(
 						folder.externalReferenceCode
 					);
@@ -58,8 +65,7 @@ export default function EditObjectFolder({
 	return (
 		<>
 			<Header
-				folderExternalReferenceCode="uncategorized"
-				folderName="Uncategorized"
+				folder={currentFolder as ObjectFolder}
 				hasDraftObjectDefinitions={false}
 			/>
 			<div className="lfr-objects__model-builder-diagram-container">

@@ -7,13 +7,11 @@
 
 import './Header.scss';
 interface Header {
-	folderExternalReferenceCode: string;
-	folderName: string;
+	folder: ObjectFolder;
 	hasDraftObjectDefinitions: boolean;
 }
 export default function ({
-	folderExternalReferenceCode,
-	folderName,
+	folder,
 	hasDraftObjectDefinitions,
 }: Header): JSX.Element;
 export {};
