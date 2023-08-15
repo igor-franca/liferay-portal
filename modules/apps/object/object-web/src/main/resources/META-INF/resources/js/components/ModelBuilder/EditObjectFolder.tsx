@@ -14,6 +14,8 @@ import LeftSidebar from './LeftSidebar/LeftSidebar';
 import {useFolderContext} from './ModelBuilderContext/objectFolderContext';
 import {TYPES} from './ModelBuilderContext/typesEnum';
 import {RightSideBar} from './RightSidebar/index';
+import {ModalDeleteObjectDefinition} from '../ViewObjectDefinitions/ModalDeleteObjectDefinition';
+import {DeletedObjectDefinition} from '../ViewObjectDefinitions/ViewObjectDefinitions';
 
 interface EditObjectFolder {
 	companyKeyValuePair: KeyValuePair[];
@@ -26,7 +28,7 @@ export default function EditObjectFolder({
 	siteKeyValuePair,
 }: EditObjectFolder) {
 	const [
-		{rightSidebarType, selectedFolderERC},
+		{rightSidebarType, selectedFolderERC, selectedDefinitionNode},
 		dispatch,
 	] = useFolderContext();
 	const [currentFolder, setCurrentFolder] = useState<ObjectFolder>();

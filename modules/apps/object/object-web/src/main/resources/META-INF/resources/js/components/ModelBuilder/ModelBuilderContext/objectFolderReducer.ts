@@ -4,7 +4,7 @@
  */
 
 import {getLocalizableLabel} from '@liferay/object-js-components-web';
-import {Edge, Node} from 'react-flow-renderer';
+import {Edge, Node, isNode} from 'react-flow-renderer';
 
 import {defaultLanguageId} from '../../../utils/constants';
 import {manyMarkerId} from '../Edges/ManyMarkerEnd';
@@ -26,9 +26,75 @@ import {TYPES} from './typesEnum';
 
 export function objectFolderReducer(state: TState, action: TAction) {
 	switch (action.type) {
+		case TYPES.DELETE_DEFINITION_NODE: {
+			const {deletedNodeName} = action.payload;
+			const {elements} = state;
+
+			let updatedObjectDefinitions;
+			const test = elements;
+
+            const newElements = elements.map((element) => {
+
+                if (isNode(element) && (element as any).name === deletedNodeName) {
+                    updatedObjectDefinitions = elements?.filter(
+                        (definitionNode) =>
+							(definitionNode as any) !== deletedNodeName
+                    );
+
+                    return {
+                        ...element,
+                        objectDefinitions: [...updatedObjectDefinitions!],
+                    };
+                }
+                else {
+                    return {
+                        ...element,
+                    };
+                }
+            }) as any;
+
+            return {
+                ...state,
+                elements: newElements,
+            };
+
+
+			return '';
+		}
+		case TYPES.DELETE_FOLDER_DEFINITION: {
+            const {currentFolderName, deletedNodeName} = action.payload;
+
+            const {leftSidebarItems} = state;
+
+            let updatedObjectDefinitions;
+
+            const newLeftSidebarItems = leftSidebarItems.map((item) => {
+                if (item.folderName === currentFolderName) {
+                    updatedObjectDefinitions = item.objectDefinitions?.filter(
+                        (definition) =>
+                            definition.definitionName !== deletedNodeName
+                    );
+
+                    return {
+                        ...item,
+                        objectDefinitions: [...updatedObjectDefinitions!],
+                    };
+                }
+                else {
+                    return {
+                        ...item,
+                    };
+                }
+            }) as LeftSidebarItemType[];
+
+            return {
+                ...state,
+                leftSidebarItems: newLeftSidebarItems,
+            };
+        }
 		case TYPES.CREATE_MODEL_BUILDER_STRUCTURE: {
 			const {objectFolders} = action.payload;
-			const {selectedFolderERC} = state;
+			const {editObjectDefinitionURL, objectDefinitionPermissionsURL, selectedFolderERC} = state;
 
 			const newLeftSidebar = objectFolders.map((folder) => {
 				const folderDefinitions = folder.definitions?.map(
@@ -133,12 +199,13 @@ export function objectFolderReducer(state: TState, action: TAction) {
 							data: {
 								defaultLanguageId:
 									objectDefinition.defaultLanguageId,
+								objectDefinitionId: objectDefinition.id,
 								externalReferenceCode:
 									objectDefinition.externalReferenceCode,
-								hasObjectDefinitionDeleteResourcePermission: true,
-								hasObjectDefinitionManagePermissionsResourcePermission: true,
-								hasObjectDefinitionUpdateResourcePermission: true,
-								hasObjectDefinitionViewResourcePermission: true,
+								hasObjectDefinitionDeleteResourcePermission: 
+									objectDefinition.actions.hasOwnProperty("delete"),
+								hasObjectDefinitionManagePermissionsResourcePermission: 
+									objectDefinition.actions.hasOwnProperty("permissions"),
 								isLinkedNode: false,
 								label: getLocalizableLabel(
 									objectDefinition.defaultLanguageId,
@@ -148,6 +215,8 @@ export function objectFolderReducer(state: TState, action: TAction) {
 								name: objectDefinition.name,
 								nodeSelected: false,
 								objectFields: fieldsCustomSort(objectFields),
+								editObjectDefinitionURL: editObjectDefinitionURL,
+								objectDefinitionPermissionsURL: objectDefinitionPermissionsURL,
 								status: objectDefinition.status,
 								system: objectDefinition.system,
 							},
@@ -205,7 +274,7 @@ export function objectFolderReducer(state: TState, action: TAction) {
 				...state,
 				elements: [...edges, ...newObjectDefinitionNodes],
 				leftSidebarItems: newLeftSidebarItems,
-				rightSidebarType: 'objectDefinitionDetails' as RightSidebarType,
+				// rightSidebarType: 'objectDefinitionDetails' as RightSidebarType,
 			};
 		}
 		case TYPES.SET_ELEMENTS: {

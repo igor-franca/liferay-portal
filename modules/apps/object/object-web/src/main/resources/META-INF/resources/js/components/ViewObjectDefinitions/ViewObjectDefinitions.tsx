@@ -53,7 +53,9 @@ export type ViewObjectDefinitionsModals = {
 	moveObjectDefinition: boolean;
 };
 
-export interface DeletedObjectDefinition extends ObjectDefinition {
+export interface DeletedObjectDefinition {
+	name: string;
+	id: number;
 	hasObjectRelationship: boolean;
 	objectEntriesCount: number;
 }

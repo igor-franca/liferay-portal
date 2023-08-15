@@ -13,8 +13,21 @@ export type TAction =
 				objectFolders: ObjectFolder[];
 			};
 			type: TYPES.CREATE_MODEL_BUILDER_STRUCTURE;
-	  }
-	| {
+	  }| 
+	  {
+		payload: {
+			deletedNodeName: string;
+		};
+		type: TYPES.DELETE_DEFINITION_NODE;
+	}| 
+	  {
+		payload: {
+			currentFolderName: string;
+			deletedNodeName: string;
+		};
+		type: TYPES.DELETE_FOLDER_DEFINITION;
+	}| 
+	{
 			payload: {
 				edges: Edge<ObjectRelationshipEdgeData>[];
 				nodes: Node<ObjectDefinitionNodeData>[];
@@ -30,8 +43,11 @@ export type TAction =
 	  };
 
 export type TState = {
+	baseResourceURL: string;
+	editObjectDefinitionURL: string;
 	elements: Elements<ObjectDefinitionNodeData | ObjectRelationshipEdgeData>;
 	leftSidebarItems: LeftSidebarItemType[];
+	objectDefinitionPermissionsURL: string;
 	objectDefinitions: ObjectDefinition[];
 	objectFolders: ObjectFolder[];
 	rightSidebarType: RightSidebarType;
@@ -64,6 +80,7 @@ export interface ObjectFieldNode extends Partial<ObjectField> {
 
 export interface ObjectDefinitionNodeData
 	extends Partial<Omit<ObjectDefinition, 'objectFields' | 'label'>> {
+	editObjectDefinitionURL: string;
 	hasObjectDefinitionDeleteResourcePermission: boolean;
 	hasObjectDefinitionManagePermissionsResourcePermission: boolean;
 	hasObjectDefinitionUpdateResourcePermission: boolean;
@@ -71,6 +88,9 @@ export interface ObjectDefinitionNodeData
 	isLinkedNode: boolean;
 	label: string;
 	nodeSelected: boolean;
+	objectRelationships: ObjectRelationship[];
+	objectDefinitionId: number;
+	objectDefinitionPermissionsURL: string;
 	objectFields: ObjectFieldNode[];
 }
 
