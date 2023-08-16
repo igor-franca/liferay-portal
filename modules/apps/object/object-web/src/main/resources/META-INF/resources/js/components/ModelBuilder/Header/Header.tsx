@@ -11,8 +11,6 @@ import './Header.scss';
 
 import {sub} from 'frontend-js-web';
 
-import {useFolderContext} from '../ModelBuilderContext/objectFolderContext';
-
 interface Header {
 	folderExternalReferenceCode: string;
 	folderName: string;

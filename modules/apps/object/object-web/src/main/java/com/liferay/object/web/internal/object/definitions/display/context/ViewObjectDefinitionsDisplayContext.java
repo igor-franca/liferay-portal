@@ -132,6 +132,14 @@ public class ViewObjectDefinitionsDisplayContext {
 		return fdsActionDropdownItems;
 	}
 
+	public String getModelBuilderURL() throws Exception {
+		return PortletURLBuilder.create(
+			getPortletURL()
+		).setMVCRenderCommandName(
+			"/object_definitions/view_model_builder"
+		).buildString();
+	}
+
 	public String getPermissionsURL(String modelResource) throws Exception {
 		PortletURL portletURL = PortletURLBuilder.create(
 			PortalUtil.getControlPanelPortletURL(
@@ -159,14 +167,6 @@ public class ViewObjectDefinitionsDisplayContext {
 		}
 
 		return portletURL.toString();
-	}
-
-	public String getModelBuilderURL() throws Exception {
-		return PortletURLBuilder.create(
-			getPortletURL()
-		).setMVCRenderCommandName(
-			"/object_definitions/view_model_builder"
-		).buildString();
 	}
 
 	public PortletURL getPortletURL() throws PortletException {
