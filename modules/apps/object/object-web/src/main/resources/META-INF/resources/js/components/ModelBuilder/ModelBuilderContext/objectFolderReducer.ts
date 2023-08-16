@@ -28,7 +28,11 @@ export function objectFolderReducer(state: TState, action: TAction) {
 	switch (action.type) {
 		case TYPES.CREATE_MODEL_BUILDER_STRUCTURE: {
 			const {objectFolders} = action.payload;
-			const {selectedFolderERC} = state;
+			const {
+				editObjectDefinitionURL,
+				objectDefinitionPermissionsURL,
+				selectedFolderERC,
+			} = state;
 
 			const newLeftSidebar = objectFolders.map((folder) => {
 				const folderDefinitions = folder.definitions?.map(
@@ -133,12 +137,15 @@ export function objectFolderReducer(state: TState, action: TAction) {
 							data: {
 								defaultLanguageId:
 									objectDefinition.defaultLanguageId,
+								editObjectDefinitionURL,
 								externalReferenceCode:
 									objectDefinition.externalReferenceCode,
-								hasObjectDefinitionDeleteResourcePermission: true,
-								hasObjectDefinitionManagePermissionsResourcePermission: true,
-								hasObjectDefinitionUpdateResourcePermission: true,
-								hasObjectDefinitionViewResourcePermission: true,
+								hasObjectDefinitionDeleteResourcePermission:
+									typeof objectDefinition.actions.delete !==
+									'undefined',
+								hasObjectDefinitionManagePermissionsResourcePermission:
+									typeof objectDefinition.actions
+										.permissions !== 'undefined',
 								isLinkedNode: false,
 								label: getLocalizableLabel(
 									objectDefinition.defaultLanguageId,
@@ -147,6 +154,8 @@ export function objectFolderReducer(state: TState, action: TAction) {
 								),
 								name: objectDefinition.name,
 								nodeSelected: false,
+								objectDefinitionId: objectDefinition.id,
+								objectDefinitionPermissionsURL,
 								objectFields: fieldsCustomSort(objectFields),
 								status: objectDefinition.status,
 								system: objectDefinition.system,
