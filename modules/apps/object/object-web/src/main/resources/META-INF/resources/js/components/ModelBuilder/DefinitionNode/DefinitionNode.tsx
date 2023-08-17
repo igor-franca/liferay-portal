@@ -8,6 +8,7 @@ import React, {useState} from 'react';
 import {Handle, NodeProps, Position, useStore} from 'react-flow-renderer';
 
 import './DefinitionNode.scss';
+import {formatActionURL} from '../../../utils/fds';
 import {ModalDeleteObjectDefinition} from '../../ViewObjectDefinitions/ModalDeleteObjectDefinition';
 import {
 	DeletedObjectDefinition,
@@ -20,6 +21,7 @@ import {ObjectDefinitionNodeData} from '../types';
 import NodeFields from './NodeFields';
 import NodeFooter from './NodeFooter';
 import NodeHeader from './NodeHeader';
+import {RedirectModal} from './RedirectModal';
 
 export function DefinitionNode({
 	data: {
@@ -55,10 +57,21 @@ export function DefinitionNode({
 	const [{baseResourceURL}] = useFolderContext();
 
 	const handleShowDeleteDefinitionModal = () => {
-        setShowModal({
-            deleteObjectDefinition: true,
-        });
-    };
+		setShowModal({
+			deleteObjectDefinition: true,
+		});
+	};
+
+	const handleShowEditDefinitionModal = () => {
+		setShowModal({
+			redirectEditObjectDefinition: true,
+		});
+	};
+
+	const viewDetailsUrl = formatActionURL(
+		editObjectDefinitionURL,
+		objectDefinitionId
+	);
 
 	return (
 		<>
@@ -89,11 +102,11 @@ export function DefinitionNode({
 						name,
 						hasObjectDefinitionDeleteResourcePermission,
 						hasObjectDefinitionManagePermissionsResourcePermission,
-						editObjectDefinitionURL,
 						objectDefinitionPermissionsURL,
 						status,
 						setDeletedObjectDefinition,
-						handleShowDeleteDefinitionModal
+						handleShowDeleteDefinitionModal,
+						handleShowEditDefinitionModal
 					)}
 					isLinkedNode={isLinkedNode}
 					objectDefinitionLabel={label}
@@ -138,6 +151,17 @@ export function DefinitionNode({
 						deletedObjectDefinition as DeletedObjectDefinition
 					}
 					setDeletedObjectDefinition={setDeletedObjectDefinition}
+				/>
+			)}
+
+			{showModal.redirectEditObjectDefinition && (
+				<RedirectModal
+					handleOnClose={() => {
+						setShowModal({
+							redirectEditObjectDefinition: false,
+						});
+					}}
+					viewDetailsUrl={viewDetailsUrl}
 				/>
 			)}
 		</>
