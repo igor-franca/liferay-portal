@@ -96,7 +96,6 @@ export function getDefinitionActions(
 	objectDefinitionName: string,
 	hasObjectDefinitionDeleteResourcePermission: boolean,
 	hasObjectDefinitionManagePermissionsResourcePermission: boolean,
-	editObjectDefinitionURL: string,
 	objectDefinitionPermissionsURL: string,
 	status: {
 		code: number;
@@ -104,36 +103,33 @@ export function getDefinitionActions(
 		label_i18n: string;
 	},
 	setDeletedObjectDefinition: (value: DeletedObjectDefinition) => void,
-	handleShowDeleteModal: () => void
+	handleShowDeleteModal: () => void,
+	handleShowEditDefinitionModal: () => void
 ) {
-	const viewDetailsUrl = formatActionURL(
-		editObjectDefinitionURL,
-		objectDefinitionId
-	);
 	const PermissionUrl = formatActionURL(
 		objectDefinitionPermissionsURL,
 		objectDefinitionId
 	);
 
 	const handleClickDeleteObjectDefinition = (event: React.MouseEvent) => {
-        event.stopPropagation();
-        getDeleteObjectDefinition(
-            baseResourceURL,
-            objectDefinitionId,
-            objectDefinitionName,
-            status.label,
-            setDeletedObjectDefinition,
-            handleShowDeleteModal
-        );
-    };
+		event.stopPropagation();
+		getDeleteObjectDefinition(
+			baseResourceURL,
+			objectDefinitionId,
+			objectDefinitionName,
+			status.label,
+			setDeletedObjectDefinition,
+			handleShowDeleteModal
+		);
+	};
 
-    const handleClickManagePermissions = (event: React.MouseEvent) => {
-        event.stopPropagation();
-        openModal({
-            title: Liferay.Language.get('permissions'),
-            url: PermissionUrl,
-        });
-    };
+	const handleClickManagePermissions = (event: React.MouseEvent) => {
+		event.stopPropagation();
+		openModal({
+			title: Liferay.Language.get('permissions'),
+			url: PermissionUrl,
+		});
+	};
 
 	const kebabOptions = [
 		{
@@ -143,7 +139,7 @@ export function getDefinitionActions(
 			),
 			onClick: (event: Event) => {
 				event.stopPropagation();
-				window.open(viewDetailsUrl, '_blank');
+				handleShowEditDefinitionModal();
 			},
 			symbolRight: 'shortcut',
 		},

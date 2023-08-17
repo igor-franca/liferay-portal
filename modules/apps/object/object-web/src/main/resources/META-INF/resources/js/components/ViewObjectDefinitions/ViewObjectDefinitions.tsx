@@ -51,6 +51,7 @@ export type ViewObjectDefinitionsModals = {
 	deleteObjectDefinition: boolean;
 	editFolder: boolean;
 	moveObjectDefinition: boolean;
+	redirectEditObjectDefinition: boolean;
 };
 
 export interface DeletedObjectDefinition {
@@ -87,6 +88,7 @@ export default function ViewObjectDefinitions({
 		deleteObjectDefinition: false,
 		editFolder: false,
 		moveObjectDefinition: false,
+		redirectEditObjectDefinition: false,
 	});
 	const [selectedFolder, setSelectedFolder] = useState<Partial<Folder>>(
 		initialValues
