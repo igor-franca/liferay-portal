@@ -96,7 +96,6 @@ export function getDefinitionActions(
 	objectDefinitionName: string,
 	hasObjectDefinitionDeleteResourcePermission: boolean,
 	hasObjectDefinitionManagePermissionsResourcePermission: boolean,
-	editObjectDefinitionURL: string,
 	objectDefinitionPermissionsURL: string,
 	status: {
 		code: number;
@@ -104,12 +103,9 @@ export function getDefinitionActions(
 		label_i18n: string;
 	},
 	setDeletedObjectDefinition: (value: DeletedObjectDefinition) => void,
-	handleShowDeleteModal: () => void
+	handleShowDeleteModal: () => void,
+	handleShowRedirectModal: () => void
 ) {
-	const viewDetailsUrl = formatActionURL(
-		editObjectDefinitionURL,
-		objectDefinitionId
-	);
 	const PermissionUrl = formatActionURL(
 		objectDefinitionPermissionsURL,
 		objectDefinitionId
@@ -143,7 +139,7 @@ export function getDefinitionActions(
 			),
 			onClick: (event: Event) => {
 				event.stopPropagation();
-				window.open(viewDetailsUrl, '_blank');
+				handleShowRedirectModal();
 			},
 			symbolRight: 'shortcut',
 		},
