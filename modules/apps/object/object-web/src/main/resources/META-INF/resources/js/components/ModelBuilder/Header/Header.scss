@@ -12,11 +12,11 @@
 	}
 
 	&-changes-saved {
+		align-items: center;
 		color: #287d3c;
+		display: flex;
 		font-size: 14px;
 		font-weight: 600;
-		align-items: center;
-		display: flex;
 		gap: 0.5rem;
 	}
 
