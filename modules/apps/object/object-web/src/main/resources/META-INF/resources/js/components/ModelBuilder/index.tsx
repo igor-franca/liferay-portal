@@ -37,9 +37,14 @@ const CustomFolderWrapper: React.FC<ICustomFolderWrapperProps> = ({
 	return (
 		<ReactFlowProvider>
 			<FolderContextProvider
-				value={{baseResourceURL,
+				value={{
+					baseResourceURL,
 					editObjectDefinitionURL,
-					objectDefinitionPermissionsURL, selectedFolderERC: folderERC, storages, viewApiUrl}}
+					objectDefinitionPermissionsURL,
+					selectedFolderERC: folderERC,
+					storages,
+					viewApiUrl,
+				}}
 			>
 				<EditObjectFolder
 					companyKeyValuePair={companyKeyValuePair}
