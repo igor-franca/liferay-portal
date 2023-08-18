@@ -174,6 +174,12 @@ export function RightSidebarObjectDefinitionDetails({
 
 					newObjectDefinition = {
 						...objectDefinition,
+						hasObjectDefinitionDeleteResourcePermission:
+							typeof objectDefinition.actions?.delete !==
+							'undefined',
+						hasObjectDefinitionManagePermissionsResourcePermission:
+							typeof objectDefinition.actions?.permissions !==
+							'undefined',
 						label: getLocalizableLabel(
 							objectDefinition.defaultLanguageId!,
 							objectDefinition.label,
@@ -181,6 +187,7 @@ export function RightSidebarObjectDefinitionDetails({
 						),
 						name: objectDefinition.name,
 						nodeSelected: true,
+						objectDefinitionId: objectDefinition.id,
 						objectFields: fieldsCustomSort(objectFields!),
 						pluralLabel: {
 							[objectDefinition.defaultLanguageId!]: objectDefinition.pluralLabel,
@@ -260,6 +267,7 @@ export function RightSidebarObjectDefinitionDetails({
 							: false
 					}
 					isApproved={values.status?.label === 'approved'}
+					isLinkedNode={selectedNode.data!.isLinkedNode}
 					setValues={setValues}
 					values={values as ObjectDefinition}
 				/>
@@ -268,6 +276,7 @@ export function RightSidebarObjectDefinitionDetails({
 			<div className="lfr-objects__model-builder-right-sidebar-definition-node-content">
 				<EntryDisplayContainer
 					errors={errors}
+					isLinkedNode={selectedNode.data!.isLinkedNode}
 					nonRelationshipObjectFieldsInfo={
 						nonRelationshipObjectFieldsInfo ?? []
 					}
@@ -281,6 +290,7 @@ export function RightSidebarObjectDefinitionDetails({
 					errors={errors}
 					hasUpdateObjectDefinitionPermission={true}
 					isApproved={values.status?.label === 'approved'}
+					isLinkedNode={selectedNode.data!.isLinkedNode}
 					setValues={setValues}
 					siteKeyValuePair={siteKeyValuePair}
 					values={values as ObjectDefinition}
@@ -294,6 +304,7 @@ export function RightSidebarObjectDefinitionDetails({
 					<AccountRestrictionContainer
 						errors={errors}
 						isApproved={values?.status?.label === 'approved'}
+						isLinkedNode={selectedNode.data!.isLinkedNode}
 						objectFields={
 							(values?.objectFields as ObjectField[]) ?? []
 						}
@@ -310,6 +321,7 @@ export function RightSidebarObjectDefinitionDetails({
 							? 'update' in (values as ObjectDefinition).actions
 							: false
 					}
+					isLinkedNode={selectedNode.data!.isLinkedNode}
 					setValues={setValues}
 					values={values as ObjectDefinition}
 				/>

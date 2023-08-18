@@ -20,6 +20,7 @@ interface ObjectDataContainerProps {
 	handleChange: ChangeEventHandler<HTMLInputElement>;
 	hasUpdateObjectDefinitionPermission: boolean;
 	isApproved: boolean;
+	isLinkedNode?: boolean;
 	setValues: (values: Partial<ObjectDefinition>) => void;
 	values: Partial<ObjectDefinition>;
 }
@@ -30,6 +31,7 @@ export function ObjectDataContainer({
 	handleChange,
 	hasUpdateObjectDefinitionPermission,
 	isApproved,
+	isLinkedNode,
 	setValues,
 	values,
 }: ObjectDataContainerProps) {
@@ -44,7 +46,11 @@ export function ObjectDataContainer({
 	return (
 		<>
 			<Input
-				disabled={isApproved || !hasUpdateObjectDefinitionPermission}
+				disabled={
+					isApproved ||
+					!hasUpdateObjectDefinitionPermission ||
+					isLinkedNode
+				}
 				error={errors.name}
 				label={Liferay.Language.get('name')}
 				name="name"
@@ -54,7 +60,11 @@ export function ObjectDataContainer({
 			/>
 
 			<InputLocalized
-				disabled={isReadOnly || !hasUpdateObjectDefinitionPermission}
+				disabled={
+					isReadOnly ||
+					!hasUpdateObjectDefinitionPermission ||
+					isLinkedNode
+				}
 				error={errors.label}
 				label={Liferay.Language.get('label')}
 				onChange={(label) => setValues({label})}
@@ -65,7 +75,11 @@ export function ObjectDataContainer({
 			/>
 
 			<InputLocalized
-				disabled={isReadOnly || !hasUpdateObjectDefinitionPermission}
+				disabled={
+					isReadOnly ||
+					!hasUpdateObjectDefinitionPermission ||
+					isLinkedNode
+				}
 				error={errors.pluralLabel}
 				label={Liferay.Language.get('plural-label')}
 				onChange={(pluralLabel) => setValues({pluralLabel})}
@@ -86,7 +100,8 @@ export function ObjectDataContainer({
 				disabled={
 					!isApproved ||
 					isReadOnly ||
-					!hasUpdateObjectDefinitionPermission
+					!hasUpdateObjectDefinitionPermission ||
+					isLinkedNode
 				}
 				label={sub(
 					Liferay.Language.get('activate-x'),

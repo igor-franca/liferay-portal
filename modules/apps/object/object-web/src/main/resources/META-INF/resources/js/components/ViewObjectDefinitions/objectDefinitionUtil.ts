@@ -104,7 +104,8 @@ export function getDefinitionActions(
 	},
 	setDeletedObjectDefinition: (value: DeletedObjectDefinition) => void,
 	handleShowDeleteModal: () => void,
-	handleShowEditDefinitionModal: () => void
+	handleShowEditDefinitionModal: () => void,
+	handleShowEditERCModal: () => void
 ) {
 	const PermissionUrl = formatActionURL(
 		objectDefinitionPermissionsURL,
@@ -142,6 +143,17 @@ export function getDefinitionActions(
 				handleShowEditDefinitionModal();
 			},
 			symbolRight: 'shortcut',
+		},
+		{
+			label: sub(
+				Liferay.Language.get('edit-x'),
+				Liferay.Language.get('erc')
+			),
+			onClick: (event: Event) => {
+				event.stopPropagation();
+				handleShowEditERCModal();
+			},
+			symbolLeft: 'info-panel-closed',
 		},
 		{type: 'divider'},
 	] as DropDownItems[];

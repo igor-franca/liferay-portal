@@ -49,7 +49,8 @@ export declare function getDefinitionActions(
 	},
 	setDeletedObjectDefinition: (value: DeletedObjectDefinition) => void,
 	handleShowDeleteModal: () => void,
-	handleShowEditDefinitionModal: () => void
+	handleShowEditDefinitionModal: () => void,
+	handleShowEditERCModal: () => void
 ): DropDownItems[];
 export declare function getFolderActions(
 	id: number,
