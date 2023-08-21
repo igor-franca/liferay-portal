@@ -136,7 +136,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 					id: newObjectDefinition.id,
 					isLinkedNode: false,
 					label: getLocalizableLabel(
-						newObjectDefinition.defaultLanguageId!,
+						newObjectDefinition.defaultLanguageId,
 						newObjectDefinition.label,
 						newObjectDefinition.name
 					),
@@ -542,8 +542,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 				data: {
 					...definitionNode.data,
 					nodeSelected:
-						definitionNode.id ===
-						selectedObjectDefinitionId.toString(),
+						definitionNode.id === selectedObjectDefinitionId,
 				},
 			}));
 
