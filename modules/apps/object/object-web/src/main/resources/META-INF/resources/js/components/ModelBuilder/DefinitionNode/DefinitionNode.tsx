@@ -88,15 +88,15 @@ export function DefinitionNode({
 		});
 	};
 
-	const handleShowRedirectModal = () => {
-		setShowModal({
-			redirectEditObjectDefinition: true,
-		});
-	};
-
 	const handleShowEditERCModal = () => {
 		setShowModal({
 			editERC: true,
+		});
+	};
+
+	const handleShowRedirectModal = () => {
+		setShowModal({
+			redirectEditObjectDefinition: true,
 		});
 	};
 
@@ -118,7 +118,7 @@ export function DefinitionNode({
 						payload: {
 							edges,
 							nodes,
-							selectedObjectDefinitionId: id!.toString(),
+							selectedObjectDefinitionId: id.toString(),
 						},
 						type: TYPES.SET_SELECTED_NODE,
 					});
@@ -127,7 +127,7 @@ export function DefinitionNode({
 				<NodeHeader
 					dropDownItems={getDefinitionNodeActions(
 						baseResourceURL,
-						id!,
+						id,
 						name,
 						hasObjectDefinitionDeleteResourcePermission,
 						hasObjectDefinitionManagePermissionsResourcePermission,
