@@ -129,14 +129,12 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 					editObjectDefinitionURL,
 					externalReferenceCode:
 						newObjectDefinition.externalReferenceCode,
-					hasObjectDefinitionDeleteResourcePermission:
-						typeof newObjectDefinition.actions.delete !==
-						'undefined',
-					hasObjectDefinitionManagePermissionsResourcePermission:
-						typeof newObjectDefinition.actions.permissions !==
-						'undefined',
+					hasObjectDefinitionDeleteResourcePermission: !!newObjectDefinition
+						.actions.delete,
+					hasObjectDefinitionManagePermissionsResourcePermission: !!newObjectDefinition
+						.actions.permissions,
 					id: newObjectDefinition.id,
-					isLinkedNode: false, // se clicar no no e linked for true, desabilita os campos da rightsidebar
+					isLinkedNode: false,
 					label: getLocalizableLabel(
 						newObjectDefinition.defaultLanguageId!,
 						newObjectDefinition.label,
@@ -144,7 +142,6 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 					),
 					name: newObjectDefinition.name,
 					nodeSelected: true,
-					objectDefinitionId: newObjectDefinition.id,
 					objectDefinitionPermissionsURL,
 					objectFields: fieldsCustomSort(objectFields),
 					status: newObjectDefinition.status,
@@ -252,7 +249,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 
 			const updatedNodes = nodes.map(
 				(node: Node<ObjectDefinitionNodeData>) => {
-					if (node.data?.name === definitionName) {
+					if (node.data?.id === definitionId) {
 						return {
 							...node,
 							data: {...node.data, nodeSelected: false},
@@ -423,12 +420,10 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 								editObjectDefinitionURL,
 								externalReferenceCode:
 									objectDefinition.externalReferenceCode,
-								hasObjectDefinitionDeleteResourcePermission:
-									typeof objectDefinition.actions.delete !==
-									'undefined',
-								hasObjectDefinitionManagePermissionsResourcePermission:
-									typeof objectDefinition.actions
-										.permissions !== 'undefined',
+								hasObjectDefinitionDeleteResourcePermission: !!objectDefinition
+									.actions.delete,
+								hasObjectDefinitionManagePermissionsResourcePermission: !!objectDefinition
+									.actions.permissions,
 								id: objectDefinition.id,
 								isLinkedNode: false,
 								label: getLocalizableLabel(
@@ -438,7 +433,6 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 								),
 								name: objectDefinition.name,
 								nodeSelected: false,
-								objectDefinitionId: objectDefinition.id,
 								objectDefinitionPermissionsURL,
 								objectFields: fieldsCustomSort(objectFields),
 								status: objectDefinition.status,
