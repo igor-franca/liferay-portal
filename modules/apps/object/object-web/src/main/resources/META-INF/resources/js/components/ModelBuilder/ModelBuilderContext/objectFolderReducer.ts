@@ -304,11 +304,10 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 		}
 
 		case TYPES.CREATE_MODEL_BUILDER_STRUCTURE: {
-			const {objectFolders} = action.payload;
+			const {objectFolders, selectedFolder} = action.payload;
 			const {
 				editObjectDefinitionURL,
 				objectDefinitionPermissionsURL,
-				selectedFolderERC,
 			} = state;
 
 			const newLeftSidebar = objectFolders.map((folder) => {
@@ -343,7 +342,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 			});
 
 			const currentFolder = objectFolders.find(
-				(folder) => folder.externalReferenceCode === selectedFolderERC
+				(folder) => folder.name === selectedFolder.name
 			);
 
 			let newObjectDefinitionNodes: Node<ObjectDefinitionNodeData>[] = [];
@@ -455,6 +454,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 				...state,
 				elements: [...newObjectDefinitionNodes, ...newEdges],
 				leftSidebarItems: newLeftSidebar,
+				selectedFolder,
 			};
 		}
 		case TYPES.DELETE_FOLDER_NODE: {
@@ -496,6 +496,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 				elements: newElements,
 			};
 		}
+
 		case TYPES.SET_SELECTED_NODE: {
 			const {edges, nodes, selectedObjectDefinitionId} = action.payload;
 

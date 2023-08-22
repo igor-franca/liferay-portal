@@ -317,6 +317,7 @@ export default function ViewObjectDefinitions({
 										}
 										label={selectedFolder.label}
 										modelBuilderURL={modelBuilderURL}
+										name={selectedFolder.name}
 									/>
 								}
 								viewMode="no-header-border"

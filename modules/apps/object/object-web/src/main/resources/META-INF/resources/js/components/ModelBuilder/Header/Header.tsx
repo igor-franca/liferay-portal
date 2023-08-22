@@ -11,18 +11,23 @@ import './Header.scss';
 
 import {sub} from 'frontend-js-web';
 
+import {ViewObjectDefinitionsModals} from '../../ViewObjectDefinitions/ViewObjectDefinitions';
 import {useFolderContext} from '../ModelBuilderContext/objectFolderContext';
 
 interface Header {
 	folderExternalReferenceCode: string;
 	folderName: string;
 	hasDraftObjectDefinitions: boolean;
+	setShowModal: (
+		value: React.SetStateAction<ViewObjectDefinitionsModals>
+	) => void;
 }
 
 export default function ({
 	folderExternalReferenceCode,
 	folderName,
 	hasDraftObjectDefinitions,
+	setShowModal,
 }: Header) {
 	const [{showChangesSaved}] = useFolderContext();
 
@@ -51,11 +56,20 @@ export default function ({
 
 					{folderExternalReferenceCode !== 'uncategorized' && (
 						<ClayButtonWithIcon
-							aria-label={sub(
-								Liferay.Language.get('edit-x'),
-								Liferay.Language.get('external-reference-code')
+							aria-label={Liferay.Language.get(
+								'edit-label-and-erc'
 							)}
 							displayType="unstyled"
+							onClick={() =>
+								setShowModal(
+									(
+										previousState: ViewObjectDefinitionsModals
+									) => ({
+										...previousState,
+										editFolder: true,
+									})
+								)
+							}
 							symbol="pencil"
 						/>
 					)}

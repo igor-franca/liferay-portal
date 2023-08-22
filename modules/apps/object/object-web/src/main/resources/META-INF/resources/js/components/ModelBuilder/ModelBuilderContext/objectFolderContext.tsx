@@ -36,7 +36,7 @@ const initialState = {
 	objectDefinitions: [] as ObjectDefinition[],
 	objectFolders: [] as ObjectFolder[],
 	rightSidebarType: 'empty' as RightSidebarType,
-	selectedFolderERC: '',
+	selectedFolder: {},
 	showChangesSaved: false,
 } as TState;
 

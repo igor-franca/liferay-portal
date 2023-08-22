@@ -21,6 +21,7 @@ import React, {useMemo, useState} from 'react';
 import {useStore, useZoomPanHelper} from 'react-flow-renderer';
 
 import './LeftSidebar.scss';
+import {ViewObjectDefinitionsModals} from '../../ViewObjectDefinitions/ViewObjectDefinitions';
 import {useFolderContext} from '../ModelBuilderContext/objectFolderContext';
 import {TYPES} from '../ModelBuilderContext/typesEnum';
 import {LeftSidebarDefinitionItemType, LeftSidebarItemType} from '../types';
@@ -32,7 +33,9 @@ const TYPES_TO_SYMBOLS = {
 
 interface LeftSidebarProps {
 	selectedFolderName: string;
-	setShowModal: (value: boolean) => void;
+	setShowModal: (
+		value: React.SetStateAction<ViewObjectDefinitionsModals>
+	) => void;
 }
 
 export default function LeftSidebar({
@@ -40,10 +43,7 @@ export default function LeftSidebar({
 	setShowModal,
 }: LeftSidebarProps) {
 	const [query, setQuery] = useState('');
-	const [
-		{leftSidebarItems, selectedFolderERC},
-		dispatch,
-	] = useFolderContext();
+	const [{leftSidebarItems, selectedFolder}, dispatch] = useFolderContext();
 	const {setCenter} = useZoomPanHelper();
 	const store = useStore();
 
@@ -104,7 +104,8 @@ export default function LeftSidebar({
 
 		const movedObjectDefinition: ObjectDefinition = {
 			...objectDefinition,
-			objectFolderExternalReferenceCode: selectedFolderERC,
+			objectFolderExternalReferenceCode:
+				selectedFolder.externalReferenceCode,
 		};
 
 		try {
@@ -317,7 +318,14 @@ export default function LeftSidebar({
 			<div className="lfr-objects__model-builder-left-sidebar">
 				<ClayButton
 					className="lfr-objects__model-builder-left-sidebar-body-create-new-object-button"
-					onClick={() => setShowModal(true)}
+					onClick={() =>
+						setShowModal(
+							(previousState: ViewObjectDefinitionsModals) => ({
+								...previousState,
+								addObjectDefinition: true,
+							})
+						)
+					}
 				>
 					{Liferay.Language.get('create-new-object')}
 				</ClayButton>
