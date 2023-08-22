@@ -20,7 +20,7 @@ interface ObjectDataContainerProps {
 	handleChange: ChangeEventHandler<HTMLInputElement>;
 	hasUpdateObjectDefinitionPermission: boolean;
 	isApproved: boolean;
-	isLinkedNode?: boolean;
+	linkedDefinition?: boolean;
 	setValues: (values: Partial<ObjectDefinition>) => void;
 	values: Partial<ObjectDefinition>;
 }
@@ -31,7 +31,7 @@ export function ObjectDataContainer({
 	handleChange,
 	hasUpdateObjectDefinitionPermission,
 	isApproved,
-	isLinkedNode,
+	linkedDefinition,
 	setValues,
 	values,
 }: ObjectDataContainerProps) {
@@ -44,7 +44,7 @@ export function ObjectDataContainer({
 		: values.system;
 
 	const noPermissionOrLinked =
-		!hasUpdateObjectDefinitionPermission || isLinkedNode;
+		!hasUpdateObjectDefinitionPermission || linkedDefinition;
 
 	return (
 		<>
