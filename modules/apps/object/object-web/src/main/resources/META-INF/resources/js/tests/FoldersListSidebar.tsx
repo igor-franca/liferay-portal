@@ -9,8 +9,27 @@ import React from 'react';
 
 import FoldersListSideBar from '../components/ViewObjectDefinitions/FoldersListSidebar';
 
+const folderActions = {
+	delete: {
+		href: '',
+		method: '',
+	},
+	get: {
+		href: '',
+		method: '',
+	},
+	permissions: {
+		href: '',
+		method: '',
+	},
+	update: {
+		href: '',
+		method: '',
+	},
+};
+
 const uncategorizedFolder = {
-	actions: {},
+	actions: folderActions,
 	dateCreated: '2023-08-07T14:42:21Z',
 	dateModified: '2023-08-07T14:42:21Z',
 	externalReferenceCode: 'uncategorized',
@@ -20,7 +39,7 @@ const uncategorizedFolder = {
 };
 
 const ticketFolder = {
-	actions: {},
+	actions: folderActions,
 	dateCreated: '2023-08-07T14:45:00Z',
 	dateModified: '2023-08-07T14:45:00Z',
 	externalReferenceCode: 'ticketERC',
