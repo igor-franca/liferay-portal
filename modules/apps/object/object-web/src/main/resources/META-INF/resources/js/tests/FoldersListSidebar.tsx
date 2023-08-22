@@ -8,9 +8,17 @@ import {render, screen} from '@testing-library/react';
 import React from 'react';
 
 import FoldersListSideBar from '../components/ViewObjectDefinitions/FoldersListSidebar';
+const emptyAction = {href: '', method: ''};
+
+const folderActions = {
+	delete: emptyAction,
+	get: emptyAction,
+	permissions: emptyAction,
+	update: emptyAction,
+};
 
 const uncategorizedFolder = {
-	actions: {},
+	actions: folderActions,
 	dateCreated: '2023-08-07T14:42:21Z',
 	dateModified: '2023-08-07T14:42:21Z',
 	externalReferenceCode: 'uncategorized',
@@ -20,7 +28,7 @@ const uncategorizedFolder = {
 };
 
 const ticketFolder = {
-	actions: {},
+	actions: folderActions,
 	dateCreated: '2023-08-07T14:45:00Z',
 	dateModified: '2023-08-07T14:45:00Z',
 	externalReferenceCode: 'ticketERC',

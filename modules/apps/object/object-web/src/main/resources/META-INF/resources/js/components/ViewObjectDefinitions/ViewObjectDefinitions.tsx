@@ -71,8 +71,15 @@ export default function ViewObjectDefinitions({
 	storages,
 	url,
 }: ViewObjectDefinitionsProps) {
+	const emptyAction = {href: '', method: ''};
+
 	const initialValues: ObjectFolder = {
-		actions: {},
+		actions: {
+			delete: emptyAction,
+			get: emptyAction,
+			permissions: emptyAction,
+			update: emptyAction,
+		},
 		dateCreated: '',
 		dateModified: '',
 		externalReferenceCode: '',
@@ -314,6 +321,7 @@ export default function ViewObjectDefinitions({
 										}
 										label={selectedFolder.label}
 										modelBuilderURL={modelBuilderURL}
+										name={selectedFolder.name}
 									/>
 								}
 								viewMode="no-header-border"
