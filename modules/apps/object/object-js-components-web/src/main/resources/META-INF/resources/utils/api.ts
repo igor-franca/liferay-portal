@@ -28,20 +28,18 @@ interface ObjectFolder {
 	id: number;
 	label: LocalizedValue<string>;
 	name: string;
+	objectFolderItems: ObjectFolderItem[];
+}
+
+interface ObjectFolderItem {
+	linkedDefinition: boolean;
+	objectDefinitionExternalReferenceCode: string;
+	positionX: number;
+	positionY: number;
 }
 
 interface ErrorDetails extends Error {
 	detail?: string;
-}
-
-interface Folder {
-	actions: [];
-	dateCreated: string;
-	dateModified: string;
-	externalReferenceCode: string;
-	id: number;
-	label: LocalizedValue<string>;
-	name: string;
 }
 
 interface PickListItem {
@@ -183,7 +181,7 @@ export async function getAllObjectDefinitions() {
 }
 
 export async function getAllObjectFolders() {
-	return await getList<Folder>(
+	return await getList<ObjectFolder>(
 		'/o/object-admin/v1.0/object-folders?pageSize=-1'
 	);
 }

@@ -21,15 +21,13 @@ interface ObjectFolder {
 	id: number;
 	label: LocalizedValue<string>;
 	name: string;
+	objectFolderItems: ObjectFolderItem[];
 }
-interface Folder {
-	actions: [];
-	dateCreated: string;
-	dateModified: string;
-	externalReferenceCode: string;
-	id: number;
-	label: LocalizedValue<string>;
-	name: string;
+interface ObjectFolderItem {
+	linkedDefinition: boolean;
+	objectDefinitionExternalReferenceCode: string;
+	positionX: number;
+	positionY: number;
 }
 interface PickListItem {
 	externalReferenceCode: string;
@@ -104,7 +102,7 @@ export declare function fetchJSON<T>(
 ): Promise<T>;
 export declare function getAllFolders(): Promise<ObjectFolder[]>;
 export declare function getAllObjectDefinitions(): Promise<ObjectDefinition[]>;
-export declare function getAllObjectFolders(): Promise<Folder[]>;
+export declare function getAllObjectFolders(): Promise<ObjectFolder[]>;
 export declare function getFolderByERC(
 	folderERC: string
 ): Promise<ObjectFolder>;

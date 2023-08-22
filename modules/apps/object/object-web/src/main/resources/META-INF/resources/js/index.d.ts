@@ -314,11 +314,30 @@ type ObjectValidationType = {
 	name: string;
 };
 
+interface ObjectFieldNode extends Partial<ObjectField> {
+	primaryKey: boolean;
+	required: boolean;
+	selected: boolean;
+}
+
+interface ObjectDefinitionNodeData
+	extends Omit<ObjectDefinition, 'objectFields' | 'label'> {
+	hasObjectDefinitionDeleteResourcePermission: boolean;
+	hasObjectDefinitionManagePermissionsResourcePermission: boolean;
+	hasObjectDefinitionUpdateResourcePermission: boolean;
+	hasObjectDefinitionViewResourcePermission: boolean;
+	hasSelfRelationships: boolean;
+	label: string;
+	linkedDefinition: boolean;
+	nodeSelected: boolean;
+	objectFields: ObjectFieldNode[];
+}
+
 interface ObjectFolder {
 	actions: {};
 	dateCreated: string;
 	dateModified: string;
-	definitions?: ObjectDefinition[];
+	definitions?: ObjectDefinitionNodeData[];
 	externalReferenceCode: string;
 	id: number;
 	label: LocalizedValue<string>;
