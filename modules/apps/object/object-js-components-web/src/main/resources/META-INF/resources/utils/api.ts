@@ -21,7 +21,7 @@ interface Actions {
 }
 
 interface ObjectFolder {
-	actions: [];
+	actions: Actions;
 	dateCreated: string;
 	dateModified: string;
 	externalReferenceCode: string;

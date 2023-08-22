@@ -334,7 +334,7 @@ interface ObjectDefinitionNodeData
 }
 
 interface ObjectFolder {
-	actions: {};
+	actions: Actions;
 	dateCreated: string;
 	dateModified: string;
 	definitions?: ObjectDefinitionNodeData[];

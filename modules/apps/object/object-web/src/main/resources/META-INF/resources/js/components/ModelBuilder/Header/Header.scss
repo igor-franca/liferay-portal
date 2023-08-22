@@ -33,7 +33,18 @@
 		display: flex;
 		gap: 0.5rem;
 
-		&-erc {
+		&-erc-content {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			max-width: 28rem;
+
+			&-changes-saved {
+				max-width: 10rem;
+			}
+		}
+
+		&-erc-title {
 			color: #6b6c7e;
 		}
 
