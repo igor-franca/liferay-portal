@@ -9,14 +9,14 @@ import React from 'react';
 
 interface ConfigurationContainerProps {
 	hasUpdateObjectDefinitionPermission: boolean;
-	isLinkedNode?: boolean;
+	linkedDefinition?: boolean;
 	setValues: (values: Partial<ObjectDefinition>) => void;
 	values: Partial<ObjectDefinition>;
 }
 
 export function ConfigurationContainer({
 	hasUpdateObjectDefinitionPermission,
-	isLinkedNode,
+	linkedDefinition,
 	setValues,
 	values,
 }: ConfigurationContainerProps) {
@@ -30,7 +30,7 @@ export function ConfigurationContainer({
 				disabled={
 					isReadOnly ||
 					!hasUpdateObjectDefinitionPermission ||
-					isLinkedNode
+					linkedDefinition
 				}
 				label={sub(
 					Liferay.Language.get('show-widget-in-x'),
@@ -45,7 +45,7 @@ export function ConfigurationContainer({
 				disabled={
 					isReadOnly ||
 					!hasUpdateObjectDefinitionPermission ||
-					isLinkedNode
+					linkedDefinition
 				}
 				label={sub(
 					Liferay.Language.get('enable-x'),
@@ -64,7 +64,7 @@ export function ConfigurationContainer({
 				disabled={
 					isReadOnly ||
 					!hasUpdateObjectDefinitionPermission ||
-					isLinkedNode
+					linkedDefinition
 				}
 				label={sub(
 					Liferay.Language.get('enable-x'),
@@ -80,7 +80,7 @@ export function ConfigurationContainer({
 			/>
 
 			<Toggle
-				disabled={isReadOnly || isLinkedNode}
+				disabled={isReadOnly || linkedDefinition}
 				label={sub(
 					Liferay.Language.get('enable-x'),
 					Liferay.Language.get('entry-history-in-audit-framework')
