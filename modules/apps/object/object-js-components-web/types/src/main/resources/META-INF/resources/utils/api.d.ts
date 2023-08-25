@@ -158,6 +158,9 @@ export declare function publishObjectDefinitionById(
 export declare function putObjectDefinitionByExternalReferenceCode(
 	values: Partial<ObjectDefinition>
 ): Promise<Response>;
+export declare function putObjectFolderByERC(
+	folder: Partial<ObjectFolder>
+): Promise<Response>;
 export declare function save(
 	url: string,
 	item: unknown,
