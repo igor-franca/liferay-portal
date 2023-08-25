@@ -327,15 +327,6 @@ interface ObjectFolder {
 	name: string;
 	objectFolderItems: ObjectFolderItem[];
 }
-<<<<<<< Updated upstream
-interface ObjectFolderItem {
-	linkedDefinition: boolean;
-	objectDefinitionExternalReferenceCode: string;
-	positionX: number;
-	positionY: number;
-}
-=======
->>>>>>> Stashed changes
 
 interface ObjectState {
 	key: string;
