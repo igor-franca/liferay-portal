@@ -53,7 +53,6 @@ export default function Fields({
 	] = useState<ObjectField | null>(null);
 
 	const [showAddFieldModal, setShowAddFieldModal] = useState(false);
-
 	const [showDeletionModal, setShowDeletionModal] = useState<boolean>(false);
 
 	const [
