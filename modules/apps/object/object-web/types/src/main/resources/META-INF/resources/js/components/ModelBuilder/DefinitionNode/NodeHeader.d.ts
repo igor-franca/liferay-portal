@@ -9,6 +9,7 @@ import './NodeHeader.scss';
 import {DropDownItems} from '../types';
 interface NodeHeaderProps {
 	dropDownItems: DropDownItems[];
+	handleSelectedNode: () => void;
 	isLinkedObjectDefinition: boolean;
 	objectDefinitionLabel: string;
 	status: {
@@ -20,6 +21,7 @@ interface NodeHeaderProps {
 }
 export default function NodeHeader({
 	dropDownItems,
+	handleSelectedNode,
 	isLinkedObjectDefinition,
 	objectDefinitionLabel,
 	status,

@@ -122,6 +122,7 @@ export default function EditObjectFolder({
 													field.businessType,
 												externalReferenceCode:
 													field.externalReferenceCode,
+												id: field.id,
 												label: getLocalizableLabel(
 													objectDefinition.defaultLanguageId,
 													field.label,
@@ -240,6 +241,10 @@ export default function EditObjectFolder({
 							companyKeyValuePair={companyKeyValuePair}
 							siteKeyValuePair={siteKeyValuePair}
 						/>
+					)}
+
+					{rightSidebarType === 'objectFieldDetails' && (
+						<RightSideBar.ObjectFieldDetails />
 					)}
 
 					{rightSidebarType === 'objectRelationshipDetails' && (

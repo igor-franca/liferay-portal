@@ -103,6 +103,18 @@ export function DefinitionNode({
 
 	const viewDetailsURL = formatActionURL(editObjectDefinitionURL, id);
 
+	const handleSelectedNode = () => {
+		const {edges, nodes} = store.getState();
+		dispatch({
+			payload: {
+				edges,
+				nodes,
+				selectedObjectDefinitionId: id.toString(),
+			},
+			type: TYPES.SET_SELECTED_NODE,
+		});
+	};
+
 	return (
 		<>
 			<div
@@ -113,18 +125,6 @@ export function DefinitionNode({
 						'lfr-objects__model-builder-node-container--selected': nodeSelected,
 					}
 				)}
-				onClick={() => {
-					const {edges, nodes} = store.getState();
-
-					dispatch({
-						payload: {
-							edges,
-							nodes,
-							selectedObjectDefinitionId: id.toString(),
-						},
-						type: TYPES.SET_SELECTED_NODE,
-					});
-				}}
 			>
 				<NodeHeader
 					dropDownItems={getDefinitionNodeActions({
@@ -140,6 +140,7 @@ export function DefinitionNode({
 						setDeletedObjectDefinition,
 						status,
 					})}
+					handleSelectedNode={handleSelectedNode}
 					isLinkedObjectDefinition={linked}
 					objectDefinitionLabel={getLocalizableLabel(
 						defaultLanguageId,
@@ -153,10 +154,12 @@ export function DefinitionNode({
 				<NodeFields
 					defaultLanguageId={defaultLanguageId}
 					objectFields={objectFields}
+					selectedObjectDefinitionId={id}
 					showAll={showAllFields}
 				/>
 
 				<NodeFooter
+					handleSelectedNode={handleSelectedNode}
 					isLinkedObjectDefinition={linked}
 					setShowAllFields={setShowAllFields}
 					setShowModal={setShowModal}

@@ -12,10 +12,12 @@ interface CustomObjectFolderWrapperProps
 	companyKeyValuePair: KeyValuePair[];
 	deletionTypes: TDeletionType[];
 	editObjectDefinitionURL: string;
+	filterOperators: TFilterOperators;
 	objectDefinitionPermissionsURL: string;
 	siteKeyValuePair: KeyValuePair[];
 	storages: LabelValueObject[];
 	viewApiURL: string;
+	workflowStatusJSONArray: LabelValueObject[];
 }
 declare const CustomObjectFolderWrapper: React.FC<CustomObjectFolderWrapperProps>;
 export default CustomObjectFolderWrapper;

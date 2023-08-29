@@ -16,10 +16,12 @@ interface CustomObjectFolderWrapperProps
 	companyKeyValuePair: KeyValuePair[];
 	deletionTypes: TDeletionType[];
 	editObjectDefinitionURL: string;
+	filterOperators: TFilterOperators;
 	objectDefinitionPermissionsURL: string;
 	siteKeyValuePair: KeyValuePair[];
 	storages: LabelValueObject[];
 	viewApiURL: string;
+	workflowStatusJSONArray: LabelValueObject[];
 }
 
 const CustomObjectFolderWrapper: React.FC<CustomObjectFolderWrapperProps> = ({
@@ -27,10 +29,12 @@ const CustomObjectFolderWrapper: React.FC<CustomObjectFolderWrapperProps> = ({
 	companyKeyValuePair,
 	deletionTypes,
 	editObjectDefinitionURL,
+	filterOperators,
 	objectDefinitionPermissionsURL,
 	siteKeyValuePair,
 	storages,
 	viewApiURL,
+	workflowStatusJSONArray,
 }) => {
 	const urlParams = new URLSearchParams(window.location.search);
 	const objectFolderName = urlParams.get('objectFolderName');
@@ -41,9 +45,11 @@ const CustomObjectFolderWrapper: React.FC<CustomObjectFolderWrapperProps> = ({
 				value={{
 					baseResourceURL,
 					editObjectDefinitionURL,
+					filterOperators,
 					objectDefinitionPermissionsURL,
 					storages,
 					viewApiURL,
+					workflowStatusJSONArray,
 				}}
 			>
 				<EditObjectFolder
