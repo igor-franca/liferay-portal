@@ -15,10 +15,12 @@ interface ICustomFolderWrapperProps extends React.HTMLAttributes<HTMLElement> {
 	companyKeyValuePair: KeyValuePair[];
 	deletionTypes: TDeletionType[];
 	editObjectDefinitionURL: string;
+	filterOperators: TFilterOperators;
 	objectDefinitionPermissionsURL: string;
 	siteKeyValuePair: KeyValuePair[];
 	storages: LabelValueObject[];
 	viewApiURL: string;
+	workflowStatusJSONArray: LabelValueObject[];
 }
 
 const CustomFolderWrapper: React.FC<ICustomFolderWrapperProps> = ({
@@ -26,10 +28,12 @@ const CustomFolderWrapper: React.FC<ICustomFolderWrapperProps> = ({
 	companyKeyValuePair,
 	deletionTypes,
 	editObjectDefinitionURL,
+	filterOperators,
 	objectDefinitionPermissionsURL,
 	siteKeyValuePair,
 	storages,
 	viewApiURL,
+	workflowStatusJSONArray,
 }) => {
 	const urlParams = new URLSearchParams(window.location.search);
 	const folderName = urlParams.get('folderName');
@@ -40,9 +44,11 @@ const CustomFolderWrapper: React.FC<ICustomFolderWrapperProps> = ({
 				value={{
 					baseResourceURL,
 					editObjectDefinitionURL,
+					filterOperators,
 					objectDefinitionPermissionsURL,
 					storages,
 					viewApiURL,
+					workflowStatusJSONArray,
 				}}
 			>
 				<EditObjectFolder

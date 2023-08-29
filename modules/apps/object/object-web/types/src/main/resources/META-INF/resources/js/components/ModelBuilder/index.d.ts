@@ -11,10 +11,12 @@ interface ICustomFolderWrapperProps extends React.HTMLAttributes<HTMLElement> {
 	companyKeyValuePair: KeyValuePair[];
 	deletionTypes: TDeletionType[];
 	editObjectDefinitionURL: string;
+	filterOperators: TFilterOperators;
 	objectDefinitionPermissionsURL: string;
 	siteKeyValuePair: KeyValuePair[];
 	storages: LabelValueObject[];
 	viewApiURL: string;
+	workflowStatusJSONArray: LabelValueObject[];
 }
 declare const CustomFolderWrapper: React.FC<ICustomFolderWrapperProps>;
 export default CustomFolderWrapper;

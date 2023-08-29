@@ -12,6 +12,7 @@ import React from 'react';
 import './NodeFooter.scss';
 
 interface NodeFooterProps {
+	handleSelectedNode: () => void;
 	isLinkedNode: boolean;
 	setShowAllFields: (value: boolean) => void;
 	setShowModal: React.Dispatch<
@@ -21,6 +22,7 @@ interface NodeFooterProps {
 }
 
 export default function NodeFooter({
+	handleSelectedNode,
 	isLinkedNode,
 	setShowAllFields,
 	setShowModal,
@@ -28,7 +30,10 @@ export default function NodeFooter({
 }: NodeFooterProps) {
 	return (
 		<>
-			<div className="lfr-objects__model-builder-node-button-container">
+			<div
+				className="lfr-objects__model-builder-node-button-container"
+				onClick={handleSelectedNode}
+			>
 				{!isLinkedNode && (
 					<DropDown
 						alignmentPosition={4}

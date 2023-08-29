@@ -39,6 +39,10 @@ renderResponse.setTitle(LanguageUtil.get(request, "object-model-builder"));
 			"storages", objectDefinitionsDetailsDisplayContext.getStoragesJSONArray()
 		).put(
 			"viewApiURL", "/o/object-admin/v1.0/object-definitions"
+		).put(
+			"filterOperators", LocalizedJSONArrayUtil.getFilterOperatorsJSONObject(locale)
+		).put(
+			"workflowStatusJSONArray", LocalizedJSONArrayUtil.getWorkflowStatusJSONArray(locale)
 		).build()
 	%>'
 />

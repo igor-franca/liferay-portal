@@ -116,6 +116,7 @@ export default function EditObjectFolder({
 													field.businessType,
 												externalReferenceCode:
 													field.externalReferenceCode,
+												id: field.id,
 												label: getLocalizableLabel(
 													objectDefinition.defaultLanguageId,
 													field.label,
@@ -237,6 +238,10 @@ export default function EditObjectFolder({
 						<RightSideBar.ObjectRelationshipDetails
 							deletionTypes={deletionTypes}
 						/>
+					)}
+
+					{rightSidebarType === 'objectFieldDetails' && (
+						<RightSideBar.ObjectFieldDetails />
 					)}
 				</RightSideBar.Root>
 			</div>
