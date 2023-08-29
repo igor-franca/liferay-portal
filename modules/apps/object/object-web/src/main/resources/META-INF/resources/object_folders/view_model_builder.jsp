@@ -32,6 +32,8 @@ renderResponse.setTitle(LanguageUtil.get(request, "object-model-builder"));
 		).put(
 			"editObjectDefinitionURL", objectDefinitionsDetailsDisplayContext.getEditObjectDefinitionURL()
 		).put(
+			"filterOperators", LocalizedJSONArrayUtil.getFilterOperatorsJSONObject(locale)
+		).put(
 			"objectDefinitionPermissionsURL", objectDefinitionsDetailsDisplayContext.getPermissionsURL(ObjectDefinition.class.getName())
 		).put(
 			"siteKeyValuePair", objectDefinitionsDetailsDisplayContext.getScopeKeyValuePairs("site")
@@ -39,6 +41,8 @@ renderResponse.setTitle(LanguageUtil.get(request, "object-model-builder"));
 			"storages", objectDefinitionsDetailsDisplayContext.getStoragesJSONArray()
 		).put(
 			"viewApiURL", "/o/object-admin/v1.0/object-definitions"
+		).put(
+			"workflowStatusJSONArray", LocalizedJSONArrayUtil.getWorkflowStatusJSONArray(locale)
 		).build()
 	%>'
 />

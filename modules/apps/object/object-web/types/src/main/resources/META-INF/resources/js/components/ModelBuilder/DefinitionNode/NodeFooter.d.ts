@@ -6,6 +6,7 @@
 import React from 'react';
 import './NodeFooter.scss';
 interface NodeFooterProps {
+	handleSelectedNode: () => void;
 	isLinkedNode: boolean;
 	setShowAllFields: (value: boolean) => void;
 	setShowModal: React.Dispatch<
@@ -14,6 +15,7 @@ interface NodeFooterProps {
 	showAllFields: boolean;
 }
 export default function NodeFooter({
+	handleSelectedNode,
 	isLinkedNode,
 	setShowAllFields,
 	setShowModal,
