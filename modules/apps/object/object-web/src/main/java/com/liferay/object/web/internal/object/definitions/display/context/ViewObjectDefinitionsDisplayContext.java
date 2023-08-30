@@ -187,7 +187,7 @@ public class ViewObjectDefinitionsDisplayContext {
 				objectEntryManager.getStorageLabel(
 					_objectRequestHelper.getLocale())
 			).put(
-				"type", objectEntryManager.getStorageType()
+				"value", objectEntryManager.getStorageType()
 			));
 	}
 

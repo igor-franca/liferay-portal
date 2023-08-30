@@ -373,11 +373,6 @@ interface LabelNameObject {
 	name: string;
 }
 
-interface LabelTypeObject {
-	label: string;
-	type: string;
-}
-
 interface NameValueObject {
 	name: string;
 	value: string;
