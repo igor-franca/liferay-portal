@@ -184,7 +184,7 @@ export function ModalPublishObjectDefinitions({ disableAutoClose, dispatch, elem
 
             <ClayModal.Body>
                 <div className="c-mb-sm-4">
-                    <Text size={3}>{Liferay.Language.get('the-following-objects-contain-changes-that-will-be-published-and-may-affect-your-production-environment')} {Liferay.Language.get('please-check-before-confirming')}</Text>
+                    <Text size={3}>{Liferay.Language.get('publishing-all-draft-objects-at-once-can-make-them-available-for-creating-entries')} {Liferay.Language.get('please-check-before-confirming')}</Text>
                 </div>
 
                 {statusPublish === STATUS.DRAFT &&
