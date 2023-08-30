@@ -3,18 +3,21 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
+import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
 import ClayIcon from '@clayui/icon';
-import {ClayTooltipProvider} from '@clayui/tooltip';
+import { useModal } from '@clayui/modal';
+import { ClayTooltipProvider } from '@clayui/tooltip';
 import classNames from 'classnames';
-import React from 'react';
+import React, { useState } from 'react';
+
+import { ModalPublishObjectDefinitions } from './ModalPublishObjectDefinitions';
 
 import './Header.scss';
 
-import {sub} from 'frontend-js-web';
+import { sub } from 'frontend-js-web';
 
-import {ViewObjectDefinitionsModals} from '../../ViewObjectDefinitions/ViewObjectDefinitions';
-import {useFolderContext} from '../ModelBuilderContext/objectFolderContext';
+import { ViewObjectDefinitionsModals } from '../../ViewObjectDefinitions/ViewObjectDefinitions';
+import { useFolderContext } from '../ModelBuilderContext/objectFolderContext';
 
 interface Header {
 	folder: ObjectFolder;
@@ -29,7 +32,11 @@ export default function ({
 	hasDraftObjectDefinitions,
 	setShowModal,
 }: Header) {
-	const [{showChangesSaved}] = useFolderContext();
+	const [{ elements, showChangesSaved }, dispatch] = useFolderContext();
+	const [showModalPublishObjectDefinitions, setShowModalPublishObjectDefinitions] = useState<boolean>(false);
+	const { observer, onClose } = useModal({
+		onClose: () => setShowModalPublishObjectDefinitions(false),
+	});
 
 	return (
 		<div className="lfr-objects__model-builder-header">
@@ -138,7 +145,10 @@ export default function ({
 					<ClayButton
 						disabled={!hasDraftObjectDefinitions}
 						displayType="primary"
+						onClick={() => { setShowModalPublishObjectDefinitions(true) }}
 					>
+						{showModalPublishObjectDefinitions && <ModalPublishObjectDefinitions disableAutoClose={false} dispatch={dispatch} elements={elements} observer={observer} onClose={onClose} />}
+
 						{Liferay.Language.get('publish')}
 					</ClayButton>
 				</div>
