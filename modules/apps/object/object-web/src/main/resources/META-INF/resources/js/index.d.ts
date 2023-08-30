@@ -37,6 +37,21 @@ interface LabelNameObject {
 	name: string;
 }
 
+interface ViewObjectDefinitionsModals {
+	addFolder: boolean;
+	addObjectDefinition: boolean;
+	deleteFolder: boolean;
+	deleteObjectDefinition: boolean;
+	editFolder: boolean;
+	moveObjectDefinition: boolean;
+}
+
+interface ModelBuilderModals extends ViewObjectDefinitionsModals {
+	addRelationship: boolean;
+	editERC: boolean;
+	redirectEditObjectDefinition: boolean;
+}
+
 interface NameValueObject {
 	name: string;
 	value: string;
