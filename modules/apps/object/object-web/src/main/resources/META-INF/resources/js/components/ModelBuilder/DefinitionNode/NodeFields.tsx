@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {getLocalizableLabel} from '@liferay/object-js-components-web';
 import classNames from 'classnames';
 import React from 'react';
 
@@ -16,7 +17,11 @@ interface NodeFieldsProps {
 	showAll: boolean;
 }
 
-export default function NodeFields({objectFields, showAll}: NodeFieldsProps) {
+export default function NodeFields({
+	defaultLanguageId,
+	objectFields,
+	showAll,
+}: NodeFieldsProps) {
 	return (
 		<>
 			{objectFields.map((objectField, index) => {
@@ -33,7 +38,13 @@ export default function NodeFields({objectFields, showAll}: NodeFieldsProps) {
 							key={objectField.name}
 						>
 							<div className="lfr-objects__model-builder-node-field-label">
-								<span>{objectField.label}</span>
+								<span>
+									{getLocalizableLabel(
+										defaultLanguageId,
+										objectField.label,
+										objectField.name
+									)}
+								</span>
 							</div>
 
 							<div className="lfr-objects__model-builder-node-field-business-type">
