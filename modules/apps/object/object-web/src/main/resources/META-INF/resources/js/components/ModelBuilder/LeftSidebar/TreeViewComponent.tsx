@@ -32,9 +32,11 @@ const TYPES_TO_SYMBOLS = {
 
 export default function TreeViewComponent({
 	query,
+	setEmptySearch,
 	showActions,
 }: {
 	query: string;
+	setEmptySearch: (value: boolean) => void;
 	showActions?: boolean;
 }) {
 	const [
@@ -64,6 +66,8 @@ export default function TreeViewComponent({
 	);
 
 	const filteredLeftSidebarItems = useMemo(() => {
+		setEmptySearch(false);
+
 		return leftSidebarItems.map((sidebarItem) => {
 			if (!sidebarItem.leftSidebarObjectDefinitionItems) {
 				return sidebarItem;
@@ -79,6 +83,7 @@ export default function TreeViewComponent({
 
 			return {
 				...sidebarItem,
+				id: sidebarItem.name,
 				objectDefinitions: newObjectDefinitions,
 			};
 		});
@@ -166,7 +171,17 @@ export default function TreeViewComponent({
 	const leftSidebarOtherObjectFoldersItems = filteredLeftSidebarItems.filter(
 		(filteredLeftSidebarItem) =>
 			filteredLeftSidebarItem.objectFolderName !==
-			selectedObjectFolder.name
+				selectedObjectFolder.name &&
+			filteredLeftSidebarItem.leftSidebarObjectDefinitionItems?.length !==
+				0
+	);
+
+	leftSidebarOtherObjectFoldersItems.sort((a, b) =>
+		a.objectFolderName > b.objectFolderName
+			? 1
+			: b.objectFolderName > a.objectFolderName
+			? -1
+			: 0
 	);
 
 	const leftSidebarSelectedObjectFolderItem = filteredLeftSidebarItems.find(
@@ -206,6 +221,12 @@ export default function TreeViewComponent({
 				objectDefinitions,
 			};
 		}
+	);
+
+	setEmptySearch(
+		!newOtherObjectFolders.length &&
+			leftSidebarSelectedObjectFolderItem.leftSidebarObjectDefinitionItems
+				?.length === 0
 	);
 
 	return (
@@ -250,6 +271,7 @@ export default function TreeViewComponent({
 						const y =
 							selectedObjectDefinitionNode.__rf.position.y +
 							selectedObjectDefinitionNode.__rf.height / 2;
+
 						setCenter(x, y, 1.2);
 					}
 				}

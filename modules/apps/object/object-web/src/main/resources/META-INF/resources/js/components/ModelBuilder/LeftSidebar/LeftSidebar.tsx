@@ -12,6 +12,7 @@ import {
 import React, {useState} from 'react';
 
 import {useObjectFolderContext} from '../ModelBuilderContext/objectFolderContext';
+import {LeftSidebarEmptySearch} from './LeftSidebarEmptySearch';
 import TreeViewComponent from './TreeViewComponent';
 
 interface LeftSidebarProps {
@@ -19,6 +20,7 @@ interface LeftSidebarProps {
 }
 
 export default function LeftSidebar({setShowModal}: LeftSidebarProps) {
+	const [emptySearch, setEmptySearch] = useState(false);
 	const [query, setQuery] = useState('');
 	const [
 		{isLoadingObjectFolder, leftSidebarItems},
@@ -57,28 +59,36 @@ export default function LeftSidebar({setShowModal}: LeftSidebarProps) {
 
 				{!isLoadingObjectFolder ? (
 					<>
-						{!!leftSidebarItems.length && (
-							<>
-								<TreeViewComponent query={query} />
+						{emptySearch ? (
+							<LeftSidebarEmptySearch />
+						) : (
+							!!leftSidebarItems.length && (
+								<>
+									<TreeViewComponent
+										query={query}
+										setEmptySearch={setEmptySearch}
+									/>
 
-								<ClayPanel
-									className="lfr-objects__model-builder-left-sidebar-body-panel"
-									collapsable
-									defaultExpanded
-									displayTitle={Liferay.Language.get(
-										'other-folders'
-									)}
-									displayType="unstyled"
-									showCollapseIcon={true}
-								>
-									<ClayPanel.Body>
-										<TreeViewComponent
-											query={query}
-											showActions
-										/>
-									</ClayPanel.Body>
-								</ClayPanel>
-							</>
+									<ClayPanel
+										className="lfr-objects__model-builder-left-sidebar-body-panel"
+										collapsable
+										defaultExpanded
+										displayTitle={Liferay.Language.get(
+											'other-folders'
+										)}
+										displayType="unstyled"
+										showCollapseIcon={true}
+									>
+										<ClayPanel.Body>
+											<TreeViewComponent
+												query={query}
+												setEmptySearch={setEmptySearch}
+												showActions
+											/>
+										</ClayPanel.Body>
+									</ClayPanel>
+								</>
+							)
 						)}
 					</>
 				) : (
