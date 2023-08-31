@@ -22,7 +22,7 @@ import {
 } from './objectFolderReducerUtil';
 import {TYPES} from './typesEnum';
 
-export function ObjectFolderReducer(state: TState, action: TAction) {
+export function ObjectFolderReducer(state: TState, action: TAction): TState {
 	const store = useStore();
 
 	switch (action.type) {
@@ -120,11 +120,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 					return {
 						businessType: field.businessType,
 						externalReferenceCode: field.externalReferenceCode,
-						label: getLocalizableLabel(
-							newObjectDefinition.defaultLanguageId,
-							field.label,
-							field.name
-						),
+						label: field.label,
 						name: field.name,
 						primaryKey: field.name === 'id',
 						required: field.required,
@@ -209,6 +205,71 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 			};
 		}
 
+		case TYPES.ADD_NEW_OBJECT_FIELD: {
+			const {
+				edges,
+				newObjectField,
+				nodes,
+				objectDefinitionExternalReferenceCode,
+			} = action.payload;
+
+			const newNodes = nodes.map((node) => {
+				if (
+					node.data?.externalReferenceCode ===
+					objectDefinitionExternalReferenceCode
+				) {
+					const {objectFields} = node.data;
+					const newObjectFields = objectFields.map((objectField) => ({
+						...objectField,
+						selected: false,
+					}));
+
+					const newObjectFieldNode: ObjectFieldNode = {
+						businessType: newObjectField.businessType,
+						externalReferenceCode:
+							newObjectField.externalReferenceCode,
+						label: newObjectField.label,
+						name: newObjectField.name,
+						primaryKey: false,
+						required: newObjectField.required,
+						selected: true,
+					};
+
+					newObjectFields.push(newObjectFieldNode);
+
+					return {
+						...node,
+						data: {
+							...node.data,
+							nodeSelected: true,
+							objectFields: newObjectFields,
+						},
+					};
+				}
+
+				const unselectedFields = node.data?.objectFields.map(
+					(objectField) => ({
+						...objectField,
+						selected: false,
+					})
+				);
+
+				return {
+					...node,
+					data: {
+						...node.data,
+						nodeSelected: false,
+						objectFields: unselectedFields,
+					},
+				};
+			}) as Node<ObjectDefinitionNodeData>[];
+
+			return {
+				...state,
+				elements: [...newNodes, ...edges],
+			};
+		}
+
 		case TYPES.BULK_CHANGE_NODE_VIEW: {
 			const {hiddenFolderNodes, leftSidebarItem} = action.payload;
 			const {edges, nodes} = store.getState();
@@ -222,7 +283,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 						isHidden: !hiddenFolderNodes,
 					};
 				}
-			);
+			) as Node<ObjectDefinitionNodeData>[];
 
 			const updatedEdges = edges.map(
 				(edge: Edge<ObjectRelationshipEdgeData>) => {
@@ -231,7 +292,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 						isHidden: !hiddenFolderNodes,
 					};
 				}
-			);
+			) as Edge<ObjectRelationshipEdgeData>[];
 
 			const updatedLeftSidebarItems = leftSidebarItems.map(
 				(sidebarItem: LeftSidebarItemType) => {
@@ -572,7 +633,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 							selectedObjectRelationshipId,
 					},
 				})
-			);
+			) as Edge<ObjectRelationshipEdgeData>[];
 
 			const selectedNode = nodes.find(
 				(definitionNode) => definitionNode.data?.nodeSelected
@@ -612,7 +673,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 					nodeSelected:
 						definitionNode.id === selectedObjectDefinitionId,
 				},
-			}));
+			})) as Node<ObjectDefinitionNodeData>[];
 
 			const newLeftSidebarItems = leftSidebarItems.map((sidebarItem) => {
 				const newLeftSidebarDefinitions = sidebarItem.objectDefinitions?.map(
