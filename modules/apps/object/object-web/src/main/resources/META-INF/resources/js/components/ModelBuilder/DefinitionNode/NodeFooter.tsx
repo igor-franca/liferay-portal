@@ -14,12 +14,16 @@ import './NodeFooter.scss';
 interface NodeFooterProps {
 	isLinkedNode: boolean;
 	setShowAllFields: (value: boolean) => void;
+	setShowModal: React.Dispatch<
+		React.SetStateAction<Partial<ViewObjectDefinitionsModals>>
+	>;
 	showAllFields: boolean;
 }
 
 export default function NodeFooter({
 	isLinkedNode,
 	setShowAllFields,
+	setShowModal,
 	showAllFields,
 }: NodeFooterProps) {
 	return (
@@ -29,7 +33,10 @@ export default function NodeFooter({
 					<DropDown
 						alignmentPosition={4}
 						trigger={
-							<ClayButton displayType="secondary">
+							<ClayButton
+								displayType="secondary"
+								onClick={(event) => event.stopPropagation()}
+							>
 								<span>
 									{sub(
 										Liferay.Language.get('x-or-x'),
@@ -41,7 +48,14 @@ export default function NodeFooter({
 						}
 					>
 						<DropDown.ItemList>
-							<DropDown.Item>
+							<DropDown.Item
+								onClick={() =>
+									setShowModal((prevState) => ({
+										...prevState,
+										addObjectField: true,
+									}))
+								}
+							>
 								<ClayIcon
 									className="c-mr-3 text-4"
 									symbol="custom-field"
