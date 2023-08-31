@@ -1,58 +1,58 @@
 .lfr-object__object-view-modal-object-definitions {
-    .container-list {
-        max-height: 350px;
-        overflow-y: auto;
-        padding: 3px;
-    }
-    .custom-checkbox {
-        margin-bottom: 0;
-        margin-left: 3.3px;
-    }
+	.container-list {
+		max-height: 350px;
+		overflow-y: auto;
+		padding: 3px;
+	}
+	.custom-checkbox {
+		margin-bottom: 0;
+		margin-left: 3.3px;
+	}
 
-    &-list-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+	&-list-item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 
-        &.active {
-            background: #f0f5ff;
-        }
-        > div:first-child {
-            display: flex;
-            align-items: center;
-            gap: 20px;
+		&.active {
+			background: #f0f5ff;
+		}
+		> div:first-child {
+			display: flex;
+			align-items: center;
+			gap: 20px;
 
-            > svg {
-                background: #fff;
-                padding: 8px;
-                width: 32px;
-                height: 32px;
-                border-radius: 5px;
-            }
+			> svg {
+				background: #fff;
+				padding: 8px;
+				width: 32px;
+				height: 32px;
+				border-radius: 5px;
+			}
 
-            .custom-control {
-                margin-bottom: 0;
-            }
+			.custom-control {
+				margin-bottom: 0;
+			}
 
-            .lexicon-icon {
-                margin-top: 0;
-            }
+			.lexicon-icon {
+				margin-top: 0;
+			}
 
-            .rejected {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-            }
-        }
+			.rejected {
+				display: flex;
+				align-items: center;
+				gap: 5px;
+			}
+		}
 
-        .loading-animation {
-            margin: 0;
-        }
-    }
+		.loading-animation {
+			margin: 0;
+		}
+	}
 
-    &-select-all-checkbox {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+	&-select-all-checkbox {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
 }
