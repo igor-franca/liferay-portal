@@ -431,6 +431,7 @@ type TFilterOperators = {
 
 interface ViewObjectDefinitionsModals {
 	addObjectDefinition: boolean;
+	addObjectField: boolean;
 	addObjectFolder: boolean;
 	bindToRootObjectDefinition: boolean;
 	deleteObjectDefinition: boolean;
