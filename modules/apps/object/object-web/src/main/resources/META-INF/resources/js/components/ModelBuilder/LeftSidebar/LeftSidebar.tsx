@@ -43,6 +43,9 @@ export default function LeftSidebar({
 	setShowModal,
 }: LeftSidebarProps) {
 	const [emptySearch, setEmptySearch] = useState(false);
+	const [expandedKeys, setExpandedKeys] = useState<Set<React.Key>>(
+		new Set(['uncategorized'])
+	);
 	const [loading, setLoading] = useState(true);
 	const [query, setQuery] = useState('');
 	const [{leftSidebarItems, selectedFolder}, dispatch] = useFolderContext();
@@ -68,7 +71,9 @@ export default function LeftSidebar({
 	const filteredItems = useMemo(() => {
 		setEmptySearch(false);
 
-		return leftSidebarItems.map((sidebarItem) => {
+		const keys = [] as string[];
+
+		const newLeftSidebarItems = leftSidebarItems.map((sidebarItem) => {
 			if (!sidebarItem.objectDefinitions) {
 				return sidebarItem;
 			}
@@ -78,11 +83,18 @@ export default function LeftSidebar({
 					stringIncludesQuery(objectDefinition.name, query)
 			);
 
+			keys.push(sidebarItem.name);
+
 			return {
 				...sidebarItem,
+				id: sidebarItem.name,
 				objectDefinitions: newObjectDefinitions,
 			};
 		});
+
+		setExpandedKeys(new Set(keys));
+
+		return newLeftSidebarItems;
 	}, [query, leftSidebarItems]);
 
 	const handleMove = async ({
@@ -214,8 +226,10 @@ export default function LeftSidebar({
 					<TreeView<
 						LeftSidebarItemType | LeftSidebarDefinitionItemType
 					>
+						expandedKeys={expandedKeys}
 						items={showActions ? newOtherFolders : [selectedFolder]}
 						nestedKey="objectDefinitions"
+						onExpandedChange={setExpandedKeys}
 						onSelect={(item) => {
 							if (
 								selectedFolder.objectDefinitions?.find(
