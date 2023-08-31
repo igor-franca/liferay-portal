@@ -15,7 +15,7 @@ import {
 } from '@liferay/object-js-components-web';
 import classNames from 'classnames';
 import {openToast, sub} from 'frontend-js-web';
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Node, useStore, useZoomPanHelper} from 'react-flow-renderer';
 
 import './LeftSidebar.scss';
@@ -39,6 +39,9 @@ export default function TreeViewComponent({
 	setEmptySearch: (value: boolean) => void;
 	showActions?: boolean;
 }) {
+	const [expandedKeys, setExpandedKeys] = useState<Set<React.Key>>(
+		new Set(['uncategorized'])
+	);
 	const [
 		{leftSidebarItems, selectedObjectFolder},
 		dispatch,
@@ -66,9 +69,10 @@ export default function TreeViewComponent({
 	);
 
 	const filteredLeftSidebarItems = useMemo(() => {
+		const keys = [] as string[];
 		setEmptySearch(false);
 
-		return leftSidebarItems.map((sidebarItem) => {
+		const newLeftSidebarItems = leftSidebarItems.map((sidebarItem) => {
 			if (!sidebarItem.leftSidebarObjectDefinitionItems) {
 				return sidebarItem;
 			}
@@ -81,12 +85,18 @@ export default function TreeViewComponent({
 					)
 			);
 
+			keys.push(sidebarItem.name);
+
 			return {
 				...sidebarItem,
 				id: sidebarItem.name,
 				objectDefinitions: newObjectDefinitions,
 			};
 		});
+
+		setExpandedKeys(new Set(keys));
+
+		return newLeftSidebarItems;
 	}, [leftSidebarItems, query]);
 
 	const handleMove = async ({
@@ -231,12 +241,14 @@ export default function TreeViewComponent({
 
 	return (
 		<TreeView<LeftSidebarItem | LeftSidebarObjectDefinitionItem>
+			expandedKeys={expandedKeys}
 			items={
 				showActions
 					? newOtherObjectFolders
 					: [leftSidebarSelectedObjectFolderItem]
 			}
 			nestedKey="objectDefinitions"
+			onExpandedChange={setExpandedKeys}
 			onSelect={(item) => {
 				if (
 					selectedObjectFolder.objectDefinitions?.find(
