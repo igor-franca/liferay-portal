@@ -216,7 +216,7 @@ export default function EditObjectFolder({
 
 			<Header
 				folder={selectedFolder}
-				hasDraftObjectDefinitions={elements.some(element => (element as FlowElement<ObjectDefinitionNodeData>).data?.status.code === 2)}
+				hasDraftObjectDefinitions={elements.some(element => (element as FlowElement<ObjectDefinitionNodeData>).data?.status?.code === 2)}
 				setShowModal={setShowModal}
 			/>
 			<div className="lfr-objects__model-builder-diagram-container">

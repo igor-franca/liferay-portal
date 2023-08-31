@@ -4,16 +4,9 @@
         overflow-y: auto;
         padding: 3px;
     }
-
-    .select-all-checkbox {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-
-        .custom-checkbox {
-            margin-bottom: 0;
-            margin-left: 3.3px;
-        }
+    .custom-checkbox {
+        margin-bottom: 0;
+        margin-left: 3.3px;
     }
 
     &-list-item {
@@ -55,5 +48,11 @@
         .loading-animation {
             margin: 0;
         }
+    }
+
+    &-select-all-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 }

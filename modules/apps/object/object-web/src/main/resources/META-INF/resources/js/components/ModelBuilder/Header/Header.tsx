@@ -127,7 +127,7 @@ export default function ({
 					<ClayButtonWithIcon
 						aria-label={Liferay.Language.get('toggle-sidebars')}
 						displayType="secondary"
-						symbol="view"
+						symbol='view'
 						title={Liferay.Language.get('toggle-sidebars')}
 					/>
 
