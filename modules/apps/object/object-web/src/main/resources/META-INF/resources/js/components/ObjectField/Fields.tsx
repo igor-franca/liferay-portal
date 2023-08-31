@@ -242,7 +242,6 @@ export default function Fields({
 
 			{showAddFieldModal && (
 				<ModalAddObjectField
-					apiURL={apiURL as string}
 					creationLanguageId={
 						creationLanguageId as Liferay.Language.Locale
 					}
@@ -251,6 +250,10 @@ export default function Fields({
 					}
 					objectFieldTypes={objectFieldTypes}
 					objectName=""
+					onAfterSubmit={() => {
+						setShowAddFieldModal(false);
+						window.location.reload();
+					}}
 					setVisibility={setShowAddFieldModal}
 				/>
 			)}
