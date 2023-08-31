@@ -80,6 +80,7 @@ export default function ViewObjectDefinitions({
 	const [showModal, setShowModal] = useState<ViewObjectDefinitionsModals>({
 		addFolder: false,
 		addObjectDefinition: false,
+		addObjectField: false,
 		deleteFolder: false,
 		deleteObjectDefinition: false,
 		editFolder: false,

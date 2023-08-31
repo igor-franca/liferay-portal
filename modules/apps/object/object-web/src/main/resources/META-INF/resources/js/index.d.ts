@@ -40,6 +40,7 @@ interface LabelNameObject {
 interface ViewObjectDefinitionsModals {
 	addFolder: boolean;
 	addObjectDefinition: boolean;
+	addObjectField: boolean;
 	deleteFolder: boolean;
 	deleteObjectDefinition: boolean;
 	editFolder: boolean;
