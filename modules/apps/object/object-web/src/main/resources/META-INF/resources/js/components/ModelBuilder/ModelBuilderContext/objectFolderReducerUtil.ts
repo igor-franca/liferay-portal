@@ -7,6 +7,13 @@ import {Edge} from 'react-flow-renderer';
 
 import {ObjectRelationshipEdgeData} from '../types';
 
+export function convertAllFieldsToUnselected(objectFields: ObjectFieldNode[]) {
+	return objectFields.map((objectField) => ({
+		...objectField,
+		selected: false,
+	})) as ObjectFieldNode[];
+}
+
 export function fieldsCustomSort(objectFields: ObjectFieldNode[]) {
 	const fieldOrder = ['id', 'externalReferenceCode'];
 
