@@ -19,6 +19,7 @@ import {
 } from '../types';
 import {updateURLParam} from '../utils';
 import {
+	convertAllFieldsToUnselected,
 	fieldsCustomSort,
 	getNonOverlappingEdges,
 } from './objectFolderReducerUtil';
@@ -28,6 +29,66 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 	const store = useStore();
 
 	switch (action.type) {
+		case TYPES.ADD_NEW_OBJECT_FIELD: {
+			const {
+				edges,
+				newObjectField,
+				nodes,
+				objectDefinitionExternalReferenceCode,
+			} = action.payload;
+
+			const newNodes = nodes.map((node) => {
+				if (
+					node.data?.externalReferenceCode ===
+					objectDefinitionExternalReferenceCode
+				) {
+					const {objectFields} = node.data;
+
+					const newObjectFields = convertAllFieldsToUnselected(
+						objectFields
+					);
+
+					newObjectFields.push({
+						businessType: newObjectField.businessType,
+						externalReferenceCode:
+							newObjectField.externalReferenceCode,
+						label: newObjectField.label,
+						name: newObjectField.name,
+						primaryKey: false,
+						required: newObjectField.required,
+						selected: true,
+					});
+
+					return {
+						...node,
+						data: {
+							...node.data,
+							nodeSelected: true,
+							objectFields: newObjectFields,
+						},
+					};
+				}
+
+				const unselectedFields = convertAllFieldsToUnselected(
+					node.data?.objectFields as ObjectFieldNode[]
+				);
+
+				return {
+					...node,
+					data: {
+						...node.data,
+						nodeSelected: false,
+						objectFields: unselectedFields,
+					},
+				};
+			}) as Node<ObjectDefinitionNodeData>[];
+
+			return {
+				...state,
+				elements: [...newNodes, ...edges],
+			};
+		}
+
 		case TYPES.ADD_OBJECT_DEFINITION_TO_OBJECT_FOLDER: {
 			const {
 				newObjectDefinition,
@@ -134,11 +195,7 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 						businessType: objectField.businessType,
 						externalReferenceCode:
 							objectField.externalReferenceCode,
-						label: getLocalizableLabel(
-							newObjectDefinition.defaultLanguageId,
-							objectField.label,
-							objectField.name
-						),
+						label: objectField.label,
 						name: objectField.name,
 						primaryKey: objectField.name === 'id',
 						required: objectField.required,
