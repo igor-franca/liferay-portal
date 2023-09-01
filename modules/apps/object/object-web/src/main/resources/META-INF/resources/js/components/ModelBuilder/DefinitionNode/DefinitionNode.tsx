@@ -4,7 +4,7 @@
  */
 
 import classNames from 'classnames';
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
 	Handle,
 	Node,
@@ -65,6 +65,33 @@ export function DefinitionNode({
 	] = useFolderContext();
 	const store = useStore();
 
+	const handleBottomRef = useRef<HTMLDivElement>(null);
+	const handleLeftRef = useRef<HTMLDivElement>(null);
+	const handleRightRef = useRef<HTMLDivElement>(null);
+	const handleTopRef = useRef<HTMLDivElement>(null);
+
+	const displayHandles = (display: boolean) => {
+		if (
+			handleBottomRef.current &&
+			handleLeftRef.current &&
+			handleRightRef.current &&
+			handleTopRef.current
+		) {
+			if (display) {
+				handleBottomRef.current.style.opacity = '1';
+				handleLeftRef.current.style.opacity = '1';
+				handleRightRef.current.style.opacity = '1';
+				handleTopRef.current.style.opacity = '1';
+			}
+			else {
+				handleBottomRef.current.style.opacity = '0';
+				handleLeftRef.current.style.opacity = '0';
+				handleRightRef.current.style.opacity = '0';
+				handleTopRef.current.style.opacity = '0';
+			}
+		}
+	};
+
 	const [showModal, setShowModal] = useState<Partial<ModelBuilderModals>>({
 		deleteObjectDefinition: false,
 		editERC: false,
@@ -122,6 +149,12 @@ export function DefinitionNode({
 						type: TYPES.SET_SELECTED_NODE,
 					});
 				}}
+				onMouseEnter={() => {
+					displayHandles(true);
+				}}
+				onMouseLeave={() => {
+					displayHandles(false);
+				}}
 			>
 				<NodeHeader
 					dropDownItems={getDefinitionNodeActions({
@@ -160,19 +193,62 @@ export function DefinitionNode({
 					showAllFields={showAllFields}
 				/>
 
-				<Handle
-					className="lfr-objects__model-builder-node-handle"
-					hidden
-					id={id.toString()}
-					position={Position.Left}
-					style={{
-						background: '#80ACFF',
-						height: '12px',
-						left: '-30px',
-						width: '12px',
-					}}
-					type="source"
-				/>
+				<>
+					<Handle
+						className="lfr-objects__model-builder-node-handle"
+						id={id.toString()}
+						position={Position.Bottom}
+						ref={handleBottomRef}
+						style={{
+							background: '#80ACFF',
+							bottom: '-18px',
+							height: '12px',
+							width: '12px',
+						}}
+						type="source"
+					/>
+					<Handle
+						className="lfr-objects__model-builder-node-handle"
+						id={id.toString()}
+						position={Position.Left}
+						ref={handleLeftRef}
+						style={{
+							background: '#80ACFF',
+							height: '12px',
+							left: '-18px',
+							width: '12px',
+						}}
+						type="source"
+					/>
+
+					<Handle
+						className="lfr-objects__model-builder-node-handle"
+						id={id.toString()}
+						position={Position.Right}
+						ref={handleRightRef}
+						style={{
+							background: '#80ACFF',
+							height: '12px',
+							right: '-18px',
+							width: '12px',
+						}}
+						type="source"
+					/>
+
+					<Handle
+						className="lfr-objects__model-builder-node-handle"
+						id={id.toString()}
+						position={Position.Top}
+						ref={handleTopRef}
+						style={{
+							background: '#80ACFF',
+							height: '12px',
+							top: ' -18px',
+							width: '12px',
+						}}
+						type="source"
+					/>
+				</>
 
 				{hasSelfRelationships && (
 					<>
