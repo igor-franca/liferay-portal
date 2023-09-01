@@ -3,10 +3,44 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import { ArrowHeadType, Node, Position, XYPosition } from 'react-flow-renderer';
+import {ArrowHeadType, Node, Position, XYPosition} from 'react-flow-renderer';
 
 // this helper function returns the intersection point
 // of the line between the center of the intersectionNode and the target node
+
+export function createElements() {
+	const elements = [];
+	const center = {x: window.innerWidth / 2, y: window.innerHeight / 2};
+
+	elements.push({
+		data: {label: 'Target'},
+		id: 'target',
+		position: center,
+	});
+
+	for (let i = 0; i < 8; i++) {
+		const degrees = i * (360 / 8);
+		const radians = degrees * (Math.PI / 180);
+		const x = 250 * Math.cos(radians) + center.x;
+		const y = 250 * Math.sin(radians) + center.y;
+
+		elements.push({
+			data: {label: 'Source'},
+			id: `${i}`,
+			position: {x, y},
+		});
+
+		elements.push({
+			arrowHeadType: ArrowHeadType.Arrow,
+			id: `edge-${i}`,
+			source: `${i}`,
+			target: 'target',
+			type: 'floating',
+		});
+	}
+
+	return elements;
+}
 
 function getNodeIntersection(
 	intersectionNode: Node,
@@ -53,16 +87,16 @@ function getNodeIntersection(
 
 	const intersectionPointX =
 		nodeHalfWidth *
-		(normalizedSourceToTargetXDifference +
-			normalizedSourceToTargetYDifference) +
+			(normalizedSourceToTargetXDifference +
+				normalizedSourceToTargetYDifference) +
 		sourceCoordinateX;
 	const intersectionPointY =
 		nodeHalfHeight *
-		(-normalizedSourceToTargetXDifference +
-			normalizedSourceToTargetYDifference) +
+			(-normalizedSourceToTargetXDifference +
+				normalizedSourceToTargetYDifference) +
 		sourceCoordinateY;
 
-	return { x: intersectionPointX, y: intersectionPointY };
+	return {x: intersectionPointX, y: intersectionPointY};
 }
 
 function getEdgePosition(
@@ -70,7 +104,7 @@ function getEdgePosition(
 	node: Node,
 	nodeIncrementY: number
 ) {
-	const nodeProperties = { ...node.__rf.position, ...node.__rf };
+	const nodeProperties = {...node.__rf.position, ...node.__rf};
 	const nodePositionX = Math.round(nodeProperties.x);
 	const nodePositionY = Math.round(nodeProperties.y + nodeIncrementY);
 	const intersectionPointX = Math.round(intersectionPoint.x);
@@ -143,46 +177,22 @@ export function getFolderName(): string {
 	return folderName || '';
 }
 
-export function createElements() {
-	const elements = [];
-	const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+export function formatFolderName(folderName : string) {
+    folderName = folderName.replace(/[^\w\s]/gi, '');
 
-	elements.push({
-		data: { label: 'Target' },
-		id: 'target',
-		position: center,
-	});
+    if (/[a-zA-Z]/.test(folderName.charAt(0))) {
+        folderName = folderName.charAt(0).toUpperCase() + folderName.slice(1);
+    }
 
-	for (let i = 0; i < 8; i++) {
-		const degrees = i * (360 / 8);
-		const radians = degrees * (Math.PI / 180);
-		const x = 250 * Math.cos(radians) + center.x;
-		const y = 250 * Math.sin(radians) + center.y;
-
-		elements.push({
-			data: { label: 'Source' },
-			id: `${i}`,
-			position: { x, y },
-		});
-
-		elements.push({
-			arrowHeadType: ArrowHeadType.Arrow,
-			id: `edge-${i}`,
-			source: `${i}`,
-			target: 'target',
-			type: 'floating',
-		});
-	}
-
-	return elements;
+    return folderName;
 }
 
 export function updateURLParam(paramType: string, paramValue: string) {
 	const currentURL = window.location.href;
 	const novaURL = currentURL.replace(
-		new RegExp("(" + paramType + "=)([^&]*)"),
-		paramType + "=" + paramValue
+		new RegExp('(' + paramType + '=)([^&]*)'),
+		paramType + '=' + paramValue
 	);
 
-	window.history.pushState({ path: novaURL }, "", novaURL);
+	window.history.pushState({path: novaURL}, '', novaURL);
 }

@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import { Edge, Elements, Node } from 'react-flow-renderer';
+import {Edge, Elements, Node} from 'react-flow-renderer';
 
-import { TYPES } from './ModelBuilderContext/typesEnum';
+import {TYPES} from './ModelBuilderContext/typesEnum';
 
 declare type TDropDownType =
 	| 'checkbox'
@@ -34,96 +34,96 @@ export type DropDownItems = {
 
 export type TAction =
 	| {
-		payload: {
-			newObjectDefinition: ObjectDefinition;
-			selectedFolderName: string;
-		};
-		type: TYPES.ADD_NEW_NODE_TO_FOLDER;
-	}
+			payload: {
+				newObjectDefinition: ObjectDefinition;
+				selectedFolderName: string;
+			};
+			type: TYPES.ADD_NEW_NODE_TO_FOLDER;
+	  }
 	| {
-		payload: {
-			hiddenFolderNodes: boolean;
-			leftSidebarItem: LeftSidebarItemType;
-		};
-		type: TYPES.BULK_CHANGE_NODE_VIEW;
-	}
+			payload: {
+				hiddenFolderNodes: boolean;
+				leftSidebarItem: LeftSidebarItemType;
+			};
+			type: TYPES.BULK_CHANGE_NODE_VIEW;
+	  }
 	| {
-		payload: {
-			definitionId: number;
-			definitionName: string;
-			hiddenNode: boolean;
-			leftSidebarItem: LeftSidebarItemType;
-		};
-		type: TYPES.CHANGE_NODE_VIEW;
-	}
+			payload: {
+				definitionId: number;
+				definitionName: string;
+				hiddenNode: boolean;
+				leftSidebarItem: LeftSidebarItemType;
+			};
+			type: TYPES.CHANGE_NODE_VIEW;
+	  }
 	| {
-		payload: {
-			objectFolders: ObjectFolder[];
-			selectedFolder: ObjectFolder;
-		};
-		type: TYPES.CREATE_MODEL_BUILDER_STRUCTURE;
-	}
+			payload: {
+				objectFolders: ObjectFolder[];
+				selectedFolder: ObjectFolder;
+			};
+			type: TYPES.CREATE_MODEL_BUILDER_STRUCTURE;
+	  }
 	| {
-		payload: {
-			currentFolderName: string;
-			deletedNodeName: string;
-		};
-		type: TYPES.DELETE_FOLDER_NODE;
-	}
+			payload: {
+				currentFolderName: string;
+				deletedNodeName: string;
+			};
+			type: TYPES.DELETE_FOLDER_NODE;
+	  }
 	| {
-		payload: {
-			newElements: any;
-		};
-		type: TYPES.SET_ELEMENTS;
-	}
+			payload: {
+				newElements: any;
+			};
+			type: TYPES.SET_ELEMENTS;
+	  }
 	| {
-		payload: {
-			folderName: string;
-		};
-		type: TYPES.SET_FOLDER_NAME;
-	}
+			payload: {
+				folderName: string;
+			};
+			type: TYPES.SET_FOLDER_NAME;
+	  }
 	| {
-		payload: {
-			isLoadingFolder: boolean;
-		};
-		type: TYPES.SET_LOADING_FOLDER;
-	}
+			payload: {
+				isLoadingFolder: boolean;
+			};
+			type: TYPES.SET_LOADING_FOLDER;
+	  }
 	| {
-		payload: {
-			edges: Edge<ObjectRelationshipEdgeData>[];
-			nodes: Node<ObjectDefinitionNodeData>[];
-			selectedObjectRelationshipId: string;
-		};
-		type: TYPES.SET_SELECTED_EDGE;
-	}
+			payload: {
+				edges: Edge<ObjectRelationshipEdgeData>[];
+				nodes: Node<ObjectDefinitionNodeData>[];
+				selectedObjectRelationshipId: string;
+			};
+			type: TYPES.SET_SELECTED_EDGE;
+	  }
 	| {
-		payload: {
-			edges: Edge<ObjectRelationshipEdgeData>[];
-			nodes: Node<ObjectDefinitionNodeData>[];
-			selectedObjectDefinitionId: string;
-		};
-		type: TYPES.SET_SELECTED_NODE;
-	}
+			payload: {
+				edges: Edge<ObjectRelationshipEdgeData>[];
+				nodes: Node<ObjectDefinitionNodeData>[];
+				selectedObjectDefinitionId: string;
+			};
+			type: TYPES.SET_SELECTED_NODE;
+	  }
 	| {
-		payload: {
-			updatedShowChangesSaved: boolean;
-		};
-		type: TYPES.SET_SHOW_CHANGES_SAVED;
-	}
+			payload: {
+				updatedShowChangesSaved: boolean;
+			};
+			type: TYPES.SET_SHOW_CHANGES_SAVED;
+	  }
 	| {
-		payload: {
-			currentFolderName: string;
-			updatedNode: Partial<ObjectDefinition>;
-		};
-		type: TYPES.UPDATE_FOLDER_NODE;
-	};
+			payload: {
+				currentFolderName: string;
+				updatedNode: Partial<ObjectDefinition>;
+			};
+			type: TYPES.UPDATE_FOLDER_NODE;
+	  };
 
 export type TState = {
 	baseResourceURL: string;
 	editObjectDefinitionURL: string;
 	elements: Elements<ObjectDefinitionNodeData | ObjectRelationshipEdgeData>;
-	folderName: string,
-	isLoadingFolder: boolean,
+	folderName: string;
+	isLoadingFolder: boolean;
 	leftSidebarItems: LeftSidebarItemType[];
 	objectDefinitionPermissionsURL: string;
 	objectDefinitions: ObjectDefinition[];

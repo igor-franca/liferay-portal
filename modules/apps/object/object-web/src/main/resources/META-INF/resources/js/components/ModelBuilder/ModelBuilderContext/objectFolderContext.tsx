@@ -13,7 +13,7 @@ import {
 	TAction,
 	TState,
 } from '../types';
-import { getFolderName } from '../utils';
+import {getFolderName} from '../utils';
 import {ObjectFolderReducer} from './objectFolderReducer';
 
 interface IFolderContextProps extends Array<TState | Function> {

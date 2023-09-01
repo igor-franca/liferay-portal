@@ -3,21 +3,21 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import { API, getLocalizableLabel } from '@liferay/object-js-components-web';
-import React, { useEffect, useState } from 'react';
-import { FlowElement } from 'react-flow-renderer';
+import {API, getLocalizableLabel} from '@liferay/object-js-components-web';
+import React, {useEffect, useState} from 'react';
+import {FlowElement} from 'react-flow-renderer';
 
-import { KeyValuePair } from '../ObjectDetails/EditObjectDetails';
-import { TDeletionType } from '../ObjectRelationship/EditRelationship';
-import { ModalAddObjectDefinition } from '../ViewObjectDefinitions/ModalAddObjectDefinition';
-import { ModalEditFolder } from '../ViewObjectDefinitions/ModalEditFolder';
-import { ViewObjectDefinitionsModals } from '../ViewObjectDefinitions/ViewObjectDefinitions';
+import {KeyValuePair} from '../ObjectDetails/EditObjectDetails';
+import {TDeletionType} from '../ObjectRelationship/EditRelationship';
+import {ModalAddObjectDefinition} from '../ViewObjectDefinitions/ModalAddObjectDefinition';
+import {ModalEditFolder} from '../ViewObjectDefinitions/ModalEditFolder';
+import {ViewObjectDefinitionsModals} from '../ViewObjectDefinitions/ViewObjectDefinitions';
 import Diagram from './Diagram/Diagram';
 import Header from './Header/Header';
 import LeftSidebar from './LeftSidebar/LeftSidebar';
-import { useFolderContext } from './ModelBuilderContext/objectFolderContext';
-import { TYPES } from './ModelBuilderContext/typesEnum';
-import { RightSideBar } from './RightSidebar/index';
+import {useFolderContext} from './ModelBuilderContext/objectFolderContext';
+import {TYPES} from './ModelBuilderContext/typesEnum';
+import {RightSideBar} from './RightSidebar/index';
 
 interface EditObjectFolder {
 	companyKeyValuePair: KeyValuePair[];
@@ -30,7 +30,14 @@ export default function EditObjectFolder({
 	siteKeyValuePair,
 }: EditObjectFolder) {
 	const [
-		{ elements, folderName, rightSidebarType, selectedFolder, storages, viewApiURL },
+		{
+			elements,
+			folderName,
+			rightSidebarType,
+			selectedFolder,
+			storages,
+			viewApiURL,
+		},
 		dispatch,
 	] = useFolderContext();
 
@@ -120,21 +127,21 @@ export default function EditObjectFolder({
 									nodeSelected: false,
 									objectFields: objectDefinition.objectFields.map(
 										(field) =>
-										({
-											businessType:
-												field.businessType,
-											externalReferenceCode:
-												field.externalReferenceCode,
-											label: getLocalizableLabel(
-												objectDefinition.defaultLanguageId,
-												field.label,
-												field.name
-											),
-											name: field.name,
-											primaryKey: field.name === 'id',
-											required: field.required,
-											selected: false,
-										} as ObjectFieldNode)
+											({
+												businessType:
+													field.businessType,
+												externalReferenceCode:
+													field.externalReferenceCode,
+												label: getLocalizableLabel(
+													objectDefinition.defaultLanguageId,
+													field.label,
+													field.name
+												),
+												name: field.name,
+												primaryKey: field.name === 'id',
+												required: field.required,
+												selected: false,
+											} as ObjectFieldNode)
 									),
 								});
 							}
@@ -175,9 +182,9 @@ export default function EditObjectFolder({
 		};
 
 		makeFetch();
-		
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [folderName,]);
+	}, [folderName]);
 
 	return (
 		<>
@@ -228,7 +235,11 @@ export default function EditObjectFolder({
 
 			<Header
 				folder={selectedFolder}
-				hasDraftObjectDefinitions={elements.some(element => (element as FlowElement<ObjectDefinitionNodeData>).data?.status?.code === 2)}
+				hasDraftObjectDefinitions={elements.some(
+					(element) =>
+						(element as FlowElement<ObjectDefinitionNodeData>).data
+							?.status?.code === 2
+				)}
 				setShowModal={setShowModal}
 			/>
 			<div className="lfr-objects__model-builder-diagram-container">

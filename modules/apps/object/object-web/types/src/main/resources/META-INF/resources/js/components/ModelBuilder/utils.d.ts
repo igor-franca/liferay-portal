@@ -4,20 +4,6 @@
  */
 
 import {ArrowHeadType, Node, Position} from 'react-flow-renderer';
-export declare function getEdgeParams(
-	source: Node,
-	sourceIncrementY: number,
-	target: Node,
-	targetIncrementY: number
-): {
-	sourcePos: Position;
-	sourceX: number;
-	sourceY: number;
-	targetPos: Position;
-	targetX: number;
-	targetY: number;
-};
-export declare function getFolderName(): string;
 export declare function createElements(): (
 	| {
 			data: {
@@ -43,6 +29,21 @@ export declare function createElements(): (
 			position?: undefined;
 	  }
 )[];
+export declare function getEdgeParams(
+	source: Node,
+	sourceIncrementY: number,
+	target: Node,
+	targetIncrementY: number
+): {
+	sourcePos: Position;
+	sourceX: number;
+	sourceY: number;
+	targetPos: Position;
+	targetX: number;
+	targetY: number;
+};
+export declare function getFolderName(): string;
+export declare function formatFolderName(folderName: string): string;
 export declare function updateURLParam(
 	paramType: string,
 	paramValue: string

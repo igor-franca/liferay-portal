@@ -14,19 +14,19 @@ import ReactFlow, {
 	addEdge,
 } from 'react-flow-renderer';
 
-import { DefinitionNode } from '../DefinitionNode/DefinitionNode';
-import { EmptyNode } from '../DefinitionNode/EmptyNode';
+import {DefinitionNode} from '../DefinitionNode/DefinitionNode';
+import {EmptyNode} from '../DefinitionNode/EmptyNode';
 
 import './Diagram.scss';
 
-import { API } from '@liferay/object-js-components-web';
-import React, { MouseEvent, useCallback } from 'react';
+import {API} from '@liferay/object-js-components-web';
+import React, {MouseEvent, useCallback} from 'react';
 
-import { ViewObjectDefinitionsModals } from '../../ViewObjectDefinitions/ViewObjectDefinitions';
+import {ViewObjectDefinitionsModals} from '../../ViewObjectDefinitions/ViewObjectDefinitions';
 import DefaultEdge from '../Edges/DefaultEdge';
 import SelfEdge from '../Edges/SelfEdge';
-import { useFolderContext } from '../ModelBuilderContext/objectFolderContext';
-import { TYPES } from '../ModelBuilderContext/typesEnum';
+import {useFolderContext} from '../ModelBuilderContext/objectFolderContext';
+import {TYPES} from '../ModelBuilderContext/typesEnum';
 
 const NODE_TYPES = {
 	emptyNode: EmptyNode,
@@ -44,7 +44,7 @@ function DiagramBuilder({
 	setShowModal: (value: ViewObjectDefinitionsModals) => void;
 }) {
 	const [
-		{ elements, isLoadingFolder, selectedFolder, showChangesSaved },
+		{elements, isLoadingFolder, selectedFolder, showChangesSaved},
 		dispatch,
 	] = useFolderContext();
 
@@ -67,7 +67,7 @@ function DiagramBuilder({
 			const newElements = addEdge(connection, elements);
 
 			dispatch({
-				payload: { newElements },
+				payload: {newElements},
 				type: TYPES.SET_ELEMENTS,
 			});
 		},
@@ -111,7 +111,7 @@ function DiagramBuilder({
 
 		if (!showChangesSaved) {
 			dispatch({
-				payload: { updatedShowChangesSaved: true },
+				payload: {updatedShowChangesSaved: true},
 				type: TYPES.SET_SHOW_CHANGES_SAVED,
 			});
 		}
@@ -122,7 +122,13 @@ function DiagramBuilder({
 			<ReactFlow
 				connectionMode={ConnectionMode.Loose}
 				edgeTypes={EDGE_TYPES}
-				elements={!isLoadingFolder ? (elements.length ? elements : emptyNode) : []}
+				elements={
+					!isLoadingFolder
+						? elements.length
+							? elements
+							: emptyNode
+						: []
+				}
 				minZoom={0.1}
 				nodeTypes={NODE_TYPES}
 				onConnect={onConnect}
@@ -130,20 +136,19 @@ function DiagramBuilder({
 			>
 				<Background size={1} />
 
-				{!isLoadingFolder ?
-					(
-						<>
-							<Controls showInteractive={false} />
-							<MiniMap />
-						</>
-					)
-					: <div className="lfr-objects__model-builder-diagram-area-loading">
+				{!isLoadingFolder ? (
+					<>
+						<Controls showInteractive={false} />
+						<MiniMap />
+					</>
+				) : (
+					<div className="lfr-objects__model-builder-diagram-area-loading">
 						<span
 							aria-hidden="true"
 							className="loading-animation-lg loading-animation-primary loading-animation-squares"
 						></span>
 					</div>
-				}
+				)}
 			</ReactFlow>
 		</div>
 	);

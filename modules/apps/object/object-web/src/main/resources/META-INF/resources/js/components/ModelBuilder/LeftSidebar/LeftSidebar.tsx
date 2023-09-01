@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
-import { Text, TreeView } from '@clayui/core';
-import { ClayDropDownWithItems } from '@clayui/drop-down';
+import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
+import {Text, TreeView} from '@clayui/core';
+import {ClayDropDownWithItems} from '@clayui/drop-down';
 import Icon from '@clayui/icon';
 import ClayPanel from '@clayui/panel';
-import { ClayTooltipProvider } from '@clayui/tooltip';
+import {ClayTooltipProvider} from '@clayui/tooltip';
 import {
 	API,
 	CustomVerticalBar,
@@ -16,15 +16,16 @@ import {
 	stringIncludesQuery,
 } from '@liferay/object-js-components-web';
 import classNames from 'classnames';
-import { openToast, sub } from 'frontend-js-web';
-import React, { useMemo, useState } from 'react';
-import { Node, useStore, useZoomPanHelper } from 'react-flow-renderer';
+import {openToast, sub} from 'frontend-js-web';
+import React, {useMemo, useState} from 'react';
+import {Node, useStore, useZoomPanHelper} from 'react-flow-renderer';
 
 import './LeftSidebar.scss';
-import { ViewObjectDefinitionsModals } from '../../ViewObjectDefinitions/ViewObjectDefinitions';
-import { useFolderContext } from '../ModelBuilderContext/objectFolderContext';
-import { TYPES } from '../ModelBuilderContext/typesEnum';
-import { LeftSidebarDefinitionItemType, LeftSidebarItemType } from '../types';
+import {ViewObjectDefinitionsModals} from '../../ViewObjectDefinitions/ViewObjectDefinitions';
+import {useFolderContext} from '../ModelBuilderContext/objectFolderContext';
+import {TYPES} from '../ModelBuilderContext/typesEnum';
+import {LeftSidebarDefinitionItemType, LeftSidebarItemType} from '../types';
+import {formatFolderName} from '../utils';
 
 const TYPES_TO_SYMBOLS = {
 	objectDefinition: 'catalog',
@@ -45,8 +46,11 @@ export default function LeftSidebar({
 	setShowModal,
 }: LeftSidebarProps) {
 	const [query, setQuery] = useState('');
-	const [{ isLoadingFolder, leftSidebarItems, selectedFolder }, dispatch] = useFolderContext();
-	const { setCenter } = useZoomPanHelper();
+	const [
+		{isLoadingFolder, leftSidebarItems, selectedFolder},
+		dispatch,
+	] = useFolderContext();
+	const {setCenter} = useZoomPanHelper();
 	const store = useStore();
 
 	const changeNodeViewButton = (hiddenNode: boolean, dispatch: Function) => (
@@ -144,21 +148,20 @@ export default function LeftSidebar({
 					type: 'success',
 				});
 			}
-			catch (error) { }
+			catch (error) {}
 		}
 	};
 
 	const onClickGoToFolder = (selectedFolderName: string) => {
-
 		dispatch({
 			payload: {
-				folderName: selectedFolderName.charAt(0).toUpperCase() + selectedFolderName.slice(1),
+				folderName: formatFolderName(selectedFolderName)
 			},
 			type: TYPES.SET_FOLDER_NAME,
 		});
-	}
+	};
 
-	const TreeViewComponent = ({ showActions }: { showActions?: boolean }) => {
+	const TreeViewComponent = ({showActions}: {showActions?: boolean}) => {
 		const otherFolders = filteredItems.filter(
 			(item) => item.folderName !== selectedFolderName
 		);
@@ -208,7 +211,7 @@ export default function LeftSidebar({
 									.definitionId
 						)
 					) {
-						const { edges, nodes } = store.getState();
+						const {edges, nodes} = store.getState();
 
 						dispatch({
 							payload: {
@@ -252,18 +255,31 @@ export default function LeftSidebar({
 
 									<Text weight="semi-bold">{item.name}</Text>
 
-									{item.folderName !== selectedFolderName &&
+									{item.folderName !== selectedFolderName && (
 										<ClayTooltipProvider>
 											<div className="lfr-objects__model-builder-left-sidebar-btn-folder">
-												<ClayButton data-tooltip-align="bottom" displayType={null} onClick={() => onClickGoToFolder(item.name)} title={Liferay.Language.get('go-to-folder')}>
+												<ClayButton
+													data-tooltip-align="bottom"
+													displayType={null}
+													onClick={() =>
+														onClickGoToFolder(
+															item.name
+														)
+													}
+													title={Liferay.Language.get(
+														'go-to-folder'
+													)}
+												>
 													<Icon
 														className="text-5"
-														symbol={TYPES_TO_SYMBOLS.objectGoToFolder}
+														symbol={
+															TYPES_TO_SYMBOLS.objectGoToFolder
+														}
 													/>
 												</ClayButton>
 											</div>
 										</ClayTooltipProvider>
-									}
+									)}
 								</div>
 
 								{!showActions &&
@@ -400,7 +416,9 @@ export default function LeftSidebar({
 									className="lfr-objects__model-builder-left-sidebar-body-panel"
 									collapsable
 									defaultExpanded
-									displayTitle={Liferay.Language.get('other-folders')}
+									displayTitle={Liferay.Language.get(
+										'other-folders'
+									)}
 									displayType="unstyled"
 									showCollapseIcon={true}
 								>
@@ -413,14 +431,14 @@ export default function LeftSidebar({
 							</>
 						)}
 					</>
-				)
-					: <div className="lfr-objects__model-builder-left-sidebar-loading">
+				) : (
+					<div className="lfr-objects__model-builder-left-sidebar-loading">
 						<span
 							aria-hidden="true"
 							className="loading-animation loading-animation-secondary loading-animation-sm"
 						></span>
 					</div>
-				}
+				)}
 			</div>
 		</CustomVerticalBar>
 	);

@@ -260,8 +260,8 @@ export function ModalPublishObjectDefinitions({
 						{Liferay.Language.get(
 							'publishing-all-draft-objects-at-once-can-make-them-available-for-creating-entries'
 						)}{' '}
-                        
-						{Liferay.Language.get('please-check-before-confirming')}
+						
+                        {Liferay.Language.get('please-check-before-confirming')}
 					</Text>
 				</div>
 
