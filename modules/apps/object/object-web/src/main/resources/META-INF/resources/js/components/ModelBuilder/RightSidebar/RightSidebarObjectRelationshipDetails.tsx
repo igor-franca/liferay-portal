@@ -15,6 +15,7 @@ import {InputLocalized} from 'frontend-js-components-web';
 
 import {firstLetterUppercase} from '../../../utils/string';
 import {TDeletionType} from '../../ObjectRelationship/EditRelationship';
+import {ModalDeleteObjectRelationship} from '../../ObjectRelationship/ModalDeleteObjectRelationship';
 import {useObjectRelationshipForm} from '../../ObjectRelationship/ObjectRelationshipFormBase';
 import {useFolderContext} from '../ModelBuilderContext/objectFolderContext';
 import {ObjectRelationshipEdgeData} from '../types';
@@ -28,6 +29,7 @@ export function RightSidebarObjectRelationshipDetails({
 }: RightSidebarObjectRelationshipDetailsProps) {
 	const [{elements}] = useFolderContext();
 	const [readOnly, setReadOnly] = useState(true);
+	const [showModal, setShowModal] = useState(false);
 
 	const selectedEdge = elements.find((element) => {
 		if (isEdge(element)) {
@@ -93,6 +95,7 @@ export function RightSidebarObjectRelationshipDetails({
 				<ClayButtonWithIcon
 					aria-label={Liferay.Language.get('delete-relationship')}
 					displayType="secondary"
+					onClick={() => setShowModal(true)}
 					symbol="trash"
 					title={Liferay.Language.get('delete-relationship')}
 				/>
@@ -152,6 +155,13 @@ export function RightSidebarObjectRelationshipDetails({
 					}
 				/>
 			</div>
+
+			{showModal && (
+				<ModalDeleteObjectRelationship
+					handleOnClose={() => setShowModal(false)}
+					objectRelationship={values as ObjectRelationship}
+				/>
+			)}
 		</>
 	);
 }
