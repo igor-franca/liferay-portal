@@ -7,16 +7,14 @@ import ClayButton from '@clayui/button';
 import DropDown from '@clayui/drop-down';
 import ClayIcon from '@clayui/icon';
 import {sub} from 'frontend-js-web';
-import React from 'react';
+import React, {SetStateAction} from 'react';
 
 import './NodeFooter.scss';
 
 interface NodeFooterProps {
 	isLinkedNode: boolean;
 	setShowAllFields: (value: boolean) => void;
-	setShowModal: React.Dispatch<
-		React.SetStateAction<Partial<ViewObjectDefinitionsModals>>
-	>;
+	setShowModal: (value: SetStateAction<Partial<ModelBuilderModals>>) => void;
 	showAllFields: boolean;
 }
 
