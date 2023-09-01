@@ -31,9 +31,6 @@ const CustomFolderWrapper: React.FC<ICustomFolderWrapperProps> = ({
 	storages,
 	viewApiURL,
 }) => {
-	const urlParams = new URLSearchParams(window.location.search);
-	const folderName = urlParams.get('folderName');
-
 	return (
 		<ReactFlowProvider>
 			<FolderContextProvider
@@ -48,7 +45,6 @@ const CustomFolderWrapper: React.FC<ICustomFolderWrapperProps> = ({
 				<EditObjectFolder
 					companyKeyValuePair={companyKeyValuePair}
 					deletionTypes={deletionTypes}
-					folderName={folderName ?? ''}
 					siteKeyValuePair={siteKeyValuePair}
 				/>
 			</FolderContextProvider>

@@ -17,6 +17,7 @@ export declare function getEdgeParams(
 	targetX: number;
 	targetY: number;
 };
+export declare function getFolderName(): string;
 export declare function createElements(): (
 	| {
 			data: {
@@ -42,3 +43,7 @@ export declare function createElements(): (
 			position?: undefined;
 	  }
 )[];
+export declare function updateURLParam(
+	paramType: string,
+	paramValue: string
+): void;

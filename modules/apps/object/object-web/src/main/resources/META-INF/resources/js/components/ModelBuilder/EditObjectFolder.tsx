@@ -22,17 +22,15 @@ import { RightSideBar } from './RightSidebar/index';
 interface EditObjectFolder {
 	companyKeyValuePair: KeyValuePair[];
 	deletionTypes: TDeletionType[];
-	folderName: string;
 	siteKeyValuePair: KeyValuePair[];
 }
 export default function EditObjectFolder({
 	companyKeyValuePair,
 	deletionTypes,
-	folderName,
 	siteKeyValuePair,
 }: EditObjectFolder) {
 	const [
-		{ elements, rightSidebarType, selectedFolder, storages, viewApiURL },
+		{ elements, folderName, rightSidebarType, selectedFolder, storages, viewApiURL },
 		dispatch,
 	] = useFolderContext();
 
@@ -48,6 +46,13 @@ export default function EditObjectFolder({
 	});
 
 	useEffect(() => {
+		dispatch({
+			payload: {
+				isLoadingFolder: true,
+			},
+			type: TYPES.SET_LOADING_FOLDER,
+		});
+
 		const makeFetch = async () => {
 			const folderResponse = await API.getAllFolders();
 
@@ -155,6 +160,13 @@ export default function EditObjectFolder({
 
 			dispatch({
 				payload: {
+					isLoadingFolder: false,
+				},
+				type: TYPES.SET_LOADING_FOLDER,
+			});
+
+			dispatch({
+				payload: {
 					objectFolders: objectFoldersWithDefinitions,
 					selectedFolder: currentFolder,
 				},
@@ -163,9 +175,9 @@ export default function EditObjectFolder({
 		};
 
 		makeFetch();
-
+		
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [folderName,]);
 
 	return (
 		<>

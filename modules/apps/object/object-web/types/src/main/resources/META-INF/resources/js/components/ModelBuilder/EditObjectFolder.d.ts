@@ -10,13 +10,11 @@ import {TDeletionType} from '../ObjectRelationship/EditRelationship';
 interface EditObjectFolder {
 	companyKeyValuePair: KeyValuePair[];
 	deletionTypes: TDeletionType[];
-	folderName: string;
 	siteKeyValuePair: KeyValuePair[];
 }
 export default function EditObjectFolder({
 	companyKeyValuePair,
 	deletionTypes,
-	folderName,
 	siteKeyValuePair,
 }: EditObjectFolder): JSX.Element;
 export {};

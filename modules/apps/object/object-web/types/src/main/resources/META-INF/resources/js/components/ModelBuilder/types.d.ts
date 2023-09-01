@@ -76,6 +76,18 @@ export declare type TAction =
 	  }
 	| {
 			payload: {
+				folderName: string;
+			};
+			type: TYPES.SET_FOLDER_NAME;
+	  }
+	| {
+			payload: {
+				isLoadingFolder: boolean;
+			};
+			type: TYPES.SET_LOADING_FOLDER;
+	  }
+	| {
+			payload: {
 				edges: Edge<ObjectRelationshipEdgeData>[];
 				nodes: Node<ObjectDefinitionNodeData>[];
 				selectedObjectRelationshipId: string;
@@ -107,6 +119,8 @@ export declare type TState = {
 	baseResourceURL: string;
 	editObjectDefinitionURL: string;
 	elements: Elements<ObjectDefinitionNodeData | ObjectRelationshipEdgeData>;
+	folderName: string;
+	isLoadingFolder: boolean;
 	leftSidebarItems: LeftSidebarItemType[];
 	objectDefinitionPermissionsURL: string;
 	objectDefinitions: ObjectDefinition[];

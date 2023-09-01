@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {getLocalizableLabel} from '@liferay/object-js-components-web';
-import {ArrowHeadType, Edge, Node, isEdge, useStore} from 'react-flow-renderer';
+import { getLocalizableLabel } from '@liferay/object-js-components-web';
+import { ArrowHeadType, Edge, Node, isEdge, useStore } from 'react-flow-renderer';
 
-import {defaultLanguageId} from '../../../utils/constants';
-import {manyMarkerId} from '../Edges/ManyMarker';
-import {oneMarkerId} from '../Edges/OneMarker';
+import { defaultLanguageId } from '../../../utils/constants';
+import { manyMarkerId } from '../Edges/ManyMarker';
+import { oneMarkerId } from '../Edges/OneMarker';
 import {
 	LeftSidebarItemType,
 	ObjectRelationshipEdgeData,
@@ -16,20 +16,21 @@ import {
 	TAction,
 	TState,
 } from '../types';
+import { updateURLParam } from '../utils';
 import {
 	fieldsCustomSort,
 	getNonOverlappingEdges,
 } from './objectFolderReducerUtil';
-import {TYPES} from './typesEnum';
+import { TYPES } from './typesEnum';
 
 export function ObjectFolderReducer(state: TState, action: TAction) {
 	const store = useStore();
 
 	switch (action.type) {
 		case TYPES.ADD_NEW_NODE_TO_FOLDER: {
-			const {newObjectDefinition, selectedFolderName} = action.payload;
-			const {nodes} = store.getState();
-			const {elements, leftSidebarItems} = state;
+			const { newObjectDefinition, selectedFolderName } = action.payload;
+			const { nodes } = store.getState();
+			const { elements, leftSidebarItems } = state;
 			let newPosition = {
 				x: 2 * 300,
 				y: 2 * 400,
@@ -85,7 +86,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 							if (
 								isLinkedDefinition &&
 								objectDefinition.definitionId ===
-									newObjectDefinition.id
+								newObjectDefinition.id
 							) {
 								return {
 									...objectDefinition,
@@ -211,15 +212,15 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 		}
 
 		case TYPES.BULK_CHANGE_NODE_VIEW: {
-			const {hiddenFolderNodes, leftSidebarItem} = action.payload;
-			const {edges, nodes} = store.getState();
-			const {leftSidebarItems} = state;
+			const { hiddenFolderNodes, leftSidebarItem } = action.payload;
+			const { edges, nodes } = store.getState();
+			const { leftSidebarItems } = state;
 
 			const updatedNodes = nodes.map(
 				(node: Node<ObjectDefinitionNodeData>) => {
 					return {
 						...node,
-						data: {...node.data, nodeSelected: false},
+						data: { ...node.data, nodeSelected: false },
 						isHidden: !hiddenFolderNodes,
 					};
 				}
@@ -272,8 +273,8 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 				hiddenNode,
 				leftSidebarItem,
 			} = action.payload;
-			const {edges, nodes} = store.getState();
-			const {leftSidebarItems} = state;
+			const { edges, nodes } = store.getState();
+			const { leftSidebarItems } = state;
 			let isNodeSelected = false;
 
 			const updatedEdges = edges.map(
@@ -297,7 +298,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 					if (node.data?.id === definitionId) {
 						return {
 							...node,
-							data: {...node.data, nodeSelected: false},
+							data: { ...node.data, nodeSelected: false },
 							isHidden: !hiddenNode,
 						};
 					}
@@ -349,7 +350,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 		}
 
 		case TYPES.CREATE_MODEL_BUILDER_STRUCTURE: {
-			const {objectFolders, selectedFolder} = action.payload;
+			const { objectFolders, selectedFolder } = action.payload;
 
 			const newLeftSidebar = objectFolders.map((folder) => {
 				const folderDefinitions = folder.definitions?.map(
@@ -388,7 +389,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 			const allEdges: Edge<ObjectRelationshipEdgeData>[] = [];
 
 			if (currentFolder) {
-				const positionColumn = {positionX: 0, positionY: 0};
+				const positionColumn = { positionX: 0, positionY: 0 };
 
 				newObjectDefinitionNodes = currentFolder.definitions!.map(
 					(objectDefinition, index) => {
@@ -423,18 +424,18 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 												edgeSelected: false,
 												label:
 													!isSelfRelationship ||
-													(isSelfRelationship &&
-														hasOneSelfRelationship)
+														(isSelfRelationship &&
+															hasOneSelfRelationship)
 														? getLocalizableLabel(
-																objectDefinition.defaultLanguageId,
-																relationship.label,
-																relationship.name
-														  )
+															objectDefinition.defaultLanguageId,
+															relationship.label,
+															relationship.name
+														)
 														: selfRelationships.length.toString(),
 												markerEndId: manyMarkerId,
 												markerStartId:
 													relationship.type ===
-													'manyToMany'
+														'manyToMany'
 														? manyMarkerId
 														: oneMarkerId,
 												objectRelationshipId:
@@ -516,9 +517,9 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 		}
 
 		case TYPES.DELETE_FOLDER_NODE: {
-			const {currentFolderName, deletedNodeName} = action.payload;
+			const { currentFolderName, deletedNodeName } = action.payload;
 
-			const {leftSidebarItems} = state;
+			const { leftSidebarItems } = state;
 
 			let updatedObjectDefinitions;
 
@@ -548,7 +549,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 		}
 
 		case TYPES.SET_ELEMENTS: {
-			const {newElements} = action.payload;
+			const { newElements } = action.payload;
 
 			return {
 				...state,
@@ -556,8 +557,28 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 			};
 		}
 
+		case TYPES.SET_FOLDER_NAME: {
+			const { folderName } = action.payload;
+
+			updateURLParam("folderName", folderName);
+
+			return {
+				...state,
+				folderName
+			};
+		}
+
+		case TYPES.SET_LOADING_FOLDER: {
+			const { isLoadingFolder } = action.payload;
+
+			return {
+				...state,
+				isLoadingFolder
+			};
+		}
+
 		case TYPES.SET_SELECTED_EDGE: {
-			const {edges, nodes, selectedObjectRelationshipId} = action.payload;
+			const { edges, nodes, selectedObjectRelationshipId } = action.payload;
 
 			const newObjectRelationshipEdges = edges.map(
 				(relationshipEdge) => ({
@@ -598,9 +619,9 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 		}
 
 		case TYPES.SET_SELECTED_NODE: {
-			const {edges, nodes, selectedObjectDefinitionId} = action.payload;
+			const { edges, nodes, selectedObjectDefinitionId } = action.payload;
 
-			const {leftSidebarItems} = state;
+			const { leftSidebarItems } = state;
 
 			const newObjectDefinitionNodes = nodes.map((definitionNode) => ({
 				...definitionNode,
@@ -655,7 +676,7 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 		}
 
 		case TYPES.SET_SHOW_CHANGES_SAVED: {
-			const {updatedShowChangesSaved} = action.payload;
+			const { updatedShowChangesSaved } = action.payload;
 
 			return {
 				...state,
@@ -664,9 +685,9 @@ export function ObjectFolderReducer(state: TState, action: TAction) {
 		}
 
 		case TYPES.UPDATE_FOLDER_NODE: {
-			const {currentFolderName, updatedNode} = action.payload;
+			const { currentFolderName, updatedNode } = action.payload;
 
-			const {leftSidebarItems} = state;
+			const { leftSidebarItems } = state;
 
 			let updatedObjectDefinitions;
 

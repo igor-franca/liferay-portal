@@ -1,10 +1,16 @@
-@import 'atlas-variables';
+@import "atlas-variables";
 
 .lfr-objects__model-builder-left-sidebar {
 	display: flex;
 	flex-direction: column;
 	padding: 1rem;
 	position: inherit;
+
+	&-btn-folder {
+		margin-left: auto;
+		position: relative;
+		visibility: hidden;
+	}
 
 	&-item-linked.treeview-link {
 		background-color: transparent;
@@ -22,6 +28,25 @@
 		align-items: center;
 		display: flex;
 		gap: 1rem;
+		width: 100%;
+
+		&:hover {
+			.lfr-objects__model-builder-left-sidebar-btn-folder {
+				visibility: visible;
+
+				button {
+					padding-left: 0;
+					padding-right: 0;
+				}
+			}
+		}
+	}
+
+	&-loading {
+		align-items: center;
+		display: flex;
+		height: 100%;
+		justify-content: center;
 	}
 
 	.navbar-form,

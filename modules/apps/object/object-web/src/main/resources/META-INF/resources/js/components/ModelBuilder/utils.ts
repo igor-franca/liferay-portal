@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {ArrowHeadType, Node, Position, XYPosition} from 'react-flow-renderer';
+import { ArrowHeadType, Node, Position, XYPosition } from 'react-flow-renderer';
 
 // this helper function returns the intersection point
 // of the line between the center of the intersectionNode and the target node
@@ -53,16 +53,16 @@ function getNodeIntersection(
 
 	const intersectionPointX =
 		nodeHalfWidth *
-			(normalizedSourceToTargetXDifference +
-				normalizedSourceToTargetYDifference) +
+		(normalizedSourceToTargetXDifference +
+			normalizedSourceToTargetYDifference) +
 		sourceCoordinateX;
 	const intersectionPointY =
 		nodeHalfHeight *
-			(-normalizedSourceToTargetXDifference +
-				normalizedSourceToTargetYDifference) +
+		(-normalizedSourceToTargetXDifference +
+			normalizedSourceToTargetYDifference) +
 		sourceCoordinateY;
 
-	return {x: intersectionPointX, y: intersectionPointY};
+	return { x: intersectionPointX, y: intersectionPointY };
 }
 
 function getEdgePosition(
@@ -70,7 +70,7 @@ function getEdgePosition(
 	node: Node,
 	nodeIncrementY: number
 ) {
-	const nodeProperties = {...node.__rf.position, ...node.__rf};
+	const nodeProperties = { ...node.__rf.position, ...node.__rf };
 	const nodePositionX = Math.round(nodeProperties.x);
 	const nodePositionY = Math.round(nodeProperties.y + nodeIncrementY);
 	const intersectionPointX = Math.round(intersectionPoint.x);
@@ -136,12 +136,19 @@ export function getEdgeParams(
 	};
 }
 
+export function getFolderName(): string {
+	const urlParams = new URLSearchParams(window.location.search);
+	const folderName = urlParams.get('folderName');
+
+	return folderName || '';
+}
+
 export function createElements() {
 	const elements = [];
-	const center = {x: window.innerWidth / 2, y: window.innerHeight / 2};
+	const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
 	elements.push({
-		data: {label: 'Target'},
+		data: { label: 'Target' },
 		id: 'target',
 		position: center,
 	});
@@ -153,9 +160,9 @@ export function createElements() {
 		const y = 250 * Math.sin(radians) + center.y;
 
 		elements.push({
-			data: {label: 'Source'},
+			data: { label: 'Source' },
 			id: `${i}`,
-			position: {x, y},
+			position: { x, y },
 		});
 
 		elements.push({
@@ -168,4 +175,14 @@ export function createElements() {
 	}
 
 	return elements;
+}
+
+export function updateURLParam(paramType: string, paramValue: string) {
+	const currentURL = window.location.href;
+	const novaURL = currentURL.replace(
+		new RegExp("(" + paramType + "=)([^&]*)"),
+		paramType + "=" + paramValue
+	);
+
+	window.history.pushState({ path: novaURL }, "", novaURL);
 }

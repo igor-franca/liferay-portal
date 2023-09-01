@@ -12,6 +12,8 @@ export declare function ObjectFolderReducer(
 	elements: any;
 	baseResourceURL: string;
 	editObjectDefinitionURL: string;
+	folderName: string;
+	isLoadingFolder: boolean;
 	leftSidebarItems: LeftSidebarItemType[];
 	objectDefinitionPermissionsURL: string;
 	objectDefinitions: ObjectDefinition[];

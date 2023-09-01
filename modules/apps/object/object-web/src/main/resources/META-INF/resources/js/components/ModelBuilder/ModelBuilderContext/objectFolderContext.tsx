@@ -13,6 +13,7 @@ import {
 	TAction,
 	TState,
 } from '../types';
+import { getFolderName } from '../utils';
 import {ObjectFolderReducer} from './objectFolderReducer';
 
 interface IFolderContextProps extends Array<TState | Function> {
@@ -31,6 +32,8 @@ const initialState = {
 	elements: [] as Elements<
 		ObjectDefinitionNodeData | ObjectRelationshipEdgeData
 	>,
+	folderName: getFolderName(),
+	isLoadingFolder: false,
 	leftSidebarItems: [] as LeftSidebarItemType[],
 	objectDefinitions: [] as ObjectDefinition[],
 	objectFolders: [] as ObjectFolder[],
