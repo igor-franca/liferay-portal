@@ -11,7 +11,7 @@ import ReactFlow, {
 	Edge,
 	MiniMap,
 	Node,
-	addEdge,
+	isNode,
 } from 'react-flow-renderer';
 
 import {DefinitionNode} from '../DefinitionNode/DefinitionNode';
@@ -20,8 +20,9 @@ import {EmptyNode} from '../DefinitionNode/EmptyNode';
 import './Diagram.scss';
 
 import {API} from '@liferay/object-js-components-web';
-import React, {MouseEvent, useCallback} from 'react';
+import React, {MouseEvent, useCallback, useState} from 'react';
 
+import {ModalAddObjectRelationship} from '../../ObjectRelationship/ModalAddObjectRelationship';
 import DefaultEdge from '../Edges/DefaultEdge';
 import SelfEdge from '../Edges/SelfEdge';
 import {useObjectFolderContext} from '../ModelBuilderContext/objectFolderContext';
@@ -43,9 +44,15 @@ function DiagramBuilder({
 	setShowModal: (value: React.SetStateAction<ModelBuilderModals>) => void;
 }) {
 	const [
-		{elements, selectedObjectFolder, showChangesSaved},
+		{baseResourceURL, elements, selectedObjectFolder, showChangesSaved},
 		dispatch,
 	] = useObjectFolderContext();
+
+	const [showAddModal, setShowAddModal] = useState(false);
+	const [sourceNodeProps, setSourceNodeProps] = useState<{
+		erc: string;
+		parameterRequired: boolean;
+	}>();
 
 	const emptyNode = [
 		{
@@ -63,14 +70,17 @@ function DiagramBuilder({
 
 	const onConnect = useCallback(
 		(connection: Connection | Edge) => {
-			const newElements = addEdge(connection, elements);
+			const sourceNode = elements.find(
+				(node) => isNode(node) && node.id === connection.source
+			) as Node<ObjectDefinitionNodeData>;
 
-			dispatch({
-				payload: {newElements},
-				type: TYPES.SET_ELEMENTS,
+			setShowAddModal(true);
+			setSourceNodeProps({
+				erc: sourceNode?.data?.externalReferenceCode!,
+				parameterRequired: sourceNode?.data?.parameterRequired!,
 			});
 		},
-		[dispatch, elements]
+		[elements]
 	);
 
 	const onNodeDragStop = async (
@@ -118,6 +128,17 @@ function DiagramBuilder({
 
 	return (
 		<div className="lfr-objects__model-builder-diagram-area">
+			{showAddModal && (
+				<ModalAddObjectRelationship
+					baseResourceURL={baseResourceURL}
+					handleOnClose={() => setShowAddModal(false)}
+					objectDefinitionExternalReferenceCode={
+						sourceNodeProps?.erc!
+					}
+					parameterRequired={sourceNodeProps?.parameterRequired!}
+				/>
+			)}
+
 			<ReactFlow
 				connectionMode={ConnectionMode.Loose}
 				edgeTypes={EDGE_TYPES}
