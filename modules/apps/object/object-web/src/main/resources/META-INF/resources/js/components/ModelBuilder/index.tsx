@@ -17,7 +17,11 @@ interface CustomObjectFolderWrapperProps
 	deletionTypes: TDeletionType[];
 	editObjectDefinitionURL: string;
 	filterOperators: TFilterOperators;
+	forbiddenChars: string[];
+	forbiddenLastChars: string[];
+	forbiddenNames: string[];
 	objectDefinitionPermissionsURL: string;
+	objectWebLearnResources: ObjectWebLearnResources;
 	siteKeyValuePair: KeyValuePair[];
 	storages: LabelValueObject[];
 	viewApiURL: string;
@@ -30,7 +34,11 @@ const CustomObjectFolderWrapper: React.FC<CustomObjectFolderWrapperProps> = ({
 	deletionTypes,
 	editObjectDefinitionURL,
 	filterOperators,
+	forbiddenChars,
+	forbiddenLastChars,
+	forbiddenNames,
 	objectDefinitionPermissionsURL,
+	objectWebLearnResources,
 	siteKeyValuePair,
 	storages,
 	viewApiURL,
@@ -46,7 +54,11 @@ const CustomObjectFolderWrapper: React.FC<CustomObjectFolderWrapperProps> = ({
 					baseResourceURL,
 					editObjectDefinitionURL,
 					filterOperators,
+					forbiddenChars,
+					forbiddenLastChars,
+					forbiddenNames,
 					objectDefinitionPermissionsURL,
+					objectWebLearnResources,
 					storages,
 					viewApiURL,
 					workflowStatusJSONArray,
