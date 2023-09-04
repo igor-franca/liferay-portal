@@ -230,6 +230,7 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 						businessType: newObjectField.businessType,
 						externalReferenceCode:
 							newObjectField.externalReferenceCode,
+						id: newObjectField.id,
 						label: newObjectField.label,
 						name: newObjectField.name,
 						primaryKey: false,
@@ -264,6 +265,7 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 			return {
 				...state,
 				elements: [...newNodes, ...edges],
+				rightSidebarType: 'objectFieldDetails',
 			};
 		}
 
@@ -833,6 +835,49 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 			return {
 				...state,
 				leftSidebarItems: newLeftSidebarItems,
+			};
+		}
+
+		case TYPES.UPDATE_OBJECT_FIELD: {
+			const {edges, nodes, selectedNode, updatedField} = action.payload;
+
+			const newSelectedNodeFields = selectedNode.data?.objectFields.map(
+				(objectField) => {
+					if (
+						objectField.externalReferenceCode ===
+						updatedField.externalReferenceCode
+					) {
+						return {
+							...updatedField,
+							primaryKey: false,
+							selected: true,
+						} as ObjectFieldNode;
+					}
+
+					return objectField;
+				}
+			);
+
+			const newNodes = nodes.map((node) => {
+				if (
+					node.data?.externalReferenceCode ===
+					selectedNode.data?.externalReferenceCode
+				) {
+					return {
+						...selectedNode,
+						data: {
+							...selectedNode.data,
+							objectFields: newSelectedNodeFields,
+						},
+					} as Node<ObjectDefinitionNodeData>;
+				}
+
+				return node;
+			});
+
+			return {
+				...state,
+				elements: [...edges, ...newNodes],
 			};
 		}
 

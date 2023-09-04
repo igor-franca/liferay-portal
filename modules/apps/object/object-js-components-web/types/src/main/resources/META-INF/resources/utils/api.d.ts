@@ -166,30 +166,30 @@ export declare function putObjectDefinitionByExternalReferenceCode(
 export declare function putObjectFolderByERC(
 	folder: Partial<ObjectFolder>
 ): Promise<Response>;
-export declare function save({
+export declare function save<T>({
 	item,
 	method,
 	returnValue,
 	url,
-}: saveProps): Promise<any>;
+}: saveProps): Promise<T>;
 export declare function addPickListItem({
 	id,
 	key,
 	name_i18n,
-}: Partial<PickListItem>): Promise<any>;
+}: Partial<PickListItem>): Promise<unknown>;
 export declare function updatePickList({
 	externalReferenceCode,
 	id,
 	listTypeEntries,
 	name_i18n,
-}: Partial<PickList>): Promise<any>;
+}: Partial<PickList>): Promise<unknown>;
 export declare function updatePickListItem({
 	externalReferenceCode,
 	id,
 	name_i18n,
-}: Partial<PickListItem>): Promise<any>;
+}: Partial<PickListItem>): Promise<unknown>;
 export declare function updateRelationship({
 	objectRelationshipId,
 	...others
-}: ObjectRelationship): Promise<any>;
+}: ObjectRelationship): Promise<unknown>;
 export {};

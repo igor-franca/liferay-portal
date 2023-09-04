@@ -356,7 +356,7 @@ export async function putObjectFolderByERC(folder: Partial<ObjectFolder>) {
 	);
 }
 
-export async function save({
+export async function save<T>({
 	item,
 	method = 'PUT',
 	returnValue = false,
@@ -400,7 +400,7 @@ export async function save({
 	}
 
 	if (returnValue) {
-		return response.json();
+		return (await response.json()) as T;
 	}
 }
 

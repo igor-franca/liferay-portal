@@ -118,6 +118,15 @@ export type TAction =
 	  }
 	| {
 			payload: {
+				edges: Edge<ObjectRelationshipEdgeData>[];
+				nodes: Node<ObjectDefinitionNodeData>[];
+				selectedNode: Node<ObjectDefinitionNodeData>;
+				updatedField: ObjectField;
+			};
+			type: TYPES.UPDATE_OBJECT_FIELD;
+	  }
+	| {
+			payload: {
 				currentObjectFolderName: string;
 				updatedNode: Partial<ObjectDefinition>;
 			};
