@@ -10,6 +10,7 @@
 <%
 String backURL = ParamUtil.getString(request, "backURL", String.valueOf(renderResponse.createRenderURL()));
 ObjectDefinitionsDetailsDisplayContext objectDefinitionsDetailsDisplayContext = (ObjectDefinitionsDetailsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_DETAILS_DISPLAY_CONTEXT);
+ObjectDefinitionsFieldsDisplayContext objectDefinitionsFieldsDisplayContext = (ObjectDefinitionsFieldsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_FIELD_DISPLAY_CONTEXT);
 ObjectDefinitionsRelationshipsDisplayContext objectDefinitionsRelationshipsDisplayContext = (ObjectDefinitionsRelationshipsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_RELATIONSHIP_DISPLAY_CONTEXT);
 
 portletDisplay.setShowBackIcon(true);
@@ -34,7 +35,15 @@ renderResponse.setTitle(LanguageUtil.get(request, "object-model-builder"));
 		).put(
 			"filterOperators", LocalizedJSONArrayUtil.getFilterOperatorsJSONObject(locale)
 		).put(
+			"forbiddenChars", PropsUtil.getArray(PropsKeys.DL_CHAR_BLACKLIST)
+		).put(
+			"forbiddenLastChars", objectDefinitionsFieldsDisplayContext.getForbiddenLastCharacters()
+		).put(
+			"forbiddenNames", PropsUtil.getArray(PropsKeys.DL_NAME_BLACKLIST)
+		).put(
 			"objectDefinitionPermissionsURL", objectDefinitionsDetailsDisplayContext.getPermissionsURL(ObjectDefinition.class.getName())
+		).put(
+			"objectWebLearnResources", LearnMessageUtil.getReactDataJSONObject("object-web")
 		).put(
 			"siteKeyValuePair", objectDefinitionsDetailsDisplayContext.getScopeKeyValuePairs("site")
 		).put(
