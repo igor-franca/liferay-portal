@@ -13,14 +13,14 @@ import React, {useEffect, useMemo, useState} from 'react';
 
 interface IProps {
 	error?: string;
-	objectDefinitionExternalReferenceCode: string;
+	objectDefinitionExternalReferenceCode1: string;
 	onChange: (objectFieldName: string) => void;
 	value?: string;
 }
 
 export default function SelectRelationship({
 	error,
-	objectDefinitionExternalReferenceCode,
+	objectDefinitionExternalReferenceCode1,
 	onChange,
 	value,
 	...otherProps
@@ -58,14 +58,14 @@ export default function SelectRelationship({
 	}, [fields, value]);
 
 	useEffect(() => {
-		if (objectDefinitionExternalReferenceCode) {
+		if (objectDefinitionExternalReferenceCode1) {
 			const makeFetch = async () => {
 				const items = await API.getObjectFieldsByExternalReferenceCode(
-					objectDefinitionExternalReferenceCode
+					objectDefinitionExternalReferenceCode1
 				);
 
 				const objectDefinition = await API.getObjectDefinitionByExternalReferenceCode(
-					objectDefinitionExternalReferenceCode
+					objectDefinitionExternalReferenceCode1
 				);
 
 				setCreationLanguageId(objectDefinition.defaultLanguageId);
@@ -84,7 +84,7 @@ export default function SelectRelationship({
 		else {
 			setFields([]);
 		}
-	}, [objectDefinitionExternalReferenceCode]);
+	}, [objectDefinitionExternalReferenceCode1]);
 
 	return (
 		<AutoComplete<LabelNameObject>

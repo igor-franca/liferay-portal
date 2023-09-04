@@ -117,7 +117,7 @@ export default function EditRelationship({
 					baseResourceURL={baseResourceURL}
 					errors={errors}
 					handleChange={handleChange}
-					objectDefinitionExternalReferenceCode={
+					objectDefinitionExternalReferenceCode1={
 						objectDefinitionExternalReferenceCode
 					}
 					readonly
@@ -148,7 +148,7 @@ export default function EditRelationship({
 
 						<SelectRelationship
 							error={errors.parameterObjectFieldName}
-							objectDefinitionExternalReferenceCode={
+							objectDefinitionExternalReferenceCode1={
 								values.objectDefinitionExternalReferenceCode2 as string
 							}
 							onChange={(parameterObjectFieldName) =>
