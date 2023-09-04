@@ -126,10 +126,14 @@ export declare type TState = {
 	editObjectDefinitionURL: string;
 	elements: Elements<ObjectDefinitionNodeData | ObjectRelationshipEdgeData>;
 	filterOperators: TFilterOperators;
+	forbiddenChars: string[];
+	forbiddenLastChars: string[];
+	forbiddenNames: string[];
 	leftSidebarItems: LeftSidebarItemType[];
 	objectDefinitionPermissionsURL: string;
 	objectDefinitions: ObjectDefinition[];
 	objectFolders: ObjectFolder[];
+	objectWebLearnResources: ObjectWebLearnResources;
 	rightSidebarType: RightSidebarType;
 	selectedDefinitionNode: Node<ObjectDefinitionNodeData> | null;
 	selectedFolder: ObjectFolder;

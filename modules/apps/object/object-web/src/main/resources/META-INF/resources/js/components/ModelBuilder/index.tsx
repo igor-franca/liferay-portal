@@ -16,7 +16,11 @@ interface ICustomFolderWrapperProps extends React.HTMLAttributes<HTMLElement> {
 	deletionTypes: TDeletionType[];
 	editObjectDefinitionURL: string;
 	filterOperators: TFilterOperators;
+	forbiddenChars: string[];
+	forbiddenLastChars: string[];
+	forbiddenNames: string[];
 	objectDefinitionPermissionsURL: string;
+	objectWebLearnResources: ObjectWebLearnResources;
 	siteKeyValuePair: KeyValuePair[];
 	storages: LabelValueObject[];
 	viewApiURL: string;
@@ -29,7 +33,11 @@ const CustomFolderWrapper: React.FC<ICustomFolderWrapperProps> = ({
 	deletionTypes,
 	editObjectDefinitionURL,
 	filterOperators,
+	forbiddenChars,
+	forbiddenLastChars,
+	forbiddenNames,
 	objectDefinitionPermissionsURL,
+	objectWebLearnResources,
 	siteKeyValuePair,
 	storages,
 	viewApiURL,
@@ -45,7 +53,11 @@ const CustomFolderWrapper: React.FC<ICustomFolderWrapperProps> = ({
 					baseResourceURL,
 					editObjectDefinitionURL,
 					filterOperators,
+					forbiddenChars,
+					forbiddenLastChars,
+					forbiddenNames,
 					objectDefinitionPermissionsURL,
+					objectWebLearnResources,
 					storages,
 					viewApiURL,
 					workflowStatusJSONArray,
