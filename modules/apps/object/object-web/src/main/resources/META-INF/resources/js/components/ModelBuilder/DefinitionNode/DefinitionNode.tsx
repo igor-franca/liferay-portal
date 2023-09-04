@@ -73,29 +73,29 @@ export function DefinitionNode({
 	] = useObjectFolderContext();
 	const store = useStore();
 
-	const handleBottomRef = useRef<HTMLDivElement>(null);
-	const handleLeftRef = useRef<HTMLDivElement>(null);
-	const handleRightRef = useRef<HTMLDivElement>(null);
-	const handleTopRef = useRef<HTMLDivElement>(null);
+	const handlePosition: {
+		[key: string]: Position;
+	} = {
+		bottom: Position.Bottom,
+		left: Position.Left,
+		right: Position.Right,
+		top: Position.Top,
+	};
+
+	const handleRefs: {
+		[key: string]: React.RefObject<HTMLDivElement>;
+	} = {
+		bottom: useRef<HTMLDivElement>(null),
+		left: useRef<HTMLDivElement>(null),
+		right: useRef<HTMLDivElement>(null),
+		top: useRef<HTMLDivElement>(null),
+	};
 
 	const displayHandles = (display: boolean) => {
-		if (
-			handleBottomRef.current &&
-			handleLeftRef.current &&
-			handleRightRef.current &&
-			handleTopRef.current
-		) {
-			if (display) {
-				handleBottomRef.current.style.opacity = '1';
-				handleLeftRef.current.style.opacity = '1';
-				handleRightRef.current.style.opacity = '1';
-				handleTopRef.current.style.opacity = '1';
-			}
-			else {
-				handleBottomRef.current.style.opacity = '0';
-				handleLeftRef.current.style.opacity = '0';
-				handleRightRef.current.style.opacity = '0';
-				handleTopRef.current.style.opacity = '0';
+		for (const key in handleRefs) {
+			const handleRef = handleRefs[key].current;
+			if (handleRef) {
+				handleRef.style.opacity = display ? '1' : '0';
 			}
 		}
 	};
@@ -223,60 +223,22 @@ export function DefinitionNode({
 				/>
 
 				<>
-					<Handle
-						className="lfr-objects__model-builder-node-handle"
-						id={id.toString()}
-						position={Position.Bottom}
-						ref={handleBottomRef}
-						style={{
-							background: '#80ACFF',
-							bottom: '-18px',
-							height: '12px',
-							width: '12px',
-						}}
-						type="source"
-					/>
-					<Handle
-						className="lfr-objects__model-builder-node-handle"
-						id={id.toString()}
-						position={Position.Left}
-						ref={handleLeftRef}
-						style={{
-							background: '#80ACFF',
-							height: '12px',
-							left: '-18px',
-							width: '12px',
-						}}
-						type="source"
-					/>
-
-					<Handle
-						className="lfr-objects__model-builder-node-handle"
-						id={id.toString()}
-						position={Position.Right}
-						ref={handleRightRef}
-						style={{
-							background: '#80ACFF',
-							height: '12px',
-							right: '-18px',
-							width: '12px',
-						}}
-						type="source"
-					/>
-
-					<Handle
-						className="lfr-objects__model-builder-node-handle"
-						id={id.toString()}
-						position={Position.Top}
-						ref={handleTopRef}
-						style={{
-							background: '#80ACFF',
-							height: '12px',
-							top: ' -18px',
-							width: '12px',
-						}}
-						type="source"
-					/>
+					{Object.keys(handleRefs).map((position, index) => (
+						<Handle
+							className="lfr-objects__model-builder-node-handle"
+							id={id.toString()}
+							key={index}
+							position={handlePosition[position]}
+							ref={handleRefs[position]}
+							style={{
+								background: '#80ACFF',
+								height: '12px',
+								[position]: '-18px',
+								width: '12px',
+							}}
+							type="source"
+						/>
+					))}
 				</>
 
 				{hasSelfRelationships && (
