@@ -49,9 +49,14 @@ function DiagramBuilder({
 	] = useObjectFolderContext();
 
 	const [showAddModal, setShowAddModal] = useState(false);
-	const [sourceNodeProps, setSourceNodeProps] = useState<{
-		erc: string;
+	const [nodesProps, setNodesProps] = useState<{
 		parameterRequired: boolean;
+		sourceNode: {
+			erc: string;
+		};
+		targetNode: {
+			erc: string;
+		};
 	}>();
 
 	const emptyNode = [
@@ -74,10 +79,19 @@ function DiagramBuilder({
 				(node) => isNode(node) && node.id === connection.source
 			) as Node<ObjectDefinitionNodeData>;
 
+			const targetNode = elements.find(
+				(node) => isNode(node) && node.id === connection.target
+			) as Node<ObjectDefinitionNodeData>;
+
 			setShowAddModal(true);
-			setSourceNodeProps({
-				erc: sourceNode?.data?.externalReferenceCode!,
+			setNodesProps({
 				parameterRequired: sourceNode?.data?.parameterRequired!,
+				sourceNode: {
+					erc: sourceNode?.data?.externalReferenceCode!,
+				},
+				targetNode: {
+					erc: targetNode?.data?.externalReferenceCode!,
+				},
 			});
 		},
 		[elements]
@@ -132,10 +146,13 @@ function DiagramBuilder({
 				<ModalAddObjectRelationship
 					baseResourceURL={baseResourceURL}
 					handleOnClose={() => setShowAddModal(false)}
-					objectDefinitionExternalReferenceCode={
-						sourceNodeProps?.erc!
+					objectDefinitionExternalReferenceCode1={
+						nodesProps?.sourceNode.erc!
 					}
-					parameterRequired={sourceNodeProps?.parameterRequired!}
+					objectDefinitionExternalReferenceCode2={
+						nodesProps?.targetNode.erc!
+					}
+					parameterRequired={nodesProps?.parameterRequired!}
 				/>
 			)}
 
