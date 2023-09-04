@@ -4,21 +4,25 @@
  */
 
 import {ClayButtonWithIcon} from '@clayui/button';
-import ClayLoadingIndicator from '@clayui/loading-indicator';
 import ClayPanel from '@clayui/panel';
-import {API} from '@liferay/object-js-components-web';
-import React, {useEffect, useState} from 'react';
-import {Node, isNode} from 'react-flow-renderer';
+import {
+	API,
+	getLocalizableLabel,
+	openToast,
+} from '@liferay/object-js-components-web';
+import React, {useEffect} from 'react';
+import {Node, isNode, useStore} from 'react-flow-renderer';
 
 import {objectFieldInitialValues} from '../../ObjectField/EditObjectField';
 import {EditObjectFieldContent} from '../../ObjectField/EditObjectFieldContent';
 import {useObjectFieldForm} from '../../ObjectField/useObjectFieldForm';
 import {useFolderContext} from '../ModelBuilderContext/objectFolderContext';
+import {TYPES} from '../ModelBuilderContext/typesEnum';
 
 import './RightSidebarObjectFieldDetails.scss';
 
 export function RightSidebarObjectFieldDetails() {
-	const [loading, setLoading] = useState(false);
+	const store = useStore();
 
 	const [
 		{
@@ -30,6 +34,7 @@ export function RightSidebarObjectFieldDetails() {
 			objectWebLearnResources,
 			workflowStatusJSONArray,
 		},
+		dispatch,
 	] = useFolderContext();
 
 	const selectedNode = elements.find((element) => {
@@ -43,35 +48,89 @@ export function RightSidebarObjectFieldDetails() {
 		(field) => field.selected
 	);
 
-	const onSubmit = async () => {};
-
-	const {errors, handleChange, setValues, values} = useObjectFieldForm({
+	const {
+		errors,
+		handleChange,
+		handleValidate,
+		setValues,
+		values,
+	} = useObjectFieldForm({
 		forbiddenChars,
 		forbiddenLastChars,
 		forbiddenNames,
 		initialValues: objectFieldInitialValues,
-		onSubmit,
+		onSubmit: () => {},
 	});
+
+	const onSubmit = async () => {
+		const validationErrors = handleValidate();
+
+		if (!Object.keys(validationErrors).length) {
+			const {id, ...objectField} = values;
+			const {edges, nodes} = store.getState();
+
+			delete objectField.defaultValue;
+			delete objectField.listTypeDefinitionId;
+			delete objectField.system;
+
+			try {
+				const updatedFieldResponse = await API.save<ObjectField>(
+					`/o/object-admin/v1.0/object-fields/${id}`,
+					objectField
+				);
+
+				dispatch({
+					payload: {
+						edges,
+						nodes,
+						selectedNode,
+						updatedField: updatedFieldResponse,
+					},
+					type: TYPES.UPDATE_OBJECT_FIELD,
+				});
+
+				openToast({
+					message: Liferay.Language.get(
+						'the-object-field-was-updated-successfully'
+					),
+				});
+			}
+			catch (error) {
+				openToast({message: (error as Error).message, type: 'danger'});
+			}
+		}
+	};
 
 	useEffect(() => {
 		const makeFetch = async () => {
 			if (selectedField) {
-				setLoading(true);
-				const ObjectFieldResponse = await API.getObjectField(
+				const objectFieldResponse = await API.getObjectField(
 					selectedField?.id as number
 				);
-				setValues(ObjectFieldResponse);
-				setLoading(false);
+
+				setValues(objectFieldResponse);
 			}
 		};
+
 		makeFetch();
+
+		return () => {
+			setValues({});
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedField]);
 
 	return (
 		<div onBlur={onSubmit}>
 			<div className="lfr-objects__model-builder-right-sidebar-definition-node-title">
-				<span>{selectedField?.label}</span>
+				<span>
+					{getLocalizableLabel(
+						selectedNode.data
+							?.defaultLanguageId as Liferay.Language.Locale,
+						selectedField?.label,
+						selectedField?.name
+					)}
+				</span>
 
 				<ClayButtonWithIcon
 					aria-label="Trash"
@@ -82,43 +141,37 @@ export function RightSidebarObjectFieldDetails() {
 			</div>
 
 			<div className="lfr-objects__model-builder-right-sidebar-definition-node-content">
-				{loading ? (
-					<ClayLoadingIndicator displayType="secondary" size="sm" />
-				) : (
-					<EditObjectFieldContent
-						containerWrapper={ClayPanel}
-						creationLanguageId={
-							selectedNode.data?.defaultLanguageId ?? 'en_US'
-						}
-						errors={errors}
-						filterOperators={filterOperators}
-						handleChange={handleChange}
-						isApproved={
-							selectedNode.data?.status.label === 'approved'
-						}
-						isDefaultStorageType={
-							selectedNode.data?.storageType === 'default' ?? true
-						}
-						learnResources={objectWebLearnResources}
-						modelBuilder
-						objectDefinitionExternalReferenceCode={
-							selectedNode.data?.externalReferenceCode ?? ''
-						}
-						objectFieldTypes={[]}
-						objectName={selectedNode.data?.name as string}
-						objectRelationshipId={0}
-						readOnly={
-							!selectedNode.data
-								?.hasObjectDefinitionUpdateResourcePermission ??
-							false
-						}
-						readOnlySidebarElements={[]}
-						setValues={setValues}
-						sidebarElements={[]}
-						values={values}
-						workflowStatusJSONArray={workflowStatusJSONArray}
-					/>
-				)}
+				<EditObjectFieldContent
+					containerWrapper={ClayPanel}
+					creationLanguageId={
+						selectedNode.data?.defaultLanguageId ?? 'en_US'
+					}
+					errors={errors}
+					filterOperators={filterOperators}
+					handleChange={handleChange}
+					isApproved={selectedNode.data?.status.label === 'approved'}
+					isDefaultStorageType={
+						selectedNode.data?.storageType === 'default' ?? true
+					}
+					learnResources={objectWebLearnResources}
+					modelBuilder
+					objectDefinitionExternalReferenceCode={
+						selectedNode.data?.externalReferenceCode ?? ''
+					}
+					objectFieldTypes={[]}
+					objectName={selectedNode.data?.name as string}
+					objectRelationshipId={0}
+					readOnly={
+						!selectedNode.data
+							?.hasObjectDefinitionUpdateResourcePermission ??
+						false
+					}
+					readOnlySidebarElements={[]}
+					setValues={setValues}
+					sidebarElements={[]}
+					values={values}
+					workflowStatusJSONArray={workflowStatusJSONArray}
+				/>
 			</div>
 		</div>
 	);

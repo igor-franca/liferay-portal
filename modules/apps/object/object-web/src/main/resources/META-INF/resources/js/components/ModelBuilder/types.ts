@@ -97,6 +97,15 @@ export type TAction =
 			payload: {
 				edges: Edge<ObjectRelationshipEdgeData>[];
 				nodes: Node<ObjectDefinitionNodeData>[];
+				selectedFieldDefinitionName: string;
+				selectedObjectDefinitionId: number;
+			};
+			type: TYPES.SET_SELECTED_FIELD;
+	  }
+	| {
+			payload: {
+				edges: Edge<ObjectRelationshipEdgeData>[];
+				nodes: Node<ObjectDefinitionNodeData>[];
 				selectedObjectDefinitionId: string;
 			};
 			type: TYPES.SET_SELECTED_NODE;
@@ -118,10 +127,10 @@ export type TAction =
 			payload: {
 				edges: Edge<ObjectRelationshipEdgeData>[];
 				nodes: Node<ObjectDefinitionNodeData>[];
-				selectedFieldDefinitionName: string;
-				selectedObjectDefinitionId: number;
+				selectedNode: Node<ObjectDefinitionNodeData>;
+				updatedField: ObjectField;
 			};
-			type: TYPES.SET_SELECTED_FIELD;
+			type: TYPES.UPDATE_OBJECT_FIELD;
 	  };
 
 export type TState = {
