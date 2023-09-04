@@ -353,7 +353,7 @@ export async function putObjectFolderByERC(folder: Partial<ObjectFolder>) {
 	);
 }
 
-export async function save(
+export async function save<T>(
 	url: string,
 	item: unknown,
 	method: 'PATCH' | 'POST' | 'PUT' = 'PUT'
@@ -395,7 +395,7 @@ export async function save(
 		throw ErrorDetails();
 	}
 
-	return response.json();
+	return (await response.json()) as T;
 }
 
 export async function addPickListItem({

@@ -122,6 +122,15 @@ export type TAction =
 				updatedNode: Partial<ObjectDefinition>;
 			};
 			type: TYPES.UPDATE_FOLDER_NODE;
+	  }
+	| {
+			payload: {
+				edges: Edge<ObjectRelationshipEdgeData>[];
+				nodes: Node<ObjectDefinitionNodeData>[];
+				selectedNode: Node<ObjectDefinitionNodeData>;
+				updatedField: ObjectField;
+			};
+			type: TYPES.UPDATE_OBJECT_FIELD;
 	  };
 
 export type TState = {
