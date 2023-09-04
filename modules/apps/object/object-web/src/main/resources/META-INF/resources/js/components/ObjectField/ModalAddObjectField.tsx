@@ -77,7 +77,7 @@ export function ModalAddObjectField({
 			delete field.listTypeDefinitionId;
 
 			try {
-				const fieldResponse = await API.save({
+				const fieldResponse = await API.save<ObjectField>({
 					item: field,
 					method: 'POST',
 					returnValue: true,
