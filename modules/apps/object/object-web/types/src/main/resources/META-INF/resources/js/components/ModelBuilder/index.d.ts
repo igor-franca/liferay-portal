@@ -12,7 +12,11 @@ interface ICustomFolderWrapperProps extends React.HTMLAttributes<HTMLElement> {
 	deletionTypes: TDeletionType[];
 	editObjectDefinitionURL: string;
 	filterOperators: TFilterOperators;
+	forbiddenChars: string[];
+	forbiddenLastChars: string[];
+	forbiddenNames: string[];
 	objectDefinitionPermissionsURL: string;
+	objectWebLearnResources: ObjectWebLearnResources;
 	siteKeyValuePair: KeyValuePair[];
 	storages: LabelValueObject[];
 	viewApiURL: string;
