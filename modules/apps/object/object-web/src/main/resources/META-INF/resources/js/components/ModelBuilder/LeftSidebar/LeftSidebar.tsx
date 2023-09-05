@@ -25,7 +25,6 @@ import {ViewObjectDefinitionsModals} from '../../ViewObjectDefinitions/ViewObjec
 import {useFolderContext} from '../ModelBuilderContext/objectFolderContext';
 import {TYPES} from '../ModelBuilderContext/typesEnum';
 import {LeftSidebarDefinitionItemType, LeftSidebarItemType} from '../types';
-import {formatFolderName} from '../utils';
 
 const TYPES_TO_SYMBOLS = {
 	objectDefinition: 'catalog',
@@ -155,7 +154,7 @@ export default function LeftSidebar({
 	const onClickGoToFolder = (selectedFolderName: string) => {
 		dispatch({
 			payload: {
-				folderName: formatFolderName(selectedFolderName)
+				folderName: selectedFolderName
 			},
 			type: TYPES.SET_FOLDER_NAME,
 		});
@@ -263,7 +262,7 @@ export default function LeftSidebar({
 													displayType={null}
 													onClick={() =>
 														onClickGoToFolder(
-															item.name
+															item.folderName
 														)
 													}
 													title={Liferay.Language.get(

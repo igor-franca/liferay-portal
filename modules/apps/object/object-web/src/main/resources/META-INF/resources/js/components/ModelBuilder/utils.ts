@@ -177,16 +177,6 @@ export function getFolderName(): string {
 	return folderName || '';
 }
 
-export function formatFolderName(folderName : string) {
-    folderName = folderName.replace(/[^\w\s]/gi, '');
-
-    if (/[a-zA-Z]/.test(folderName.charAt(0))) {
-        folderName = folderName.charAt(0).toUpperCase() + folderName.slice(1);
-    }
-
-    return folderName;
-}
-
 export function updateURLParam(paramType: string, paramValue: string) {
 	const currentURL = window.location.href;
 	const novaURL = currentURL.replace(
