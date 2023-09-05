@@ -649,12 +649,19 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 			const newObjectDefinitionNodes = nodes;
 
 			if (selectedNode?.data) {
+				const {objectFields} = selectedNode.data;
 				const selectedNodeIndex = nodes.findIndex(
 					(objectDefinitionNode) =>
 						objectDefinitionNode.data?.nodeSelected
 				);
 
+				const newObjectFields = objectFields.map((objectField) => ({
+					...objectField,
+					selected: false,
+				}));
+
 				selectedNode.data.nodeSelected = false;
+				selectedNode.data.objectFields = newObjectFields;
 
 				newObjectDefinitionNodes[selectedNodeIndex] = selectedNode;
 			}
@@ -708,35 +715,26 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 
 			const {leftSidebarItems} = state;
 
-			let selectedObjectDefinitionNode: Node<
+			const selectedObjectDefinitionNode: Node<
 				ObjectDefinitionNodeData
 			> | null = null;
 
 			const newObjectDefinitionNodes = nodes.map(
-				(objectDefinitionNode) => {
-					if (
-						objectDefinitionNode.id ===
-						selectedObjectDefinitionId.toString()
-					) {
-						selectedObjectDefinitionNode = {
-							...objectDefinitionNode,
-							data: {
-								...objectDefinitionNode.data,
-								nodeSelected: true,
-							},
-						} as Node<ObjectDefinitionNodeData>;
-
-						return selectedObjectDefinitionNode;
-					}
-
-					return {
-						...objectDefinitionNode,
-						data: {
-							...objectDefinitionNode.data,
-							nodeSelected: false,
-						},
-					};
-				}
+				(objectDefinitionNode) => ({
+					...objectDefinitionNode,
+					data: {
+						...objectDefinitionNode.data,
+						nodeSelected:
+							objectDefinitionNode.id ===
+							selectedObjectDefinitionId.toString(),
+						objectFields: objectDefinitionNode.data?.objectFields.map(
+							(objectField) => ({
+								...objectField,
+								selected: false,
+							})
+						),
+					},
+				})
 			) as Node<ObjectDefinitionNodeData>[];
 
 			const newLeftSidebarItems = leftSidebarItems.map((sidebarItem) => {
