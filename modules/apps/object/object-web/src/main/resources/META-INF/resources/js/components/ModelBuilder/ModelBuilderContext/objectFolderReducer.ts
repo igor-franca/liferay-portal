@@ -692,6 +692,30 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 				selectedObjectDefinitionId,
 			} = action.payload;
 
+			const selectedNode = nodes.find(
+				(objectDefinitionNode) =>
+					objectDefinitionNode.data?.nodeSelected
+			);
+
+			const newObjectDefinitionNodes = nodes;
+
+			if (selectedNode?.data) {
+				const {objectFields} = selectedNode.data;
+				const selectedNodeIndex = nodes.findIndex(
+					(objectDefinitionNode) =>
+						objectDefinitionNode.data?.nodeSelected
+				);
+
+				const newObjectFields = objectFields.map((objectField) => ({
+					...objectField,
+					selected: false,
+				}));
+
+				selectedNode.data.nodeSelected = false;
+				selectedNode.data.objectFields = newObjectFields;
+
+				newObjectDefinitionNodes[selectedNodeIndex] = selectedNode;
+			}
 			const newNodes = nodes.map((node) => ({
 				...node,
 				data: {
@@ -757,7 +781,7 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 
 			const {leftSidebarItems} = state;
 
-			let selectedObjectDefinitionNode: Node<
+			const selectedObjectDefinitionNode: Node<
 				ObjectDefinitionNodeData
 			> | null = null;
 
@@ -771,7 +795,7 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 							...objectDefinitionNode,
 							data: {
 								...objectDefinitionNode.data,
-								selected: true,
+								nodeSelected: true,
 							},
 						} as Node<ObjectDefinitionNodeData>;
 
@@ -782,7 +806,7 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 						...objectDefinitionNode,
 						data: {
 							...objectDefinitionNode.data,
-							selected: false,
+							nodeSelected: false,
 						},
 					};
 				}
