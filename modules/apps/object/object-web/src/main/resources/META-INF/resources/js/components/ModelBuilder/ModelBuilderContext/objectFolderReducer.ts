@@ -639,11 +639,18 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 			const newObjectDefinitionNodes = nodes;
 
 			if (selectedNode?.data) {
+				const {objectFields} = selectedNode.data;
 				const selectedNodeIndex = nodes.findIndex(
 					(definitionNode) => definitionNode.data?.nodeSelected
 				);
 
+				const newObjectFields = objectFields.map((objectField) => ({
+					...objectField,
+					selected: false,
+				}));
+
 				selectedNode.data.nodeSelected = false;
+				selectedNode.data.objectFields = newObjectFields;
 
 				newObjectDefinitionNodes[selectedNodeIndex] = selectedNode;
 			}
@@ -697,31 +704,23 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 
 			const {leftSidebarItems} = state;
 
-			let selectedNode: Node<ObjectDefinitionNodeData> | null = null;
+			const selectedNode: Node<ObjectDefinitionNodeData> | null = null;
 
-			const newObjectDefinitionNodes = nodes.map((definitionNode) => {
-				if (
-					definitionNode.id === selectedObjectDefinitionId.toString()
-				) {
-					selectedNode = {
-						...definitionNode,
-						data: {
-							...definitionNode.data,
-							nodeSelected: true,
-						},
-					} as Node<ObjectDefinitionNodeData>;
-
-					return selectedNode;
-				}
-
-				return {
-					...definitionNode,
-					data: {
-						...definitionNode.data,
-						nodeSelected: false,
-					},
-				};
-			}) as Node<ObjectDefinitionNodeData>[];
+			const newObjectDefinitionNodes = nodes.map((definitionNode) => ({
+				...definitionNode,
+				data: {
+					...definitionNode.data,
+					nodeSelected:
+						definitionNode.id ===
+						selectedObjectDefinitionId.toString(),
+					objectFields: definitionNode.data?.objectFields.map(
+						(objectField) => ({
+							...objectField,
+							selected: false,
+						})
+					),
+				},
+			})) as Node<ObjectDefinitionNodeData>[];
 
 			const newLeftSidebarItems = leftSidebarItems.map((sidebarItem) => {
 				const newLeftSidebarDefinitions = sidebarItem.objectDefinitions?.map(
