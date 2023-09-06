@@ -4,7 +4,22 @@
  */
 
 import React from 'react';
-import {SidebarCategory} from './CodeEditor/index';
+interface ExpressionBuilderProps
+	extends React.InputHTMLAttributes<HTMLInputElement> {
+	buttonDisabled?: boolean;
+	component?: 'input' | 'textarea' | React.ForwardRefExoticComponent<any>;
+	disabled?: boolean;
+	error?: string;
+	feedbackMessage?: string;
+	hideFeedback?: boolean;
+	id?: string;
+	label?: string;
+	name?: string;
+	onOpenModal: () => void;
+	required?: boolean;
+	type?: 'number' | 'text';
+	value?: string | number | string[];
+}
 export declare function ExpressionBuilder({
 	buttonDisabled,
 	className,
@@ -23,42 +38,5 @@ export declare function ExpressionBuilder({
 	type,
 	value,
 	...otherProps
-}: IProps): JSX.Element;
-export declare function ExpressionBuilderModal({
-	error,
-	eventSidebarElements,
-	header,
-	onSave,
-	placeholder,
-	required,
-	sidebarElements,
-	source,
-}: IModalProps): JSX.Element | null;
-declare type Callback = (source?: string) => void;
-interface IModalProps {
-	error?: string;
-	eventSidebarElements?: SidebarCategory[];
-	header?: string;
-	onSave?: Callback;
-	placeholder?: string;
-	required?: boolean;
-	sidebarElements: SidebarCategory[];
-	source?: string;
-	validateExpressionURL?: string;
-}
-interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
-	buttonDisabled?: boolean;
-	component?: 'input' | 'textarea' | React.ForwardRefExoticComponent<any>;
-	disabled?: boolean;
-	error?: string;
-	feedbackMessage?: string;
-	hideFeedback?: boolean;
-	id?: string;
-	label?: string;
-	name?: string;
-	onOpenModal: () => void;
-	required?: boolean;
-	type?: 'number' | 'text';
-	value?: string | number | string[];
-}
+}: ExpressionBuilderProps): JSX.Element;
 export {};

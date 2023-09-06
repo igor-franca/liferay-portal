@@ -16,7 +16,8 @@ export {
 } from './components/CodeEditor/index';
 export {CodeEditorLocalized} from './components/CodeEditor/CodeEditorLocalized';
 export {DatePicker} from './components/DatePicker';
-export * from './components/ExpressionBuilder';
+export {ExpressionBuilder} from './components/ExpressionBuilder';
+export {ExpressionBuilderModal} from './components/ExpressionBuilderModal';
 export {Input} from './components/Input';
 export {ManagementToolbar} from './components/ManagementToolbar/index';
 export {ManagementToolbarSearch} from './components/ManagementToolbar/ManagementToolbarSearch';
