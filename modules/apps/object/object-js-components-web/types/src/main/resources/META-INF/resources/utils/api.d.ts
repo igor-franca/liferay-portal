@@ -191,5 +191,5 @@ export declare function updatePickListItem({
 export declare function updateRelationship({
 	objectRelationshipId,
 	...others
-}: ObjectRelationship): Promise<any>;
+}: Partial<ObjectRelationship>): Promise<any>;
 export {};

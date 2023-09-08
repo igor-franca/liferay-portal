@@ -444,7 +444,7 @@ export async function updatePickListItem({
 export async function updateRelationship({
 	objectRelationshipId,
 	...others
-}: ObjectRelationship) {
+}: Partial<ObjectRelationship>) {
 	return await save({
 		item: others,
 		url: `/o/object-admin/v1.0/object-relationships/${objectRelationshipId}`,

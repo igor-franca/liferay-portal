@@ -3,14 +3,22 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {ClayButtonWithIcon} from '@clayui/button';
-import {sub} from 'frontend-js-web';
+import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
+import {createResourceURL, sub} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
 import {Edge, Node, isEdge, isNode} from 'react-flow-renderer';
 
+import {TYPES} from '../ModelBuilderContext/typesEnum';
+
 import './RightSidebarObjectRelationshipDetails.scss';
 
-import {API, Input, SingleSelect} from '@liferay/object-js-components-web';
+import {
+	API,
+	Input,
+	SingleSelect,
+	getLocalizableLabel,
+	openToast,
+} from '@liferay/object-js-components-web';
 import {InputLocalized} from 'frontend-js-components-web';
 
 import {firstLetterUppercase} from '../../../utils/string';
@@ -18,6 +26,7 @@ import {TDeletionType} from '../../ObjectRelationship/EditRelationship';
 import {ModalDeleteObjectRelationship} from '../../ObjectRelationship/ModalDeleteObjectRelationship';
 import {useObjectRelationshipForm} from '../../ObjectRelationship/ObjectRelationshipFormBase';
 import {useObjectFolderContext} from '../ModelBuilderContext/objectFolderContext';
+import SelectRelationship from '../../ObjectRelationship/SelectRelationship';
 import {ObjectRelationshipEdgeData} from '../types';
 
 interface RightSidebarObjectRelationshipDetailsProps {
@@ -27,9 +36,19 @@ interface RightSidebarObjectRelationshipDetailsProps {
 export function RightSidebarObjectRelationshipDetails({
 	deletionTypes,
 }: RightSidebarObjectRelationshipDetailsProps) {
-	const [{elements}] = useObjectFolderContext();
+	const [{baseResourceURL, elements}, dispatch] = useObjectFolderContext();
+	const [objectDefinition1, setObjectDefinition1] = useState<
+		Partial<ObjectDefinition>
+	>();
+	const [objectDefinition2, setObjectDefinition2] = useState<
+		Partial<ObjectDefinition>
+	>();
+	const [parameterRequired, setParameterRequired] = useState(false);
 	const [readOnly, setReadOnly] = useState(true);
+	const [restContextPath, setRestContextPath] = useState('');
 	const [showModal, setShowModal] = useState(false);
+
+	const defaultLanguageId = Liferay.ThemeDisplay.getDefaultLanguageId();
 
 	const selectedEdge = elements.find((element) => {
 		if (isEdge(element)) {
@@ -38,7 +57,12 @@ export function RightSidebarObjectRelationshipDetails({
 		}
 	}) as Edge<ObjectRelationshipEdgeData>;
 
-	const {setValues, values} = useObjectRelationshipForm({
+	const {
+		errors,
+		handleValidate,
+		setValues,
+		values,
+	} = useObjectRelationshipForm({
 		initialValues: {
 			id: 0,
 			label: {},
@@ -56,6 +80,35 @@ export function RightSidebarObjectRelationshipDetails({
 				)) as ObjectRelationship;
 
 				setValues(selectedObjectRelationshipResponse);
+
+				const objectDefinition1 = await API.getObjectDefinitionById(
+					selectedObjectRelationshipResponse.objectDefinitionId1
+				);
+
+				const objectDefinition2 = await API.getObjectDefinitionById(
+					selectedObjectRelationshipResponse.objectDefinitionId2
+				);
+
+				setObjectDefinition1(objectDefinition1);
+
+				setObjectDefinition2(objectDefinition2);
+
+				const url = createResourceURL(baseResourceURL, {
+					objectDefinitionId: objectDefinition1.id,
+					p_p_resource_id:
+						'/object_definitions/get_object_relationship_info',
+				}).href;
+
+				const {
+					parameterRequired,
+					restContextPath,
+				} = await API.fetchJSON<{
+					parameterRequired: boolean;
+					restContextPath: string;
+				}>(url);
+
+				setParameterRequired(parameterRequired);
+				setRestContextPath(restContextPath ?? '');
 
 				const nodeObjectDefinition1 = elements.find(
 					(element) =>
@@ -80,6 +133,67 @@ export function RightSidebarObjectRelationshipDetails({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedEdge]);
 
+	const onSubmit = async () => {
+		const validationErrors = handleValidate();
+
+		if (!Object.keys(validationErrors).length) {
+			const relationship = {
+				...values,
+				objectRelationshipId: values.id,
+			};
+
+			try {
+				await API.updateRelationship(relationship);
+
+				openToast({
+					message: Liferay.Language.get(
+						'the-object-relationship-was-updated-successfully'
+					),
+				});
+			}
+			catch (error: unknown) {
+				const {message} = error as Error;
+
+				openToast({message, type: 'danger'});
+			}
+
+			let newObjectRelationship = {};
+
+			const updatedElements = elements.map((element) => {
+				if (
+					isEdge(element) &&
+					(element as Edge<ObjectRelationshipEdgeData>).data
+						?.objectRelationshipId ===
+						relationship?.objectRelationshipId
+				) {
+					newObjectRelationship = {
+						...element.data,
+						deletionType: relationship.deletionType,
+						label: getLocalizableLabel(
+							defaultLanguageId,
+							relationship.label,
+							relationship.name
+						),
+					};
+
+					return {
+						...element,
+						data: newObjectRelationship,
+					};
+				}
+
+				return element;
+			});
+
+			dispatch({
+				payload: {
+					newElements: updatedElements,
+				},
+				type: TYPES.SET_ELEMENTS,
+			});
+		}
+	};
+
 	return (
 		<>
 			<div className="lfr-objects__model-builder-right-sidebar-relationship-title-container">
@@ -92,61 +206,68 @@ export function RightSidebarObjectRelationshipDetails({
 					</span>
 				</div>
 
-				<ClayButtonWithIcon
-					aria-label={Liferay.Language.get('delete-relationship')}
-					displayType="secondary"
-					onClick={() => setShowModal(true)}
-					symbol="trash"
-					title={Liferay.Language.get('delete-relationship')}
-				/>
+				<div className="lfr-objects__model-builder-right-sidebar-relationship-title-buttons-container">
+					<ClayButton
+						aria-label={Liferay.Language.get('save-relationship')}
+						className="lfr-objects__model-builder-right-sidebar-relationship-title-save-button"
+						displayType="primary"
+						onClick={() => onSubmit()}
+					>
+						{Liferay.Language.get('save')}
+					</ClayButton>
+
+					<ClayButtonWithIcon
+						aria-label={Liferay.Language.get('delete-relationship')}
+						displayType="secondary"
+						onClick={() => setShowModal(true)}
+						symbol="trash"
+						title={Liferay.Language.get('delete-relationship')}
+					/>
+				</div>
 			</div>
 
 			<div className="lfr-objects__model-builder-right-sidebar-relationship-content">
 				<InputLocalized
 					disableFlag={readOnly}
 					disabled={readOnly}
-					error=""
+					error={errors.label}
 					label={Liferay.Language.get('label')}
-					onChange={() => {}}
+					onChange={(label) => setValues({label})}
 					required
 					translations={values.label as LocalizedValue<string>}
 				/>
 
 				<Input
 					disabled
-					error=""
 					label={Liferay.Language.get('name')}
-					onChange={() => {}}
 					required
 					value={values.name}
 				/>
 
 				<Input
 					disabled
-					error=""
 					label={
 						values.type === 'manyToMany'
 							? Liferay.Language.get('many-records-of')
 							: Liferay.Language.get('one-record-of')
 					}
-					onChange={() => {}}
 					required
-					value={values.name}
+					value={objectDefinition1?.name}
 				/>
 
 				<Input
 					disabled
-					error=""
 					label={Liferay.Language.get('many-records-of')}
-					onChange={() => {}}
 					required
-					value={values.objectDefinitionName2}
+					value={objectDefinition2?.name}
 				/>
 
 				<SingleSelect
 					disabled={readOnly}
 					label={Liferay.Language.get('deletion-type')}
-					onChange={() => {}}
+					onChange={(deletionType) =>
+						setValues({deletionType: deletionType.value})
+					}
 					options={deletionTypes}
 					required
 					value={
@@ -154,6 +275,29 @@ export function RightSidebarObjectRelationshipDetails({
 						firstLetterUppercase(values.deletionType)
 					}
 				/>
+
+				{parameterRequired && selectedEdge.data?.type === 'oneToMany' && (
+					<>
+						<Input
+							label={Liferay.Language.get('api-endpoint')}
+							readOnly
+							value={restContextPath}
+						/>
+
+						<SelectRelationship
+							error={errors.parameterObjectFieldName}
+							objectDefinitionExternalReferenceCode={
+								values.objectDefinitionExternalReferenceCode2 as string
+							}
+							onChange={(parameterObjectFieldName) =>
+								setValues({
+									parameterObjectFieldName,
+								})
+							}
+							value={values.parameterObjectFieldName}
+						/>
+					</>
+				)}
 			</div>
 
 			{showModal && (
