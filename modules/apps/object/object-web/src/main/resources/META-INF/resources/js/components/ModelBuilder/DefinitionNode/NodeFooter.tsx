@@ -62,7 +62,20 @@ export default function NodeFooter({
 								{Liferay.Language.get('add-field')}
 							</DropDown.Item>
 
-							<DropDown.Item>
+							<DropDown.Item
+								onClick={() => {
+									setShowModal(
+										(
+											previousState: Partial<
+												ModelBuilderModals
+											>
+										) => ({
+											...previousState,
+											addRelationship: true,
+										})
+									);
+								}}
+							>
 								<ClayIcon
 									className="c-mr-3 text-4"
 									symbol="nodes"
