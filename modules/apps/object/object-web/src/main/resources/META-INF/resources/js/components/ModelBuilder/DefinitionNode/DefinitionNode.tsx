@@ -4,7 +4,7 @@
  */
 
 import classNames from 'classnames';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
 	Handle,
 	Node,
@@ -22,9 +22,11 @@ import {
 	getLocalizableLabel,
 	openToast,
 } from '@liferay/object-js-components-web';
+import {createResourceURL} from 'frontend-js-web';
 
 import {formatActionURL} from '../../../utils/fds';
 import {ModalAddObjectField} from '../../ObjectField/ModalAddObjectField';
+import {ModalAddObjectRelationship} from '../../ObjectRelationship/ModalAddObjectRelationship';
 import {ModalDeleteObjectDefinition} from '../../ViewObjectDefinitions/ModalDeleteObjectDefinition';
 import {DeletedObjectDefinition} from '../../ViewObjectDefinitions/ViewObjectDefinitions';
 import {getDefinitionNodeActions} from '../../ViewObjectDefinitions/objectDefinitionUtil';
@@ -65,15 +67,18 @@ export function DefinitionNode({
 			editObjectDefinitionURL,
 			elements,
 			objectDefinitionPermissionsURL,
+			selectedObjectDefinitionNode,
 		},
 		dispatch,
 	] = useObjectFolderContext();
 	const store = useStore();
 
 	const [showModal, setShowModal] = useState<Partial<ModelBuilderModals>>({
+		addObjectRelationship: false,
 		deleteObjectDefinition: false,
 		editObjectDefinitionERC: false,
 	});
+	const [parameterRequired, setParameterRequired] = useState(false);
 	const [
 		deletedObjectDefinition,
 		setDeletedObjectDefinition,
@@ -102,6 +107,27 @@ export function DefinitionNode({
 	};
 
 	const viewDetailsURL = formatActionURL(editObjectDefinitionURL, id);
+
+	useEffect(() => {
+		const makeFetch = async () => {
+			if (selectedObjectDefinitionNode) {
+				const url = createResourceURL(baseResourceURL, {
+					objectDefinitionId: selectedObjectDefinitionNode.id,
+					p_p_resource_id:
+						'/object_definitions/get_object_relationship_info',
+				}).href;
+
+				const {parameterRequired} = await API.fetchJSON<{
+					parameterRequired: boolean;
+				}>(url);
+
+				setParameterRequired(parameterRequired);
+			}
+		};
+
+		makeFetch();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [selectedObjectDefinitionNode]);
 
 	return (
 		<>
@@ -247,6 +273,25 @@ export function DefinitionNode({
 							addObjectField: false,
 						}))
 					}
+				/>
+			)}
+
+			{showModal.addObjectRelationship && (
+				<ModalAddObjectRelationship
+					baseResourceURL={baseResourceURL}
+					handleOnClose={() => {
+						setShowModal(
+							(previousState: Partial<ModelBuilderModals>) => ({
+								...previousState,
+								addRelationship: false,
+							})
+						);
+					}}
+					objectDefinitionExternalReferenceCode={
+						selectedObjectDefinitionNode?.data
+							?.externalReferenceCode as string
+					}
+					parameterRequired={parameterRequired}
 				/>
 			)}
 
