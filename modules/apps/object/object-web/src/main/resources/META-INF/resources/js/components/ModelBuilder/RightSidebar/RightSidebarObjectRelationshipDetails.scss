@@ -17,5 +17,25 @@
 			justify-content: space-between;
 			padding: 1rem;
 		}
+
+		&-buttons-container {
+			align-items: center;
+			display: flex;
+			gap: 10px;
+			justify-content: center;
+		}
+
+		&-delete-button {
+			height: 32px;
+			width: 32px;
+		}
+
+		&-save-button {
+			align-items: center;
+			display: flex;
+			height: 32px;
+			justify-content: center;
+			width: 57px;
+		}
 	}
 }
