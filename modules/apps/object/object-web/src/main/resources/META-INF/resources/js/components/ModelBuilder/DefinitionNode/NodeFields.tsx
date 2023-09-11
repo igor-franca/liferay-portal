@@ -9,7 +9,7 @@ import React from 'react';
 import {useStore} from 'react-flow-renderer';
 
 import {getBusinessTypeLabel} from '../../../utils/businessTypeLabel';
-import {useFolderContext} from '../ModelBuilderContext/objectFolderContext';
+import {useObjectFolderContext} from '../ModelBuilderContext/objectFolderContext';
 import {TYPES} from '../ModelBuilderContext/typesEnum';
 
 import './NodeFields.scss';
@@ -28,7 +28,7 @@ export default function NodeFields({
 	showAll,
 }: NodeFieldsProps) {
 	const store = useStore();
-	const [_, dispatch] = useFolderContext();
+	const [_, dispatch] = useObjectFolderContext();
 
 	const handleClickDetails = (selectedFieldName: string) => {
 		const {edges, nodes} = store.getState();
