@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {API} from '@liferay/object-js-components-web';
+import {API, getLocalizableLabel} from '@liferay/object-js-components-web';
 import {createResourceURL, openModal, sub} from 'frontend-js-web';
 import {SetStateAction} from 'react';
 
@@ -277,6 +277,113 @@ export function getFolderActions(
 	}
 
 	return kebabOptions;
+}
+
+export async function getUpdateModelBuilderStructurePayload(
+	currentObjectFolderName: string
+) {
+	const objectFolderResponse = await API.getAllObjectFolders();
+
+	const currentObjectFolder = objectFolderResponse.find(
+		(objectFolder) => objectFolder.name === currentObjectFolderName
+	) as ObjectFolder;
+
+	const objectFoldersWithObjectDefinitions: ObjectFolder[] = await Promise.all(
+		objectFolderResponse.map(async (objectFolder) => {
+			const objectFolderWithObjectDefinitions: ObjectDefinitionNodeData[] = [];
+
+			const objectDefinitionsFilteredByObjectFolder = await API.getObjectDefinitions(
+				`filter=objectFolderExternalReferenceCode eq '${objectFolder.externalReferenceCode}'`
+			);
+
+			const linkedObjectDefinitions: ObjectDefinition[] = [];
+
+			await Promise.all(
+				objectFolder.objectFolderItems
+					.filter(
+						(objectFolderItem) =>
+							objectFolderItem.linkedObjectDefinition
+					)
+					.map(async (objectFolderItem) => {
+						const response = await API.getObjectDefinitionByExternalReferenceCode(
+							objectFolderItem.objectDefinitionExternalReferenceCode
+						);
+
+						linkedObjectDefinitions.push(response);
+					})
+			);
+
+			const updateObjectFoldersLinkedObjectDefinition = ({
+				linked,
+				objectDefinitions,
+			}: {
+				linked: boolean;
+				objectDefinitions: ObjectDefinition[];
+			}) => {
+				objectDefinitions.forEach((objectDefinition) => {
+					const objectFolderItem = objectFolder.objectFolderItems.find(
+						(objectFolderItem) =>
+							objectFolderItem.objectDefinitionExternalReferenceCode ===
+							objectDefinition.externalReferenceCode
+					);
+
+					if (objectFolderItem) {
+						objectFolderWithObjectDefinitions.push({
+							...objectDefinition,
+							hasObjectDefinitionDeleteResourcePermission: !!objectDefinition
+								.actions.delete,
+							hasObjectDefinitionManagePermissionsResourcePermission: !!objectDefinition
+								.actions.permissions,
+							hasObjectDefinitionUpdateResourcePermission: !!objectDefinition
+								.actions.update,
+							hasObjectDefinitionViewResourcePermission: !!objectDefinition
+								.actions.get,
+							hasSelfRelationships: false,
+							linked,
+							nodeSelected: false,
+							objectFields: objectDefinition.objectFields.map(
+								(field) =>
+									({
+										businessType: field.businessType,
+										externalReferenceCode:
+											field.externalReferenceCode,
+										label: getLocalizableLabel(
+											objectDefinition.defaultLanguageId,
+											field.label,
+											field.name
+										),
+										name: field.name,
+										primaryKey: field.name === 'id',
+										required: field.required,
+										selected: false,
+									} as ObjectFieldNode)
+							),
+						});
+					}
+				});
+			};
+
+			updateObjectFoldersLinkedObjectDefinition({
+				linked: false,
+				objectDefinitions: objectDefinitionsFilteredByObjectFolder,
+			});
+
+			updateObjectFoldersLinkedObjectDefinition({
+				linked: true,
+				objectDefinitions: linkedObjectDefinitions,
+			});
+
+			return {
+				...objectFolder,
+				objectDefinitions: objectFolderWithObjectDefinitions,
+			};
+		})
+	);
+
+	return {
+		objectFolders: objectFoldersWithObjectDefinitions,
+		selectedObjectFolder: currentObjectFolder,
+	};
 }
 
 export function normalizeName(str: string) {
