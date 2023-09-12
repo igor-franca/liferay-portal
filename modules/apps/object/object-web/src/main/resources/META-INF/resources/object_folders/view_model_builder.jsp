@@ -21,37 +21,45 @@ renderResponse.setTitle(LanguageUtil.get(request, "object-model-builder"));
 
 <liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" var="baseResourceURL" />
 
-<react:component
-	module="js/components/ModelBuilder/index"
-	props='<%=
-		HashMapBuilder.<String, Object>put(
-			"baseResourceURL", String.valueOf(baseResourceURL)
-		).put(
-			"companyKeyValuePair", objectDefinitionsDetailsDisplayContext.getScopeKeyValuePairs("company")
-		).put(
-			"deletionTypes", objectDefinitionsRelationshipsDisplayContext.getObjectRelationshipDeletionTypesJSONArray()
-		).put(
-			"editObjectDefinitionURL", objectDefinitionsDetailsDisplayContext.getEditObjectDefinitionURL()
-		).put(
-			"filterOperators", LocalizedJSONArrayUtil.getFilterOperatorsJSONObject(locale)
-		).put(
-			"forbiddenChars", PropsUtil.getArray(PropsKeys.DL_CHAR_BLACKLIST)
-		).put(
-			"forbiddenLastChars", objectDefinitionsFieldsDisplayContext.getForbiddenLastCharacters()
-		).put(
-			"forbiddenNames", PropsUtil.getArray(PropsKeys.DL_NAME_BLACKLIST)
-		).put(
-			"objectDefinitionPermissionsURL", objectDefinitionsDetailsDisplayContext.getPermissionsURL(ObjectDefinition.class.getName())
-		).put(
-			"objectWebLearnResources", LearnMessageUtil.getReactDataJSONObject("object-web")
-		).put(
-			"siteKeyValuePair", objectDefinitionsDetailsDisplayContext.getScopeKeyValuePairs("site")
-		).put(
-			"storages", objectDefinitionsDetailsDisplayContext.getStoragesJSONArray()
-		).put(
-			"viewApiURL", "/o/object-admin/v1.0/object-definitions"
-		).put(
-			"workflowStatusJSONArray", LocalizedJSONArrayUtil.getWorkflowStatusJSONArray(locale)
-		).build()
-	%>'
-/>
+<div>
+	<react:component
+		module="js/components/ModelBuilder/index"
+		props='<%=
+			HashMapBuilder.<String, Object>put(
+				"baseResourceURL", String.valueOf(baseResourceURL)
+			).put(
+				"companyKeyValuePair", objectDefinitionsDetailsDisplayContext.getScopeKeyValuePairs("company")
+			).put(
+				"deletionTypes", objectDefinitionsRelationshipsDisplayContext.getObjectRelationshipDeletionTypesJSONArray()
+			).put(
+				"editObjectDefinitionURL", objectDefinitionsDetailsDisplayContext.getEditObjectDefinitionURL()
+			).put(
+				"filterOperators", LocalizedJSONArrayUtil.getFilterOperatorsJSONObject(locale)
+			).put(
+				"forbiddenChars", PropsUtil.getArray(PropsKeys.DL_CHAR_BLACKLIST)
+			).put(
+				"forbiddenLastChars", objectDefinitionsFieldsDisplayContext.getForbiddenLastCharacters()
+			).put(
+				"forbiddenNames", PropsUtil.getArray(PropsKeys.DL_NAME_BLACKLIST)
+			).put(
+				"objectDefinitionPermissionsURL", objectDefinitionsDetailsDisplayContext.getPermissionsURL(ObjectDefinition.class.getName())
+			).put(
+				"objectWebLearnResources", LearnMessageUtil.getReactDataJSONObject("object-web")
+			).put(
+				"siteKeyValuePair", objectDefinitionsDetailsDisplayContext.getScopeKeyValuePairs("site")
+			).put(
+				"storages", objectDefinitionsDetailsDisplayContext.getStoragesJSONArray()
+			).put(
+				"viewApiURL", "/o/object-admin/v1.0/object-definitions"
+			).put(
+				"workflowStatusJSONArray", LocalizedJSONArrayUtil.getWorkflowStatusJSONArray(locale)
+			).build()
+		%>'
+	/>
+</div>
+
+<div>
+	<react:component
+		module="js/components/ExpressionBuilderModal"
+	/>
+</div>
