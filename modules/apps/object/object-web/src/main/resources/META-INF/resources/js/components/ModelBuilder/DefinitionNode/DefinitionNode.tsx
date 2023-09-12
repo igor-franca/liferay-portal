@@ -211,11 +211,11 @@ export function DefinitionNode({
 
 			{showModal.addObjectField && (
 				<ModalAddObjectField
+					baseResourceURL={baseResourceURL}
 					creationLanguageId={defaultLanguageId}
 					objectDefinitionExternalReferenceCode={
 						externalReferenceCode
 					}
-					objectFieldTypes={[]}
 					objectName={name}
 					onAfterSubmit={(newObjectField) => {
 						const {edges, nodes} = store.getState();
