@@ -97,9 +97,14 @@ interface saveProps {
 	returnValue?: boolean;
 	url: string;
 }
-export declare function deleteFolder(id: number): Promise<void>;
+export declare function addPickListItem({
+	id,
+	key,
+	name_i18n,
+}: Partial<PickListItem>): Promise<any>;
 export declare function deleteObjectDefinitions(id: number): Promise<void>;
 export declare function deleteObjectField(id: number): Promise<void>;
+export declare function deleteObjectFolder(id: number): Promise<void>;
 export declare function deleteObjectRelationships(id: number): Promise<void>;
 export declare function deletePickList(pickListId: number): Promise<void>;
 export declare function deletePickListItem(id: number): Promise<void>;
@@ -107,12 +112,8 @@ export declare function fetchJSON<T>(
 	input: RequestInfo,
 	init?: RequestInit
 ): Promise<T>;
-export declare function getAllFolders(): Promise<ObjectFolder[]>;
 export declare function getAllObjectDefinitions(): Promise<ObjectDefinition[]>;
 export declare function getAllObjectFolders(): Promise<ObjectFolder[]>;
-export declare function getFolderByERC(
-	folderERC: string
-): Promise<ObjectFolder>;
 export declare function getList<T>(url: string): Promise<T[]>;
 export declare function getNotificationTemplateByExternalReferenceCode(
 	notificationTemplateExternalReferenceCode: string
@@ -141,6 +142,9 @@ export declare function getObjectFieldsByExternalReferenceCode(
 export declare function getObjectFieldsById(
 	objectDefinitionId: number
 ): Promise<ObjectField[]>;
+export declare function getObjectFolderByERC(
+	folderERC: string
+): Promise<ObjectFolder>;
 export declare function getObjectRelationshipsByExternalReferenceCode(
 	externalReferenceCode: string
 ): Promise<ObjectRelationship[]>;
@@ -158,6 +162,15 @@ export declare function getPickLists(): Promise<PickList[]>;
 export declare function getRelationship<T>(
 	objectRelationshipId: number
 ): Promise<T>;
+export declare function save({
+	item,
+	method,
+	returnValue,
+	url,
+}: saveProps): Promise<any>;
+export declare function postObjectDefinition(
+	objectDefinition: Partial<ObjectDefinition>
+): Promise<any>;
 export declare function publishObjectDefinitionById(
 	objectDefinitionId: number
 ): Promise<Response>;
@@ -167,17 +180,6 @@ export declare function putObjectDefinitionByExternalReferenceCode(
 export declare function putObjectFolderByERC(
 	folder: Partial<ObjectFolder>
 ): Promise<Response>;
-export declare function save({
-	item,
-	method,
-	returnValue,
-	url,
-}: saveProps): Promise<any>;
-export declare function addPickListItem({
-	id,
-	key,
-	name_i18n,
-}: Partial<PickListItem>): Promise<any>;
 export declare function updatePickList({
 	externalReferenceCode,
 	id,
