@@ -120,8 +120,8 @@ export declare type TState = {
 };
 export interface LeftSidebarItem {
 	hiddenObjectFolderObjectDefinitionNodes: boolean;
-	name: string;
 	leftSidebarObjectDefinitionItems?: LeftSidebarObjectDefinitionItem[];
+	name: string;
 	objectFolderName: string;
 	type: 'objectFolder' | 'objectDefinition';
 }
@@ -136,11 +136,11 @@ export interface LeftSidebarObjectDefinitionItem {
 }
 export interface ObjectRelationshipEdgeData {
 	defaultLanguageId?: Liferay.Language.Locale;
-	edgeSelected: boolean;
 	label: string;
 	markerEndId: string;
 	markerStartId: string;
 	objectRelationshipId: number;
+	selected: boolean;
 	selfObjectRelationships?: ObjectRelationship[];
 	sourceY: number;
 	targetY: number;

@@ -17,7 +17,7 @@ declare type DeleteObjectDefinitionProps = {
 declare type ObjectDefinitionNodeActionsProps = {
 	baseResourceURL: string;
 	handleShowDeleteObjectDefinitionModal: () => void;
-	handleShowEditObjectDefinitionERCModal: () => void;
+	handleShowEditObjectDefinitionExternalReferenceCodeModal: () => void;
 	handleShowRedirectObjectDefinitionModal: () => void;
 	hasObjectDefinitionDeleteResourcePermission: boolean;
 	hasObjectDefinitionManagePermissionsResourcePermission: boolean;
@@ -61,7 +61,7 @@ export declare function deleteRelationship(id: number): Promise<void>;
 export declare function getObjectDefinitionNodeActions({
 	baseResourceURL,
 	handleShowDeleteObjectDefinitionModal,
-	handleShowEditObjectDefinitionERCModal,
+	handleShowEditObjectDefinitionExternalReferenceCodeModal,
 	handleShowRedirectObjectDefinitionModal,
 	hasObjectDefinitionDeleteResourcePermission,
 	hasObjectDefinitionManagePermissionsResourcePermission,

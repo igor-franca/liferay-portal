@@ -30,8 +30,7 @@ export function RightSidebarObjectRelationshipDetails({
 
 	const selectedObjectRelationshipEdge = elements.find((element) => {
 		if (isEdge(element)) {
-			return (element as Edge<ObjectRelationshipEdgeData>).data
-				?.selected;
+			return (element as Edge<ObjectRelationshipEdgeData>).data?.selected;
 		}
 	}) as Edge<ObjectRelationshipEdgeData>;
 

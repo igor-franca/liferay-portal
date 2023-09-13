@@ -39,9 +39,10 @@ export function ModalMoveObjectDefinition({
 	setMoveObjectDefinition,
 }: ModalMoveObjectDefinitionProps) {
 	const [query, setQuery] = useState('');
-	const [selectedObjectFolderExternalReferenceCode, setSelectedObjectFolderExternalReferenceCode] = useState<
-		string
-	>('');
+	const [
+		selectedObjectFolderExternalReferenceCode,
+		setSelectedObjectFolderExternalReferenceCode,
+	] = useState<string>('');
 	const [error, setError] = useState<string>('');
 
 	const {observer, onClose} = useModal({

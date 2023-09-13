@@ -104,7 +104,9 @@ export declare function addPickListItem({
 }: Partial<PickListItem>): Promise<any>;
 export declare function deleteObjectDefinitions(id: number): Promise<void>;
 export declare function deleteObjectField(id: number): Promise<void>;
-export declare function deleteObjectFolder(id: number): Promise<void>;
+export declare function deleteObjectFolder(
+	objectFolderId: number
+): Promise<void>;
 export declare function deleteObjectRelationships(id: number): Promise<void>;
 export declare function deletePickList(pickListId: number): Promise<void>;
 export declare function deletePickListItem(id: number): Promise<void>;
@@ -142,8 +144,8 @@ export declare function getObjectFieldsByExternalReferenceCode(
 export declare function getObjectFieldsById(
 	objectDefinitionId: number
 ): Promise<ObjectField[]>;
-export declare function getObjectFolderByERC(
-	folderERC: string
+export declare function getObjectFolderByExternalReferenceCode(
+	objectFolderExternalReferenceCode: string
 ): Promise<ObjectFolder>;
 export declare function getObjectRelationshipsByExternalReferenceCode(
 	externalReferenceCode: string
@@ -177,8 +179,8 @@ export declare function publishObjectDefinitionById(
 export declare function putObjectDefinitionByExternalReferenceCode(
 	values: Partial<ObjectDefinition>
 ): Promise<Response>;
-export declare function putObjectFolderByERC(
-	folder: Partial<ObjectFolder>
+export declare function putObjectFolderByExternalReferenceCode(
+	objectFolder: Partial<ObjectFolder>
 ): Promise<Response>;
 export declare function updatePickList({
 	externalReferenceCode,

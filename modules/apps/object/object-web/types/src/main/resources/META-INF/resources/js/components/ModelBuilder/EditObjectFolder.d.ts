@@ -8,8 +8,8 @@
 import {KeyValuePair} from '../ObjectDetails/EditObjectDetails';
 interface EditObjectFolder {
 	companyKeyValuePairs: KeyValuePair[];
-	objectRelationshipDeletionTypes: LabelValueObject[];
 	objectFolderName: string;
+	objectRelationshipDeletionTypes: LabelValueObject[];
 	siteKeyValuePairs: KeyValuePair[];
 }
 export default function EditObjectFolder({

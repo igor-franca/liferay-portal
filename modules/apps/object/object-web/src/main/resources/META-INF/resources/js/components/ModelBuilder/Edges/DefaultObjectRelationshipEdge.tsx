@@ -54,7 +54,10 @@ export default function DefaultObjectRelationshipEdge({
 	} = data!;
 
 	const [_, dispatch] = useObjectFolderContext();
-	const [objectRelationshipEdgeStyle, setObjectRelationshipEdgeStyle] = useState({
+	const [
+		objectRelationshipEdgeStyle,
+		setObjectRelationshipEdgeStyle,
+	] = useState({
 		...style,
 		...getInitialObjectRelationshipEdgeStyle(selected),
 	});

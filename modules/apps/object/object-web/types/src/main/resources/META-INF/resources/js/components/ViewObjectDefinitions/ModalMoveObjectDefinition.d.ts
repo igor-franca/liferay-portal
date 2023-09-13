@@ -9,14 +9,14 @@ import './ModalMoveObjectDefinition.scss';
 interface ModalMoveObjectDefinitionProps {
 	handleOnClose: () => void;
 	objectDefinition: ObjectDefinition;
-	objectFoldersList: ObjectFolder[];
+	objectFolders: ObjectFolder[];
 	selectedObjectFolder: Partial<ObjectFolder>;
 	setMoveObjectDefinition: (value: ObjectDefinition | null) => void;
 }
 export declare function ModalMoveObjectDefinition({
 	handleOnClose,
 	objectDefinition,
-	objectFoldersList,
+	objectFolders,
 	selectedObjectFolder,
 	setMoveObjectDefinition,
 }: ModalMoveObjectDefinitionProps): JSX.Element;

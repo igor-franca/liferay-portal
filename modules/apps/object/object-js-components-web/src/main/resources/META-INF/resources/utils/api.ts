@@ -278,7 +278,9 @@ export async function getObjectFieldsById(objectDefinitionId: number) {
 	);
 }
 
-export async function getObjectFolderByExternalReferenceCode(objectFolderExternalReferenceCode: string) {
+export async function getObjectFolderByExternalReferenceCode(
+	objectFolderExternalReferenceCode: string
+) {
 	const objectFolderResponse = await fetch(
 		`/o/object-admin/v1.0/object-folders/by-external-reference-code/${objectFolderExternalReferenceCode}`,
 		{method: 'GET'}
@@ -416,7 +418,9 @@ export async function putObjectDefinitionByExternalReferenceCode(
 	);
 }
 
-export async function putObjectFolderByExternalReferenceCode(objectFolder: Partial<ObjectFolder>) {
+export async function putObjectFolderByExternalReferenceCode(
+	objectFolder: Partial<ObjectFolder>
+) {
 	return await fetch(
 		`/o/object-admin/v1.0/object-folders/by-external-reference-code/${objectFolder.externalReferenceCode}`,
 		{

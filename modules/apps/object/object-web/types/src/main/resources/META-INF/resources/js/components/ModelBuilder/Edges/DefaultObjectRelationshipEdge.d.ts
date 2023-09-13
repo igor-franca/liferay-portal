@@ -7,7 +7,7 @@
 
 import {EdgeProps} from 'react-flow-renderer';
 import {ObjectRelationshipEdgeData} from '../types';
-export declare function getInitialEdgeStyle(
+export declare function getInitialObjectRelationshipEdgeStyle(
 	edgeSelected: boolean
 ): {
 	stroke: string;

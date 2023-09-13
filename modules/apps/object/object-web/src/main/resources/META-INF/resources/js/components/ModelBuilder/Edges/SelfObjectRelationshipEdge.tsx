@@ -53,7 +53,10 @@ export default function SelfObjectRelationshipEdge({
 
 	const [_, dispatch] = useObjectFolderContext();
 	const [activePopover, setActivePopover] = useState(false);
-	const [objectRelationshipEdgeStyle, setObjectRelationshipEdgeStyle] = useState({
+	const [
+		objectRelationshipEdgeStyle,
+		setObjectRelationshipEdgeStyle,
+	] = useState({
 		...style,
 		...getInitialObjectRelationshipEdgeStyle(selected),
 	});
@@ -125,10 +128,14 @@ export default function SelfObjectRelationshipEdge({
 				d={edgePath}
 				id={id}
 				markerEnd={
-					!hasManySelfObjectRelationships ? `url(#${markerEndId})` : ''
+					!hasManySelfObjectRelationships
+						? `url(#${markerEndId})`
+						: ''
 				}
 				markerStart={
-					!hasManySelfObjectRelationships ? `url(#${markerStartId})` : ''
+					!hasManySelfObjectRelationships
+						? `url(#${markerStartId})`
+						: ''
 				}
 				style={objectRelationshipEdgeStyle}
 			/>

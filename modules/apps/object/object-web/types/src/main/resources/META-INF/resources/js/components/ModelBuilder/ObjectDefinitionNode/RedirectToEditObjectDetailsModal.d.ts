@@ -7,10 +7,10 @@
 
 interface RedirectToEditObjectDetailsModalProps {
 	handleOnClose: () => void;
-	viewDetailsURL: string;
+	viewObjectDetailsURL: string;
 }
 export declare function RedirectToEditObjectDetailsModal({
 	handleOnClose,
-	viewDetailsURL,
+	viewObjectDetailsURL,
 }: RedirectToEditObjectDetailsModalProps): JSX.Element;
 export {};

@@ -9,11 +9,11 @@ import {KeyValuePair} from '../ObjectDetails/EditObjectDetails';
 interface CustomObjectFolderWrapperProps {
 	baseResourceURL: string;
 	companyKeyValuePairs: KeyValuePair[];
-	objectRelationshipDeletionTypes: LabelValueObject[];
 	editObjectDefinitionURL: string;
 	objectDefinitionPermissionsURL: string;
-	siteKeyValuePairs: KeyValuePair[];
 	objectDefinitionsStorageTypes: LabelValueObject[];
+	objectRelationshipDeletionTypes: LabelValueObject[];
+	siteKeyValuePairs: KeyValuePair[];
 }
 export default function CustomObjectFolderWrapper({
 	baseResourceURL,

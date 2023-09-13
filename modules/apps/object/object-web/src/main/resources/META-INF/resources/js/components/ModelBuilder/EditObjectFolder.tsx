@@ -18,8 +18,8 @@ import {RightSideBar} from './RightSidebar/index';
 
 interface EditObjectFolder {
 	companyKeyValuePairs: KeyValuePair[];
-	objectRelationshipDeletionTypes: LabelValueObject[];
 	objectFolderName: string;
+	objectRelationshipDeletionTypes: LabelValueObject[];
 	siteKeyValuePairs: KeyValuePair[];
 }
 export default function EditObjectFolder({

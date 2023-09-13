@@ -42,7 +42,7 @@ describe('The CardHeader component should', () => {
 
 	it('not render delete and edit folder actions on uncategorized folder', () => {
 		render(
-			<CardHeader
+			<ObjectFolderCardHeader
 				externalReferenceCode="uncategorized"
 				items={
 					getObjectFolderActions(1010, '', () => {}, {
@@ -52,7 +52,7 @@ describe('The CardHeader component should', () => {
 				}
 				label={{en_US: 'Uncategorized'}}
 				modelBuilderURL=""
-			></CardHeader>
+			></ObjectFolderCardHeader>
 		);
 
 		userEvent.click(screen.getByRole('button', {name: 'folder-actions'}));
