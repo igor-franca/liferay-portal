@@ -23,6 +23,10 @@ import {TYPES} from '../ModelBuilderContext/typesEnum';
 
 import './RightSidebarObjectFieldDetails.scss';
 
+interface CustomWindow extends Window {
+	__isReactDndBackendSetUp?: boolean;
+}
+
 export function RightSidebarObjectFieldDetails() {
 	const [showDeletionModal, setShowDeletionModal] = useState(false);
 	const [
@@ -145,6 +149,10 @@ export function RightSidebarObjectFieldDetails() {
 		makeFetch();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedField]);
+
+	if ((window as CustomWindow).__isReactDndBackendSetUp) {
+		(window as CustomWindow).__isReactDndBackendSetUp = false;
+	}
 
 	return (
 		<>
