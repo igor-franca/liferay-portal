@@ -12,7 +12,7 @@ import {
 	useStoreState,
 } from 'react-flow-renderer';
 
-import {useFolderContext} from '../ModelBuilderContext/objectFolderContext';
+import {useObjectFolderContext} from '../ModelBuilderContext/objectFolderContext';
 import {TYPES} from '../ModelBuilderContext/typesEnum';
 import {ObjectRelationshipEdgeData} from '../types';
 import {getEdgeParams} from '../utils';
@@ -36,7 +36,7 @@ export function getInitialLabelBgStyle(edgeSelected: boolean) {
 	};
 }
 
-export default function DefaultEdge({
+export default function DefaultObjectRelationshipEdge({
 	data,
 	id,
 	source,
@@ -44,22 +44,22 @@ export default function DefaultEdge({
 	target,
 }: EdgeProps<ObjectRelationshipEdgeData>) {
 	const {
-		edgeSelected,
 		label,
 		markerEndId,
 		markerStartId,
 		objectRelationshipId,
+		selected,
 		sourceY: currentSourceY,
 		targetY: currentTargetY,
 	} = data!;
 
-	const [_, dispatch] = useFolderContext();
-	const [edgeStyle, setEdgeStyle] = useState({
+	const [_, dispatch] = useObjectFolderContext();
+	const [objectRelationshipEdgeStyle, setObjectRelationshipEdgeStyle] = useState({
 		...style,
-		...getInitialEdgeStyle(edgeSelected),
+		...getInitialEdgeStyle(selected),
 	});
 	const [labelBgStyle, setLabelBgStyle] = useState(
-		getInitialLabelBgStyle(edgeSelected)
+		getInitialLabelBgStyle(selected)
 	);
 	const {edges, nodes} = useStoreState((state) => state);
 
@@ -73,8 +73,8 @@ export default function DefaultEdge({
 	]);
 
 	useEffect(() => {
-		if (edgeSelected) {
-			setEdgeStyle((style) => {
+		if (selected) {
+			setObjectRelationshipEdgeStyle((style) => {
 				return {...style, stroke: HIGHLIGHT_COLOR};
 			});
 			setLabelBgStyle((style) => {
@@ -85,7 +85,7 @@ export default function DefaultEdge({
 			});
 		}
 		else {
-			setEdgeStyle((style) => {
+			setObjectRelationshipEdgeStyle((style) => {
 				return {...style, stroke: DEFAULT_COLOR};
 			});
 			setLabelBgStyle((style) => {
@@ -95,7 +95,7 @@ export default function DefaultEdge({
 				};
 			});
 		}
-	}, [edgeSelected]);
+	}, [selected]);
 
 	if (!sourceNode || !targetNode) {
 		return null;
@@ -151,7 +151,7 @@ export default function DefaultEdge({
 				d={edgePath}
 				id={id}
 				markerEnd={`url(#${markerEndId})`}
-				style={edgeStyle}
+				style={objectRelationshipEdgeStyle}
 			/>
 
 			<path
@@ -159,7 +159,7 @@ export default function DefaultEdge({
 				d={reverseEdgePath}
 				id={id + 'reverse'}
 				markerEnd={`url(#${markerStartId})`}
-				style={edgeStyle}
+				style={objectRelationshipEdgeStyle}
 			/>
 
 			<EdgeText
@@ -180,7 +180,7 @@ export default function DefaultEdge({
 							nodes,
 							selectedObjectRelationshipId: objectRelationshipId.toString(),
 						},
-						type: TYPES.SET_SELECTED_EDGE,
+						type: TYPES.SET_SELECTED_OBJECT_RELATIONSHIP_EDGE,
 					});
 				}}
 				x={edgeCenterX}

@@ -19,7 +19,7 @@ export declare function getInitialLabelBgStyle(
 	fill: string;
 	height: string;
 };
-export default function DefaultEdge({
+export default function DefaultObjectRelationshipEdge({
 	data,
 	id,
 	source,
