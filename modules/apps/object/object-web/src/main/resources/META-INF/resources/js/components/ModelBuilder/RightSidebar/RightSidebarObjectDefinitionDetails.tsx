@@ -229,7 +229,7 @@ export function RightSidebarObjectDefinitionDetails({
 						!!values.actions?.update
 					}
 					isApproved={values.status?.label === 'approved'}
-					isLinkedObjectDefinition={selectedNode.data!.linked}
+					isLinkedObjectDefinition={selectedNode?.data!.linked}
 					setValues={setValues}
 					values={values as ObjectDefinition}
 				/>
@@ -238,7 +238,7 @@ export function RightSidebarObjectDefinitionDetails({
 			<div className="lfr-objects__model-builder-right-sidebar-object-definition-node-content">
 				<EntryDisplayContainer
 					errors={errors}
-					isLinkedObjectDefinition={selectedNode.data!.linked}
+					isLinkedObjectDefinition={selectedNode?.data!.linked}
 					nonRelationshipObjectFieldsInfo={
 						nonRelationshipObjectFieldsInfo ?? []
 					}
@@ -252,7 +252,7 @@ export function RightSidebarObjectDefinitionDetails({
 					errors={errors}
 					hasUpdateObjectDefinitionPermission={true}
 					isApproved={values.status?.label === 'approved'}
-					isLinkedObjectDefinition={selectedNode.data!.linked}
+					isLinkedObjectDefinition={selectedNode?.data!.linked}
 					isRootDescendantNode={false}
 					setValues={setValues}
 					siteKeyValuePair={siteKeyValuePair}
@@ -267,7 +267,7 @@ export function RightSidebarObjectDefinitionDetails({
 					<AccountRestrictionContainer
 						errors={errors}
 						isApproved={values?.status?.label === 'approved'}
-						isLinkedObjectDefinition={selectedNode.data!.linked}
+						isLinkedObjectDefinition={selectedNode?.data!.linked}
 						isRootDescendantNode={false}
 						objectFields={
 							(values?.objectFields as ObjectField[]) ?? []
@@ -283,7 +283,7 @@ export function RightSidebarObjectDefinitionDetails({
 					hasUpdateObjectDefinitionPermission={
 						!!values.actions?.update
 					}
-					isLinkedObjectDefinition={selectedNode.data!.linked}
+					isLinkedObjectDefinition={selectedNode?.data!.linked}
 					isRootDescendantNode={false}
 					setValues={setValues}
 					values={values as ObjectDefinition}

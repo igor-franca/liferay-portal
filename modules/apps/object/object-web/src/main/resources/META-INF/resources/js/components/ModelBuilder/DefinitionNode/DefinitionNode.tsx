@@ -233,6 +233,7 @@ export function DefinitionNode({
 							style={{
 								background: '#80ACFF',
 								height: '12px',
+								opacity: 0,
 								[position]: '-18px',
 								width: '12px',
 							}}
@@ -325,7 +326,7 @@ export function DefinitionNode({
 							})
 						);
 					}}
-					objectDefinitionExternalReferenceCode={
+					objectDefinitionExternalReferenceCode1={
 						selectedObjectDefinitionNode?.data
 							?.externalReferenceCode as string
 					}

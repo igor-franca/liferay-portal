@@ -22,6 +22,7 @@ import React, {useMemo, useState} from 'react';
 import {Node, useStore, useZoomPanHelper} from 'react-flow-renderer';
 
 import './LeftSidebar.scss';
+import {getUpdateModelBuilderStructurePayload} from '../../ViewObjectDefinitions/objectDefinitionUtil';
 import {useObjectFolderContext} from '../ModelBuilderContext/objectFolderContext';
 import {TYPES} from '../ModelBuilderContext/typesEnum';
 import {
@@ -132,30 +133,27 @@ export default function LeftSidebar({
 			};
 
 			try {
-				const newObjectDefinition = (await API.save({
+				(await API.save({
 					item: movedObjectDefinition,
 					method: 'PATCH',
 					returnValue: true,
 					url: `/o/object-admin/v1.0/object-definitions/${objectDefinition?.id}`,
 				})) as ObjectDefinition;
 
-				dispatch({
-					payload: {
-						newObjectDefinition,
-						selectedObjectFolderName,
-					},
-					type: TYPES.ADD_NEW_NODE_TO_OBJECT_FOLDER,
-				});
+				setTimeout(
+					async () => {
+						const payload = await getUpdateModelBuilderStructurePayload(
+							selectedObjectFolderName
+						);
 
-				if (!objectDefinition.linked) {
-					dispatch({
-						payload: {
-							currentObjectFolderName: currentObjectFolder!.name,
-							deletedNodeName: newObjectDefinition.name,
-						},
-						type: TYPES.DELETE_OBJECT_FOLDER_NODE,
-					});
-				}
+						dispatch({
+							payload,
+							type: TYPES.UPDATE_MODEL_BUILDER_STRUCTURE,
+						});
+					},
+
+					200
+				);
 
 				openToast({
 					message: sub(
@@ -245,6 +243,7 @@ export default function LeftSidebar({
 						onExpandedChange={setExpandedKeys}
 						onSelect={(item) => {
 							if (
+								!showActions &&
 								selectedObjectFolder.objectDefinitions?.find(
 									(objectDefinition) =>
 										objectDefinition.id ===
@@ -346,7 +345,7 @@ export default function LeftSidebar({
 																				{
 																					objectDefinitionId: id,
 																					objectFolderName:
-																						item.name,
+																						item.objectFolderName,
 																				}
 																			),
 																		symbolLeft:

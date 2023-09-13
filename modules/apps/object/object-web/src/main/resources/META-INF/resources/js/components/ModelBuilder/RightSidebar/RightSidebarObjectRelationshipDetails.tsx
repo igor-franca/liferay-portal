@@ -25,8 +25,8 @@ import {firstLetterUppercase} from '../../../utils/string';
 import {TDeletionType} from '../../ObjectRelationship/EditRelationship';
 import {ModalDeleteObjectRelationship} from '../../ObjectRelationship/ModalDeleteObjectRelationship';
 import {useObjectRelationshipForm} from '../../ObjectRelationship/ObjectRelationshipFormBase';
-import {useObjectFolderContext} from '../ModelBuilderContext/objectFolderContext';
 import SelectRelationship from '../../ObjectRelationship/SelectRelationship';
+import {useObjectFolderContext} from '../ModelBuilderContext/objectFolderContext';
 import {ObjectRelationshipEdgeData} from '../types';
 
 interface RightSidebarObjectRelationshipDetailsProps {
@@ -286,7 +286,7 @@ export function RightSidebarObjectRelationshipDetails({
 
 						<SelectRelationship
 							error={errors.parameterObjectFieldName}
-							objectDefinitionExternalReferenceCode={
+							objectDefinitionExternalReferenceCode1={
 								values.objectDefinitionExternalReferenceCode2 as string
 							}
 							onChange={(parameterObjectFieldName) =>

@@ -91,7 +91,7 @@ function DiagramBuilder({
 				sourceNode.data?.storageType === 'salesforce' ||
 				targetNode.data?.storageType === 'salesforce' ||
 				targetNode.data?.name === 'Address' ||
-				sourceNode.data?.linkedDefinition
+				sourceNode.data?.linked
 			) {
 				return;
 			}
