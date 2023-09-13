@@ -22,7 +22,7 @@ import OneMarker from './OneMarker';
 const DEFAULT_COLOR = '#80ACFF';
 const HIGHLIGHT_COLOR = '#0B5FFF';
 
-export function getInitialEdgeStyle(edgeSelected: boolean) {
+export function getInitialObjectRelationshipEdgeStyle(edgeSelected: boolean) {
 	return {
 		stroke: edgeSelected ? HIGHLIGHT_COLOR : DEFAULT_COLOR,
 		strokeWidth: '2px',
@@ -56,7 +56,7 @@ export default function DefaultObjectRelationshipEdge({
 	const [_, dispatch] = useObjectFolderContext();
 	const [objectRelationshipEdgeStyle, setObjectRelationshipEdgeStyle] = useState({
 		...style,
-		...getInitialEdgeStyle(selected),
+		...getInitialObjectRelationshipEdgeStyle(selected),
 	});
 	const [labelBgStyle, setLabelBgStyle] = useState(
 		getInitialLabelBgStyle(selected)

@@ -8,7 +8,7 @@
 import {EdgeProps} from 'react-flow-renderer';
 import {ObjectRelationshipEdgeData} from '../types';
 import './Edge.scss';
-export default function SelfEdge({
+export default function SelfObjectRelationshipEdge({
 	data,
 	id,
 	source,
