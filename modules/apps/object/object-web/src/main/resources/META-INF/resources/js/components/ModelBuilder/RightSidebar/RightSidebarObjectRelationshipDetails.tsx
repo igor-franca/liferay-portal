@@ -14,25 +14,24 @@ import {API, Input, SingleSelect} from '@liferay/object-js-components-web';
 import {InputLocalized} from 'frontend-js-components-web';
 
 import {firstLetterUppercase} from '../../../utils/string';
-import {TDeletionType} from '../../ObjectRelationship/EditRelationship';
 import {useObjectRelationshipForm} from '../../ObjectRelationship/ObjectRelationshipFormBase';
-import {useFolderContext} from '../ModelBuilderContext/objectFolderContext';
+import {useObjectFolderContext} from '../ModelBuilderContext/objectFolderContext';
 import {ObjectRelationshipEdgeData} from '../types';
 
 interface RightSidebarObjectRelationshipDetailsProps {
-	deletionTypes: TDeletionType[];
+	objectRelationshipDeletionTypes: LabelValueObject[];
 }
 
 export function RightSidebarObjectRelationshipDetails({
-	deletionTypes,
+	objectRelationshipDeletionTypes,
 }: RightSidebarObjectRelationshipDetailsProps) {
-	const [{elements}] = useFolderContext();
+	const [{elements}] = useObjectFolderContext();
 	const [readOnly, setReadOnly] = useState(true);
 
-	const selectedEdge = elements.find((element) => {
+	const selectedObjectRelationshipEdge = elements.find((element) => {
 		if (isEdge(element)) {
 			return (element as Edge<ObjectRelationshipEdgeData>).data
-				?.edgeSelected;
+				?.selected;
 		}
 	}) as Edge<ObjectRelationshipEdgeData>;
 
@@ -48,9 +47,9 @@ export function RightSidebarObjectRelationshipDetails({
 
 	useEffect(() => {
 		const makeFetch = async () => {
-			if (selectedEdge) {
+			if (selectedObjectRelationshipEdge) {
 				const selectedObjectRelationshipResponse = (await API.getRelationship(
-					selectedEdge.data!.objectRelationshipId
+					selectedObjectRelationshipEdge.data!.objectRelationshipId
 				)) as ObjectRelationship;
 
 				setValues(selectedObjectRelationshipResponse);
@@ -76,7 +75,7 @@ export function RightSidebarObjectRelationshipDetails({
 
 		makeFetch();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [selectedEdge]);
+	}, [selectedObjectRelationshipEdge]);
 
 	return (
 		<>
@@ -144,7 +143,7 @@ export function RightSidebarObjectRelationshipDetails({
 					disabled={readOnly}
 					label={Liferay.Language.get('deletion-type')}
 					onChange={() => {}}
-					options={deletionTypes}
+					options={objectRelationshipDeletionTypes}
 					required
 					value={
 						values.deletionType &&
