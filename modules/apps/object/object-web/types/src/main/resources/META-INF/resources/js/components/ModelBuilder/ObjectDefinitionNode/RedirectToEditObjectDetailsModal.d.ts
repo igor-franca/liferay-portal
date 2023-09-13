@@ -5,12 +5,12 @@
 
 /// <reference types="react" />
 
-interface RedirectModalProps {
+interface RedirectToEditObjectDetailsModalProps {
 	handleOnClose: () => void;
 	viewDetailsURL: string;
 }
-export declare function RedirectModal({
+export declare function RedirectToEditObjectDetailsModal({
 	handleOnClose,
 	viewDetailsURL,
-}: RedirectModalProps): JSX.Element;
+}: RedirectToEditObjectDetailsModalProps): JSX.Element;
 export {};

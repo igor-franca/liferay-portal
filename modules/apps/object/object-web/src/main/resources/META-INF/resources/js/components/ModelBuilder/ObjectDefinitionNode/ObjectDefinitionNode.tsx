@@ -31,7 +31,7 @@ import {TYPES} from '../ModelBuilderContext/typesEnum';
 import ObjectDefinitionNodeFooter from './ObjectDefinitionNodeFooter';
 import ObjectDefinitionNodeHeader from './ObjectDefinitionNodeHeader';
 import ObjectDefinitionNodeFields from './ObjectDefinitionNodeObjectFields';
-import {RedirectModal} from './RedirectModal';
+import {RedirectToEditObjectDetailsModal} from './RedirectToEditObjectDetailsModal';
 
 const selfRelationshipHandleStyle = {
 	background: 'transparent',
@@ -101,7 +101,7 @@ export function ObjectDefinitionNode({
 		});
 	};
 
-	const viewDetailsURL = formatActionURL(editObjectDefinitionURL, id);
+	const viewObjectDetailsURL = formatActionURL(editObjectDefinitionURL, id);
 
 	return (
 		<>
@@ -268,13 +268,13 @@ export function ObjectDefinitionNode({
 			)}
 
 			{showModal.redirectToEditObjectDefinitionDetails && (
-				<RedirectModal
+				<RedirectToEditObjectDetailsModal
 					handleOnClose={() => {
 						setShowModal({
 							redirectToEditObjectDefinitionDetails: false,
 						});
 					}}
-					viewDetailsURL={viewDetailsURL}
+					viewObjectDetailsURL={viewObjectDetailsURL}
 				/>
 			)}
 		</>
