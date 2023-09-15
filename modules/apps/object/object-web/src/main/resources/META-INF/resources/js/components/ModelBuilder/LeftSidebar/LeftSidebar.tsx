@@ -19,7 +19,7 @@ import {
 import classNames from 'classnames';
 import {openToast, sub} from 'frontend-js-web';
 import React, {useMemo, useState} from 'react';
-import {Node, useStore, useZoomPanHelper} from 'react-flow-renderer';
+import {Node, useStoreState, useZoomPanHelper} from 'react-flow-renderer';
 
 import './LeftSidebar.scss';
 import {getUpdateModelBuilderStructurePayload} from '../../ViewObjectDefinitions/objectDefinitionUtil';
@@ -57,7 +57,8 @@ export default function LeftSidebar({
 		dispatch,
 	] = useObjectFolderContext();
 	const {setCenter} = useZoomPanHelper();
-	const store = useStore();
+
+	const {edges, nodes} = useStoreState((state) => state);
 
 	const changeNodeViewButton = (hiddenNode: boolean, dispatch: Function) => (
 		<ClayButtonWithIcon
@@ -251,8 +252,6 @@ export default function LeftSidebar({
 											.id
 								)
 							) {
-								const {edges, nodes} = store.getState();
-
 								dispatch({
 									payload: {
 										edges,
@@ -306,9 +305,11 @@ export default function LeftSidebar({
 												() =>
 													dispatch({
 														payload: {
+															edges,
 															hiddenObjectFolderNodes:
 																item.hiddenObjectFolderNodes,
 															leftSidebarItem: item,
+															nodes,
 														},
 														type:
 															TYPES.BULK_CHANGE_NODE_VIEW,
@@ -371,8 +372,10 @@ export default function LeftSidebar({
 														() =>
 															dispatch({
 																payload: {
+																	edges,
 																	hiddenNode,
 																	leftSidebarItem: item,
+																	nodes,
 																	objectDefinitionId: id,
 																	objectDefinitionName: name,
 																},

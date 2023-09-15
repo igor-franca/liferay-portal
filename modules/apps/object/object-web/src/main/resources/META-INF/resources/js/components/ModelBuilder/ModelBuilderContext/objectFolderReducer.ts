@@ -4,7 +4,7 @@
  */
 
 import {getLocalizableLabel} from '@liferay/object-js-components-web';
-import {ArrowHeadType, Edge, Node, useStore} from 'react-flow-renderer';
+import {ArrowHeadType, Edge, Node} from 'react-flow-renderer';
 
 import {defaultLanguageId} from '../../../utils/constants';
 import {manyMarkerId} from '../Edges/ManyMarker';
@@ -25,15 +25,14 @@ import {
 import {TYPES} from './typesEnum';
 
 export function ObjectFolderReducer(state: TState, action: TAction): TState {
-	const store = useStore();
-
 	switch (action.type) {
 		case TYPES.ADD_NEW_NODE_TO_OBJECT_FOLDER: {
 			const {
 				newObjectDefinition,
+				nodes,
 				selectedObjectFolderName,
 			} = action.payload;
-			const {nodes} = store.getState();
+
 			const {elements, leftSidebarItems} = state;
 			let newPosition = {
 				x: 2 * 300,
@@ -59,45 +58,23 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 				};
 			}
 
-			let linkedObjectDefinition = false;
-
 			const newLeftSidebarItems = leftSidebarItems.map((item) => {
 				let newDefinition;
 
 				if (item.objectFolderName === selectedObjectFolderName) {
-					linkedObjectDefinition =
-						item.objectDefinitions?.find(
-							(objectDefinition) =>
-								objectDefinition.id === newObjectDefinition.id
-						)?.type === 'objectLink';
-
-					if (!linkedObjectDefinition) {
-						newDefinition = {
-							id: newObjectDefinition.id,
-							label: getLocalizableLabel(
-								newObjectDefinition.defaultLanguageId,
-								newObjectDefinition.label,
-								newObjectDefinition.name
-							),
-							name: newObjectDefinition.name,
-							selected: true,
-							type: 'objectDefinition',
-						} as LeftSidebarObjectDefinitionItemType;
-					}
-
+					newDefinition = {
+						id: newObjectDefinition.id,
+						label: getLocalizableLabel(
+							newObjectDefinition.defaultLanguageId,
+							newObjectDefinition.label,
+							newObjectDefinition.name
+						),
+						name: newObjectDefinition.name,
+						selected: true,
+						type: 'objectDefinition',
+					} as LeftSidebarObjectDefinitionItemType;
 					const updatedObjectDefinitions = item.objectDefinitions?.map(
 						(objectDefinition) => {
-							if (
-								linkedObjectDefinition &&
-								objectDefinition.id === newObjectDefinition.id
-							) {
-								return {
-									...objectDefinition,
-									selected: true,
-									type: 'objectDefinition',
-								};
-							}
-
 							return {
 								...objectDefinition,
 								selected: false,
@@ -143,61 +120,35 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 
 			let newObjectDefinitionNodes = [];
 
-			let newNode = {} as Node<ObjectDefinitionNodeData>;
+			const newNode = {
+				data: {
+					...newObjectDefinition,
+					hasObjectDefinitionDeleteResourcePermission: !!newObjectDefinition
+						.actions.delete,
+					hasObjectDefinitionManagePermissionsResourcePermission: !!newObjectDefinition
+						.actions.permissions,
+					hasObjectDefinitionUpdateResourcePermission: !!newObjectDefinition
+						.actions.update,
+					hasObjectDefinitionViewResourcePermission: false,
+					hasSelfRelationships: false,
+					label: getLocalizableLabel(
+						newObjectDefinition.defaultLanguageId,
+						newObjectDefinition.label,
+						newObjectDefinition.name
+					),
+					linked: false,
+					nodeSelected: true,
+					objectFields: fieldsCustomSort(objectFields),
+				},
+				id: newObjectDefinition.id.toString(),
+				position: newPosition,
+				type: 'objectDefinition',
+			} as Node<ObjectDefinitionNodeData>;
 
-			if (linkedObjectDefinition) {
-				const objectDefinitionNodes = updatedObjectDefinitionsNodes.map(
-					(node) => {
-						if (node.id === newObjectDefinition.id.toString()) {
-							return {
-								...node,
-								data: {
-									...node.data,
-									linked: false,
-									nodeSelected: true,
-								},
-							} as Node<ObjectDefinitionNodeData>;
-						}
-
-						return node;
-					}
-				);
-
-				newObjectDefinitionNodes = [...objectDefinitionNodes] as Node<
-					ObjectDefinitionNodeData
-				>[];
-			}
-			else {
-				newNode = {
-					data: {
-						...newObjectDefinition,
-						hasObjectDefinitionDeleteResourcePermission: !!newObjectDefinition
-							.actions.delete,
-						hasObjectDefinitionManagePermissionsResourcePermission: !!newObjectDefinition
-							.actions.permissions,
-						hasObjectDefinitionUpdateResourcePermission: !!newObjectDefinition
-							.actions.update,
-						hasObjectDefinitionViewResourcePermission: false,
-						hasSelfRelationships: false,
-						label: getLocalizableLabel(
-							newObjectDefinition.defaultLanguageId,
-							newObjectDefinition.label,
-							newObjectDefinition.name
-						),
-						linked: false,
-						nodeSelected: true,
-						objectFields: fieldsCustomSort(objectFields),
-					},
-					id: newObjectDefinition.id.toString(),
-					position: newPosition,
-					type: 'objectDefinition',
-				} as Node<ObjectDefinitionNodeData>;
-
-				newObjectDefinitionNodes = [
-					...updatedObjectDefinitionsNodes,
-					newNode,
-				] as Node<ObjectDefinitionNodeData>[];
-			}
+			newObjectDefinitionNodes = [
+				...updatedObjectDefinitionsNodes,
+				newNode,
+			] as Node<ObjectDefinitionNodeData>[];
 
 			return {
 				...state,
@@ -268,8 +219,12 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 		}
 
 		case TYPES.BULK_CHANGE_NODE_VIEW: {
-			const {hiddenObjectFolderNodes, leftSidebarItem} = action.payload;
-			const {edges, nodes} = store.getState();
+			const {
+				edges,
+				hiddenObjectFolderNodes,
+				leftSidebarItem,
+				nodes,
+			} = action.payload;
 			const {leftSidebarItems} = state;
 
 			const updatedNodes = nodes.map(
@@ -327,12 +282,13 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 
 		case TYPES.CHANGE_NODE_VIEW: {
 			const {
+				edges,
 				hiddenNode,
 				leftSidebarItem,
+				nodes,
 				objectDefinitionId,
 				objectDefinitionName,
 			} = action.payload;
-			const {edges, nodes} = store.getState();
 			const {leftSidebarItems} = state;
 			let isNodeSelected = false;
 
@@ -583,38 +539,6 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 			};
 		}
 
-		case TYPES.DELETE_OBJECT_FOLDER_NODE: {
-			const {currentObjectFolderName, deletedNodeName} = action.payload;
-
-			const {leftSidebarItems} = state;
-
-			let updatedObjectDefinitions;
-
-			const newLeftSidebarItems = leftSidebarItems.map((item) => {
-				if (item.objectFolderName === currentObjectFolderName) {
-					updatedObjectDefinitions = item.objectDefinitions?.filter(
-						(objectDefinition) =>
-							objectDefinition.name !== deletedNodeName
-					);
-
-					return {
-						...item,
-						objectDefinitions: [...updatedObjectDefinitions!],
-					};
-				}
-				else {
-					return {
-						...item,
-					};
-				}
-			}) as LeftSidebarItemType[];
-
-			return {
-				...state,
-				leftSidebarItems: newLeftSidebarItems,
-			};
-		}
-
 		case TYPES.SET_ELEMENTS: {
 			const {newElements} = action.payload;
 
@@ -775,6 +699,7 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 								) {
 									return {
 										...objectDefinition,
+										label: updatedNode.label, // ajeitar o edit name. ver o mockup
 										name: updatedNode.label,
 									};
 								}

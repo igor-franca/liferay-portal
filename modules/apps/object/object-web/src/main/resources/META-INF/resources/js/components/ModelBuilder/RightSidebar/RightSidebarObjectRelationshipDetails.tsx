@@ -6,7 +6,7 @@
 import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
 import {createResourceURL, sub} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
-import {Edge, Node, isEdge, isNode} from 'react-flow-renderer';
+import {Edge, Elements, Node, isEdge, isNode} from 'react-flow-renderer';
 
 import {TYPES} from '../ModelBuilderContext/typesEnum';
 
@@ -183,7 +183,7 @@ export function RightSidebarObjectRelationshipDetails({
 				}
 
 				return element;
-			});
+			}) as Elements<ObjectDefinitionNodeData>;
 
 			dispatch({
 				payload: {

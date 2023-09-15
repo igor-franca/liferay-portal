@@ -36,6 +36,7 @@ export type TAction =
 	| {
 			payload: {
 				newObjectDefinition: ObjectDefinition;
+				nodes: Node<ObjectDefinitionNodeData>[];
 				selectedObjectFolderName: string;
 			};
 			type: TYPES.ADD_NEW_NODE_TO_OBJECT_FOLDER;
@@ -51,15 +52,19 @@ export type TAction =
 	  }
 	| {
 			payload: {
+				edges: Edge<ObjectRelationshipEdgeData>[];
 				hiddenObjectFolderNodes: boolean;
 				leftSidebarItem: LeftSidebarItemType;
+				nodes: Node<ObjectDefinitionNodeData>[];
 			};
 			type: TYPES.BULK_CHANGE_NODE_VIEW;
 	  }
 	| {
 			payload: {
+				edges: Edge<ObjectRelationshipEdgeData>[];
 				hiddenNode: boolean;
 				leftSidebarItem: LeftSidebarItemType;
+				nodes: Node<ObjectDefinitionNodeData>[];
 				objectDefinitionId: number;
 				objectDefinitionName: string;
 			};
@@ -74,14 +79,9 @@ export type TAction =
 	  }
 	| {
 			payload: {
-				currentObjectFolderName: string;
-				deletedNodeName: string;
-			};
-			type: TYPES.DELETE_OBJECT_FOLDER_NODE;
-	  }
-	| {
-			payload: {
-				newElements: any;
+				newElements: Elements<
+					ObjectDefinitionNodeData | ObjectRelationshipEdgeData
+				>;
 			};
 			type: TYPES.SET_ELEMENTS;
 	  }
