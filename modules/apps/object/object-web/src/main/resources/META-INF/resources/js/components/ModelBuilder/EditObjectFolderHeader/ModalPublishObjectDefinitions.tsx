@@ -13,7 +13,7 @@ import ClayModal from '@clayui/modal';
 import {Observer} from '@clayui/modal/lib/types';
 import {API, getLocalizableLabel} from '@liferay/object-js-components-web';
 import {sub} from 'frontend-js-web';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Elements, FlowElement, isNode} from 'react-flow-renderer';
 
 import {defaultLanguageId} from '../../../utils/constants';
@@ -43,9 +43,9 @@ interface ModalPublishObjectDefinitionsProps {
 	onClose: () => void;
 }
 
-interface SelectedItem {
+interface SelectedUnpublishedObjectDefinitions {
+	errorMessage?: string;
 	id: number;
-	message?: string;
 	status: ObjectDefinitionStatus;
 }
 
@@ -58,43 +58,58 @@ export function ModalPublishObjectDefinitions({
 	observer,
 	onClose,
 }: ModalPublishObjectDefinitionsProps) {
+	const [messageHeaderModal, setMessageHeaderModal] = useState<string>(
+		Liferay.Language.get('confirm-publishing')
+	);
+	const [
+		publishObjectDefinitionStatus,
+		setPublishObjectDefinitionStatus,
+	] = useState<number>(STATUS.DRAFT);
+	const [
+		selectAllObjectDefinitions,
+		setSelectAllObjectDefinitions,
+	] = useState<boolean>(false);
+	const [
+		selectedUnpublishedObjectDefinitions,
+		setSelectedUnpublishedObjectDefinitions,
+	] = useState<SelectedUnpublishedObjectDefinitions[]>([]);
+
 	const objectDefinitionNodes = elements.filter((element) =>
 		isNode(element)
 	) as Elements<ObjectDefinitionNodeData>;
 
-	const [filteredObjectDefinitionNodes] = useState<
-		Elements<ObjectDefinitionNodeData>
-	>(
-		objectDefinitionNodes.filter(
+	const unpublishedObjectDefinitions = useMemo(() => {
+		return objectDefinitionNodes.filter(
 			(element) =>
 				isNode(element) && element.data?.status?.code === STATUS.DRAFT
-		)
-	);
-	const [messageHeaderModal, setMessageHeaderModal] = useState<string>(
-		Liferay.Language.get('confirm-publishing')
-	);
-	const [publishStatus, setPublishStatus] = useState<number>(STATUS.DRAFT);
-	const [selectAll, setSelectAll] = useState<boolean>(false);
-	const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
+		);
+	}, [objectDefinitionNodes]);
 
 	const updateObjectDefinitionStatus = (
-		items: SelectedItem[],
-		id: number,
-		status: ObjectDefinitionStatus,
-		message?: string
+		objectDefinitionId: number,
+		objectDefinitionStatus: ObjectDefinitionStatus,
+		selectedUnpublishedObjectDefinitionsPrevState: SelectedUnpublishedObjectDefinitions[],
+		errorMessage?: string
 	) => {
-		return items.map((item) => {
-			if (item.id === id) {
-				return {
-					id,
-					status,
-					...(status.code === STATUS.REJECTED && {message}),
-				};
+		return selectedUnpublishedObjectDefinitionsPrevState.map(
+			(selectedUnpublishedObjectDefinitionPrevState) => {
+				if (
+					selectedUnpublishedObjectDefinitionPrevState.id ===
+					objectDefinitionId
+				) {
+					return {
+						objectDefinitionId,
+						objectDefinitionStatus,
+						...(objectDefinitionStatus.code === STATUS.REJECTED && {
+							errorMessage,
+						}),
+					};
+				}
+				else {
+					return selectedUnpublishedObjectDefinitionPrevState;
+				}
 			}
-			else {
-				return item;
-			}
-		}) as SelectedItem[];
+		) as SelectedUnpublishedObjectDefinitions[];
 	};
 
 	const publishObjectDefinition = (
@@ -103,32 +118,32 @@ export function ModalPublishObjectDefinitions({
 		// eslint-disable-next-line no-async-promise-executor
 		return new Promise<ObjectDefinition | number>(async (resolve) => {
 			try {
-				const response = await API.postObjectDefinitionPublish(
+				const objectDefinitionResponse = await API.postObjectDefinitionPublish(
 					objectDefinitionId
 				);
 
-				const data = await response.json();
+				const objectDefinitionResponseJSON = await objectDefinitionResponse.json();
 
-				if (!response.ok) {
-					throw new Error(data.title);
+				if (!objectDefinitionResponse.ok) {
+					throw new Error(objectDefinitionResponseJSON.title);
 				}
 
-				setSelectedItems((prevState) =>
+				setSelectedUnpublishedObjectDefinitions((prevState) =>
 					updateObjectDefinitionStatus(
-						prevState,
 						objectDefinitionId,
-						data.status
+						objectDefinitionResponseJSON.status,
+						prevState
 					)
 				);
 
-				resolve(data);
+				resolve(objectDefinitionResponseJSON);
 			}
 			catch (error: any) {
-				setSelectedItems((prevState) =>
+				setSelectedUnpublishedObjectDefinitions((prevState) =>
 					updateObjectDefinitionStatus(
-						prevState,
 						objectDefinitionId,
 						{code: STATUS.REJECTED},
+						prevState,
 						error.message
 					)
 				);
@@ -142,15 +157,17 @@ export function ModalPublishObjectDefinitions({
 
 	const handleOnClickPublish = async () => {
 		setMessageHeaderModal(`${Liferay.Language.get('publishing')}...`);
-		setPublishStatus(STATUS.PENDING);
+		setPublishObjectDefinitionStatus(STATUS.PENDING);
 
-		const publishPromises = selectedItems.map(({id, status}) => {
-			setSelectedItems((prevState) =>
-				updateObjectDefinitionStatus(prevState, id, status)
-			);
+		const publishPromises = selectedUnpublishedObjectDefinitions.map(
+			({id, status}) => {
+				setSelectedUnpublishedObjectDefinitions((prevState) =>
+					updateObjectDefinitionStatus(id, status, prevState)
+				);
 
-			return publishObjectDefinition(id);
-		});
+				return publishObjectDefinition(id);
+			}
+		);
 
 		try {
 			const responses = await Promise.all(publishPromises);
@@ -168,7 +185,7 @@ export function ModalPublishObjectDefinitions({
 					? Liferay.Language.get('successfully-published')
 					: Liferay.Language.get('published-with-errors')
 			);
-			setPublishStatus(
+			setPublishObjectDefinitionStatus(
 				!hasErrorsResponse ? STATUS.APPROVED : STATUS.REJECTED
 			);
 
@@ -207,7 +224,7 @@ export function ModalPublishObjectDefinitions({
 		}
 		catch (error) {
 			setMessageHeaderModal(Liferay.Language.get('confirm-publishing'));
-			setPublishStatus(STATUS.REJECTED);
+			setPublishObjectDefinitionStatus(STATUS.REJECTED);
 		}
 	};
 
@@ -215,49 +232,72 @@ export function ModalPublishObjectDefinitions({
 		actionType?: 'check-all' | 'check-remove-all'
 	): void => {
 		if (actionType) {
-			const allSelected =
-				selectedItems.length === filteredObjectDefinitionNodes.length;
+			const selectedAllUnpublishedObjectDefinitions =
+				selectedUnpublishedObjectDefinitions.length ===
+				unpublishedObjectDefinitions.length;
 
-			if (allSelected && actionType !== 'check-all') {
-				setSelectAll(false);
-				setSelectedItems([]);
+			if (
+				selectedAllUnpublishedObjectDefinitions &&
+				actionType !== 'check-all'
+			) {
+				setSelectAllObjectDefinitions(false);
+				setSelectedUnpublishedObjectDefinitions([]);
 			}
 			else {
-				const newSelectedItems = filteredObjectDefinitionNodes.map(
-					(filteredObjectDefinitionNode) => {
-						const {data} = filteredObjectDefinitionNode;
+				const newUnpublishedObjectDefinitions = unpublishedObjectDefinitions.map(
+					(unpublishedObjectDefinition) => {
+						const {data} = unpublishedObjectDefinition;
 
 						return {id: data?.id!, status: data?.status!};
 					}
 				);
 
-				setSelectAll(true);
-				setSelectedItems(newSelectedItems);
+				setSelectAllObjectDefinitions(true);
+				setSelectedUnpublishedObjectDefinitions(
+					newUnpublishedObjectDefinitions
+				);
 			}
 		}
 	};
 
-	const handleCheckboxChange = (itemId: number): void => {
-		if (selectedItems.some((item) => item.id === itemId)) {
-			setSelectedItems(
-				selectedItems.filter((item) => item.id !== itemId)
+	const handleCheckboxChange = ({
+		objectDefinitionId,
+	}: {
+		objectDefinitionId: number;
+	}): void => {
+		if (
+			selectedUnpublishedObjectDefinitions.some(
+				(selectedUnpublishedObjectDefinition) =>
+					selectedUnpublishedObjectDefinition.id ===
+					objectDefinitionId
+			)
+		) {
+			setSelectedUnpublishedObjectDefinitions(
+				selectedUnpublishedObjectDefinitions.filter(
+					(selectedUnpublishedObjectDefinition) =>
+						selectedUnpublishedObjectDefinition.id !==
+						objectDefinitionId
+				)
 			);
 		}
 		else {
-			const item = objectDefinitionNodes.find(
-				(objectDefinitionNode) =>
-					objectDefinitionNode.data?.id === itemId
+			const objectDefinitionNode = objectDefinitionNodes.find(
+				(currentObjectDefinitionNode) =>
+					currentObjectDefinitionNode.data?.id === objectDefinitionId
 			)!;
 
-			setSelectedItems([
-				...selectedItems,
-				{id: itemId, status: item.data?.status!},
+			setSelectedUnpublishedObjectDefinitions([
+				...selectedUnpublishedObjectDefinitions,
+				{
+					id: objectDefinitionId,
+					status: objectDefinitionNode.data?.status!,
+				},
 			]);
 		}
 	};
 
 	const renderStatusModal = (): TStatus => {
-		switch (publishStatus) {
+		switch (publishObjectDefinitionStatus) {
 			case STATUS.APPROVED:
 				return 'success';
 			case STATUS.PENDING:
@@ -269,7 +309,13 @@ export function ModalPublishObjectDefinitions({
 		}
 	};
 
-	useEffect(() => setSelectAll(!!selectedItems.length), [selectedItems]);
+	useEffect(
+		() =>
+			setSelectAllObjectDefinitions(
+				!!selectedUnpublishedObjectDefinitions.length
+			),
+		[selectedUnpublishedObjectDefinitions]
+	);
 
 	return (
 		<ClayModal
@@ -291,23 +337,23 @@ export function ModalPublishObjectDefinitions({
 					</Text>
 				</div>
 
-				{publishStatus === STATUS.DRAFT && (
+				{publishObjectDefinitionStatus === STATUS.DRAFT && (
 					<div
 						className={`lfr-object__object-view-modal-object-definitions-select-all-checkbox c-px-sm-3 c-mb-sm-2 ${
-							selectAll ? 'active' : ''
+							selectAllObjectDefinitions ? 'active' : ''
 						}`}
 					>
 						<ClayCheckbox
-							checked={selectAll}
+							checked={selectAllObjectDefinitions}
 							indeterminate={
-								selectAll &&
-								selectedItems.length !==
-									filteredObjectDefinitionNodes.length
+								selectAllObjectDefinitions &&
+								selectedUnpublishedObjectDefinitions.length !==
+									unpublishedObjectDefinitions.length
 							}
 							label={`${sub(
 								Liferay.Language.get('x-of-x-items-selected'),
-								selectedItems.length,
-								filteredObjectDefinitionNodes.length
+								selectedUnpublishedObjectDefinitions.length,
+								unpublishedObjectDefinitions.length
 							)}`}
 							onChange={() => handleSelectAll('check-remove-all')}
 						/>
@@ -323,42 +369,50 @@ export function ModalPublishObjectDefinitions({
 				)}
 
 				<ClayList className="container-list">
-					{filteredObjectDefinitionNodes.map(
-						(filteredObjectDefinitionNode) => {
-							const {data, id} = filteredObjectDefinitionNode;
+					{unpublishedObjectDefinitions.map(
+						(unpublishedObjectDefinition) => {
+							const {data, id} = unpublishedObjectDefinition;
 
-							const selectedItem = selectedItems.find(
-								(item) => item.id === data?.id!
+							const selectedUnpublishedObjectDefinition = selectedUnpublishedObjectDefinitions.find(
+								(unpublishedObjectDefinition) =>
+									unpublishedObjectDefinition.id === data?.id!
 							);
 
-							const isSelected = selectedItem?.id === data?.id!;
+							const isSelectedUnpublishedObjectDefinition =
+								selectedUnpublishedObjectDefinition?.id ===
+								data?.id!;
 
 							return (
 								<ClayList.Item
 									className={`lfr-object__object-view-modal-object-definitions-list-item ${
-										isSelected ? 'active' : ''
+										isSelectedUnpublishedObjectDefinition
+											? 'active'
+											: ''
 									}`}
 									key={id}
 								>
 									<div>
-										{publishStatus === STATUS.DRAFT && (
+										{publishObjectDefinitionStatus ===
+											STATUS.DRAFT && (
 											<ClayCheckbox
-												checked={isSelected}
+												checked={
+													isSelectedUnpublishedObjectDefinition
+												}
 												disabled={
-													selectedItem?.status !==
+													selectedUnpublishedObjectDefinition?.status !==
 														undefined &&
 													[
 														STATUS.APPROVED,
 														STATUS.PENDING,
 													].includes(
-														selectedItem?.status
-															?.code
+														selectedUnpublishedObjectDefinition
+															?.status?.code
 													)
 												}
 												onChange={() =>
-													handleCheckboxChange(
-														data?.id!
-													)
+													handleCheckboxChange({
+														objectDefinitionId: data?.id!,
+													})
 												}
 											/>
 										)}
@@ -379,7 +433,8 @@ export function ModalPublishObjectDefinitions({
 												</Text>
 											</div>
 
-											{selectedItem?.status?.code ===
+											{selectedUnpublishedObjectDefinition
+												?.status?.code ===
 												STATUS.REJECTED && (
 												<span className="rejected text-danger">
 													<ClayIcon
@@ -388,7 +443,9 @@ export function ModalPublishObjectDefinitions({
 													/>
 
 													<Text size={2}>
-														{selectedItem?.message}
+														{
+															selectedUnpublishedObjectDefinition?.errorMessage
+														}
 													</Text>
 												</span>
 											)}
@@ -396,7 +453,8 @@ export function ModalPublishObjectDefinitions({
 									</div>
 
 									<div>
-										{selectedItem?.status?.code ===
+										{selectedUnpublishedObjectDefinition
+											?.status?.code ===
 											STATUS.PENDING && (
 											<ClayLoadingIndicator
 												displayType="secondary"
@@ -404,7 +462,8 @@ export function ModalPublishObjectDefinitions({
 											/>
 										)}
 
-										{selectedItem?.status?.code ===
+										{selectedUnpublishedObjectDefinition
+											?.status?.code ===
 											STATUS.APPROVED && (
 											<Text color="success">
 												<ClayIcon symbol="check" />
@@ -420,8 +479,8 @@ export function ModalPublishObjectDefinitions({
 
 			<ClayModal.Footer
 				last={
-					publishStatus === STATUS.APPROVED ||
-					publishStatus === STATUS.REJECTED ? (
+					publishObjectDefinitionStatus === STATUS.APPROVED ||
+					publishObjectDefinitionStatus === STATUS.REJECTED ? (
 						<ClayButton.Group key={1} spaced>
 							<ClayButton displayType="primary" onClick={onClose}>
 								{Liferay.Language.get('close')}
@@ -440,13 +499,15 @@ export function ModalPublishObjectDefinitions({
 
 								<ClayButton
 									disabled={
-										!selectedItems.length ||
-										publishStatus === STATUS.PENDING
+										!selectedUnpublishedObjectDefinitions.length ||
+										publishObjectDefinitionStatus ===
+											STATUS.PENDING
 									}
 									displayType="primary"
 									onClick={handleOnClickPublish}
 								>
-									{publishStatus === STATUS.PENDING
+									{publishObjectDefinitionStatus ===
+									STATUS.PENDING
 										? Liferay.Language.get('please-wait') +
 										  '...'
 										: Liferay.Language.get(
