@@ -410,11 +410,6 @@ interface ObjectValidation {
 	system?: boolean;
 }
 
-type ObjectValidationType = {
-	label: string;
-	name: string;
-};
-
 interface PredefinedValue {
 	businessType: ObjectFieldBusinessType;
 	inputAsValue: boolean;
