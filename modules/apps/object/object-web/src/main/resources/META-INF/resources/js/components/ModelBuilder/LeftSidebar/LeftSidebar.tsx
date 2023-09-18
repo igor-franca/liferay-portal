@@ -212,10 +212,11 @@ export default function LeftSidebar({
 				nestedKey="objectDefinitions"
 				onSelect={(item) => {
 					if (
-						selectedObjectFolder.objectDefinitions?.find(
-							(objectDefinition) =>
-								objectDefinition.id ===
-								(item as LeftSidebarObjectDefinitionItem).id
+						selectedObjectFolder.objectFolderItems?.find(
+							(objectFolderItem) =>
+								objectFolderItem.objectDefinitionExternalReferenceCode ===
+								(item as LeftSidebarObjectDefinitionItem)
+									.externalReferenceCode
 						)
 					) {
 						const {edges, nodes} = store.getState();

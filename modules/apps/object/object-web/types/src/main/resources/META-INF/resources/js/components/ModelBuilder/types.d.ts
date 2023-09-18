@@ -126,6 +126,7 @@ export interface LeftSidebarItem {
 	type: 'objectFolder' | 'objectDefinition';
 }
 export interface LeftSidebarObjectDefinitionItem {
+	externalReferenceCode?: string;
 	hiddenObjectDefinitionNode: boolean;
 	id: number;
 	label: string;
