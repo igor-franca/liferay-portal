@@ -8,14 +8,10 @@ import {Text, TreeView} from '@clayui/core';
 import {ClayDropDownWithItems} from '@clayui/drop-down';
 import Icon from '@clayui/icon';
 import {ClayTooltipProvider} from '@clayui/tooltip';
-import {
-	API,
-	getLocalizableLabel,
-	stringIncludesQuery,
-} from '@liferay/object-js-components-web';
+import {API, getLocalizableLabel} from '@liferay/object-js-components-web';
 import classNames from 'classnames';
 import {openToast, sub} from 'frontend-js-web';
-import React, {useMemo, useState} from 'react';
+import React from 'react';
 import {Node, useStore, useZoomPanHelper} from 'react-flow-renderer';
 
 import './LeftSidebar.scss';
@@ -31,21 +27,19 @@ const TYPES_TO_SYMBOLS = {
 };
 
 export default function TreeViewComponent({
-	query,
-	setEmptySearch,
+	expandedKeys,
+	leftSidebarOtherObjectFoldersItems,
+	leftSidebarSelectedObjectFolderItem,
+	setExpandedKeys,
 	showActions,
 }: {
-	query: string;
-	setEmptySearch: (value: boolean) => void;
+	expandedKeys: Set<React.Key>;
+	leftSidebarOtherObjectFoldersItems: LeftSidebarItem[];
+	leftSidebarSelectedObjectFolderItem: LeftSidebarItem;
+	setExpandedKeys: React.Dispatch<React.SetStateAction<Set<React.Key>>>;
 	showActions?: boolean;
 }) {
-	const [expandedKeys, setExpandedKeys] = useState<Set<React.Key>>(
-		new Set(['uncategorized'])
-	);
-	const [
-		{leftSidebarItems, selectedObjectFolder},
-		dispatch,
-	] = useObjectFolderContext();
+	const [{selectedObjectFolder}, dispatch] = useObjectFolderContext();
 	const store = useStore();
 	const {setCenter} = useZoomPanHelper();
 
@@ -67,37 +61,6 @@ export default function TreeViewComponent({
 			symbol={hiddenObjectDefinitionNode ? 'hidden' : 'view'}
 		/>
 	);
-
-	const filteredLeftSidebarItems = useMemo(() => {
-		const keys = [] as string[];
-		setEmptySearch(false);
-
-		const newLeftSidebarItems = leftSidebarItems.map((sidebarItem) => {
-			if (!sidebarItem.leftSidebarObjectDefinitionItems) {
-				return sidebarItem;
-			}
-
-			const newObjectDefinitions = sidebarItem.leftSidebarObjectDefinitionItems.filter(
-				(leftSidebarObjectDefinitionItem) =>
-					stringIncludesQuery(
-						leftSidebarObjectDefinitionItem.label,
-						query
-					)
-			);
-
-			keys.push(sidebarItem.name);
-
-			return {
-				...sidebarItem,
-				id: sidebarItem.name,
-				objectDefinitions: newObjectDefinitions,
-			};
-		});
-
-		setExpandedKeys(new Set(keys));
-
-		return newLeftSidebarItems;
-	}, [leftSidebarItems, query]);
 
 	const handleMove = async ({
 		objectDefinitionId,
@@ -178,28 +141,6 @@ export default function TreeViewComponent({
 		});
 	};
 
-	const leftSidebarOtherObjectFoldersItems = filteredLeftSidebarItems.filter(
-		(filteredLeftSidebarItem) =>
-			filteredLeftSidebarItem.objectFolderName !==
-				selectedObjectFolder.name &&
-			filteredLeftSidebarItem.leftSidebarObjectDefinitionItems?.length !==
-				0
-	);
-
-	leftSidebarOtherObjectFoldersItems.sort((a, b) =>
-		a.objectFolderName > b.objectFolderName
-			? 1
-			: b.objectFolderName > a.objectFolderName
-			? -1
-			: 0
-	);
-
-	const leftSidebarSelectedObjectFolderItem = filteredLeftSidebarItems.find(
-		(filteredLeftSidebarItem) =>
-			filteredLeftSidebarItem.objectFolderName ===
-			selectedObjectFolder.name
-	) as LeftSidebarItem;
-
 	const linkedObjectDefinitions = leftSidebarSelectedObjectFolderItem.leftSidebarObjectDefinitionItems?.filter(
 		(leftSidebarObjectDefinitionItem) =>
 			leftSidebarObjectDefinitionItem.type === 'linkedObjectDefinition'
@@ -231,12 +172,6 @@ export default function TreeViewComponent({
 				objectDefinitions,
 			};
 		}
-	);
-
-	setEmptySearch(
-		!newOtherObjectFolders.length &&
-			leftSidebarSelectedObjectFolderItem.leftSidebarObjectDefinitionItems
-				?.length === 0
 	);
 
 	return (
