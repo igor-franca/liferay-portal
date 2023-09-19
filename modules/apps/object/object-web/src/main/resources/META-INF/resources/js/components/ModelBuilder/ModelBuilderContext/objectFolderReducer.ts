@@ -37,6 +37,17 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 				objectDefinitionExternalReferenceCode,
 			} = action.payload;
 
+			const selectedObjectDefinitionField: ObjectFieldNode = {
+				businessType: newObjectField.businessType,
+				externalReferenceCode: newObjectField.externalReferenceCode,
+				id: newObjectField.id,
+				label: newObjectField.label,
+				name: newObjectField.name,
+				primaryKey: false,
+				required: newObjectField.required,
+				selected: true,
+			};
+
 			const newNodes = nodes.map((node) => {
 				if (
 					node.data?.externalReferenceCode ===
@@ -48,24 +59,14 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 						objectFields
 					);
 
-					newObjectFields.push({
-						businessType: newObjectField.businessType,
-						externalReferenceCode:
-							newObjectField.externalReferenceCode,
-						id: newObjectField.id,
-						label: newObjectField.label,
-						name: newObjectField.name,
-						primaryKey: false,
-						required: newObjectField.required,
-						selected: true,
-					});
+					newObjectFields.push(selectedObjectDefinitionField);
 
 					return {
 						...node,
 						data: {
 							...node.data,
-							nodeSelected: true,
 							objectFields: newObjectFields,
+							selected: true,
 						},
 					};
 				}
@@ -78,8 +79,8 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 					...node,
 					data: {
 						...node.data,
-						nodeSelected: false,
 						objectFields: unselectedFields,
+						selected: false,
 					},
 				};
 			}) as Node<ObjectDefinitionNodeData>[];
@@ -88,6 +89,7 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 				...state,
 				elements: [...newNodes, ...edges],
 				rightSidebarType: 'objectFieldDetails',
+				selectedObjectDefinitionField,
 			};
 		}
 
@@ -282,69 +284,6 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 				leftSidebarItems: newLeftSidebarItems,
 				selectedObjectDefinitionNode: newObjectDefinitionNode,
 				showChangesSaved: true,
-			};
-		}
-
-		case TYPES.ADD_NEW_OBJECT_FIELD: {
-			const {
-				edges,
-				newObjectField,
-				nodes,
-				objectDefinitionExternalReferenceCode,
-			} = action.payload;
-
-			const selectedObjectDefinitionField: ObjectFieldNode = {
-				businessType: newObjectField.businessType,
-				externalReferenceCode: newObjectField.externalReferenceCode,
-				id: newObjectField.id,
-				label: newObjectField.label,
-				name: newObjectField.name,
-				primaryKey: false,
-				required: newObjectField.required,
-				selected: true,
-			};
-
-			const newNodes = nodes.map((node) => {
-				if (
-					node.data?.externalReferenceCode ===
-					objectDefinitionExternalReferenceCode
-				) {
-					const {objectFields} = node.data;
-					const newObjectFields = convertAllFieldsToUnselected(
-						objectFields
-					);
-
-					newObjectFields.push(selectedObjectDefinitionField);
-
-					return {
-						...node,
-						data: {
-							...node.data,
-							nodeSelected: true,
-							objectFields: newObjectFields,
-						},
-					};
-				}
-
-				const unselectedFields = convertAllFieldsToUnselected(
-					node.data?.objectFields as ObjectFieldNode[]
-				);
-
-				return {
-					...node,
-					data: {
-						...node.data,
-						nodeSelected: false,
-						objectFields: unselectedFields,
-					},
-				};
-			}) as Node<ObjectDefinitionNodeData>[];
-
-			return {
-				...state,
-				elements: [...newNodes, ...edges],
-				rightSidebarType: 'objectFieldDetails',
-				selectedObjectDefinitionField,
 			};
 		}
 
@@ -736,8 +675,8 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 						...selectedNode,
 						data: {
 							...selectedNode.data,
-							nodeSelected: false,
 							objectFields: newSelectedNodeFields,
+							selected: false,
 						},
 					} as Node<ObjectDefinitionNodeData>;
 				}
@@ -787,65 +726,6 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 				edges,
 				nodes,
 				selectedFieldDefinitionName,
-				selectedObjectDefinitionId,
-			} = action.payload;
-
-			const selectedNode = nodes.find(
-				(objectDefinitionNode) =>
-					objectDefinitionNode.data?.nodeSelected
-			);
-
-			const newObjectDefinitionNodes = nodes;
-
-			if (selectedNode?.data) {
-				const {objectFields} = selectedNode.data;
-				const selectedNodeIndex = nodes.findIndex(
-					(objectDefinitionNode) =>
-						objectDefinitionNode.data?.nodeSelected
-				);
-
-				const newObjectFields = objectFields.map((objectField) => ({
-					...objectField,
-					selected: false,
-				}));
-
-				selectedNode.data.nodeSelected = false;
-				selectedNode.data.objectFields = newObjectFields;
-
-				newObjectDefinitionNodes[selectedNodeIndex] = selectedNode;
-			}
-			const newNodes = nodes.map((node) => ({
-				...node,
-				data: {
-					...node.data,
-					nodeSelected: node.data?.id === selectedObjectDefinitionId,
-					objectFields: node.data?.objectFields.map((field) => ({
-						...field,
-						selected:
-							node.data?.id === selectedObjectDefinitionId &&
-							field.name === selectedFieldDefinitionName,
-					})),
-				},
-			})) as Node<ObjectDefinitionNodeData>[];
-
-			const newEdges = edges.map((relationshipEdge) => ({
-				...relationshipEdge,
-				data: {...relationshipEdge.data, edgeSelected: false},
-			})) as Edge<ObjectRelationshipEdgeData>[];
-
-			return {
-				...state,
-				elements: [...newEdges, ...newNodes],
-				rightSidebarType: 'objectFieldDetails' as RightSidebarType,
-				selectedObjectDefinitionField: undefined,
-			};
-		}
-
-		case TYPES.SET_SELECTED_FIELD: {
-			const {
-				edges,
-				nodes,
-				selectedFieldDefinitionName,
 				selectedObjectDefinitionField,
 				selectedObjectDefinitionId,
 			} = action.payload;
@@ -854,19 +734,19 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 				...node,
 				data: {
 					...node.data,
-					nodeSelected: node.data?.id === selectedObjectDefinitionId,
 					objectFields: node.data?.objectFields.map((field) => ({
 						...field,
 						selected:
 							node.data?.id === selectedObjectDefinitionId &&
 							field.name === selectedFieldDefinitionName,
 					})),
+					selected: node.data?.id === selectedObjectDefinitionId,
 				},
 			})) as Node<ObjectDefinitionNodeData>[];
 
 			const newEdges = edges.map((relationshipEdge) => ({
 				...relationshipEdge,
-				data: {...relationshipEdge.data, edgeSelected: false},
+				data: {...relationshipEdge.data, selected: false},
 			})) as Edge<ObjectRelationshipEdgeData>[];
 
 			return {
@@ -882,12 +762,19 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 
 			const {leftSidebarItems} = state;
 
-			const selectedObjectDefinitionNode: Node<
+			let selectedObjectDefinitionNode: Node<
 				ObjectDefinitionNodeData
 			> | null = null;
 
 			const newObjectDefinitionNodes = nodes.map(
 				(objectDefinitionNode) => {
+					const newObjectFields = objectDefinitionNode.data?.objectFields.map(
+						(objectField) => ({
+							...objectField,
+							selected: false,
+						})
+					);
+
 					if (
 						objectDefinitionNode.id ===
 						selectedObjectDefinitionId.toString()
@@ -896,7 +783,8 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 							...objectDefinitionNode,
 							data: {
 								...objectDefinitionNode.data,
-								nodeSelected: true,
+								objectFields: newObjectFields,
+								selected: true,
 							},
 						} as Node<ObjectDefinitionNodeData>;
 
@@ -907,7 +795,8 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 						...objectDefinitionNode,
 						data: {
 							...objectDefinitionNode.data,
-							nodeSelected: false,
+							objectFields: newObjectFields,
+							selected: false,
 						},
 					};
 				}
@@ -984,12 +873,19 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 			const newObjectDefinitionNodes = nodes;
 
 			if (selectedObjectDefinitionNode?.data) {
+				const {objectFields} = selectedObjectDefinitionNode.data;
 				const selectedNodeIndex = nodes.findIndex(
 					(objectDefinitionNode) =>
 						objectDefinitionNode.data?.selected
 				);
 
+				const newObjectFields = objectFields.map((objectField) => ({
+					...objectField,
+					selected: false,
+				}));
+
 				selectedObjectDefinitionNode.data.selected = false;
+				selectedObjectDefinitionNode.data.objectFields = newObjectFields;
 
 				newObjectDefinitionNodes[
 					selectedNodeIndex

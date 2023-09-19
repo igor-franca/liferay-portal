@@ -97,7 +97,7 @@ export default function TreeViewComponent({
 		setExpandedKeys(new Set(keys));
 
 		return newLeftSidebarItems;
-	}, [leftSidebarItems, query]);
+	}, [leftSidebarItems, query, setEmptySearch]);
 
 	const handleMove = async ({
 		objectDefinitionId,
@@ -250,15 +250,15 @@ export default function TreeViewComponent({
 			nestedKey="objectDefinitions"
 			onExpandedChange={setExpandedKeys}
 			onSelect={(item) => {
+				const {edges, nodes} = store.getState();
+
 				if (
-					selectedObjectFolder.objectDefinitions?.find(
-						(objectDefinition) =>
-							objectDefinition.id ===
+					nodes?.find(
+						(node: Node<ObjectDefinitionNodeData>) =>
+							node.data?.id ===
 							(item as LeftSidebarObjectDefinitionItem).id
 					)
 				) {
-					const {edges, nodes} = store.getState();
-
 					dispatch({
 						payload: {
 							edges,

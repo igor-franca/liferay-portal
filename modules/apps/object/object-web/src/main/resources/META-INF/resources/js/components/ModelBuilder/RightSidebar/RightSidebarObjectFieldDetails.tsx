@@ -52,8 +52,7 @@ export function RightSidebarObjectFieldDetails() {
 
 	const selectedNode = elements.find((element) => {
 		if (isNode(element)) {
-			return (element as Node<ObjectDefinitionNodeData>).data
-				?.nodeSelected;
+			return (element as Node<ObjectDefinitionNodeData>).data?.selected;
 		}
 	}) as Node<ObjectDefinitionNodeData>;
 
