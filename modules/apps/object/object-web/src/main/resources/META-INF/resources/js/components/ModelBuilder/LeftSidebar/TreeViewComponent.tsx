@@ -261,8 +261,8 @@ export default function TreeViewComponent({
 				) {
 					dispatch({
 						payload: {
-							edges,
-							nodes,
+							objectDefinitionNodes: nodes,
+							objectRelationshipEdges: edges,
 							selectedObjectDefinitionId: (item as LeftSidebarObjectDefinitionItem).id.toString(),
 						},
 						type: TYPES.SET_SELECTED_OBJECT_DEFINITION_NODE,

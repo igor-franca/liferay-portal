@@ -5,7 +5,7 @@
 
 import {Edge} from 'react-flow-renderer';
 import {ObjectRelationshipEdgeData} from '../types';
-export declare function convertAllFieldsToUnselected(
+export declare function convertAllObjectFieldsToUnselected(
 	objectFields: ObjectFieldNode[]
 ): ObjectFieldNode[];
 export declare function fieldsCustomSort(
