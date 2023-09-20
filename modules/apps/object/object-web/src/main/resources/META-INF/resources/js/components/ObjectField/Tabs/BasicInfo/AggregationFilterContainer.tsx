@@ -523,6 +523,7 @@ export function AggregationFilterContainer({
 		<>
 			<Card title={Liferay.Language.get('filters')}>
 				<BuilderScreen
+					buildScreenItems={aggregationFilters}
 					creationLanguageId={
 						creationLanguageId2 as Liferay.Language.Locale
 					}
@@ -538,7 +539,6 @@ export function AggregationFilterContainer({
 					}}
 					filter
 					firstColumnHeader={Liferay.Language.get('filter-by')}
-					objectColumns={aggregationFilters}
 					onDeleteColumn={handleDeleteFilterColumn}
 					onEditingObjectFieldName={setEditingObjectFieldName}
 					onVisibleEditModal={setVisibleModal}
