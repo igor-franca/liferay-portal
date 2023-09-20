@@ -6,11 +6,15 @@
 /// <reference types="react" />
 
 interface UniqueComposedKeyProps {
-	showCUniqueComposedKeyCardAlert: boolean;
+	creationLanguageId: Liferay.Language.Locale;
+	objectFields: ObjectField[];
 	setShowCUniqueComposedKeyCardAlert: (value: boolean) => void;
+	showCUniqueComposedKeyCardAlert: boolean;
 }
 export declare function UniqueComposedKey({
-	showCUniqueComposedKeyCardAlert,
+	creationLanguageId,
+	objectFields,
 	setShowCUniqueComposedKeyCardAlert,
+	showCUniqueComposedKeyCardAlert,
 }: UniqueComposedKeyProps): JSX.Element;
 export {};
