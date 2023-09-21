@@ -9,12 +9,16 @@ interface UniqueComposedKeyProps {
 	creationLanguageId: Liferay.Language.Locale;
 	objectFields: ObjectField[];
 	setShowCUniqueComposedKeyCardAlert: (value: boolean) => void;
+	setValues: (values: Partial<ObjectValidation>) => void;
 	showCUniqueComposedKeyCardAlert: boolean;
+	values: Partial<ObjectValidation>;
 }
 export declare function UniqueComposedKey({
 	creationLanguageId,
 	objectFields,
 	setShowCUniqueComposedKeyCardAlert,
+	setValues,
 	showCUniqueComposedKeyCardAlert,
+	values,
 }: UniqueComposedKeyProps): JSX.Element;
 export {};
