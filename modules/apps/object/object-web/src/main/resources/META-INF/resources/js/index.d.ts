@@ -404,13 +404,17 @@ interface ObjectValidation {
 	id: number;
 	lineCount?: number;
 	name: LocalizedValue<string>;
-	objectValidationRuleSettings?: {
-		name: 'outputObjectFieldExternalReferenceCode';
-		value: string;
-	}[];
+	objectValidationRuleSettings?: ObjectValidationRuleSetting[];
 	outputType?: string;
 	script: string;
 	system?: boolean;
+}
+
+interface ObjectValidationRuleSetting {
+	name:
+		| 'keyObjectFieldExternalReferenceCode'
+		| 'outputObjectFieldExternalReferenceCode';
+	value: string;
 }
 
 type ObjectWebLearnResources = {
