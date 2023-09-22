@@ -229,7 +229,7 @@ interface ObjectField {
 	DBType: string;
 	businessType: ObjectFieldBusinessType;
 	defaultValue?: string;
-	externalReferenceCode?: string;
+	externalReferenceCode: string;
 	id: number;
 	indexed: boolean;
 	indexedAsKeyword: boolean;
