@@ -4,6 +4,7 @@
  */
 
 import {
+	API,
 	BuilderScreen,
 	Card,
 	MultipleSelect,
@@ -36,6 +37,7 @@ interface UniqueComposedKeyProps {
 	customObjectFields: ObjectField[];
 	disabled: boolean;
 	errors: ObjectValidationErrors;
+	objectDefinitionExternalReferenceCode: string;
 	setShowCUniqueComposedKeyCardAlert: (value: boolean) => void;
 	setValues: (values: Partial<ObjectValidation>) => void;
 	showCUniqueComposedKeyCardAlert: boolean;
@@ -60,6 +62,7 @@ export function UniqueComposedKey({
 	customObjectFields,
 	disabled,
 	errors,
+	objectDefinitionExternalReferenceCode,
 	setShowCUniqueComposedKeyCardAlert,
 	setValues,
 	showCUniqueComposedKeyCardAlert,
@@ -75,6 +78,7 @@ export function UniqueComposedKey({
 	const [multipleSelectOptions, setMultipleSelectOptions] = useState<
 		MultipleSelectOptionProps[]
 	>([]);
+
 	const filteredCustomObjectFields = customObjectFields.filter(
 		(objectField) =>
 			objectField.businessType === 'Integer' ||
@@ -224,6 +228,7 @@ export function UniqueComposedKey({
 				<BuilderScreen
 					buildScreenItems={buildScreenItems ?? []}
 					defaultSort={false}
+					disableEdit={true}
 					emptyState={{
 						buttonText: Liferay.Language.get('add-fields'),
 						description: Liferay.Language.get(
@@ -233,7 +238,73 @@ export function UniqueComposedKey({
 					}}
 					filter={true}
 					firstColumnHeader={Liferay.Language.get('label')}
-					onDeleteColumn={() => {}}
+					onDeleteColumn={(objectFieldName) => {
+						const makeFetch = async () => {
+							const objectDefinition = await API.getObjectDefinitionByExternalReferenceCode(
+								objectDefinitionExternalReferenceCode
+							);
+
+							const objectValidation: ObjectValidation = await API.getObjectValidationRuleById(
+								values.id as number
+							);
+
+							const canNotDelete = buildScreenItems.some(
+								(buildScreenItem) =>
+									(objectValidation.objectValidationRuleSettings as ObjectValidationRuleSetting[]).some(
+										(objectValidationRuleSetting) =>
+											objectValidationRuleSetting.value ===
+											buildScreenItem.externalReferenceCode
+									) &&
+									buildScreenItem.objectFieldName ===
+										objectFieldName &&
+									objectDefinition.status.label === 'approved'
+							);
+
+							if (canNotDelete) {
+								const parentWindow = Liferay.Util.getOpener();
+
+								parentWindow.Liferay.fire(
+									'openModalDeletionNotAllowed',
+									{
+										contentLiferayFire: (
+											<span>
+												{Liferay.Language.get(
+													'fields-cannot-be-deleted-from-unique-composite-keys-after-object-publication'
+												)}
+											</span>
+										),
+									}
+								);
+							}
+							else {
+								let removedBuildScreenItem: TBuilderScreenItem[];
+
+								buildScreenItems.forEach(
+									(buildScreenItem, index) => {
+										if (
+											buildScreenItem.objectFieldName ===
+											objectFieldName
+										) {
+											removedBuildScreenItem = buildScreenItems.splice(
+												index,
+												1
+											);
+										}
+									}
+								);
+								setValues({
+									objectValidationRuleSettings: values.objectValidationRuleSettings?.filter(
+										(objectValidationRuleSetting) =>
+											objectValidationRuleSetting.value !==
+											removedBuildScreenItem[0]
+												.externalReferenceCode
+									),
+								});
+							}
+						};
+
+						makeFetch();
+					}}
 					openModal={handleAddFields}
 					secondColumnHeader={Liferay.Language.get('type')}
 				/>
@@ -247,9 +318,8 @@ export function UniqueComposedKey({
 			>
 				<MultipleSelect<MultipleSelectOptionProps>
 					disabled={!buildScreenItems.length}
-					error={errors.errorLabel}
 					label={Liferay.Language.get('field')}
-					options={multipleSelectOptions ?? []}
+					options={multipleSelectOptions}
 					required
 					setOptions={(newOutputObjectFieldOptions) => {
 						const objectValidationRuleSettings = values.objectValidationRuleSettings?.filter(

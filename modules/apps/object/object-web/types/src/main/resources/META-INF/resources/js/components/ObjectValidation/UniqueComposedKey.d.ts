@@ -11,6 +11,7 @@ interface UniqueComposedKeyProps {
 	customObjectFields: ObjectField[];
 	disabled: boolean;
 	errors: ObjectValidationErrors;
+	objectDefinitionExternalReferenceCode: string;
 	setShowCUniqueComposedKeyCardAlert: (value: boolean) => void;
 	setValues: (values: Partial<ObjectValidation>) => void;
 	showCUniqueComposedKeyCardAlert: boolean;
@@ -21,6 +22,7 @@ export declare function UniqueComposedKey({
 	customObjectFields,
 	disabled,
 	errors,
+	objectDefinitionExternalReferenceCode,
 	setShowCUniqueComposedKeyCardAlert,
 	setValues,
 	showCUniqueComposedKeyCardAlert,
