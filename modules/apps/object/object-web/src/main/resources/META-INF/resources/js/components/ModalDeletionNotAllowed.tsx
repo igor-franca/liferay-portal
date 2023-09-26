@@ -5,53 +5,69 @@
 
 import ClayButton from '@clayui/button';
 import ClayModal, {useModal} from '@clayui/modal';
-import {sub} from 'frontend-js-web';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 interface ModalDeletionNotAllowedProps {
-	onVisibilityChange: () => void;
-	selectedItemLabel: string;
+	bodyContentByComponentProp?: React.ReactNode;
+	onVisibilityChange?: () => void;
 }
 
-export function ModalDeletionNotAllowed({
+function ModalDeletionNotAllowed({
+	bodyContentByComponentProp,
 	onVisibilityChange,
-	selectedItemLabel,
 }: ModalDeletionNotAllowedProps) {
+	const [visibility, setVisibility] = useState(false);
+	const [bodyContent, setBodyContent] = useState<React.ReactNode>(
+		bodyContentByComponentProp
+	);
+
 	const {observer, onClose} = useModal({
-		onClose: () => onVisibilityChange(),
+		onClose: () => {
+			onVisibilityChange ? onVisibilityChange() : setVisibility(false);
+		},
 	});
 
+	useEffect(() => {
+		const openModal = ({bodyContentByLiferayFireProp = <></>}) => {
+			setVisibility(true);
+			setBodyContent(bodyContentByLiferayFireProp);
+		};
+
+		Liferay.on('openModalDeletionNotAllowed', openModal);
+
+		return () =>
+			Liferay.detach(
+				'openModalDeletionNotAllowed',
+				openModal as () => void
+			);
+	}, []);
+
 	return (
-		<ClayModal center observer={observer} status="warning">
-			<ClayModal.Header>
-				{Liferay.Language.get('deletion-not-allowed')}
-			</ClayModal.Header>
+		<>
+			{(visibility || !!bodyContentByComponentProp) && (
+				<ClayModal center observer={observer} status="warning">
+					<ClayModal.Header>
+						{Liferay.Language.get('deletion-not-allowed')}
+					</ClayModal.Header>
 
-			<ClayModal.Body>
-				<span
-					dangerouslySetInnerHTML={{
-						__html: sub(
-							Liferay.Language.get(
-								'x-is-being-used-by-a-root-object-and-cannot-be-deleted'
-							),
-							`<strong>"${selectedItemLabel}"</strong>`
-						),
-					}}
-				/>
-			</ClayModal.Body>
+					<ClayModal.Body>{bodyContent}</ClayModal.Body>
 
-			<ClayModal.Footer
-				last={
-					<ClayButton.Group key={1} spaced>
-						<ClayButton
-							displayType="warning"
-							onClick={() => onClose()}
-						>
-							{Liferay.Language.get('done')}
-						</ClayButton>
-					</ClayButton.Group>
-				}
-			/>
-		</ClayModal>
+					<ClayModal.Footer
+						last={
+							<ClayButton.Group key={1} spaced>
+								<ClayButton
+									displayType="warning"
+									onClick={() => onClose()}
+								>
+									{Liferay.Language.get('done')}
+								</ClayButton>
+							</ClayButton.Group>
+						}
+					/>
+				</ClayModal>
+			)}
+		</>
 	);
 }
+
+export default ModalDeletionNotAllowed;

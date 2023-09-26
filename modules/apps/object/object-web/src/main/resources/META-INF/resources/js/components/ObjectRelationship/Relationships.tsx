@@ -11,6 +11,7 @@ import {
 } from '@liferay/frontend-data-set-web';
 import {API, getLocalizableLabel} from '@liferay/object-js-components-web';
 import classNames from 'classnames';
+import {sub} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
 
 import {
@@ -19,7 +20,7 @@ import {
 	fdsItem,
 	formatActionURL,
 } from '../../utils/fds';
-import {ModalDeletionNotAllowed} from '../ModalDeletionNotAllowed';
+import ModalDeletionNotAllowed from '../ModalDeletionNotAllowed';
 import {deleteRelationship} from '../ViewObjectDefinitions/objectDefinitionUtil';
 import {ModalAddObjectRelationship} from './ModalAddObjectRelationship';
 import {ModalDeleteObjectRelationship} from './ModalDeleteObjectRelationship';
@@ -240,19 +241,29 @@ export default function Relationships({
 				/>
 			)}
 
-			{showDelitionNotAllowedModal &&
-				Liferay.FeatureFlags['LPS-187142'] && (
-					<ModalDeletionNotAllowed
-						onVisibilityChange={() =>
-							setShowDelitionNotAllowedModal(false)
-						}
-						selectedItemLabel={getLocalizableLabel(
-							creationLanguageId as Liferay.Language.Locale,
-							selectedObjectRelationship?.label,
-							selectedObjectRelationship?.name
-						)}
-					/>
-				)}
+			{showDelitionNotAllowedModal && Liferay.FeatureFlags['LPS-187142'] && (
+				<ModalDeletionNotAllowed
+					bodyContentByComponentProp={
+						<span
+							dangerouslySetInnerHTML={{
+								__html: sub(
+									Liferay.Language.get(
+										'x-is-being-used-by-a-root-object-and-cannot-be-deleted'
+									),
+									`<strong>"${getLocalizableLabel(
+										creationLanguageId as Liferay.Language.Locale,
+										selectedObjectRelationship?.label,
+										selectedObjectRelationship?.name
+									)}"</strong>`
+								),
+							}}
+						/>
+					}
+					onVisibilityChange={() =>
+						setShowDelitionNotAllowedModal(false)
+					}
+				/>
+			)}
 		</>
 	);
 }
