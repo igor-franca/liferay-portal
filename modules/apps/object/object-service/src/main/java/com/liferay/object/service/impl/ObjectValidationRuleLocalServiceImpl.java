@@ -319,8 +319,10 @@ public class ObjectValidationRuleLocalServiceImpl
 			objectValidationRuleId);
 
 		objectValidationRule.setObjectValidationRuleSettings(
-			_addObjectValidationRuleSettings(
-				objectValidationRule, objectValidationRuleSettings));
+			_objectValidationRuleSettingLocalService.
+				updateObjectValidationRuleSettings(
+					objectValidationRuleId, objectValidationRuleSettings,
+					objectValidationRule.getUserId()));
 
 		return objectValidationRule;
 	}
