@@ -11,6 +11,7 @@ import {
 	getLocalizableLabel,
 } from '@liferay/object-js-components-web';
 import {TBuilderScreenItem} from '@liferay/object-js-components-web/src/main/resources/META-INF/resources/components/BuilderScreen/BuilderScreen';
+import {sub} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
 
 import {ErrorMessage} from './ErrorMessage';
@@ -75,42 +76,62 @@ export function UniqueComposedKey({
 	);
 
 	const handleAddFields = () => {
-		const parentWindow = Liferay.Util.getOpener();
+		const makeFetch = async () => {
+			const objectDefinition = await API.getObjectDefinitionByExternalReferenceCode(
+				objectDefinitionExternalReferenceCode
+			);
 
-		parentWindow.Liferay.fire('openModalSelectObjectFields', {
-			getName: ({label, name}: ObjectField) =>
-				getLocalizableLabel(creationLanguageId, label, name),
-			header: Liferay.Language.get('add-fields'),
-			items: modalSelectObjectFieldsItems,
-			onSave: (selectedObjectFields: ObjectField[]) => {
-				const objectValidationRuleSetting = values.objectValidationRuleSettings?.filter(
-					(objectValidationRuleSetting) =>
-						selectedObjectFields.some((selectedObjectField) => {
-							return (
-								selectedObjectField.externalReferenceCode ===
-									objectValidationRuleSetting.value &&
-								objectValidationRuleSetting.name ===
-									'outputObjectFieldExternalReferenceCode'
-							);
+			const parentWindow = Liferay.Util.getOpener();
+
+			parentWindow.Liferay.fire('openModalSelectObjectFields', {
+				alert: {
+					content: sub(
+						Liferay.Language.get('x-has-already-been-published'),
+						objectDefinition.name!
+					),
+					otherProps: {
+						displayType: 'info',
+						title: Liferay.Language.get('info'),
+						variant: 'stripe',
+					},
+					showAlert: objectDefinition.status.label === 'approved',
+				},
+				getName: ({label, name}: ObjectField) =>
+					getLocalizableLabel(creationLanguageId, label, name),
+				header: Liferay.Language.get('add-fields'),
+				items: modalSelectObjectFieldsItems,
+				onSave: (selectedObjectFields: ObjectField[]) => {
+					const objectValidationRuleSetting = values.objectValidationRuleSettings?.filter(
+						(objectValidationRuleSetting) =>
+							selectedObjectFields.some((selectedObjectField) => {
+								return (
+									selectedObjectField.externalReferenceCode ===
+										objectValidationRuleSetting.value &&
+									objectValidationRuleSetting.name ===
+										'outputObjectFieldExternalReferenceCode'
+								);
+							})
+					);
+					selectedObjectFields.map((selectedObjectField) =>
+						objectValidationRuleSetting?.push({
+							name: 'keyObjectFieldExternalReferenceCode',
+							value: selectedObjectField.externalReferenceCode,
 						})
-				);
-				selectedObjectFields.map((selectedObjectField) =>
-					objectValidationRuleSetting?.push({
-						name: 'keyObjectFieldExternalReferenceCode',
-						value: selectedObjectField.externalReferenceCode,
-					})
-				);
+					);
 
-				setValues({
-					objectValidationRuleSettings: objectValidationRuleSetting,
-				});
-			},
-			selected: modalSelectObjectFieldsItems.filter(
-				(modalSelectObjectFieldsItem) =>
-					modalSelectObjectFieldsItem.checked
-			),
-			title: Liferay.Language.get('select-the-fields'),
-		});
+					setValues({
+						objectValidationRuleSettings: objectValidationRuleSetting,
+					});
+				},
+				selected: modalSelectObjectFieldsItems.filter(
+					(modalSelectObjectFieldsItem) =>
+						modalSelectObjectFieldsItem.checked
+				),
+				title: Liferay.Language.get('select-the-fields'),
+			});
+		};
+
+		makeFetch();
 	};
 
 	useEffect(() => {
