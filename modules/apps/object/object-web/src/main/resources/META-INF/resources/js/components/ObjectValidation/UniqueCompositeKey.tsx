@@ -128,10 +128,25 @@ export function UniqueCompositeKey({
 						})
 				);
 				selectedObjectFields.map((selectedObjectField) =>
-					objectValidationRuleSetting?.push({
-						name: 'keyObjectFieldExternalReferenceCode',
-						value: selectedObjectField.externalReferenceCode,
-					})
+					values.outputType === 'partialValidation'
+						? objectValidationRuleSetting?.push(
+								{
+									name: 'keyObjectFieldExternalReferenceCode',
+									value:
+										selectedObjectField.externalReferenceCode,
+								},
+								{
+									name:
+										'outputObjectFieldExternalReferenceCode',
+									value:
+										selectedObjectField.externalReferenceCode,
+								}
+						  )
+						: objectValidationRuleSetting?.push({
+								name: 'keyObjectFieldExternalReferenceCode',
+								value:
+									selectedObjectField.externalReferenceCode,
+						  })
 				);
 
 				setValues({
