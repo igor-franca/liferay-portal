@@ -14,6 +14,7 @@ import {TBuilderScreenItem} from '@liferay/object-js-components-web/src/main/res
 import {sub} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
 
+import {defaultLanguageId} from '../../utils/constants';
 import {ErrorMessage} from './ErrorMessage';
 import {ObjectValidationErrors} from './useObjectValidationForm';
 
@@ -113,10 +114,18 @@ export function UniqueComposedKey({
 							})
 					);
 					selectedObjectFields.map((selectedObjectField) =>
-						objectValidationRuleSetting?.push({
-							name: 'keyObjectFieldExternalReferenceCode',
-							value: selectedObjectField.externalReferenceCode,
-						})
+						objectValidationRuleSetting?.push(
+							{
+								name: 'keyObjectFieldExternalReferenceCode',
+								value:
+									selectedObjectField.externalReferenceCode,
+							},
+							{
+								name: 'outputObjectFieldExternalReferenceCode',
+								value:
+									selectedObjectField.externalReferenceCode,
+							}
+						)
 					);
 
 					setValues({
@@ -137,6 +146,17 @@ export function UniqueComposedKey({
 	useEffect(() => {
 		if (!values.objectValidationRuleSettings) {
 			return;
+		}
+
+		if (!Object.keys(values.errorLabel!).length) {
+			setValues({
+				errorLabel: {
+					[defaultLanguageId]: Liferay.Language.get(
+						'the-fields-values-are-already-in-use'
+					),
+				},
+				outputType: 'partialValidation',
+			});
 		}
 
 		const newBuildScreenItems: TBuilderScreenItem[] = [];
