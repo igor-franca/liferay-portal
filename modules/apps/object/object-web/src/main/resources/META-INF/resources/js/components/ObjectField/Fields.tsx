@@ -3,9 +3,10 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {Text} from '@clayui/core';
 import {FrontendDataSet} from '@liferay/frontend-data-set-web';
 import {API} from '@liferay/object-js-components-web';
-import {createResourceURL} from 'frontend-js-web';
+import {createResourceURL, sub} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
 
 import {defaultLanguageId} from '../../utils/constants';
@@ -16,10 +17,15 @@ import {
 	formatActionURL,
 } from '../../utils/fds';
 import FDSSourceDataRenderer from '../FDSPropsTransformer/FDSSourceDataRenderer';
+import ModalDeletionNotAllowed from '../ModalDeletionNotAllowed';
 import {ModalAddObjectField} from './ModalAddObjectField';
 import {ModalDeleteObjectField} from './ModalDeleteObjectField';
 import {deleteObjectField} from './deleteObjectFieldUtil';
-
+interface DeletionNotAllowedModal {
+	objectFieldObjectValidationComposedKey: boolean;
+	uniqueObjectFieldObjectDefinitionApproved: boolean;
+	showModal: boolean;
+}
 interface ItemData {
 	id: number;
 	required: boolean;
@@ -59,7 +65,7 @@ export default function Fields({
 	const [
 		showDeletionNotAllowedModal,
 		setShowDeletionNotAllowedModal,
-	] = useState<boolean>(false);
+	] = useState<DeletionNotAllowedModal>();
 
 	useEffect(() => {
 		Liferay.on('addObjectField', () => setShowAddFieldModal(true));
@@ -139,20 +145,25 @@ export default function Fields({
 					}).href;
 
 					const showModalResponse = await API.fetchJSON<{
+						objectFieldInObjectValidationComposedKey: boolean;
 						showDeletionModal: boolean;
-						showDeletionNotAllowedModal: boolean;
+						uniqueObjectFieldAfterObjectDefinitionApproved: boolean;
 					}>(url);
 
 					if (showModalResponse.showDeletionModal) {
 						setDeletedObjectField(itemData);
 
 						setShowDeletionModal(
-							showModalResponse.showDeletionModal
+							showModalResponse.showDeletionModal && (!showModalResponse.objectFieldInObjectValidationComposedKey && !showModalResponse.uniqueObjectFieldAfterObjectDefinitionApproved)
 						);
 
-						setShowDeletionNotAllowedModal(
-							showModalResponse.showDeletionNotAllowedModal
-						);
+						setShowDeletionNotAllowedModal({
+							objectFieldObjectValidationComposedKey:
+								showModalResponse.objectFieldInObjectValidationComposedKey,
+							uniqueObjectFieldObjectDefinitionApproved:
+								showModalResponse.uniqueObjectFieldAfterObjectDefinitionApproved,
+								showModal: (showModalResponse.objectFieldInObjectValidationComposedKey || showModalResponse.uniqueObjectFieldAfterObjectDefinitionApproved)
+						});
 
 						return;
 					}
@@ -245,7 +256,38 @@ export default function Fields({
 					objectField={deletedObjectField as ObjectField}
 					setModalVisibility={setShowDeletionModal}
 					setObjectField={setDeletedObjectField}
-					showDeletionNotAllowedModal={showDeletionNotAllowedModal}
+				/>
+			)}
+
+			{showDeletionNotAllowedModal?.showModal && (
+				<ModalDeletionNotAllowed
+					bodyContentByComponentProp={
+						showDeletionNotAllowedModal?.objectFieldObjectValidationComposedKey ? (
+							<Text>
+								{Liferay.Language.get(
+									'fields-cannot-be-deleted-from-unique-composite-keys-after-object-publication'
+								)}
+							</Text>
+						) : (
+							<Text>
+								{sub(
+									Liferay.Language.get(
+										'x-is-the-only-field-of-the-published-object-definition-and-cannot-be-deleted'
+									),
+									`${
+										(deletedObjectField as ObjectField)
+											.label[defaultLanguageId]
+									}`
+								)}
+							</Text>
+						)
+					}
+					onVisibilityChange={() =>
+						setShowDeletionNotAllowedModal({
+							...showDeletionNotAllowedModal, 
+							showModal: false,
+						})
+					}
 				/>
 			)}
 		</>

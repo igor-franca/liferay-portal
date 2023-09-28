@@ -8,8 +8,10 @@ package com.liferay.object.web.internal.object.definitions.portlet.action;
 import com.liferay.object.constants.ObjectPortletKeys;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectField;
+import com.liferay.object.model.ObjectValidationRule;
 import com.liferay.object.service.ObjectDefinitionLocalService;
 import com.liferay.object.service.ObjectFieldLocalService;
+import com.liferay.object.service.ObjectValidationRuleLocalService;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCResourceCommand;
@@ -50,16 +52,37 @@ public class GetObjectFieldDeleteInfoMVCResourceCommand
 		JSONPortletResponseUtil.writeJSON(
 			resourceRequest, resourceResponse,
 			JSONUtil.put(
-				"showDeletionModal",
+				"objectFieldObjectValidationComposedKey",
 				() -> {
-					if (!objectDefinition.isApproved()) {
-						return false;
+					ObjectValidationRule objectValidationRule =
+						_objectValidationRuleLocalService.
+							fetchObjectValidationRule(
+								objectDefinition.getExternalReferenceCode(),
+								objectField.getObjectFieldId());
+
+					if (objectValidationRule.getEngine(
+						).equals(
+							"composedKey"
+						)) {
+
+						return true;
 					}
 
-					return true;
+					return false;
 				}
 			).put(
-				"showDeletionNotAllowedModal",
+				"showDeletionModal",
+				() -> {
+					if (objectDefinition.isApproved() &&
+						// not("objectFieldObjectValidationComposedKey") and not("uniqueObjectFieldObjectDefinitionApproved")
+					) {
+						return true;
+					}
+
+					return false;
+				}
+			).put(
+				"uniqueObjectFieldObjectDefinitionApproved",
 				() -> {
 					if (!objectDefinition.isApproved() ||
 						objectDefinition.isSystem()) {
@@ -85,5 +108,8 @@ public class GetObjectFieldDeleteInfoMVCResourceCommand
 
 	@Reference
 	private ObjectFieldLocalService _objectFieldLocalService;
+
+	@Reference
+	private ObjectValidationRuleLocalService _objectValidationRuleLocalService;
 
 }
