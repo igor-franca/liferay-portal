@@ -14,6 +14,7 @@ import {TBuilderScreenItem} from '@liferay/object-js-components-web/src/main/res
 import {sub} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
 
+import {defaultLanguageId} from '../../utils/constants';
 import {ErrorMessage} from './ErrorMessage';
 import {ObjectValidationErrors} from './useObjectValidationForm';
 
@@ -128,10 +129,25 @@ export function UniqueCompositeKey({
 						})
 				);
 				selectedObjectFields.map((selectedObjectField) =>
-					objectValidationRuleSetting?.push({
-						name: 'keyObjectFieldExternalReferenceCode',
-						value: selectedObjectField.externalReferenceCode,
-					})
+					values.outputType === 'partialValidation'
+						? objectValidationRuleSetting?.push(
+								{
+									name: 'keyObjectFieldExternalReferenceCode',
+									value:
+										selectedObjectField.externalReferenceCode,
+								},
+								{
+									name:
+										'outputObjectFieldExternalReferenceCode',
+									value:
+										selectedObjectField.externalReferenceCode,
+								}
+						  )
+						: objectValidationRuleSetting?.push({
+								name: 'keyObjectFieldExternalReferenceCode',
+								value:
+									selectedObjectField.externalReferenceCode,
+						  })
 				);
 
 				setValues({
@@ -156,6 +172,16 @@ export function UniqueCompositeKey({
 		};
 
 		makeFetch();
+
+		if (!Object.keys(values.errorLabel!).length) {
+			setValues({
+				errorLabel: {
+					[defaultLanguageId]: Liferay.Language.get(
+						'the-fields-values-are-already-in-use'
+					),
+				},
+			});
+		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
