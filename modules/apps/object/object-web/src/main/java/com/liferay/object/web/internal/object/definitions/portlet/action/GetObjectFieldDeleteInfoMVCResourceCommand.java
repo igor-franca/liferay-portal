@@ -6,6 +6,8 @@
 package com.liferay.object.web.internal.object.definitions.portlet.action;
 
 import com.liferay.object.constants.ObjectPortletKeys;
+import com.liferay.object.constants.ObjectValidationRuleConstants;
+import com.liferay.object.constants.ObjectValidationRuleSettingConstants;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectField;
 import com.liferay.object.model.ObjectValidationRule;
@@ -19,8 +21,7 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCResourceCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-
-import java.util.List;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
@@ -56,63 +57,24 @@ public class GetObjectFieldDeleteInfoMVCResourceCommand
 		JSONPortletResponseUtil.writeJSON(
 			resourceRequest, resourceResponse,
 			JSONUtil.put(
-				"objectFieldObjectValidationComposedKey",
-				() -> _isObjectFieldValidationComposedKey(
-					objectField, objectDefinition)
+				"deleteUniqueComposedKeyObjectValidationRuleSetting",
+				() ->
+					_shouldDeleteUniqueComposedKeyObjectValidationRuleObjectField(
+						objectDefinition, objectField)
+			).put(
+				"publishedObjectDefinitionUniqueComposedKeyObjectValidationRuleSetting",
+				() ->
+					_publishedObjectDefinitionUniqueComposedKeyObjectValidationRule(
+						objectDefinition, objectField)
 			).put(
 				"showDeletionModal",
 				() -> _shouldShowDeletionModal(objectDefinition, objectField)
-			).put(
-				"uniqueObjectFieldObjectDefinitionApproved",
-				() -> _isUniqueObjectFieldObjectDefinitionApproved(
-					objectDefinition, objectField)
 			));
 	}
 
-	private boolean _isObjectFieldValidationComposedKey(
-		ObjectField objectField, ObjectDefinition objectDefinition) {
-
-		List<ObjectValidationRule> objectValidationRules =
-			(List<ObjectValidationRule>)
-				_objectValidationRuleLocalService.getObjectValidationRules(
-					objectDefinition.getObjectDefinitionId(), true);
-
-		if (objectValidationRules != null) {
-			for (int i = 0; i < objectValidationRules.size(); i++) {
-				if (objectValidationRules.get(
-						i
-					).getEngine(
-					).equals(
-						"composedKey"
-					)) {
-
-					List<ObjectValidationRuleSetting>
-						objectValidationRuleSettings =
-							objectValidationRules.get(
-								i
-							).getObjectValidationRuleSettings();
-
-					for (int index = 0;
-						 index < objectValidationRuleSettings.size(); index++) {
-
-						if (objectField.getObjectFieldId() ==
-								GetterUtil.getInteger(
-									objectValidationRuleSettings.get(
-										index
-									).getValue())) {
-
-							return true;
-						}
-					}
-				}
-			}
-		}
-
-		return false;
-	}
-
-	private boolean _isUniqueObjectFieldObjectDefinitionApproved(
-		ObjectDefinition objectDefinition, ObjectField objectField) {
+	private boolean
+		_publishedObjectDefinitionUniqueComposedKeyObjectValidationRule(
+			ObjectDefinition objectDefinition, ObjectField objectField) {
 
 		if (!objectDefinition.isApproved() || objectDefinition.isSystem()) {
 			return false;
@@ -129,13 +91,47 @@ public class GetObjectFieldDeleteInfoMVCResourceCommand
 		return false;
 	}
 
+	private boolean
+		_shouldDeleteUniqueComposedKeyObjectValidationRuleObjectField(
+			ObjectDefinition objectDefinition, ObjectField objectField) {
+
+		for (ObjectValidationRule objectValidationRule :
+				_objectValidationRuleLocalService.getObjectValidationRules(
+					objectDefinition.getObjectDefinitionId(), true)) {
+
+			if (StringUtil.equals(
+					objectValidationRule.getEngine(),
+					ObjectValidationRuleConstants.ENGINE_TYPE_COMPOSED_KEY)) {
+
+				for (ObjectValidationRuleSetting objectValidationRuleSetting :
+						objectValidationRule.
+							getObjectValidationRuleSettings()) {
+
+					if (objectValidationRuleSetting.compareName(
+							ObjectValidationRuleSettingConstants.
+								NAME_KEY_OBJECT_FIELD_ID)) {
+
+						if (GetterUtil.getLong(
+								objectValidationRuleSetting.getValue()) ==
+									objectField.getObjectFieldId()) {
+
+							return true;
+						}
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
 	private boolean _shouldShowDeletionModal(
 		ObjectDefinition objectDefinition, ObjectField objectField) {
 
 		if (objectDefinition.isApproved() &&
-			!(_isObjectFieldValidationComposedKey(
-				objectField, objectDefinition) ||
-			  _isUniqueObjectFieldObjectDefinitionApproved(
+			!(_shouldDeleteUniqueComposedKeyObjectValidationRuleObjectField(
+				objectDefinition, objectField) ||
+			  _publishedObjectDefinitionUniqueComposedKeyObjectValidationRule(
 				  objectDefinition, objectField))) {
 
 			return true;
