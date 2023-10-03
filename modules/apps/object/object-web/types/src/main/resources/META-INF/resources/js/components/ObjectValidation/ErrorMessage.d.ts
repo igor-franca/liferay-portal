@@ -10,13 +10,13 @@ declare type ErrorMessageProps = {
 	disabled: boolean;
 	errors: ObjectValidationErrors;
 	setValidation: (values: Partial<ObjectValidation>) => void;
-	validation: Partial<ObjectValidation>;
+	values: Partial<ObjectValidation>;
 };
 export declare function ErrorMessage({
 	children,
 	disabled,
 	errors,
 	setValidation,
-	validation,
+	values,
 }: ErrorMessageProps): JSX.Element;
 export {};

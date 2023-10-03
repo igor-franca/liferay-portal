@@ -5,7 +5,12 @@
 
 /// <reference types="react" />
 
+import {IClayAlertProps} from '@clayui/alert';
 import {ObjectValidationErrors} from './useObjectValidationForm';
+export declare type Alert = {
+	content: string;
+	otherProps: IClayAlertProps;
+};
 interface UniqueComposedKeyProps {
 	creationLanguageId: Liferay.Language.Locale;
 	customObjectFields: ObjectField[];

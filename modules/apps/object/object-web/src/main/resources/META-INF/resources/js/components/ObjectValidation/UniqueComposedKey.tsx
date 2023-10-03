@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {IClayAlertProps} from '@clayui/alert';
 import {
 	API,
 	BuilderScreen,
@@ -11,13 +12,16 @@ import {
 	getLocalizableLabel,
 } from '@liferay/object-js-components-web';
 import {TBuilderScreenItem} from '@liferay/object-js-components-web/src/main/resources/META-INF/resources/components/BuilderScreen/BuilderScreen';
-import {sub} from 'frontend-js-web';
+import {createResourceURL, sub} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
 
-import {defaultLanguageId} from '../../utils/constants';
 import {ErrorMessage} from './ErrorMessage';
 import {ObjectValidationErrors} from './useObjectValidationForm';
 
+export type Alert = {
+	content: string;
+	otherProps: IClayAlertProps;
+};
 interface isMatchingObjectFieldObjectValidationRuleSettingProps {
 	objectField: ObjectField;
 	objectValidationRuleSetting: ObjectValidationRuleSetting;
@@ -73,6 +77,9 @@ export function UniqueComposedKey({
 	const [buildScreenItems, setBuildScreenItems] = useState<
 		TBuilderScreenItem[]
 	>([]);
+
+	const [alerts, setAlerts] = useState<Alert[]>([]);
+
 	const [
 		modalSelectObjectFieldsItems,
 		setModalSelectObjectFieldsItems,
@@ -80,6 +87,9 @@ export function UniqueComposedKey({
 	const [multipleSelectOptions, setMultipleSelectOptions] = useState<
 		MultipleSelectOptionProps[]
 	>([]);
+	const [objectDefinition, setObjectDefinition] = useState<
+		ObjectDefinition
+	>();
 
 	const filteredCustomObjectFields = customObjectFields.filter(
 		(objectField) =>
@@ -89,32 +99,84 @@ export function UniqueComposedKey({
 			'Text'
 	);
 
-	const handleAddFields = () => {
-		const makeFetch = async () => {
-			const objectDefinition = await API.getObjectDefinitionByExternalReferenceCode(
-				objectDefinitionExternalReferenceCode
-			);
+	const openModal = () => {
+		const parentWindow = Liferay.Util.getOpener();
 
-			const parentWindow = Liferay.Util.getOpener();
-
+		if (objectDefinition) {
 			parentWindow.Liferay.fire('openModalSelectObjectFields', {
-				alert: {
-					content: sub(
-						Liferay.Language.get('x-has-already-been-published'),
-						objectDefinition.name!
-					),
-					otherProps: {
-						displayType: 'info',
-						title: Liferay.Language.get('info'),
-						variant: 'stripe',
-					},
-					showAlert: objectDefinition.status.label === 'approved',
-				},
+				alerts,
 				getName: ({label, name}: ObjectField) =>
 					getLocalizableLabel(creationLanguageId, label, name),
 				header: Liferay.Language.get('add-fields'),
 				items: modalSelectObjectFieldsItems,
-				onSave: (selectedObjectFields: ObjectField[]) => {
+				onAfterClose: () => {
+					setAlerts([
+						{
+							content: sub(
+								Liferay.Language.get(
+									'x-has-already-been-published'
+								),
+								objectDefinition.name!
+							),
+							otherProps: {
+								displayType: 'info',
+								title: Liferay.Language.get('info'),
+								variant: 'stripe',
+							},
+						},
+					]);
+				},
+				onSave: async (selectedObjectFields: ObjectField[]) => {
+					const url = createResourceURL(
+						'http://localhost:8080/group/control_panel/manage?p_p_id=com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet&p_p_lifecycle=2&p_p_state=maximized&p_p_mode=view&p_p_cacheability=cacheLevelPage&p_p_auth=pidniAew',
+						{
+							objectFieldId: selectedObjectFields[0].id,
+							p_p_resource_id:
+								'/object_definitions/get_object_field_delete_info',
+						}
+					).href;
+
+					const showModalResponse = await API.fetchJSON<{
+						objectFieldObjectValidationComposedKey: boolean;
+						showDeletionModal: boolean;
+						uniqueObjectFieldObjectDefinitionApproved: boolean;
+					}>(url);
+
+					if (
+						showModalResponse.uniqueObjectFieldObjectDefinitionApproved
+					) {
+						setAlerts([
+							{
+								content: sub(
+									Liferay.Language.get(
+										'x-has-already-been-published'
+									),
+									objectDefinition.name!
+								),
+								otherProps: {
+									displayType: 'info',
+									title: Liferay.Language.get('info'),
+									variant: 'stripe',
+								},
+							},
+							{
+								content: sub(
+									Liferay.Language.get(
+										'x-has-already-been-published'
+									),
+									objectDefinition.name!
+								),
+								otherProps: {
+									displayType: 'info',
+									title: Liferay.Language.get('info'),
+									variant: 'stripe',
+								},
+							},
+						]);
+
+						return;
+					}
+
 					const objectValidationRuleSetting = values.objectValidationRuleSettings?.filter(
 						(objectValidationRuleSetting) =>
 							selectedObjectFields.some((selectedObjectField) => {
@@ -151,25 +213,49 @@ export function UniqueComposedKey({
 				),
 				title: Liferay.Language.get('select-the-fields'),
 			});
+		}
+	};
+
+	useEffect(() => {
+		if (alerts.length >= 2) {
+			openModal();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [alerts]);
+
+	useEffect(() => {
+		const makeFetch = async () => {
+			const objectDefinitionResponse = await API.getObjectDefinitionByExternalReferenceCode(
+				objectDefinitionExternalReferenceCode
+			);
+
+			setObjectDefinition(objectDefinitionResponse);
+			if (objectDefinitionResponse.status.label === 'approved') {
+				setAlerts([
+					{
+						content: sub(
+							Liferay.Language.get(
+								'x-has-already-been-published'
+							),
+							objectDefinitionResponse.name!
+						),
+						otherProps: {
+							displayType: 'info',
+							title: Liferay.Language.get('info'),
+							variant: 'stripe',
+						},
+					},
+				]);
+			}
 		};
 
 		makeFetch();
-	};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (!values.objectValidationRuleSettings) {
 			return;
-		}
-
-		if (!Object.keys(values.errorLabel!).length) {
-			setValues({
-				errorLabel: {
-					[defaultLanguageId]: Liferay.Language.get(
-						'the-fields-values-are-already-in-use'
-					),
-				},
-				outputType: 'partialValidation',
-			});
 		}
 
 		const newBuildScreenItems: TBuilderScreenItem[] = [];
@@ -346,7 +432,7 @@ export function UniqueComposedKey({
 
 						makeFetch();
 					}}
-					openModal={handleAddFields}
+					openModal={openModal}
 					secondColumnHeader={Liferay.Language.get('type')}
 				/>
 			</Card>
@@ -355,7 +441,7 @@ export function UniqueComposedKey({
 				disabled={disabled}
 				errors={errors}
 				setValidation={setValues}
-				validation={values}
+				values={values}
 			>
 				<MultipleSelect<MultipleSelectOptionProps>
 					disabled={!buildScreenItems.length}

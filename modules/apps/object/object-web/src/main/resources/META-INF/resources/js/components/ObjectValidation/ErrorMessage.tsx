@@ -14,7 +14,7 @@ type ErrorMessageProps = {
 	disabled: boolean;
 	errors: ObjectValidationErrors;
 	setValidation: (values: Partial<ObjectValidation>) => void;
-	validation: Partial<ObjectValidation>;
+	values: Partial<ObjectValidation>;
 };
 
 export function ErrorMessage({
@@ -22,7 +22,7 @@ export function ErrorMessage({
 	disabled,
 	errors,
 	setValidation,
-	validation,
+	values,
 }: ErrorMessageProps) {
 	const outputValidationTypeArray = [
 		{
@@ -44,19 +44,19 @@ export function ErrorMessage({
 				onChange={(errorLabel) => setValidation({errorLabel})}
 				placeholder={Liferay.Language.get('add-an-error-message')}
 				required
-				translations={validation.errorLabel!}
+				translations={values.errorLabel!}
 			/>
 
 			<RadioField
-				defaultValue={validation.outputType}
+				defaultValue={values.outputType}
 				inline={false}
 				label={Liferay.Language.get('output-validation-type')}
 				onChange={(value) => {
 					if (value === 'fullValidation') {
 						setValidation({
 							objectValidationRuleSettings:
-								validation.engine === 'composedKey'
-									? validation.objectValidationRuleSettings?.filter(
+								values.engine === 'composedKey'
+									? values.objectValidationRuleSettings?.filter(
 											(objectValidationRuleSetting) =>
 												objectValidationRuleSetting.name ===
 												'keyObjectFieldExternalReferenceCode'
@@ -65,31 +65,32 @@ export function ErrorMessage({
 							outputType: value as string,
 						});
 
-						return;
-					}
-					else if (
-						value === 'partialValidation' &&
-						validation.engine === 'composedKey'
-					) {
-						const outputObjectFieldExternalReferenceCode = validation.objectValidationRuleSettings?.map(
-							(objectValidationRuleSetting) => {
-								return {
-									name:
-										'outputObjectFieldExternalReferenceCode',
-									value: objectValidationRuleSetting.value,
-								};
-							}
-						) as ObjectValidationRuleSetting[];
+							return;
+						}
+						else if (
+							value === 'partialValidation' &&
+							values.engine === 'composedKey'
+						) {
+							const outputObjectFieldExternalReferenceCode = values.objectValidationRuleSettings?.map(
+								(objectValidationRuleSetting) => {
+									return {
+										name:
+											'outputObjectFieldExternalReferenceCode',
+										value:
+											objectValidationRuleSetting.value,
+									};
+								}
+							) as ObjectValidationRuleSetting[];
 
-						setValidation({
-							objectValidationRuleSettings: validation.objectValidationRuleSettings?.concat(
-								outputObjectFieldExternalReferenceCode
-							),
-							outputType: value as string,
-						});
+							setValidation({
+								objectValidationRuleSettings: values.objectValidationRuleSettings?.concat(
+									outputObjectFieldExternalReferenceCode
+								),
+								outputType: value as string,
+							});
 
-						return;
-					}
+							return;
+						}
 
 					setValidation({
 						outputType: value as string,
@@ -105,7 +106,7 @@ export function ErrorMessage({
 				}}
 			/>
 
-			{validation.outputType === 'partialValidation' && children}
+			{values.outputType === 'partialValidation' && children}
 		</Card>
 	);
 }

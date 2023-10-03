@@ -131,7 +131,7 @@ export function Conditions({
 				disabled={disabled}
 				errors={errors}
 				setValidation={setValues}
-				validation={values}
+				values={values}
 			>
 				<AutoComplete<ObjectField>
 					emptyStateMessage={Liferay.Language.get(
