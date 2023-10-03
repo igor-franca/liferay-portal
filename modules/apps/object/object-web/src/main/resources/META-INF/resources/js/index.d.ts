@@ -452,7 +452,6 @@ interface PickList {
 	name_i18n: LocalizedValue<string>;
 }
 
-
 interface PredefinedValue {
 	businessType: ObjectFieldBusinessType;
 	inputAsValue: boolean;
