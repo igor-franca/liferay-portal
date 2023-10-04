@@ -77,9 +77,9 @@ export function RightSidebarObjectFieldDetails() {
 		).href;
 
 		const showModalResponse = await API.fetchJSON<{
-			objectFieldObjectValidationComposedKey: boolean;
+			deleteLastPublishedObjectDefinitionObjectField: boolean;
+			deleteObjectFieldObjectValidationRuleSetting: boolean;
 			showDeletionModal: boolean;
-			uniqueObjectFieldObjectDefinitionApproved: boolean;
 		}>(objectFieldModalDeletionModalUrl);
 
 		if (showModalResponse.showDeletionModal) {
@@ -89,13 +89,13 @@ export function RightSidebarObjectFieldDetails() {
 		}
 		else {
 			setShowDeletionNotAllowedModal({
-				objectFieldObjectValidationComposedKey:
-					showModalResponse.objectFieldObjectValidationComposedKey,
+				deleteLastPublishedObjectDefinitionObjectField:
+					showModalResponse.deleteLastPublishedObjectDefinitionObjectField,
+				deleteObjectFieldObjectValidationRuleSetting:
+					showModalResponse.deleteObjectFieldObjectValidationRuleSetting,
 				showModal:
-					showModalResponse.objectFieldObjectValidationComposedKey ||
-					showModalResponse.uniqueObjectFieldObjectDefinitionApproved,
-				uniqueObjectFieldObjectDefinitionApproved:
-					showModalResponse.uniqueObjectFieldObjectDefinitionApproved,
+					!showModalResponse.deleteObjectFieldObjectValidationRuleSetting ||
+					!showModalResponse.deleteLastPublishedObjectDefinitionObjectField,
 			});
 		}
 	};
@@ -265,13 +265,7 @@ export function RightSidebarObjectFieldDetails() {
 			{showDeletionNotAllowedModal?.showModal && (
 				<ModalDeletionNotAllowed
 					content={
-						showDeletionNotAllowedModal?.objectFieldObjectValidationComposedKey ? (
-							<Text>
-								{Liferay.Language.get(
-									'this-field-cannot-be-deleted-as-it-is-used-in-a-composite-unique-key-validation'
-								)}
-							</Text>
-						) : (
+						showDeletionNotAllowedModal?.deleteObjectFieldObjectValidationRuleSetting ? (
 							<Text>
 								{sub(
 									Liferay.Language.get(
@@ -283,6 +277,12 @@ export function RightSidebarObjectFieldDetails() {
 										values.label,
 										values.name
 									)}`
+								)}
+							</Text>
+						) : (
+							<Text>
+								{Liferay.Language.get(
+									'this-field-cannot-be-deleted-as-it-is-used-in-a-composite-unique-key-validation'
 								)}
 							</Text>
 						)

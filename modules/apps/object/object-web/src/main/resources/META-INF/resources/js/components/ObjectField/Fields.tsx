@@ -138,9 +138,9 @@ export default function Fields({
 					}).href;
 
 					const showModalResponse = await API.fetchJSON<{
-						objectFieldObjectValidationComposedKey: boolean;
+						deleteLastPublishedObjectDefinitionObjectField: boolean;
+						deleteObjectFieldObjectValidationRuleSetting: boolean;
 						showDeletionModal: boolean;
-						uniqueObjectFieldObjectDefinitionApproved: boolean;
 					}>(url);
 
 					setDeletedObjectField(itemData);
@@ -153,17 +153,17 @@ export default function Fields({
 						return;
 					}
 					else if (
-						showModalResponse.objectFieldObjectValidationComposedKey ||
-						showModalResponse.uniqueObjectFieldObjectDefinitionApproved
+						!showModalResponse.deleteObjectFieldObjectValidationRuleSetting ||
+						!showModalResponse.deleteLastPublishedObjectDefinitionObjectField
 					) {
 						setShowDeletionNotAllowedModal({
-							objectFieldObjectValidationComposedKey:
-								showModalResponse.objectFieldObjectValidationComposedKey,
+							deleteLastPublishedObjectDefinitionObjectField:
+								showModalResponse.deleteLastPublishedObjectDefinitionObjectField,
+							deleteObjectFieldObjectValidationRuleSetting:
+								showModalResponse.deleteObjectFieldObjectValidationRuleSetting,
 							showModal:
-								showModalResponse.objectFieldObjectValidationComposedKey ||
-								showModalResponse.uniqueObjectFieldObjectDefinitionApproved,
-							uniqueObjectFieldObjectDefinitionApproved:
-								showModalResponse.uniqueObjectFieldObjectDefinitionApproved,
+								!showModalResponse.deleteObjectFieldObjectValidationRuleSetting ||
+								!showModalResponse.deleteLastPublishedObjectDefinitionObjectField,
 						});
 
 						return;
@@ -266,13 +266,7 @@ export default function Fields({
 			{!!deletedObjectField && showDeletionNotAllowedModal?.showModal && (
 				<ModalDeletionNotAllowed
 					content={
-						showDeletionNotAllowedModal?.objectFieldObjectValidationComposedKey ? (
-							<Text>
-								{Liferay.Language.get(
-									'this-field-cannot-be-deleted-as-it-is-used-in-a-composite-unique-key-validation'
-								)}
-							</Text>
-						) : (
+						showDeletionNotAllowedModal?.deleteObjectFieldObjectValidationRuleSetting ? (
 							<Text>
 								{sub(
 									Liferay.Language.get(
@@ -283,6 +277,12 @@ export default function Fields({
 										deletedObjectField.label,
 										deletedObjectField.name
 									)}`
+								)}
+							</Text>
+						) : (
+							<Text>
+								{Liferay.Language.get(
+									'this-field-cannot-be-deleted-as-it-is-used-in-a-composite-unique-key-validation'
 								)}
 							</Text>
 						)

@@ -31,9 +31,9 @@ type DefinitionActions = {
 };
 
 type DeletionNotAllowedModal = {
-	objectFieldObjectValidationComposedKey: boolean;
+	deleteLastPublishedObjectDefinitionObjectField: boolean;
+	deleteObjectFieldObjectValidationRuleSetting: boolean;
 	showModal: boolean;
-	uniqueObjectFieldObjectDefinitionApproved: boolean;
 };
 
 type ExcludesFilterOperator = {
