@@ -23,6 +23,7 @@ import {
 } from './useObjectValidationForm';
 
 interface EditObjectValidationProps {
+	baseResourceURL: string;
 	creationLanguageId: Liferay.Language.Locale;
 	learnResources: ObjectWebLearnResources;
 	objectDefinitionExternalReferenceCode: string;
@@ -54,6 +55,7 @@ const initialValues: ObjectValidation = {
 };
 
 export default function EditObjectValidation({
+	baseResourceURL,
 	creationLanguageId,
 	learnResources,
 	objectDefinitionExternalReferenceCode,
@@ -200,6 +202,7 @@ export default function EditObjectValidation({
 					activeIndex === index ? (
 						<ClayTabs.TabPane key={index}>
 							<Component
+								baseResourceURL={baseResourceURL}
 								componentLabel={label}
 								creationLanguageId={creationLanguageId}
 								customObjectFields={customObjectFields ?? []}
