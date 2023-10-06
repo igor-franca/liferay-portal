@@ -5,19 +5,26 @@
 
 /// <reference types="react" />
 
+import {ObjectValidationErrors} from './useObjectValidationForm';
 export interface UniqueCompositeKeyProps {
 	creationLanguageId: Liferay.Language.Locale;
-	customObjectField: ObjectField[];
-	setShowUniqueCompositeKeyCardAlert: (value: boolean) => void;
+	customObjectFields: ObjectField[];
+	disabled: boolean;
+	errors: ObjectValidationErrors;
+	objectDefinitionExternalReferenceCode: string;
+	setShowUniqueCompositeKeyAlert: (value: boolean) => void;
 	setValues: (values: Partial<ObjectValidation>) => void;
-	showUniqueCompositeKeyCardAlert: boolean;
+	showUniqueCompositeKeyAlert: boolean;
 	values: Partial<ObjectValidation>;
 }
 export declare function UniqueCompositeKey({
 	creationLanguageId,
-	customObjectField,
-	setShowUniqueCompositeKeyCardAlert,
+	customObjectFields,
+	disabled,
+	errors,
+	objectDefinitionExternalReferenceCode,
+	setShowUniqueCompositeKeyAlert,
 	setValues,
-	showUniqueCompositeKeyCardAlert,
+	showUniqueCompositeKeyAlert,
 	values,
 }: UniqueCompositeKeyProps): JSX.Element;
