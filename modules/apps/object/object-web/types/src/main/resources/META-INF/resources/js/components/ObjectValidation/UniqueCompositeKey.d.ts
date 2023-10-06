@@ -6,10 +6,18 @@
 /// <reference types="react" />
 
 export interface UniqueCompositeKeyProps {
+	creationLanguageId: Liferay.Language.Locale;
+	customObjectField: ObjectField[];
 	setShowUniqueCompositeKeyCardAlert: (value: boolean) => void;
+	setValues: (values: Partial<ObjectValidation>) => void;
 	showUniqueCompositeKeyCardAlert: boolean;
+	values: Partial<ObjectValidation>;
 }
 export declare function UniqueCompositeKey({
+	creationLanguageId,
+	customObjectField,
 	setShowUniqueCompositeKeyCardAlert,
+	setValues,
 	showUniqueCompositeKeyCardAlert,
+	values,
 }: UniqueCompositeKeyProps): JSX.Element;
