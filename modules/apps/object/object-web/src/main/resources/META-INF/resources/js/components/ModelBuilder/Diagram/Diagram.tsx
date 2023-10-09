@@ -13,6 +13,7 @@ import ReactFlow, {
 	MiniMap,
 	Node,
 	isNode,
+	useStore,
 } from 'react-flow-renderer';
 
 import {EmptyNode} from '../ObjectDefinitionNode/EmptyNode';
@@ -21,7 +22,7 @@ import {ObjectDefinitionNode} from '../ObjectDefinitionNode/ObjectDefinitionNode
 import './Diagram.scss';
 
 import {API} from '@liferay/object-js-components-web';
-import React, {MouseEvent, useCallback, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {ModalAddObjectRelationship} from '../../ObjectRelationship/ModalAddObjectRelationship';
 import {getUpdatedModelBuilderStructurePayload} from '../../ViewObjectDefinitions/objectDefinitionUtil';
@@ -87,6 +88,8 @@ function DiagramBuilder({
 		},
 	];
 
+	const store = useStore();
+
 	const onConnect = useCallback(
 		(connection: Connection | Edge) => {
 			const sourceNode = elements.find(
@@ -123,10 +126,7 @@ function DiagramBuilder({
 		[elements]
 	);
 
-	const onNodeDragStop = async (
-		event: MouseEvent,
-		node: Node<ObjectDefinitionNodeData>
-	) => {
+	const onNodeDragStop = async (node: Node<ObjectDefinitionNodeData>) => {
 		const objectFolder = await API.getObjectFolderByExternalReferenceCode(
 			selectedObjectFolder.externalReferenceCode
 		);
@@ -157,6 +157,19 @@ function DiagramBuilder({
 		};
 
 		API.putObjectFolderByExternalReferenceCode(updatedObjectFolder);
+		const {edges, nodes} = store.getState();
+		dispatch({
+			payload: {
+				newPosition: {
+					x: node.position.x,
+					y: node.position.y,
+				},
+				objectDefinitionNodes: nodes,
+				objectRelationshipEdges: edges,
+				updatedObjectDefinitionNodeId: node.data?.id as number,
+			},
+			type: TYPES.SET_SELECTED_OBJECT_DEFINITION_NODE_POSITION,
+		});
 
 		if (!showChangesSaved) {
 			dispatch({
@@ -223,7 +236,7 @@ function DiagramBuilder({
 				minZoom={0.1}
 				nodeTypes={NODE_TYPES}
 				onConnect={onConnect}
-				onNodeDragStop={onNodeDragStop}
+				onNodeDragStop={(_, node) => onNodeDragStop(node)}
 			>
 				<Background size={1} />
 

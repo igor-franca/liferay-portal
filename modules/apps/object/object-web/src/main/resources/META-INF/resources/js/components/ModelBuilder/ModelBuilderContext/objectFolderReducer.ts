@@ -836,6 +836,39 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 			};
 		}
 
+		case TYPES.SET_SELECTED_OBJECT_DEFINITION_NODE_POSITION: {
+			const {
+				newPosition,
+				objectDefinitionNodes,
+				objectRelationshipEdges,
+				updatedObjectDefinitionNodeId,
+			} = action.payload;
+
+			const newObjectDefinitionNodes = objectDefinitionNodes.map(
+				(objectDefinitionNode) => {
+					if (
+						objectDefinitionNode.data?.id ===
+						updatedObjectDefinitionNodeId
+					) {
+						return {
+							...objectDefinitionNode,
+							position: newPosition,
+						};
+					}
+
+					return objectDefinitionNode;
+				}
+			);
+
+			return {
+				...state,
+				elements: [
+					...newObjectDefinitionNodes,
+					...objectRelationshipEdges,
+				],
+			};
+		}
+
 		case TYPES.SET_SELECTED_OBJECT_RELATIONSHIP_EDGE: {
 			const {
 				objectDefinitionNodes,

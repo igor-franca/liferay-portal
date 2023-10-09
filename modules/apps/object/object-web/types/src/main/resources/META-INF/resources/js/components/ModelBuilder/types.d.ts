@@ -121,6 +121,18 @@ export declare type TAction =
 			payload: {
 				objectDefinitionNodes: Node<ObjectDefinitionNodeData>[];
 				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData>[];
+				newPosition: {
+					x: number;
+					y: number;
+				};
+				updatedObjectDefinitionNodeId: number;
+			};
+			type: TYPES.SET_SELECTED_OBJECT_DEFINITION_NODE_POSITION;
+	  }
+	| {
+			payload: {
+				objectDefinitionNodes: Node<ObjectDefinitionNodeData>[];
+				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData>[];
 				selectedObjectDefinitionId: number;
 				selectedObjectField: ObjectFieldNodeRow;
 				selectedObjectFieldName: string;
