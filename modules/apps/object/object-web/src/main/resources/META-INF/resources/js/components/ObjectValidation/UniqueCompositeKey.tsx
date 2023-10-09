@@ -11,7 +11,7 @@ import {
 	getLocalizableLabel,
 } from '@liferay/object-js-components-web';
 import {TBuilderScreenItem} from '@liferay/object-js-components-web/src/main/resources/META-INF/resources/components/BuilderScreen/BuilderScreen';
-import {sub} from 'frontend-js-web';
+import {createResourceURL, sub} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
 
 import {defaultLanguageId} from '../../utils/constants';
@@ -37,6 +37,7 @@ interface MultipleSelectOption {
 }
 
 export interface UniqueCompositeKeyProps {
+	baseResourceURL: string;
 	creationLanguageId: Liferay.Language.Locale;
 	customObjectFields: ObjectField[];
 	disabled: boolean;
@@ -62,6 +63,7 @@ const isMatchingObjectFieldObjectValidationRuleSetting = ({
 };
 
 export function UniqueCompositeKey({
+	baseResourceURL,
 	creationLanguageId,
 	customObjectFields,
 	disabled,
@@ -116,7 +118,30 @@ export function UniqueCompositeKey({
 				getLocalizableLabel(creationLanguageId, label, name),
 			header: Liferay.Language.get('add-fields'),
 			items: modalSelectObjectFieldsItems,
-			onSave: (selectedObjectFields: ObjectField[]) => {
+			onSave: async (selectedObjectFields: ObjectField[]) => {
+				const objectFieldsIds = selectedObjectFields.map(
+					(selectedObjectField) => selectedObjectField.id
+				);
+
+				const addObjectFieldKeyCandidatesUrl = createResourceURL(
+					baseResourceURL,
+					{
+						objectDefinitionId: (objectDefinition as ObjectDefinition)
+							.id,
+						objectFieldsIds:
+							objectFieldsIds.length > 1
+								? objectFieldsIds.join(', ')
+								: objectFieldsIds[0],
+						p_p_resource_id:
+							'/object_definitions/add_object_field_key_candidates',
+					}
+				).href;
+
+				const response = await API.fetchJSON<{
+					errorLabel: string;
+					status: string;
+				}>(addObjectFieldKeyCandidatesUrl);
+
 				const objectValidationRuleSetting = values.objectValidationRuleSettings?.filter(
 					(objectValidationRuleSetting) =>
 						selectedObjectFields.some((selectedObjectField) => {
@@ -128,6 +153,7 @@ export function UniqueCompositeKey({
 							);
 						})
 				);
+
 				selectedObjectFields.map((selectedObjectField) =>
 					values.outputType === 'partialValidation'
 						? objectValidationRuleSetting?.push(
