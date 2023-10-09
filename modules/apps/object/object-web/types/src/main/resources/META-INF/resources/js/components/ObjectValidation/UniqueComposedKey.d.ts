@@ -7,6 +7,7 @@
 
 import {ObjectValidationErrors} from './useObjectValidationForm';
 interface UniqueComposedKeyProps {
+	baseResourceURL: string;
 	creationLanguageId: Liferay.Language.Locale;
 	customObjectFields: ObjectField[];
 	disabled: boolean;
@@ -18,6 +19,7 @@ interface UniqueComposedKeyProps {
 	values: Partial<ObjectValidation>;
 }
 export declare function UniqueComposedKey({
+	baseResourceURL,
 	creationLanguageId,
 	customObjectFields,
 	disabled,
