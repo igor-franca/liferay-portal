@@ -297,7 +297,7 @@ public interface ObjectValidationRuleLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<ObjectValidationRule>
 		getObjectValidationRulesByObjectValidationRuleEngine(
-			String engine, long objectDefinitionId);
+			long objectDefinitionId, String engine);
 
 	/**
 	 * Returns the number of object validation rules.

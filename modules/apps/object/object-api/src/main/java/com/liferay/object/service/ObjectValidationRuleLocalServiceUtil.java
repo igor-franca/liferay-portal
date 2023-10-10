@@ -340,11 +340,11 @@ public class ObjectValidationRuleLocalServiceUtil {
 
 	public static List<ObjectValidationRule>
 		getObjectValidationRulesByObjectValidationRuleEngine(
-			String engine, long objectDefinitionId) {
+			long objectDefinitionId, String engine) {
 
 		return getService().
 			getObjectValidationRulesByObjectValidationRuleEngine(
-				engine, objectDefinitionId);
+				objectDefinitionId, engine);
 	}
 
 	/**

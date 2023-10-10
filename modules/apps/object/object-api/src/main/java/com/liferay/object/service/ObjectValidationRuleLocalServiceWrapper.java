@@ -390,11 +390,11 @@ public class ObjectValidationRuleLocalServiceWrapper
 	@Override
 	public java.util.List<com.liferay.object.model.ObjectValidationRule>
 		getObjectValidationRulesByObjectValidationRuleEngine(
-			String engine, long objectDefinitionId) {
+			long objectDefinitionId, String engine) {
 
 		return _objectValidationRuleLocalService.
 			getObjectValidationRulesByObjectValidationRuleEngine(
-				engine, objectDefinitionId);
+				objectDefinitionId, engine);
 	}
 
 	/**
