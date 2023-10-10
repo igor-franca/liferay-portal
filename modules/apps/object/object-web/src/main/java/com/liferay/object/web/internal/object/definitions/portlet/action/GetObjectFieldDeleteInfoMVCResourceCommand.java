@@ -93,8 +93,9 @@ public class GetObjectFieldDeleteInfoMVCResourceCommand
 		for (ObjectValidationRule objectValidationRule :
 				_objectValidationRuleLocalService.
 					getObjectValidationRulesByObjectValidationRuleEngine(
-						ObjectValidationRuleConstants.ENGINE_TYPE_COMPOSED_KEY,
-						objectDefinition.getObjectDefinitionId())) {
+						objectDefinition.getObjectDefinitionId(),
+						ObjectValidationRuleConstants.
+							ENGINE_TYPE_COMPOSED_KEY)) {
 
 			for (ObjectValidationRuleSetting objectValidationRuleSetting :
 					objectValidationRule.getObjectValidationRuleSettings()) {
