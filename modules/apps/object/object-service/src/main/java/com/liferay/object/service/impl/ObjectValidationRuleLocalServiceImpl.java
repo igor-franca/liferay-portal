@@ -229,7 +229,7 @@ public class ObjectValidationRuleLocalServiceImpl
 	@Override
 	public List<ObjectValidationRule>
 		getObjectValidationRulesByObjectValidationRuleEngine(
-			String engine, long objectDefinitionId) {
+			long objectDefinitionId, String engine) {
 
 		return _getObjectValidationRules(
 			objectValidationRulePersistence.findByODI_E(
