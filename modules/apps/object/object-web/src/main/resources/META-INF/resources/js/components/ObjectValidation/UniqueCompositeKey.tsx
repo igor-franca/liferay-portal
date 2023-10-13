@@ -116,20 +116,11 @@ export function UniqueCompositeKey({
 			header: Liferay.Language.get('add-fields'),
 			items: modalSelectObjectFieldsItems,
 			onSave: (selectedObjectFields: ObjectField[]) => {
-				const objectValidationRuleSetting = values.objectValidationRuleSettings?.filter(
-					(objectValidationRuleSetting) =>
-						selectedObjectFields.some((selectedObjectField) => {
-							return (
-								selectedObjectField.externalReferenceCode ===
-									objectValidationRuleSetting.value &&
-								objectValidationRuleSetting.name ===
-									'outputObjectFieldExternalReferenceCode'
-							);
-						})
-				);
+				const objectValidationRuleSettings : ObjectValidationRuleSetting[] =  [];
+
 				selectedObjectFields.map((selectedObjectField) =>
 					values.outputType === 'partialValidation'
-						? objectValidationRuleSetting?.push(
+						? objectValidationRuleSettings?.push(
 								{
 									name: 'keyObjectFieldExternalReferenceCode',
 									value:
@@ -142,7 +133,7 @@ export function UniqueCompositeKey({
 										selectedObjectField.externalReferenceCode,
 								}
 						  )
-						: objectValidationRuleSetting?.push({
+						: objectValidationRuleSettings?.push({
 								name: 'keyObjectFieldExternalReferenceCode',
 								value:
 									selectedObjectField.externalReferenceCode,
@@ -150,7 +141,7 @@ export function UniqueCompositeKey({
 				);
 
 				setValues({
-					objectValidationRuleSettings: objectValidationRuleSetting,
+					objectValidationRuleSettings,
 				});
 			},
 			selected: modalSelectObjectFieldsItems.filter(
