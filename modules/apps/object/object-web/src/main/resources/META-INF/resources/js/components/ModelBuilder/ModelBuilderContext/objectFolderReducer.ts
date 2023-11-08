@@ -228,6 +228,7 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 							...objectDefinitionNode.data,
 							objectFields: unselectedObjectFields,
 							selected: false,
+							showAllFields: true,
 						},
 					};
 				}
@@ -568,6 +569,7 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 								objectFields: objectFieldsCustomSort(
 									objectDefinition.objectFields
 								),
+								showAllFields: false,
 							},
 							id: objectDefinition.id.toString(),
 							position: {
@@ -648,6 +650,15 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 				],
 				rightSidebarType: 'empty',
 				selectedObjectField: undefined,
+			};
+		}
+
+		case TYPES.SET_DELETE_OBJECT_DEFINITION: {
+			const {newDeleteObjectDefinition} = action.payload;
+
+			return {
+				...state,
+				deleteObjectDefinition: newDeleteObjectDefinition,
 			};
 		}
 
