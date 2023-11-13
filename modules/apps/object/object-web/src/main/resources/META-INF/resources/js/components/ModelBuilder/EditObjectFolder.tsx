@@ -116,9 +116,9 @@ export default function EditObjectFolder({
 
 	useEffect(() => {
 		const makeFetch = async () => {
-			if (selectedObjectDefinitionNode) {
+			if (selectedObjectDefinitionNode?.data) {
 				const url = createResourceURL(baseResourceURL, {
-					objectDefinitionId: selectedObjectDefinitionNode?.data?.id,
+					objectDefinitionId: selectedObjectDefinitionNode.data.id,
 					p_p_resource_id:
 						'/object_definitions/get_object_relationship_info',
 				}).href;
@@ -219,22 +219,21 @@ export default function EditObjectFolder({
 					<ModalAddObjectField
 						baseResourceURL={baseResourceURL}
 						creationLanguageId={
-							selectedObjectDefinitionNode?.data
-								?.defaultLanguageId
+							selectedObjectDefinitionNode.data.defaultLanguageId
 						}
 						objectDefinitionExternalReferenceCode={
-							selectedObjectDefinitionNode?.data
-								?.externalReferenceCode
+							selectedObjectDefinitionNode.data
+								.externalReferenceCode
 						}
 						objectDefinitionName={
-							selectedObjectDefinitionNode?.data?.name
+							selectedObjectDefinitionNode.data.name
 						}
 						onAfterSubmit={(newObjectField) => {
 							dispatch({
 								payload: {
 									newObjectField,
 									objectDefinitionExternalReferenceCode: selectedObjectDefinitionNode
-										?.data?.externalReferenceCode as string,
+										.data?.externalReferenceCode as string,
 									objectDefinitionNodes: nodes,
 									objectRelationshipEdges: edges,
 									selectedObjectDefinitionNode,
@@ -258,7 +257,7 @@ export default function EditObjectFolder({
 								type:
 									TYPES.UPDATE_VISIBILITY_MODEL_BUILDER_MODALS,
 							});
-							selectedObjectDefinitionNode?.data?.showAllFields;
+							selectedObjectDefinitionNode.data?.showAllFields;
 						}}
 						setVisibility={() =>
 							dispatch({
@@ -292,8 +291,8 @@ export default function EditObjectFolder({
 							});
 						}}
 						objectDefinitionExternalReferenceCode1={
-							selectedObjectDefinitionNode?.data
-								?.externalReferenceCode
+							selectedObjectDefinitionNode.data
+								.externalReferenceCode
 						}
 						objectRelationshipParameterRequired={
 							objectRelationshipParameterRequired
@@ -331,8 +330,8 @@ export default function EditObjectFolder({
 				selectedObjectDefinitionNode?.data && (
 					<ModalEditExternalReferenceCode
 						externalReferenceCode={
-							selectedObjectDefinitionNode?.data
-								?.externalReferenceCode
+							selectedObjectDefinitionNode.data
+								.externalReferenceCode
 						}
 						handleOnClose={() => {
 							dispatch({
@@ -357,7 +356,7 @@ export default function EditObjectFolder({
 									isNode(element) &&
 									(element as Node<ObjectDefinitionNodeData>)
 										.data?.id ===
-										selectedObjectDefinitionNode?.data?.id
+										selectedObjectDefinitionNode.data?.id
 								) {
 									return {
 										...element,
@@ -380,10 +379,10 @@ export default function EditObjectFolder({
 						}}
 						onGetEntity={() =>
 							API.getObjectDefinitionById(
-								selectedObjectDefinitionNode?.data?.id as number
+								selectedObjectDefinitionNode.data?.id as number
 							)
 						}
-						saveURL={`/o/object-admin/v1.0/object-definitions/${selectedObjectDefinitionNode?.data?.id}`}
+						saveURL={`/o/object-admin/v1.0/object-definitions/${selectedObjectDefinitionNode.data.id}`}
 					/>
 				)}
 
@@ -428,25 +427,27 @@ export default function EditObjectFolder({
 				/>
 			)}
 
-			{modelBuilderModals.redirectToEditObjectDefinitionDetails && (
-				<RedirectToEditObjectDetailsModal
-					handleOnClose={() => {
-						dispatch({
-							payload: {
-								modelBuilderModals: {
-									...modelBuilderModals,
-									redirectToEditObjectDefinitionDetails: false,
+			{modelBuilderModals.redirectToEditObjectDefinitionDetails &&
+				selectedObjectDefinitionNode?.data && (
+					<RedirectToEditObjectDetailsModal
+						handleOnClose={() => {
+							dispatch({
+								payload: {
+									modelBuilderModals: {
+										...modelBuilderModals,
+										redirectToEditObjectDefinitionDetails: false,
+									},
 								},
-							},
-							type: TYPES.UPDATE_VISIBILITY_MODEL_BUILDER_MODALS,
-						});
-					}}
-					viewObjectDetailsURL={formatActionURL(
-						editObjectDefinitionURL,
-						selectedObjectDefinitionNode?.data?.id ?? 0
-					)}
-				/>
-			)}
+								type:
+									TYPES.UPDATE_VISIBILITY_MODEL_BUILDER_MODALS,
+							});
+						}}
+						viewObjectDetailsURL={formatActionURL(
+							editObjectDefinitionURL,
+							selectedObjectDefinitionNode.data.id
+						)}
+					/>
+				)}
 
 			<EditObjectFolderHeader
 				hasDraftObjectDefinitions={elements.some(
