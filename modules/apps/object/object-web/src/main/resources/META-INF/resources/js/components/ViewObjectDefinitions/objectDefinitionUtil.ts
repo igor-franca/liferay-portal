@@ -238,7 +238,6 @@ export function getObjectFolderActions(
 	const kebabOptions = [];
 
 	if (actions?.update) {
-		kebabOptions.unshift({type: 'divider'});
 		kebabOptions.unshift({
 			label: Liferay.Language.get('edit-label-and-erc'),
 			onClick: () =>
@@ -249,11 +248,37 @@ export function getObjectFolderActions(
 			symbolLeft: 'pencil',
 			value: 'editFolder',
 		});
+
+		kebabOptions.push({type: 'divider'});
+	}
+
+	kebabOptions.push({
+		label: sub(
+			Liferay.Language.get('export-x'),
+			Liferay.Language.get('object-folder')
+		),
+		onClick: () => {},
+		symbolLeft: 'export',
+	});
+
+	if (actions?.update) {
+		kebabOptions.push({
+			label: sub(
+				Liferay.Language.get('import-x'),
+				Liferay.Language.get('object-definition')
+			),
+			onClick: () => {},
+			symbolLeft: 'import',
+		});
+		kebabOptions.push({type: 'divider'});
 	}
 
 	if (actions?.permissions) {
 		kebabOptions.push({
-			label: Liferay.Language.get('folder-permissions'),
+			label: sub(
+				Liferay.Language.get('x-permissions'),
+				Liferay.Language.get('object-folder')
+			),
 			onClick: () => {
 				openModal({
 					title: Liferay.Language.get('permissions'),
@@ -268,7 +293,10 @@ export function getObjectFolderActions(
 	if (actions?.delete) {
 		kebabOptions.push({type: 'divider'});
 		kebabOptions.push({
-			label: Liferay.Language.get('delete-folder'),
+			label: sub(
+				Liferay.Language.get('delete-x'),
+				Liferay.Language.get('object-folder')
+			),
 			onClick: () =>
 				setShowModal((previousState: ViewObjectDefinitionsModals) => ({
 					...previousState,
@@ -285,7 +313,7 @@ export function getObjectFolderActions(
 export async function getUpdatedModelBuilderStructurePayload(
 	currentObjectFolderName: string
 ) {
-	const objectFolders = await API.getAllObjectFolders();
+	const {items: objectFolders} = await API.getAllObjectFolders();
 
 	const currentObjectFolder = objectFolders.find(
 		(objectFolder) => objectFolder.name === currentObjectFolderName

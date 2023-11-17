@@ -9,10 +9,11 @@ import {ERRORS} from './errors';
 import {stringToURLParameterFormat} from './string';
 
 interface Actions {
-	delete: HTTPMethod;
-	get: HTTPMethod;
-	permissions: HTTPMethod;
-	update: HTTPMethod;
+	delete?: HTTPMethod;
+	get?: HTTPMethod;
+	permissions?: HTTPMethod;
+	update?: HTTPMethod;
+	updateBatch?: HTTPMethod;
 }
 
 interface ErrorDetails extends Error {
@@ -94,6 +95,11 @@ interface ObjectFolder {
 	label: LocalizedValue<string>;
 	name: string;
 	objectFolderItems: ObjectFolderItem[];
+}
+
+interface ObjectFolderRequestInfo {
+	actions: Actions;
+	items: ObjectFolder[];
 }
 
 type ObjectRelationshipType = 'manyToMany' | 'oneToMany' | 'oneToOne';
@@ -179,7 +185,7 @@ export async function getAllObjectDefinitions() {
 }
 
 export async function getAllObjectFolders() {
-	return await getList<ObjectFolder>(
+	return await fetchJSON<ObjectFolderRequestInfo>(
 		'/o/object-admin/v1.0/object-folders?pageSize=-1'
 	);
 }

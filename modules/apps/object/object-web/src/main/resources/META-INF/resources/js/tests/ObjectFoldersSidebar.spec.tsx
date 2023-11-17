@@ -39,11 +39,16 @@ const uncategorizedObjectFolder = {
 	objectFolderItems: [],
 };
 
+const objectFolderRequestInfo = {
+	actions: objectFolderActions,
+	items: [ticketObjectFolder, uncategorizedObjectFolder],
+};
+
 describe('The ObjectFoldersSidebar component should', () => {
 	it('render all created object folders', () => {
 		render(
 			<ObjectFoldersSideBar
-				objectFolders={[ticketObjectFolder, uncategorizedObjectFolder]}
+				objectFolderRequestInfo={objectFolderRequestInfo}
 				selectedObjectFolder={uncategorizedObjectFolder}
 				setSelectedObjectFolder={() => {}}
 				setShowModal={() => {}}

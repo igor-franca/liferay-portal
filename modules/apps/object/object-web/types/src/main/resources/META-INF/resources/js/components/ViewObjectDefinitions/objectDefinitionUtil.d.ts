@@ -75,6 +75,13 @@ export declare function getObjectFolderActions(
 	actions?: ObjectFolderActions
 ): (
 	| {
+			label: string;
+			onClick: () => void;
+			symbolLeft: string;
+			value: string;
+			type?: undefined;
+	  }
+	| {
 			type: string;
 			label?: undefined;
 			onClick?: undefined;
@@ -85,7 +92,7 @@ export declare function getObjectFolderActions(
 			label: string;
 			onClick: () => void;
 			symbolLeft: string;
-			value: string;
+			value?: undefined;
 			type?: undefined;
 	  }
 )[];
