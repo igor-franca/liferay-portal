@@ -4,10 +4,11 @@
  */
 
 interface Actions {
-	delete: HTTPMethod;
-	get: HTTPMethod;
-	permissions: HTTPMethod;
-	update: HTTPMethod;
+	delete?: HTTPMethod;
+	get?: HTTPMethod;
+	permissions?: HTTPMethod;
+	update?: HTTPMethod;
+	updateBatch?: HTTPMethod;
 }
 
 interface AddObjectEntryDefinitions {
@@ -396,6 +397,11 @@ interface ObjectFolderItem {
 	objectDefinitionExternalReferenceCode: string;
 	positionX: number;
 	positionY: number;
+}
+
+interface ObjectFolderRequestInfo {
+	actions: Actions;
+	items: ObjectFolder[];
 }
 
 interface ObjectRelationship {

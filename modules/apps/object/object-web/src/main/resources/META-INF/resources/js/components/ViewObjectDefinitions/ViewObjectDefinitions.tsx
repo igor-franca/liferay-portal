@@ -77,20 +77,15 @@ export default function ViewObjectDefinitions({
 }: ViewObjectDefinitionsProps) {
 	const emptyAction = {href: '', method: ''};
 
-	const initialValues: ObjectFolder = {
+	const initialValues: ObjectFolderRequestInfo = {
 		actions: {
 			delete: emptyAction,
 			get: emptyAction,
 			permissions: emptyAction,
 			update: emptyAction,
+			updateBatch: emptyAction,
 		},
-		dateCreated: '',
-		dateModified: '',
-		externalReferenceCode: '',
-		id: 0,
-		label: {en_US: ''},
-		name: '',
-		objectFolderItems: [],
+		items: [],
 	};
 	const [showModal, setShowModal] = useState<ViewObjectDefinitionsModals>({
 		addObjectDefinition: false,
@@ -107,9 +102,9 @@ export default function ViewObjectDefinitions({
 	const [selectedObjectFolder, setSelectedObjectFolder] = useState<
 		Partial<ObjectFolder>
 	>(initialValues);
-	const [objectFolders, setObjectFolders] = useState<Partial<ObjectFolder>[]>(
-		[initialValues]
-	);
+	const [ObjectFolderRequestInfo, setObjectFolderRequestInfo] = useState<
+		ObjectFolderRequestInfo
+	>(initialValues);
 	const [reloadFDS, setReloadFDS] = useState(false);
 	const [
 		deletedObjectDefinition,
@@ -299,8 +294,8 @@ export default function ViewObjectDefinitions({
 		if (Liferay.FeatureFlags['LPS-148856']) {
 			const makeFetch = async () => {
 				API.getAllObjectFolders().then((response) => {
-					setObjectFolders(response);
-					setSelectedObjectFolder(response[0]);
+					setObjectFolderRequestInfo(response);
+					setSelectedObjectFolder(response.items[0]);
 					setLoading(false);
 				});
 			};
@@ -337,7 +332,9 @@ export default function ViewObjectDefinitions({
 					) : (
 						<>
 							<ObjectFoldersSideBar
-								objectFolders={objectFolders as ObjectFolder[]}
+								objectFolderRequestInfo={
+									ObjectFolderRequestInfo
+								}
 								selectedObjectFolder={
 									selectedObjectFolder as ObjectFolder
 								}
@@ -425,7 +422,7 @@ export default function ViewObjectDefinitions({
 							})
 						);
 					}}
-					setObjectFolders={setObjectFolders}
+					setObjectFolderRequestInfo={setObjectFolderRequestInfo}
 					setSelectedObjectFolder={setSelectedObjectFolder}
 				/>
 			)}
@@ -511,7 +508,7 @@ export default function ViewObjectDefinitions({
 						);
 					}}
 					objectDefinition={moveObjectDefinition as ObjectDefinition}
-					objectFolders={objectFolders as ObjectFolder[]}
+					objectFolders={ObjectFolderRequestInfo.items}
 					selectedObjectFolder={selectedObjectFolder}
 					setMoveObjectDefinition={setMoveObjectDefinition}
 				/>

@@ -6,14 +6,14 @@
 import React from 'react';
 interface ModalAddObjectFolderProps {
 	handleOnClose: () => void;
-	setObjectFolders: React.Dispatch<
-		React.SetStateAction<Partial<ObjectFolder>[]>
+	setObjectFolderRequestInfo: React.Dispatch<
+		React.SetStateAction<ObjectFolderRequestInfo>
 	>;
 	setSelectedObjectFolder: (values: Partial<ObjectFolder>) => void;
 }
 export declare function ModalAddObjectFolder({
 	handleOnClose,
-	setObjectFolders,
+	setObjectFolderRequestInfo,
 	setSelectedObjectFolder,
 }: ModalAddObjectFolderProps): JSX.Element;
 export {};
