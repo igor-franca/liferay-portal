@@ -13,7 +13,10 @@ import {
 	removeAllSpecialCharacters,
 } from '../../utils/string';
 import {DropDownItems} from '../ModelBuilder/types';
-import {DeletedObjectDefinition} from './ViewObjectDefinitions';
+import {
+	DeletedObjectDefinition,
+	ModalImportObjectDefinitionInfo,
+} from './ViewObjectDefinitions';
 
 type DeleteObjectDefinitionProps = {
 	baseResourceURL: string;
@@ -217,12 +220,15 @@ export function getObjectDefinitionNodeActions({
 }
 
 interface GetObjectFolderActionsProps {
-	actions?:{
+	actions?: {
 		objectDefinitionActions: Actions;
-		objectFolderActions: Actions
+		objectFolderActions: Actions;
 	};
 	id: number;
 	objectFolderPermissionsURL: string;
+	setModalImportObjectDefinitionInfo: (
+		value: ModalImportObjectDefinitionInfo
+	) => void;
 	setShowModal: (value: SetStateAction<ViewObjectDefinitionsModals>) => void;
 }
 
@@ -230,8 +236,13 @@ export function getObjectFolderActions({
 	actions,
 	id,
 	objectFolderPermissionsURL,
+	setModalImportObjectDefinitionInfo,
 	setShowModal,
 }: GetObjectFolderActionsProps) {
+	const importObjectDefinitionLocalized = sub(
+		Liferay.Language.get('import-x'),
+		Liferay.Language.get('object-definition')
+	);
 	const url = formatActionURL(objectFolderPermissionsURL, id);
 	const kebabOptions = [];
 
@@ -261,11 +272,13 @@ export function getObjectFolderActions({
 
 	if (actions?.objectDefinitionActions?.create) {
 		kebabOptions.push({
-			label: sub(
-				Liferay.Language.get('import-x'),
-				Liferay.Language.get('object-definition')
-			),
-			onClick: () => {},
+			label: importObjectDefinitionLocalized,
+			onClick: () => {
+				setModalImportObjectDefinitionInfo({
+					title: importObjectDefinitionLocalized,
+					visible: true,
+				});
+			},
 			symbolLeft: 'import',
 		});
 		kebabOptions.push({type: 'divider'});

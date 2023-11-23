@@ -50,6 +50,7 @@ describe('The ObjectFoldersSidebar component should', () => {
 			<ObjectFoldersSideBar
 				objectFolderRequestInfo={objectFolderRequestInfo}
 				selectedObjectFolder={uncategorizedObjectFolder}
+				setModalImportObjectDefinitionInfo={() => {}}
 				setSelectedObjectFolder={() => {}}
 				setShowModal={() => {}}
 			></ObjectFoldersSideBar>

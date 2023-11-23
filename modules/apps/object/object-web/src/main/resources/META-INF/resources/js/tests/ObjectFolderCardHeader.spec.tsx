@@ -24,17 +24,16 @@ describe('The ObjectFolderCardHeader component should', () => {
 			<ObjectFolderCardHeader
 				externalReferenceCode="ticket"
 				items={
-					getObjectFolderActions(
-						{
-							actions: {
-								objectDefinitionActions: HTTPMethods,
-								objectFolderActions: HTTPMethods,
-							},
-							id: 1,
-							objectFolderPermissionsURL: '',
-							setShowModal: () => {}, 
-						}
-					) as IItem[]
+					getObjectFolderActions({
+						actions: {
+							objectDefinitionActions: HTTPMethods,
+							objectFolderActions: HTTPMethods,
+						},
+						id: 1,
+						objectFolderPermissionsURL: '',
+						setModalImportObjectDefinitionInfo: () => {},
+						setShowModal: () => {},
+					}) as IItem[]
 				}
 				label={{en_US: 'Ticket'}}
 				modelBuilderURL=""
@@ -64,7 +63,8 @@ describe('The ObjectFolderCardHeader component should', () => {
 						},
 						id: 2,
 						objectFolderPermissionsURL: '',
-						setShowModal: () => {}, 
+						setModalImportObjectDefinitionInfo: () => {},
+						setShowModal: () => {},
 					}) as IItem[]
 				}
 				label={{en_US: 'Uncategorized'}}
