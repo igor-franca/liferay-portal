@@ -102,7 +102,7 @@ export default function ViewObjectDefinitions({
 	const [selectedObjectFolder, setSelectedObjectFolder] = useState<
 		Partial<ObjectFolder>
 	>(initialValues);
-	const [ObjectFolderRequestInfo, setObjectFolderRequestInfo] = useState<
+	const [objectFolderRequestInfo, setObjectFolderRequestInfo] = useState<
 		ObjectFolderRequestInfo
 	>(initialValues);
 	const [reloadFDS, setReloadFDS] = useState(false);
@@ -333,7 +333,7 @@ export default function ViewObjectDefinitions({
 						<>
 							<ObjectFoldersSideBar
 								objectFolderRequestInfo={
-									ObjectFolderRequestInfo
+									objectFolderRequestInfo
 								}
 								selectedObjectFolder={
 									selectedObjectFolder as ObjectFolder
@@ -508,7 +508,7 @@ export default function ViewObjectDefinitions({
 						);
 					}}
 					objectDefinition={moveObjectDefinition as ObjectDefinition}
-					objectFolders={ObjectFolderRequestInfo.items}
+					objectFolders={objectFolderRequestInfo.items}
 					selectedObjectFolder={selectedObjectFolder}
 					setMoveObjectDefinition={setMoveObjectDefinition}
 				/>
