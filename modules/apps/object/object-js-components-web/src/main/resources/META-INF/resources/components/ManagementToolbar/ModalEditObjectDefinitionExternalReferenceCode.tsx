@@ -16,32 +16,32 @@ import {Input} from '../Input';
 import {openToast} from '../SidePanelContent';
 import {Entity} from './index';
 
-interface ModalEditExternalReferenceCodeProps {
-	externalReferenceCode: string;
+interface ModalEditObjectDefinitionExternalReferenceCodeProps {
 	handleOnClose: () => void;
 	helpMessage: string;
-	onExternalReferenceCodeChange?: (value: string) => void;
+	objectDefinitionExternalReferenceCode: string;
 	onGetEntity: () => Promise<Entity>;
+	onObjectDefinitionExternalReferenceCodeChange?: (value: string) => void;
 	saveURL: string;
-	setExternalReferenceCode?: (value: string) => void;
+	setObjectDefinitionExternalReferenceCode?: (value: string) => void;
 }
 
 type TInitialValues = {
-	externalReferenceCode: string;
+	objectDefinitionExternalReferenceCode: string;
 };
 
-export function ModalEditExternalReferenceCode({
-	externalReferenceCode,
+export function ModalEditObjectDefinitionExternalReferenceCode({
 	handleOnClose,
 	helpMessage,
-	onExternalReferenceCodeChange,
+	objectDefinitionExternalReferenceCode,
 	onGetEntity,
+	onObjectDefinitionExternalReferenceCodeChange,
 	saveURL,
-	setExternalReferenceCode,
-}: ModalEditExternalReferenceCodeProps) {
+	setObjectDefinitionExternalReferenceCode,
+}: ModalEditObjectDefinitionExternalReferenceCodeProps) {
 	const [error, setError] = useState<string>('');
 	const initialValues: TInitialValues = {
-		externalReferenceCode,
+		objectDefinitionExternalReferenceCode,
 	};
 
 	const {observer, onClose} = useModal({
@@ -50,24 +50,30 @@ export function ModalEditExternalReferenceCode({
 		},
 	});
 
-	const onSubmit = async ({externalReferenceCode}: TInitialValues) => {
+	const onSubmit = async ({
+		objectDefinitionExternalReferenceCode,
+	}: TInitialValues) => {
 		try {
 			const entity = await onGetEntity();
 
 			await save({
 				item: {
 					...entity,
-					externalReferenceCode,
+					objectDefinitionExternalReferenceCode,
 				},
 				url: `${saveURL}`,
 			});
 
-			if (setExternalReferenceCode) {
-				setExternalReferenceCode(externalReferenceCode);
+			if (setObjectDefinitionExternalReferenceCode) {
+				setObjectDefinitionExternalReferenceCode(
+					objectDefinitionExternalReferenceCode
+				);
 			}
 
-			if (onExternalReferenceCodeChange) {
-				onExternalReferenceCodeChange(externalReferenceCode);
+			if (onObjectDefinitionExternalReferenceCodeChange) {
+				onObjectDefinitionExternalReferenceCodeChange(
+					objectDefinitionExternalReferenceCode
+				);
 			}
 
 			onClose();
@@ -82,11 +88,13 @@ export function ModalEditExternalReferenceCode({
 		}
 	};
 
-	const validate = ({externalReferenceCode}: TInitialValues) => {
+	const validate = ({
+		objectDefinitionExternalReferenceCode,
+	}: TInitialValues) => {
 		const errors: FormError<TInitialValues> = {};
 
-		if (externalReferenceCode === '') {
-			errors.externalReferenceCode = REQUIRED_MSG;
+		if (objectDefinitionExternalReferenceCode === '') {
+			errors.objectDefinitionExternalReferenceCode = REQUIRED_MSG;
 		}
 
 		return errors;
@@ -114,14 +122,14 @@ export function ModalEditExternalReferenceCode({
 					)}
 
 					<Input
-						error={errors.externalReferenceCode}
+						error={errors.objectDefinitionExternalReferenceCode}
 						feedbackMessage={helpMessage}
 						id="externalReferenceCode"
 						label={Liferay.Language.get('external-reference-code')}
 						name="externalReferenceCode"
 						onChange={handleChange}
 						required
-						value={values.externalReferenceCode}
+						value={values.objectDefinitionExternalReferenceCode}
 					/>
 				</ClayModal.Body>
 
