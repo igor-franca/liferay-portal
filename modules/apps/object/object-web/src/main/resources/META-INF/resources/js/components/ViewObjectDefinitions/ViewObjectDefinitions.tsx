@@ -12,7 +12,7 @@ import {
 	stringToURLParameterFormat,
 } from '@liferay/object-js-components-web';
 import {sub} from 'frontend-js-web';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
 import {
 	IFDSTableProps,
@@ -41,11 +41,19 @@ import {
 } from './objectDefinitionUtil';
 
 import './ViewObjectDefinitions.scss';
+import ModalImportObjectDefinition from '../ModalImportObjectDefinition';
+
+export interface ModalImportObjectDefinitionInfo {
+	title: string;
+	visible: boolean;
+}
 
 interface ViewObjectDefinitionsProps extends IFDSTableProps {
 	baseResourceURL: string;
 	editObjectDefinitionURL: string;
+	importObjectDefinitionURL: string;
 	modelBuilderURL: string;
+	nameMaxLength: string;
 	objectDefinitionsAPIURL: any;
 	objectDefinitionsCreationMenu: {
 		primaryItems?: any[];
@@ -55,6 +63,7 @@ interface ViewObjectDefinitionsProps extends IFDSTableProps {
 	objectDefinitionsFDSName: any;
 	objectDefinitionsStorageTypes: LabelValueObject[];
 	objectFolderPermissionsURL: string;
+	portletNamespace: string;
 }
 
 export interface DeletedObjectDefinition {
@@ -67,13 +76,16 @@ export interface DeletedObjectDefinition {
 export default function ViewObjectDefinitions({
 	baseResourceURL,
 	editObjectDefinitionURL,
+	importObjectDefinitionURL,
 	modelBuilderURL,
+	nameMaxLength,
 	objectDefinitionsAPIURL,
 	objectDefinitionsCreationMenu,
 	objectDefinitionsFDSActionDropdownItems,
 	objectDefinitionsFDSName,
 	objectDefinitionsStorageTypes,
 	objectFolderPermissionsURL,
+	portletNamespace,
 }: ViewObjectDefinitionsProps) {
 	const emptyAction = {href: '', method: ''};
 
@@ -87,6 +99,45 @@ export default function ViewObjectDefinitions({
 		},
 		items: [],
 	};
+
+	const [
+		deletedObjectDefinition,
+		setDeletedObjectDefinition,
+	] = useState<DeletedObjectDefinition | null>();
+
+	const [reloadFDS, setReloadFDS] = useState(false);
+
+	const [loading, setLoading] = useState(true);
+
+	const [
+		modalImportObjectDefinitionInfo,
+		setModalImportObjectDefinitionInfo,
+	] = useState<ModalImportObjectDefinitionInfo>({
+		title: '',
+		visible: false,
+	});
+
+	const [
+		moveObjectDefinition,
+		setMoveObjectDefinition,
+	] = useState<ObjectDefinition | null>();
+
+	const [objectDefinitionsActions, setObjectDefinitionActions] = useState<
+		Actions
+	>();
+
+	const [objectFolderRequestInfo, setObjectFolderRequestInfo] = useState<
+		ObjectFolderRequestInfo
+	>(initialValues);
+
+	const [selectedObjectDefinition, setSelectedObjectDefinition] = useState<
+		ObjectDefinition
+	>();
+
+	const [selectedObjectFolder, setSelectedObjectFolder] = useState<
+		Partial<ObjectFolder>
+	>(initialValues);
+
 	const [showModal, setShowModal] = useState<ViewObjectDefinitionsModals>({
 		addObjectDefinition: false,
 		addObjectField: false,
@@ -99,28 +150,6 @@ export default function ViewObjectDefinitions({
 		objectFieldDeletionNotAllowed: false,
 		unbindFromRootObjectDefinition: false,
 	});
-	const [selectedObjectFolder, setSelectedObjectFolder] = useState<
-		Partial<ObjectFolder>
-	>(initialValues);
-	const [objectFolderRequestInfo, setObjectFolderRequestInfo] = useState<
-		ObjectFolderRequestInfo
-	>(initialValues);
-	const [reloadFDS, setReloadFDS] = useState(false);
-	const [
-		deletedObjectDefinition,
-		setDeletedObjectDefinition,
-	] = useState<DeletedObjectDefinition | null>();
-
-	const [
-		moveObjectDefinition,
-		setMoveObjectDefinition,
-	] = useState<ObjectDefinition | null>();
-
-	const [selectedObjectDefinition, setSelectedObjectDefinition] = useState<
-		ObjectDefinition
-	>();
-
-	const [loading, setLoading] = useState(true);
 
 	function handleShowDeleteObjectDefinitionModal() {
 		setShowModal((previousState: ViewObjectDefinitionsModals) => ({
@@ -320,6 +349,15 @@ export default function ViewObjectDefinitions({
 		}
 	}, [reloadFDS]);
 
+	useMemo(() => {
+		const makeFetch = async () => {
+			const objectDefinitions = await API.getAllObjectDefinitions();
+
+			setObjectDefinitionActions(objectDefinitions.actions);
+		};
+		makeFetch();
+	}, []);
+
 	return (
 		<>
 			{Liferay.FeatureFlags['LPS-148856'] ? (
@@ -338,6 +376,9 @@ export default function ViewObjectDefinitions({
 								selectedObjectFolder={
 									selectedObjectFolder as ObjectFolder
 								}
+								setModalImportObjectDefinitionInfo={
+									setModalImportObjectDefinitionInfo
+								}
 								setSelectedObjectFolder={
 									setSelectedObjectFolder
 								}
@@ -352,12 +393,15 @@ export default function ViewObjectDefinitions({
 										}
 										items={
 											getObjectFolderActions({
-												actions:
-													selectedObjectFolder.actions,
+												actions: {
+													objectDefinitionActions: objectDefinitionsActions as Actions,
+													objectFolderActions: selectedObjectFolder.actions as Actions,
+												},
 												id:
 													selectedObjectFolder.id ??
 													0,
 												objectFolderPermissionsURL,
+												setModalImportObjectDefinitionInfo,
 												setShowModal,
 											}) as IItem[]
 										}
@@ -412,6 +456,23 @@ export default function ViewObjectDefinitions({
 					onAfterSubmit={() => {
 						setReloadFDS(true);
 					}}
+				/>
+			)}
+
+			{modalImportObjectDefinitionInfo.visible && (
+				<ModalImportObjectDefinition
+					importObjectDefinitionURL={importObjectDefinitionURL}
+					modalImportObjectDefinitionInfo={
+						modalImportObjectDefinitionInfo
+					}
+					nameMaxLength={nameMaxLength}
+					objectFolderExternalReferenceCode={
+						selectedObjectFolder.externalReferenceCode as string
+					}
+					portletNamespace={portletNamespace}
+					setModalImportObjectDefinitionInfo={
+						setModalImportObjectDefinitionInfo
+					}
 				/>
 			)}
 

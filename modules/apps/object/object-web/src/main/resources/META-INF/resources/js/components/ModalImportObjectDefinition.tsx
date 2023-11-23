@@ -8,15 +8,21 @@ import ClayButton from '@clayui/button';
 import ClayForm, {ClayInput} from '@clayui/form';
 import ClayModal, {useModal} from '@clayui/modal';
 import {API, Input} from '@liferay/object-js-components-web';
-import {fetch} from 'frontend-js-web';
+import {fetch, sub} from 'frontend-js-web';
 import React, {FormEvent, useEffect, useRef, useState} from 'react';
 
 import {FormDataJSONFormat, jsonToFormData} from '../utils/formData';
 import {ModalImportWarning} from './ModalImportWarning';
+import {ModalImportObjectDefinitionInfo} from './ViewObjectDefinitions/ViewObjectDefinitions';
 interface ModalImportObjectDefinitionProps {
 	importObjectDefinitionURL: string;
+	modalImportObjectDefinitionInfo?: ModalImportObjectDefinitionInfo;
 	nameMaxLength: string;
+	objectFolderExternalReferenceCode?: string;
 	portletNamespace: string;
+	setModalImportObjectDefinitionInfo?: (
+		value: React.SetStateAction<ModalImportObjectDefinitionInfo>
+	) => void;
 }
 
 type TFile = {
@@ -26,15 +32,20 @@ type TFile = {
 
 export default function ModalImportObjectDefinition({
 	importObjectDefinitionURL,
+	modalImportObjectDefinitionInfo,
 	nameMaxLength,
+	objectFolderExternalReferenceCode,
 	portletNamespace,
+	setModalImportObjectDefinitionInfo,
 }: ModalImportObjectDefinitionProps) {
 	const [error, setError] = useState<string>('');
 	const [externalReferenceCode, setExternalReferenceCode] = useState<string>(
 		''
 	);
 	const [importFormData, setImportFormData] = useState<FormData>();
-	const [visible, setVisible] = useState(false);
+	const [visible, setVisible] = useState(
+		modalImportObjectDefinitionInfo?.visible ?? false
+	);
 	const [warningModalVisible, setWarningModalVisible] = useState(false);
 	const inputFileRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 	const [name, setName] = useState('');
@@ -48,14 +59,25 @@ export default function ModalImportObjectDefinition({
 		Liferay.Language.get(
 			'there-is-an-object-definition-with-the-same-external-reference-code-as-the-imported-one'
 		),
-		Liferay.Language.get(
-			'before-importing-the-new-object-definition-you-may-want-to-back-up-its-entries-to-prevent-data-loss'
+		sub(
+			Liferay.Language.get(
+				'before-importing-the-new-x-you-may-want-to-back-up-its-entries-to-prevent-data-loss'
+			),
+			Liferay.Language.get('object-definition').toLowerCase()
 		),
 		Liferay.Language.get('do-you-want-to-proceed-with-the-import-process'),
 	];
 
 	const {observer, onClose} = useModal({
 		onClose: () => {
+			if (setModalImportObjectDefinitionInfo) {
+				setModalImportObjectDefinitionInfo(
+					(previousState: ModalImportObjectDefinitionInfo) => ({
+						...previousState,
+						visible: false,
+					})
+				);
+			}
 			setVisible(false);
 			setError('');
 			setExternalReferenceCode('');
@@ -100,6 +122,15 @@ export default function ModalImportObjectDefinition({
 			return;
 		});
 
+		if (
+			Liferay.FeatureFlags['LPS-148856'] &&
+			objectFolderExternalReferenceCode
+		) {
+			formDataObject[
+				`${portletNamespace}objectFolderExternalReferenceCode`
+			] = objectFolderExternalReferenceCode;
+		}
+
 		const newFormData = jsonToFormData(formDataObject);
 
 		const response = await fetch(
@@ -136,7 +167,12 @@ export default function ModalImportObjectDefinition({
 	return visible ? (
 		<ClayModal center observer={observer}>
 			<ClayModal.Header>
-				{Liferay.Language.get('import-object-definition')}
+				{Liferay.FeatureFlags['LPS-148856']
+					? modalImportObjectDefinitionInfo?.title
+					: sub(
+							Liferay.Language.get('import-x'),
+							Liferay.Language.get('object-definition')
+					  )}
 			</ClayModal.Header>
 
 			<ClayModal.Body>
@@ -304,7 +340,15 @@ export default function ModalImportObjectDefinition({
 		<ModalImportWarning
 			handleImport={() => handleImport(importFormData as FormData)}
 			header={Liferay.Language.get('update-existing-object-definition')}
-			onClose={() => {
+			onClose={(value: boolean) => {
+				if (setModalImportObjectDefinitionInfo) {
+					setModalImportObjectDefinitionInfo(
+						(previousState: ModalImportObjectDefinitionInfo) => ({
+							...previousState,
+							visible: value,
+						})
+					);
+				}
 				setWarningModalVisible(false);
 				setImportFormData(undefined);
 			}}

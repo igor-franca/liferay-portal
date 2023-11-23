@@ -184,9 +184,11 @@ export async function fetchJSON<T>(input: RequestInfo, init?: RequestInit) {
 }
 
 export async function getAllObjectDefinitions() {
-    const fetchData = fetchJSON<ObjectDefinitions>('/o/object-admin/v1.0/object-definitions?page=-1');
+	const fetchData = fetchJSON<ObjectDefinitions>(
+		'/o/object-admin/v1.0/object-definitions?page=-1'
+	);
 
-    return await fetchData;
+	return await fetchData;
 }
 
 export async function getAllObjectFolders() {

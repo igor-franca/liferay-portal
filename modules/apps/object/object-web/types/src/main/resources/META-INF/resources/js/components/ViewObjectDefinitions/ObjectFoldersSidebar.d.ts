@@ -4,9 +4,13 @@
  */
 
 import {SetStateAction} from 'react';
+import {ModalImportObjectDefinitionInfo} from './ViewObjectDefinitions';
 interface ObjectFoldersSidebarProps {
 	objectFolderRequestInfo: ObjectFolderRequestInfo;
 	selectedObjectFolder: ObjectFolder;
+	setModalImportObjectDefinitionInfo: (
+		value: ModalImportObjectDefinitionInfo
+	) => void;
 	setSelectedObjectFolder: (
 		value: SetStateAction<Partial<ObjectFolder>>
 	) => void;
@@ -15,6 +19,7 @@ interface ObjectFoldersSidebarProps {
 export default function ObjectFoldersSideBar({
 	objectFolderRequestInfo,
 	selectedObjectFolder,
+	setModalImportObjectDefinitionInfo,
 	setSelectedObjectFolder,
 	setShowModal,
 }: ObjectFoldersSidebarProps): JSX.Element;

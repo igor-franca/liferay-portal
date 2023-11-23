@@ -13,10 +13,14 @@ import {sub} from 'frontend-js-web';
 import React, {SetStateAction} from 'react';
 
 import {defaultLanguageId} from '../../utils/constants';
+import {ModalImportObjectDefinitionInfo} from './ViewObjectDefinitions';
 
 interface ObjectFoldersSidebarProps {
 	objectFolderRequestInfo: ObjectFolderRequestInfo;
 	selectedObjectFolder: ObjectFolder;
+	setModalImportObjectDefinitionInfo: (
+		value: ModalImportObjectDefinitionInfo
+	) => void;
 	setSelectedObjectFolder: (
 		value: SetStateAction<Partial<ObjectFolder>>
 	) => void;
@@ -26,16 +30,22 @@ interface ObjectFoldersSidebarProps {
 export default function ObjectFoldersSideBar({
 	objectFolderRequestInfo,
 	selectedObjectFolder,
+	setModalImportObjectDefinitionInfo,
 	setSelectedObjectFolder,
 	setShowModal,
 }: ObjectFoldersSidebarProps) {
 	const objectFoldersKebabOptions = [];
 
+	const importObjectFolderLocalized = sub(
+		Liferay.Language.get('import-x'),
+		Liferay.Language.get('object-folder')
+	);
+
 	if (selectedObjectFolder.actions.get) {
 		objectFoldersKebabOptions.push({
 			label: sub(
 				Liferay.Language.get('export-x'),
-				Liferay.Language.get('folder')
+				Liferay.Language.get('object-folder')
 			),
 			onClick: () => {},
 			symbolLeft: 'export',
@@ -44,11 +54,13 @@ export default function ObjectFoldersSideBar({
 
 	if (objectFolderRequestInfo.actions.updateBatch) {
 		objectFoldersKebabOptions.push({
-			label: sub(
-				Liferay.Language.get('import-x'),
-				Liferay.Language.get('folder')
-			),
-			onClick: () => {},
+			label: importObjectFolderLocalized,
+			onClick: () => {
+				setModalImportObjectDefinitionInfo({
+					title: importObjectFolderLocalized,
+					visible: true,
+				});
+			},
 			symbolLeft: 'import',
 		});
 	}
