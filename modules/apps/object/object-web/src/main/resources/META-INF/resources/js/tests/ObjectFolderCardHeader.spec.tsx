@@ -17,12 +17,19 @@ describe('The ObjectFolderCardHeader component should', () => {
 			<ObjectFolderCardHeader
 				externalReferenceCode="ticket"
 				items={
-					getObjectFolderActions(1, '', () => {}, {
-						delete: {href: '', method: 'DELETE'},
-						get: {href: 'GET', method: ''},
-						permissions: {href: 'PATCH', method: ''},
-						update: {href: '', method: 'PUT'},
-					}) as IItem[]
+					getObjectFolderActions(
+						{
+							actions: {
+								delete: {href: '', method: 'DELETE'},
+								get: {href: 'GET', method: ''},
+								permissions: {href: 'PATCH', method: ''},
+								update: {href: '', method: 'PUT'},
+							},
+							id: 1,
+							objectFolderPermissionsURL: '',
+							setShowModal: () => {}, 
+						}
+					) as IItem[]
 				}
 				label={{en_US: 'Ticket'}}
 				modelBuilderURL=""
@@ -45,9 +52,14 @@ describe('The ObjectFolderCardHeader component should', () => {
 			<ObjectFolderCardHeader
 				externalReferenceCode="uncategorized"
 				items={
-					getObjectFolderActions(2, '', () => {}, {
-						get: {href: 'GET', method: ''},
-						permissions: {href: 'PATCH', method: ''},
+					getObjectFolderActions({
+						actions: {
+							get: {href: 'GET', method: ''},
+							permissions: {href: 'PATCH', method: ''},
+						},
+						id: 2,
+						objectFolderPermissionsURL: '',
+						setShowModal: () => {}, 
 					}) as IItem[]
 				}
 				label={{en_US: 'Uncategorized'}}
