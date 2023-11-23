@@ -8,7 +8,6 @@ import classNames from 'classnames';
 import React, {useRef} from 'react';
 import {Handle, NodeProps, Position, useStore} from 'react-flow-renderer';
 import {getLocalizableLabel} from '@liferay/object-js-components-web';
-import {DeletedObjectDefinition} from '../../ViewObjectDefinitions/ViewObjectDefinitions';
 import {getObjectDefinitionNodeActions} from '../../ViewObjectDefinitions/objectDefinitionUtil';
 import {useObjectFolderContext} from '../ModelBuilderContext/objectFolderContext';
 import {TYPES} from '../ModelBuilderContext/typesEnum';

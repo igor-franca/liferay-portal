@@ -5,7 +5,6 @@
 
 /// <reference types="react" />
 
-import {DeletedObjectDefinition} from './ViewObjectDefinitions';
 interface ModalDeleteObjectDefinitionProps {
 	handleDeleteObjectDefinition: (
 		value: DeletedObjectDefinition | null

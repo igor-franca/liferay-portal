@@ -9,7 +9,6 @@ import React from 'react';
 
 import DangerModal from '../DangerModal';
 import WarningModal from '../WarningModal';
-import {DeletedObjectDefinition} from './ViewObjectDefinitions';
 import {deleteObjectDefinitionToast} from './objectDefinitionUtil';
 
 interface ModalDeleteObjectDefinitionProps {

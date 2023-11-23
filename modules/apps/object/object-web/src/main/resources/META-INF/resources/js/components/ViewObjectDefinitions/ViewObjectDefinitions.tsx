@@ -57,13 +57,6 @@ interface ViewObjectDefinitionsProps extends IFDSTableProps {
 	objectFolderPermissionsURL: string;
 }
 
-export interface DeletedObjectDefinition {
-	hasObjectRelationship: boolean;
-	id: number;
-	name: string;
-	objectEntriesCount: number;
-}
-
 export default function ViewObjectDefinitions({
 	baseResourceURL,
 	editObjectDefinitionURL,

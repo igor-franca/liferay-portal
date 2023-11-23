@@ -5,7 +5,6 @@
 
 import {SetStateAction} from 'react';
 import {DropDownItems} from '../ModelBuilder/types';
-import {DeletedObjectDefinition} from './ViewObjectDefinitions';
 declare type DeleteObjectDefinitionProps = {
 	baseResourceURL: string;
 	handleDeleteObjectDefinition: (value: DeletedObjectDefinition) => void;

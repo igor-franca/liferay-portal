@@ -13,7 +13,6 @@ import {
 	removeAllSpecialCharacters,
 } from '../../utils/string';
 import {DropDownItems} from '../ModelBuilder/types';
-import {DeletedObjectDefinition} from './ViewObjectDefinitions';
 
 type DeleteObjectDefinitionProps = {
 	baseResourceURL: string;

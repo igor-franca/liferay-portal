@@ -38,7 +38,6 @@ import {formatActionURL} from '../../utils/fds';
 import {ModalAddObjectField} from '../ObjectField/ModalAddObjectField';
 import {ModalAddObjectRelationship} from '../ObjectRelationship/ModalAddObjectRelationship';
 import {ModalDeleteObjectDefinition} from '../ViewObjectDefinitions/ModalDeleteObjectDefinition';
-import {DeletedObjectDefinition} from '../ViewObjectDefinitions/ViewObjectDefinitions';
 import {RedirectToEditObjectDetailsModal} from './ObjectDefinitionNode/RedirectToEditObjectDetailsModal';
 
 interface EditObjectFolder {
