@@ -11,6 +11,13 @@ import React from 'react';
 import ObjectFolderCardHeader from '../components/ViewObjectDefinitions/ObjectFolderCardHeader';
 import {getObjectFolderActions} from '../components/ViewObjectDefinitions/objectDefinitionUtil';
 
+const HTTPMethods = {
+	delete: {href: '', method: 'DELETE'},
+	get: {href: '', method: 'GET'},
+	permissions: {href: 'PATCH', method: ''},
+	update: {href: '', method: 'PUT'},
+};
+
 describe('The ObjectFolderCardHeader component should', () => {
 	it('render all object folder actions', () => {
 		render(
@@ -20,10 +27,8 @@ describe('The ObjectFolderCardHeader component should', () => {
 					getObjectFolderActions(
 						{
 							actions: {
-								delete: {href: '', method: 'DELETE'},
-								get: {href: 'GET', method: ''},
-								permissions: {href: 'PATCH', method: ''},
-								update: {href: '', method: 'PUT'},
+								objectDefinitionActions: HTTPMethods,
+								objectFolderActions: HTTPMethods,
 							},
 							id: 1,
 							objectFolderPermissionsURL: '',
@@ -54,8 +59,8 @@ describe('The ObjectFolderCardHeader component should', () => {
 				items={
 					getObjectFolderActions({
 						actions: {
-							get: {href: 'GET', method: ''},
-							permissions: {href: 'PATCH', method: ''},
+							objectDefinitionActions: HTTPMethods,
+							objectFolderActions: HTTPMethods,
 						},
 						id: 2,
 						objectFolderPermissionsURL: '',

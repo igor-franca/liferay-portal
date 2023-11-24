@@ -41,18 +41,6 @@ type ObjectDefinitionNodeActionsProps = {
 	};
 };
 
-type ObjectFolderAction = {
-	href: string;
-	method: string;
-};
-
-type ObjectFolderActions = {
-	delete?: ObjectFolderAction;
-	get?: ObjectFolderAction;
-	permissions?: ObjectFolderAction;
-	update?: ObjectFolderAction;
-};
-
 export async function deleteObjectFolder(id: number, objectFolderName: string) {
 	await API.deleteObjectFolder(Number(id)).then(() => {
 		Liferay.Util.openToast({
@@ -229,7 +217,10 @@ export function getObjectDefinitionNodeActions({
 }
 
 interface GetObjectFolderActionsProps {
-	actions?: ObjectFolderActions;
+	actions?:{
+		objectDefinitionActions: Actions;
+		objectFolderActions: Actions
+	};
 	id: number;
 	objectFolderPermissionsURL: string;
 	setShowModal: (value: SetStateAction<ViewObjectDefinitionsModals>) => void;
@@ -244,7 +235,7 @@ export function getObjectFolderActions({
 	const url = formatActionURL(objectFolderPermissionsURL, id);
 	const kebabOptions = [];
 
-	if (actions?.update) {
+	if (actions?.objectFolderActions?.update) {
 		kebabOptions.unshift({
 			label: Liferay.Language.get('edit-label-and-erc'),
 			onClick: () =>
@@ -268,7 +259,7 @@ export function getObjectFolderActions({
 		symbolLeft: 'export',
 	});
 
-	if (actions?.update) {
+	if (actions?.objectDefinitionActions?.create) {
 		kebabOptions.push({
 			label: sub(
 				Liferay.Language.get('import-x'),
@@ -280,7 +271,7 @@ export function getObjectFolderActions({
 		kebabOptions.push({type: 'divider'});
 	}
 
-	if (actions?.permissions) {
+	if (actions?.objectFolderActions.permissions) {
 		kebabOptions.push({
 			label: sub(
 				Liferay.Language.get('x-permissions'),
@@ -297,7 +288,7 @@ export function getObjectFolderActions({
 		});
 	}
 
-	if (actions?.delete) {
+	if (actions?.objectFolderActions.delete) {
 		kebabOptions.push({type: 'divider'});
 		kebabOptions.push({
 			label: sub(

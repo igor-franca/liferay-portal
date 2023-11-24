@@ -30,16 +30,6 @@ declare type ObjectDefinitionNodeActionsProps = {
 		label_i18n: string;
 	};
 };
-declare type ObjectFolderAction = {
-	href: string;
-	method: string;
-};
-declare type ObjectFolderActions = {
-	delete?: ObjectFolderAction;
-	get?: ObjectFolderAction;
-	permissions?: ObjectFolderAction;
-	update?: ObjectFolderAction;
-};
 export declare function deleteObjectFolder(
 	id: number,
 	objectFolderName: string
@@ -68,12 +58,23 @@ export declare function getObjectDefinitionNodeActions({
 	objectDefinitionPermissionsURL,
 	setDeletedObjectDefinition,
 }: ObjectDefinitionNodeActionsProps): DropDownItems[];
-export declare function getObjectFolderActions(
-	id: number,
-	objectFolderPermissionsURL: string,
-	setShowModal: (value: SetStateAction<ViewObjectDefinitionsModals>) => void,
-	actions?: ObjectFolderActions
-): (
+interface GetObjectFolderActionsProps {
+	actions?: {
+		objectDefinitionActions: Actions;
+		objectFolderActions: Actions;
+	};
+	id: number;
+	objectFolderPermissionsURL: string;
+	setShowModal: (value: SetStateAction<ViewObjectDefinitionsModals>) => void;
+	setShowModalImportObjectDefinition: (value: boolean) => void;
+}
+export declare function getObjectFolderActions({
+	actions,
+	id,
+	objectFolderPermissionsURL,
+	setShowModal,
+	setShowModalImportObjectDefinition,
+}: GetObjectFolderActionsProps): (
 	| {
 			label: string;
 			onClick: () => void;
