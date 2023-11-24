@@ -4,6 +4,7 @@
  */
 
 interface Actions {
+	create?: HTTPMethod;
 	delete?: HTTPMethod;
 	get?: HTTPMethod;
 	permissions?: HTTPMethod;
@@ -29,18 +30,6 @@ interface ObjectActionTriggerExecutorItem {
 	type?: string;
 	value?: string;
 }
-
-type DefinitionAction = {
-	href: string;
-	method: string;
-};
-
-type DefinitionActions = {
-	delete: DefinitionAction;
-	get: DefinitionAction;
-	permissions: DefinitionAction;
-	update: DefinitionAction;
-};
 
 type ObjectFieldDeleteInfoProps = {
 	deleteLastPublishedObjectDefinitionObjectField: boolean;
@@ -177,7 +166,7 @@ interface ObjectDefinition {
 	accountEntryRestricted: boolean;
 	accountEntryRestrictedObjectFieldId: string;
 	accountEntryRestrictedObjectFieldName: string;
-	actions: DefinitionActions;
+	actions: Actions;
 	active: boolean;
 	dateCreated: string;
 	dateModified: string;
@@ -215,6 +204,11 @@ interface ObjectDefinition {
 	system: boolean;
 	titleObjectFieldId: number | string;
 	titleObjectFieldName: string;
+}
+
+interface ObjectDefinitions {
+	actions: Actions;
+	items: ObjectDefinition[];
 }
 
 interface ObjectDefinitionNodeData
