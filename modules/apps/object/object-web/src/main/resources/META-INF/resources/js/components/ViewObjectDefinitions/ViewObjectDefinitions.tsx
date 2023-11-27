@@ -370,6 +370,7 @@ export default function ViewObjectDefinitions({
 					) : (
 						<>
 							<ObjectFoldersSideBar
+								baseResourceURL={baseResourceURL}
 								objectFolderRequestInfo={
 									objectFolderRequestInfo
 								}

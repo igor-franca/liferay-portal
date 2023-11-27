@@ -48,6 +48,7 @@ describe('The ObjectFoldersSidebar component should', () => {
 	it('render all created object folders', () => {
 		render(
 			<ObjectFoldersSideBar
+				baseResourceURL=""
 				objectFolderRequestInfo={objectFolderRequestInfo}
 				selectedObjectFolder={uncategorizedObjectFolder}
 				setModalImportObjectDefinitionInfo={() => {}}
