@@ -8,8 +8,8 @@
 import {IFDSTableProps} from '../../utils/fds';
 import './ViewObjectDefinitions.scss';
 export interface ModalImportObjectDefinitionInfo {
-	visible: boolean;
 	title: string;
+	visible: boolean;
 }
 interface ViewObjectDefinitionsProps extends IFDSTableProps {
 	baseResourceURL: string;

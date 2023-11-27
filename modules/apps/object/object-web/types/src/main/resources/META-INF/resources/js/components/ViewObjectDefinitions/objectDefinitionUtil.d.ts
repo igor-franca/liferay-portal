@@ -68,17 +68,17 @@ interface GetObjectFolderActionsProps {
 	};
 	id: number;
 	objectFolderPermissionsURL: string;
-	setShowModal: (value: SetStateAction<ViewObjectDefinitionsModals>) => void;
 	setModalImportObjectDefinitionInfo: (
 		value: ModalImportObjectDefinitionInfo
 	) => void;
+	setShowModal: (value: SetStateAction<ViewObjectDefinitionsModals>) => void;
 }
 export declare function getObjectFolderActions({
 	actions,
 	id,
 	objectFolderPermissionsURL,
-	setShowModal,
 	setModalImportObjectDefinitionInfo,
+	setShowModal,
 }: GetObjectFolderActionsProps): (
 	| {
 			label: string;

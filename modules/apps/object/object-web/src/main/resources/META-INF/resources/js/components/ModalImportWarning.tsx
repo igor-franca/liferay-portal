@@ -11,17 +11,19 @@ import React from 'react';
 interface ModalImportWarningProps {
 	handleImport: () => void;
 	header: string;
-	onClose: (value: boolean) => void;
 	paragraphs: string[];
+	setVisibility: (value: boolean) => void;
 }
 
 export function ModalImportWarning({
 	handleImport,
 	header,
-	onClose,
 	paragraphs,
+	setVisibility,
 }: ModalImportWarningProps) {
-	const {observer} = useModal();
+	const {observer, onClose} = useModal({
+		onClose: () => setVisibility(false),
+	});
 
 	return (
 		<ClayModal center observer={observer} status="warning">
@@ -42,7 +44,7 @@ export function ModalImportWarning({
 					<ClayButton.Group spaced>
 						<ClayButton
 							displayType="secondary"
-							onClick={() => onClose(false)}
+							onClick={() => onClose()}
 						>
 							{Liferay.Language.get('cancel')}
 						</ClayButton>
@@ -51,7 +53,7 @@ export function ModalImportWarning({
 							displayType="warning"
 							onClick={() => {
 								handleImport();
-								onClose(false);
+								onClose();
 							}}
 							type="button"
 						>

@@ -289,11 +289,11 @@ export default function ModalImportListTypeDefinition({
 		<ModalImportWarning
 			handleImport={() => handleImport(importFormData as FormData)}
 			header={Liferay.Language.get('update-existing-picklist')}
-			onClose={() => {
+			paragraphs={warningModalBody}
+			setVisibility={() => {
 				setWarningModalVisible(false);
 				setImportFormData(undefined);
 			}}
-			paragraphs={warningModalBody}
 		/>
 	) : null;
 }
