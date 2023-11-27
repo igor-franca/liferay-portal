@@ -9,13 +9,14 @@ import {ClayDropDownWithItems} from '@clayui/drop-down';
 import ClayIcon from '@clayui/icon';
 import ClayList from '@clayui/list';
 import {getLocalizableLabel} from '@liferay/object-js-components-web';
-import {sub} from 'frontend-js-web';
+import {createResourceURL, fetch, sub} from 'frontend-js-web';
 import React, {SetStateAction} from 'react';
 
 import {defaultLanguageId} from '../../utils/constants';
 import {ModalImportObjectDefinitionInfo} from './ViewObjectDefinitions';
 
 interface ObjectFoldersSidebarProps {
+	baseResourceURL: string;
 	objectFolderRequestInfo: ObjectFolderRequestInfo;
 	selectedObjectFolder: ObjectFolder;
 	setModalImportObjectDefinitionInfo: (
@@ -28,6 +29,7 @@ interface ObjectFoldersSidebarProps {
 }
 
 export default function ObjectFoldersSideBar({
+	baseResourceURL,
 	objectFolderRequestInfo,
 	selectedObjectFolder,
 	setModalImportObjectDefinitionInfo,
@@ -47,7 +49,44 @@ export default function ObjectFoldersSideBar({
 				Liferay.Language.get('export-x'),
 				Liferay.Language.get('object-folder')
 			),
-			onClick: () => {},
+			onClick: () => {
+				const makeFetch = async () => {
+					if (selectedObjectFolder) {
+						const exportObjectFolderURL = createResourceURL(
+							baseResourceURL,
+							{
+								objectFolderId: selectedObjectFolder.id,
+								p_p_resource_id:
+									'/object_definitions/export_object_folder',
+							}
+						).href;
+
+						const response = await fetch(exportObjectFolderURL);
+						const responseHeaders = response.headers.get(
+							'Content-Disposition'
+						);
+
+						if (
+							response.ok &&
+							responseHeaders?.includes('attachment')
+						) {
+							const responseBlob = await response.blob();
+							const downloadElement = document.createElement('a');
+
+							downloadElement.download =
+								responseHeaders.split('filename=')[1] + '.json';
+							downloadElement.href = URL.createObjectURL(
+								responseBlob
+							);
+
+							document.body.appendChild(downloadElement);
+							downloadElement.click();
+						}
+					}
+				};
+
+				makeFetch();
+			},
 			symbolLeft: 'export',
 		});
 	}
