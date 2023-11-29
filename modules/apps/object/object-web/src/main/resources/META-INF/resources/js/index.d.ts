@@ -497,6 +497,7 @@ interface ViewObjectDefinitionsModals {
 	deleteObjectDefinition: boolean;
 	deleteObjectFolder: boolean;
 	editObjectFolder: boolean;
+	importModal: boolean;
 	moveObjectDefinition: boolean;
 	objectFieldDeletionNotAllowed: boolean;
 	unbindFromRootObjectDefinition: boolean;

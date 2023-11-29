@@ -6,6 +6,7 @@
 /// <reference types="react" />
 
 interface ModalImportProps {
+	JSONInputId: string;
 	apiURL: string;
 	externalReferenceCodeFeedbackMessage: string;
 	handleOnClose?: () => void;
@@ -14,7 +15,6 @@ interface ModalImportProps {
 		value: string;
 	};
 	importURL: string;
-	JSONInputId: string;
 	nameMaxLength: string;
 	portletNamespace: string;
 	showModal?: boolean;
@@ -25,12 +25,12 @@ interface ModalImportProps {
 	};
 }
 export default function ModalImport({
+	JSONInputId,
 	apiURL,
 	externalReferenceCodeFeedbackMessage,
 	handleOnClose,
 	importExtendedInfo,
 	importURL,
-	JSONInputId,
 	nameMaxLength,
 	portletNamespace,
 	showModal,

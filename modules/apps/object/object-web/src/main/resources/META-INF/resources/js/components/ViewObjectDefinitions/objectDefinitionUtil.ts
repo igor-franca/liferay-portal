@@ -15,7 +15,7 @@ import {
 import {DropDownItems} from '../ModelBuilder/types';
 import {
 	DeletedObjectDefinition,
-	ModalImportObjectDefinitionInfo,
+	ModalImportProperties,
 } from './ViewObjectDefinitions';
 
 type DeleteObjectDefinitionProps = {
@@ -245,9 +245,12 @@ interface GetObjectFolderActionsProps {
 		objectFolderActions: Actions;
 	};
 	id: number;
+	importObjectDefinitionURL: string;
+	objectFolderExternalReferenceCode: string;
 	objectFolderPermissionsURL: string;
-	setModalImportObjectDefinitionInfo: (
-		value: ModalImportObjectDefinitionInfo
+	portletNamespace: string;
+	setModalImportProperties: (
+		value: SetStateAction<ModalImportProperties>
 	) => void;
 	setShowModal: (value: SetStateAction<ViewObjectDefinitionsModals>) => void;
 }
@@ -255,8 +258,11 @@ interface GetObjectFolderActionsProps {
 export function getObjectFolderActions({
 	actions,
 	id,
+	importObjectDefinitionURL,
+	objectFolderExternalReferenceCode,
 	objectFolderPermissionsURL,
-	setModalImportObjectDefinitionInfo,
+	portletNamespace,
+	setModalImportProperties,
 	setShowModal,
 }: GetObjectFolderActionsProps) {
 	const importObjectDefinitionLocalized = sub(
@@ -294,10 +300,57 @@ export function getObjectFolderActions({
 		kebabOptions.push({
 			label: importObjectDefinitionLocalized,
 			onClick: () => {
-				setModalImportObjectDefinitionInfo({
+				setModalImportProperties({
+					JSONInputId: 'objectDefinitionJSON',
+					apiURL:
+						'/o/object-admin/v1.0/object-definitions/by-external-reference-code/',
+					externalReferenceCodeFeedbackMessage: sub(
+						Liferay.Language.get(
+							'unique-key-for-referencing-the-x'
+						),
+						Liferay.Language.get('object-definition').toLowerCase()
+					),
+					importExtendedInfo: {
+						key: `${portletNamespace}objectFolderExternalReferenceCode`,
+						value: objectFolderExternalReferenceCode,
+					},
+					importURL: importObjectDefinitionURL,
 					title: importObjectDefinitionLocalized,
-					visible: true,
+					warningModalText: {
+						body: [
+							sub(
+								Liferay.Language.get(
+									'there-is-another-x-with-the-same-external-reference-code-as-the-imported-one'
+								),
+								Liferay.Language.get(
+									'object-definition'
+								).toLowerCase()
+							),
+							sub(
+								Liferay.Language.get(
+									'before-importing-the-new-x-you-may-want-to-back-up-its-entries-to-prevent-data-loss'
+								),
+								Liferay.Language.get(
+									'object-definition'
+								).toLowerCase()
+							),
+							Liferay.Language.get(
+								'do-you-want-to-proceed-with-the-import-process'
+							),
+						],
+						header: sub(
+							Liferay.Language.get('update-existing-x'),
+							Liferay.Language.get(
+								'object-definition'
+							).toLowerCase()
+						),
+					},
 				});
+
+				setShowModal((previousState: ViewObjectDefinitionsModals) => ({
+					...previousState,
+					importModal: true,
+				}));
 			},
 			symbolLeft: 'import',
 		});

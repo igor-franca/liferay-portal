@@ -13,15 +13,11 @@ import {createResourceURL, fetch, sub} from 'frontend-js-web';
 import React, {SetStateAction} from 'react';
 
 import {defaultLanguageId} from '../../utils/constants';
-import {ModalImportObjectDefinitionInfo} from './ViewObjectDefinitions';
 
 interface ObjectFoldersSidebarProps {
 	baseResourceURL: string;
 	objectFolderRequestInfo: ObjectFolderRequestInfo;
 	selectedObjectFolder: ObjectFolder;
-	setModalImportObjectDefinitionInfo: (
-		value: ModalImportObjectDefinitionInfo
-	) => void;
 	setSelectedObjectFolder: (
 		value: SetStateAction<Partial<ObjectFolder>>
 	) => void;
@@ -32,7 +28,6 @@ export default function ObjectFoldersSideBar({
 	baseResourceURL,
 	objectFolderRequestInfo,
 	selectedObjectFolder,
-	setModalImportObjectDefinitionInfo,
 	setSelectedObjectFolder,
 	setShowModal,
 }: ObjectFoldersSidebarProps) {
@@ -94,12 +89,11 @@ export default function ObjectFoldersSideBar({
 	if (objectFolderRequestInfo.actions.updateBatch) {
 		objectFoldersKebabOptions.push({
 			label: importObjectFolderLocalized,
-			onClick: () => {
-				setModalImportObjectDefinitionInfo({
-					title: importObjectFolderLocalized,
-					visible: true,
-				});
-			},
+			onClick: () =>
+				setShowModal((previousState: ViewObjectDefinitionsModals) => ({
+					...previousState,
+					importModal: true,
+				})),
 			symbolLeft: 'import',
 		});
 	}
