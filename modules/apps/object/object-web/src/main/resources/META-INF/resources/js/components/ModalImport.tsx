@@ -39,12 +39,12 @@ type TFile = {
 };
 
 export default function ModalImport({
+	JSONInputId,
 	apiURL,
 	externalReferenceCodeFeedbackMessage,
 	handleOnClose,
 	importExtendedInfo,
 	importURL,
-	JSONInputId,
 	nameMaxLength,
 	portletNamespace,
 	showModal,
@@ -152,8 +152,7 @@ export default function ModalImport({
 			}
 		);
 
-		return () =>
-			Liferay.destroyComponent(importModalComponentId);
+		return () => Liferay.destroyComponent(importModalComponentId);
 	}, [importModalComponentId, setVisible]);
 
 	return visible ? (

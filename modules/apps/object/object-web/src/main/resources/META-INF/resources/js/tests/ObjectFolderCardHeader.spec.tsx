@@ -30,8 +30,11 @@ describe('The ObjectFolderCardHeader component should', () => {
 							objectFolderActions: HTTPMethods,
 						},
 						id: 1,
+						importObjectDefinitionURL: '',
+						objectFolderExternalReferenceCode: '',
 						objectFolderPermissionsURL: '',
-						setModalImportObjectDefinitionInfo: () => {},
+						portletNamespace: '',
+						setModalImportProperties: () => {},
 						setShowModal: () => {},
 					}) as IItem[]
 				}
@@ -61,9 +64,12 @@ describe('The ObjectFolderCardHeader component should', () => {
 							objectDefinitionActions: HTTPMethods,
 							objectFolderActions: HTTPMethods,
 						},
-						id: 2,
+						id: 1,
+						importObjectDefinitionURL: '',
+						objectFolderExternalReferenceCode: '',
 						objectFolderPermissionsURL: '',
-						setModalImportObjectDefinitionInfo: () => {},
+						portletNamespace: '',
+						setModalImportProperties: () => {},
 						setShowModal: () => {},
 					}) as IItem[]
 				}

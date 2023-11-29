@@ -51,7 +51,6 @@ describe('The ObjectFoldersSidebar component should', () => {
 				baseResourceURL=""
 				objectFolderRequestInfo={objectFolderRequestInfo}
 				selectedObjectFolder={uncategorizedObjectFolder}
-				setModalImportObjectDefinitionInfo={() => {}}
 				setSelectedObjectFolder={() => {}}
 				setShowModal={() => {}}
 			></ObjectFoldersSideBar>

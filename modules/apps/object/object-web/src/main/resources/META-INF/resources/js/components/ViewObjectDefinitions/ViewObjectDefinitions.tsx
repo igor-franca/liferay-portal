@@ -22,6 +22,7 @@ import {
 } from '../../utils/fds';
 import statusDataRenderer from '../FDSPropsTransformer/FDSDataRenderers/StatusDataRenderer';
 import LabelRenderer from '../LabelRenderer';
+import ModalImport from '../ModalImport';
 import ModalObjectFieldDeletionNotAllowed from '../ModalObjectFieldDeletionNotAllowed';
 import objectDefinitionModifiedDateDataRenderer from './FDSDataRenderers/ObjectDefinitionModifiedDateDataRenderer';
 import objectDefinitionSystemDataRenderer from './FDSDataRenderers/ObjectDefinitionSystemDataRenderer';
@@ -41,11 +42,18 @@ import {
 } from './objectDefinitionUtil';
 
 import './ViewObjectDefinitions.scss';
-import ModalImportObjectDefinition from '../ModalImportObjectDefinition';
 
-export interface ModalImportObjectDefinitionInfo {
+export interface ModalImportProperties {
+	apiURL: string;
+	externalReferenceCodeFeedbackMessage: string;
+	importExtendedInfo?: {key: string; value: string};
+	importURL: string;
+	JSONInputId: string;
 	title: string;
-	visible: boolean;
+	warningModalText: {
+		body: string[];
+		header: string;
+	};
 }
 
 interface ViewObjectDefinitionsProps extends IFDSTableProps {
@@ -109,12 +117,18 @@ export default function ViewObjectDefinitions({
 
 	const [loading, setLoading] = useState(true);
 
-	const [
-		modalImportObjectDefinitionInfo,
-		setModalImportObjectDefinitionInfo,
-	] = useState<ModalImportObjectDefinitionInfo>({
+	const [modalImportProperties, setModalImportProperties] = useState<
+		ModalImportProperties
+	>({
+		apiURL: '',
+		externalReferenceCodeFeedbackMessage: '',
+		importURL: '',
+		JSONInputId: '',
 		title: '',
-		visible: false,
+		warningModalText: {
+			body: [],
+			header: '',
+		},
 	});
 
 	const [
@@ -146,6 +160,7 @@ export default function ViewObjectDefinitions({
 		deleteObjectDefinition: false,
 		deleteObjectFolder: false,
 		editObjectFolder: false,
+		importModal: false,
 		moveObjectDefinition: false,
 		objectFieldDeletionNotAllowed: false,
 		unbindFromRootObjectDefinition: false,
@@ -377,9 +392,6 @@ export default function ViewObjectDefinitions({
 								selectedObjectFolder={
 									selectedObjectFolder as ObjectFolder
 								}
-								setModalImportObjectDefinitionInfo={
-									setModalImportObjectDefinitionInfo
-								}
 								setSelectedObjectFolder={
 									setSelectedObjectFolder
 								}
@@ -401,8 +413,11 @@ export default function ViewObjectDefinitions({
 												id:
 													selectedObjectFolder.id ??
 													0,
+												importObjectDefinitionURL,
+												objectFolderExternalReferenceCode: selectedObjectFolder.externalReferenceCode as string,
 												objectFolderPermissionsURL,
-												setModalImportObjectDefinitionInfo,
+												portletNamespace,
+												setModalImportProperties,
 												setShowModal,
 											}) as IItem[]
 										}
@@ -460,20 +475,30 @@ export default function ViewObjectDefinitions({
 				/>
 			)}
 
-			{modalImportObjectDefinitionInfo.visible && (
-				<ModalImportObjectDefinition
-					importObjectDefinitionURL={importObjectDefinitionURL}
-					modalImportObjectDefinitionInfo={
-						modalImportObjectDefinitionInfo
+			{showModal.importModal && (
+				<ModalImport
+					JSONInputId={modalImportProperties.JSONInputId}
+					apiURL={modalImportProperties.apiURL}
+					externalReferenceCodeFeedbackMessage={
+						modalImportProperties.externalReferenceCodeFeedbackMessage
 					}
+					handleOnClose={() => {
+						setShowModal(
+							(previousState: ViewObjectDefinitionsModals) => ({
+								...previousState,
+								importModal: false,
+							})
+						);
+					}}
+					importExtendedInfo={
+						modalImportProperties.importExtendedInfo
+					}
+					importURL={modalImportProperties.importURL}
 					nameMaxLength={nameMaxLength}
-					objectFolderExternalReferenceCode={
-						selectedObjectFolder.externalReferenceCode as string
-					}
 					portletNamespace={portletNamespace}
-					setModalImportObjectDefinitionInfo={
-						setModalImportObjectDefinitionInfo
-					}
+					showModal={showModal.importModal}
+					title={modalImportProperties.title}
+					warningModalText={modalImportProperties.warningModalText}
 				/>
 			)}
 

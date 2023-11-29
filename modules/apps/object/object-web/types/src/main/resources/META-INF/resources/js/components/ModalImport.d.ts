@@ -25,12 +25,12 @@ interface ModalImportProps {
 	};
 }
 export default function ModalImport({
+	JSONInputId,
 	apiURL,
 	externalReferenceCodeFeedbackMessage,
 	handleOnClose,
 	importExtendedInfo,
 	importURL,
-	JSONInputId,
 	nameMaxLength,
 	portletNamespace,
 	showModal,

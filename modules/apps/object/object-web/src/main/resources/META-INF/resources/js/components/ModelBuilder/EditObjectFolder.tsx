@@ -59,6 +59,7 @@ export default function EditObjectFolder({
 		deleteObjectRelationship: false,
 		editObjectDefinitionExternalReferenceCode: false,
 		editObjectFolder: false,
+		importModal: false,
 		moveObjectDefinition: false,
 		publishObjectDefinitions: false,
 		redirectToEditObjectDefinitionDetails: false,

@@ -8,11 +8,24 @@
 <%@ include file="/init.jsp" %>
 
 <div>
+
+	<%
+	Map<String, Object> warningModalText = HashMapBuilder.<String, Object>put(
+		"body", Arrays.asList(LanguageUtil.get(request, "there-is-an-object-definition-with-the-same-external-reference-code-as-the-imported-one"), LanguageUtil.format(request, "before-importing-the-new-x-you-may-want-to-back-up-its-entries-to-prevent-data-loss", "object-definition"), LanguageUtil.get(request, "do-you-want-to-proceed-with-the-import-process"))
+	).put(
+		"header", LanguageUtil.get(request, "update-existing-object-definition")
+	).build();
+	%>
+
 	<react:component
-		module="js/components/ModalImportObjectDefinition"
+		module="js/components/ModalImport"
 		props='<%=
 			HashMapBuilder.<String, Object>put(
-				"importObjectDefinitionURL",
+				"apiURL", "/o/object-admin/v1.0/object-definitions/by-external-reference-code/"
+			).put(
+				"externalReferenceCodeFeedbackMessage", LanguageUtil.get(request, "unique-key-for-referencing-the-object-definition")
+			).put(
+				"importURL",
 				PortletURLBuilder.createActionURL(
 					renderResponse
 				).setActionName(
@@ -21,23 +34,31 @@
 					currentURL
 				).buildString()
 			).put(
+				"JSONInputId", liferayPortletResponse.getNamespace() + "objectDefinitionJSON"
+			).put(
 				"nameMaxLength", ModelHintsConstants.TEXT_MAX_LENGTH
+			).put(
+				"portletNamespace", liferayPortletResponse.getNamespace()
+			).put(
+				"title", LanguageUtil.format(request, "import-x", "object-definition")
+			).put(
+				"warningModalText", warningModalText
 			).build()
 		%>'
 	/>
 </div>
 
 <aui:script>
-	function <portlet:namespace />openImportObjectDefinitionModal() {}
+	function <portlet:namespace />openImportModal() {}
 
 	Liferay.Util.setPortletConfigurationIconAction(
 		'<portlet:namespace />importObjectDefinition',
 		() => {
-			Liferay.componentReady(
-				'<portlet:namespace />importObjectDefinitionModal'
-			).then((importObjectDefinitionModal) => {
-				importObjectDefinitionModal.open();
-			});
+			Liferay.componentReady('<portlet:namespace />importModal').then(
+				(importModal) => {
+					importModal.open();
+				}
+			);
 		}
 	);
 </aui:script>
