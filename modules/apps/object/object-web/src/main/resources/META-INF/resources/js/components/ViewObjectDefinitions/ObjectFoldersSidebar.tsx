@@ -13,11 +13,17 @@ import {createResourceURL, fetch, sub} from 'frontend-js-web';
 import React, {SetStateAction} from 'react';
 
 import {defaultLanguageId} from '../../utils/constants';
+import { ModalImportProperties } from './ViewObjectDefinitions';
 
 interface ObjectFoldersSidebarProps {
 	baseResourceURL: string;
+	importObjectFolderURL: string;
 	objectFolderRequestInfo: ObjectFolderRequestInfo;
+	portletNamespace: string;
 	selectedObjectFolder: ObjectFolder;
+	setModalImportProperties: (
+		value: SetStateAction<ModalImportProperties>
+	) => void; 
 	setSelectedObjectFolder: (
 		value: SetStateAction<Partial<ObjectFolder>>
 	) => void;
@@ -26,8 +32,11 @@ interface ObjectFoldersSidebarProps {
 
 export default function ObjectFoldersSideBar({
 	baseResourceURL,
+	importObjectFolderURL,
 	objectFolderRequestInfo,
+	portletNamespace,
 	selectedObjectFolder,
+	setModalImportProperties,
 	setSelectedObjectFolder,
 	setShowModal,
 }: ObjectFoldersSidebarProps) {
@@ -90,11 +99,45 @@ export default function ObjectFoldersSideBar({
 	if (objectFolderRequestInfo.actions.updateBatch) {
 		objectFoldersKebabOptions.push({
 			label: importObjectFolderLocalized,
-			onClick: () =>
+			onClick: () => {
+				setModalImportProperties({
+					apiURL:
+						'/o/object-admin/v1.0/object-definitions/by-external-reference-code/',
+					externalReferenceCodeFeedbackMessage: '',
+					importURL: importObjectFolderURL,
+					JSONInputId: `${portletNamespace}objectFolderJSON`,
+					title: sub(
+						Liferay.Language.get(
+							'import-x'
+						),
+						Liferay.Language.get('object-folder')
+					),
+					warningModalText: {
+						body: [
+							Liferay.Language.get(
+								'there-is-an-object-definition-with-the-same-external-reference-code-as-the-imported-one'
+							),
+							sub(
+								Liferay.Language.get(
+									'before-importing-the-new-x-you-may-want-to-back-up-its-entries-to-prevent-data-loss'
+								),
+								Liferay.Language.get('object-definition')
+							),
+							Liferay.Language.get(
+								'do-you-want-to-proceed-with-the-import-process'
+							),
+						],
+						header: Liferay.Language.get(
+							'update-existing-object-definition'
+						),
+					},
+				});
+
 				setShowModal((previousState: ViewObjectDefinitionsModals) => ({
 					...previousState,
 					importModal: true,
-				})),
+				}))
+			},
 			symbolLeft: 'import',
 		});
 	}

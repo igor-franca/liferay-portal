@@ -8,6 +8,7 @@ import {render, screen} from '@testing-library/react';
 import React from 'react';
 
 import ObjectFoldersSideBar from '../components/ViewObjectDefinitions/ObjectFoldersSidebar';
+import { ModalImportProperties } from '../components/ViewObjectDefinitions/ViewObjectDefinitions';
 const emptyAction = {href: '', method: ''};
 
 const objectFolderActions = {
@@ -49,11 +50,14 @@ describe('The ObjectFoldersSidebar component should', () => {
 		render(
 			<ObjectFoldersSideBar
 				baseResourceURL=""
+				importObjectFolderURL={''}
 				objectFolderRequestInfo={objectFolderRequestInfo}
+				portletNamespace={''} 
 				selectedObjectFolder={uncategorizedObjectFolder}
-				setSelectedObjectFolder={() => {}}
-				setShowModal={() => {}}
-			></ObjectFoldersSideBar>
+				setModalImportProperties={() => {}}
+				setSelectedObjectFolder={() => { } }
+				setShowModal={() => {} } 
+			/>
 		);
 
 		expect(screen.getAllByRole('listitem')).toHaveLength(2);
