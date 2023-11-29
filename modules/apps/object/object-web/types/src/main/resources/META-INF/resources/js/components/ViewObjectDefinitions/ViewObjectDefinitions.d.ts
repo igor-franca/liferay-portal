@@ -26,6 +26,7 @@ interface ViewObjectDefinitionsProps extends IFDSTableProps {
 	baseResourceURL: string;
 	editObjectDefinitionURL: string;
 	importObjectDefinitionURL: string;
+	importObjectFolderURL: string;
 	modelBuilderURL: string;
 	nameMaxLength: string;
 	objectDefinitionsAPIURL: any;
@@ -49,6 +50,7 @@ export default function ViewObjectDefinitions({
 	baseResourceURL,
 	editObjectDefinitionURL,
 	importObjectDefinitionURL,
+	importObjectFolderURL,
 	modelBuilderURL,
 	nameMaxLength,
 	objectDefinitionsAPIURL,

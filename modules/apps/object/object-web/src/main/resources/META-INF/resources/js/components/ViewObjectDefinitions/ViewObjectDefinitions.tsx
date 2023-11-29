@@ -60,6 +60,7 @@ interface ViewObjectDefinitionsProps extends IFDSTableProps {
 	baseResourceURL: string;
 	editObjectDefinitionURL: string;
 	importObjectDefinitionURL: string;
+	importObjectFolderURL: string;
 	modelBuilderURL: string;
 	nameMaxLength: string;
 	objectDefinitionsAPIURL: any;
@@ -85,6 +86,7 @@ export default function ViewObjectDefinitions({
 	baseResourceURL,
 	editObjectDefinitionURL,
 	importObjectDefinitionURL,
+	importObjectFolderURL,
 	modelBuilderURL,
 	nameMaxLength,
 	objectDefinitionsAPIURL,
@@ -386,11 +388,16 @@ export default function ViewObjectDefinitions({
 						<>
 							<ObjectFoldersSideBar
 								baseResourceURL={baseResourceURL}
+								importObjectFolderURL={importObjectFolderURL}
 								objectFolderRequestInfo={
 									objectFolderRequestInfo
 								}
+								portletNamespace={portletNamespace}
 								selectedObjectFolder={
 									selectedObjectFolder as ObjectFolder
+								}
+								setModalImportProperties={
+									setModalImportProperties
 								}
 								setSelectedObjectFolder={
 									setSelectedObjectFolder

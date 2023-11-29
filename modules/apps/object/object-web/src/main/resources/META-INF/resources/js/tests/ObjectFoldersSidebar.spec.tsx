@@ -49,11 +49,14 @@ describe('The ObjectFoldersSidebar component should', () => {
 		render(
 			<ObjectFoldersSideBar
 				baseResourceURL=""
+				importObjectFolderURL=""
 				objectFolderRequestInfo={objectFolderRequestInfo}
+				portletNamespace=""
 				selectedObjectFolder={uncategorizedObjectFolder}
+				setModalImportProperties={() => {}}
 				setSelectedObjectFolder={() => {}}
 				setShowModal={() => {}}
-			></ObjectFoldersSideBar>
+			/>
 		);
 
 		expect(screen.getAllByRole('listitem')).toHaveLength(2);

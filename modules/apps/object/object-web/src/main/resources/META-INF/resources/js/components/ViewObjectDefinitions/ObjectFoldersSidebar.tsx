@@ -18,7 +18,9 @@ import {ModalImportProperties} from './ViewObjectDefinitions';
 
 interface ObjectFoldersSidebarProps {
 	baseResourceURL: string;
+	importObjectFolderURL: string;
 	objectFolderRequestInfo: ObjectFolderRequestInfo;
+	portletNamespace: string;
 	selectedObjectFolder: ObjectFolder;
 	setModalImportProperties: (
 		value: SetStateAction<ModalImportProperties>
@@ -31,8 +33,10 @@ interface ObjectFoldersSidebarProps {
 
 export default function ObjectFoldersSideBar({
 	baseResourceURL,
+	importObjectFolderURL,
 	objectFolderRequestInfo,
 	selectedObjectFolder,
+	setModalImportProperties,
 	setSelectedObjectFolder,
 	setShowModal,
 }: ObjectFoldersSidebarProps) {
@@ -62,11 +66,60 @@ export default function ObjectFoldersSideBar({
 	if (objectFolderRequestInfo.actions.updateBatch) {
 		objectFoldersKebabOptions.push({
 			label: importObjectFolderLocalized,
-			onClick: () =>
+			onClick: () => {
+				setModalImportProperties({
+					JSONInputId: 'objectFolderJSON',
+					apiURL:
+						'/o/object-admin/v1.0/object-folders/by-external-reference-code/',
+					externalReferenceCodeFeedbackMessage: sub(
+						Liferay.Language.get(
+							'unique-key-for-referencing-the-x'
+						),
+						Liferay.Language.get(
+							'object-folder'
+						).toLowerCase()
+					),
+					importURL: importObjectFolderURL,
+					title: sub(
+						Liferay.Language.get('import-x'),
+						Liferay.Language.get('object-folder')
+					),
+					warningModalText: {
+						body: [
+							sub(
+								Liferay.Language.get(
+									'there-is-another-x-with-the-same-external-reference-code-as-the-imported-one'
+								),
+								Liferay.Language.get(
+									'object-folder'
+								).toLowerCase()
+							),
+							sub(
+								Liferay.Language.get(
+									'before-importing-the-new-x-you-may-want-to-back-up-its-entries-to-prevent-data-loss'
+								),
+								Liferay.Language.get(
+									'object-folder'
+								).toLowerCase()
+							),
+							Liferay.Language.get(
+								'do-you-want-to-proceed-with-the-import-process'
+							),
+						],
+						header: sub(
+							Liferay.Language.get('update-existing-x'),
+							Liferay.Language.get(
+								'object-folder'
+							).toLowerCase()
+						),
+					},
+				});
+
 				setShowModal((previousState: ViewObjectDefinitionsModals) => ({
 					...previousState,
 					importModal: true,
-				})),
+				}));
+			},
 			symbolLeft: 'import',
 		});
 	}
