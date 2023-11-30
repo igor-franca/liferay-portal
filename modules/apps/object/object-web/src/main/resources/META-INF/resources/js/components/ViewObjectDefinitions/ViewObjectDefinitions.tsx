@@ -410,11 +410,13 @@ export default function ViewObjectDefinitions({
 													objectDefinitionActions: objectDefinitionsActions as Actions,
 													objectFolderActions: selectedObjectFolder.actions as Actions,
 												},
+												baseResourceURL,
 												id:
 													selectedObjectFolder.id ??
 													0,
 												importObjectDefinitionURL,
 												objectFolderExternalReferenceCode: selectedObjectFolder.externalReferenceCode as string,
+												objectFolderId: selectedObjectFolder.id as number,
 												objectFolderPermissionsURL,
 												portletNamespace,
 												setModalImportProperties,

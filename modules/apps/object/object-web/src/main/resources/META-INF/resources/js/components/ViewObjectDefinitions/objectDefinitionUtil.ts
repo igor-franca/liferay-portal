@@ -7,6 +7,7 @@ import {API} from '@liferay/object-js-components-web';
 import {createResourceURL, openModal, sub} from 'frontend-js-web';
 import {SetStateAction} from 'react';
 
+import {exportObjectFolder} from '../../utils/exportObjectFolder';
 import {formatActionURL} from '../../utils/fds';
 import {
 	firstLetterUppercase,
@@ -244,9 +245,11 @@ interface GetObjectFolderActionsProps {
 		objectDefinitionActions: Actions;
 		objectFolderActions: Actions;
 	};
+	baseResourceURL: string;
 	id: number;
 	importObjectDefinitionURL: string;
 	objectFolderExternalReferenceCode: string;
+	objectFolderId: number;
 	objectFolderPermissionsURL: string;
 	portletNamespace: string;
 	setModalImportProperties: (
@@ -257,9 +260,11 @@ interface GetObjectFolderActionsProps {
 
 export function getObjectFolderActions({
 	actions,
+	baseResourceURL,
 	id,
 	importObjectDefinitionURL,
 	objectFolderExternalReferenceCode,
+	objectFolderId,
 	objectFolderPermissionsURL,
 	portletNamespace,
 	setModalImportProperties,
@@ -292,7 +297,9 @@ export function getObjectFolderActions({
 			Liferay.Language.get('export-x'),
 			Liferay.Language.get('object-folder')
 		),
-		onClick: () => {},
+		onClick: () => {
+			exportObjectFolder({baseResourceURL, objectFolderId});
+		},
 		symbolLeft: 'export',
 	});
 

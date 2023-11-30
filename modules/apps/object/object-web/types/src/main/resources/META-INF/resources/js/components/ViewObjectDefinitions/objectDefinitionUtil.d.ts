@@ -69,9 +69,11 @@ interface GetObjectFolderActionsProps {
 		objectDefinitionActions: Actions;
 		objectFolderActions: Actions;
 	};
+	baseResourceURL: string;
 	id: number;
 	importObjectDefinitionURL: string;
 	objectFolderExternalReferenceCode: string;
+	objectFolderId: number;
 	objectFolderPermissionsURL: string;
 	portletNamespace: string;
 	setModalImportProperties: (
@@ -81,9 +83,11 @@ interface GetObjectFolderActionsProps {
 }
 export declare function getObjectFolderActions({
 	actions,
+	baseResourceURL,
 	id,
 	importObjectDefinitionURL,
 	objectFolderExternalReferenceCode,
+	objectFolderId,
 	objectFolderPermissionsURL,
 	portletNamespace,
 	setModalImportProperties,
