@@ -71,48 +71,14 @@ export default function ObjectFoldersSideBar({
 					JSONInputId: 'objectFolderJSON',
 					apiURL:
 						'/o/object-admin/v1.0/object-folders/by-external-reference-code/',
-					externalReferenceCodeFeedbackMessage: sub(
-						Liferay.Language.get(
-							'unique-key-for-referencing-the-x'
-						),
-						Liferay.Language.get(
-							'object-folder'
-						).toLowerCase()
-					),
 					importURL: importObjectFolderURL,
+					importedEntity: Liferay.Language.get(
+						'object-folder'
+					).toLowerCase(),
 					title: sub(
 						Liferay.Language.get('import-x'),
 						Liferay.Language.get('object-folder')
 					),
-					warningModalText: {
-						body: [
-							sub(
-								Liferay.Language.get(
-									'there-is-another-x-with-the-same-external-reference-code-as-the-imported-one'
-								),
-								Liferay.Language.get(
-									'object-folder'
-								).toLowerCase()
-							),
-							sub(
-								Liferay.Language.get(
-									'before-importing-the-new-x-you-may-want-to-back-up-its-entries-to-prevent-data-loss'
-								),
-								Liferay.Language.get(
-									'object-folder'
-								).toLowerCase()
-							),
-							Liferay.Language.get(
-								'do-you-want-to-proceed-with-the-import-process'
-							),
-						],
-						header: sub(
-							Liferay.Language.get('update-existing-x'),
-							Liferay.Language.get(
-								'object-folder'
-							).toLowerCase()
-						),
-					},
 				});
 
 				setShowModal((previousState: ViewObjectDefinitionsModals) => ({

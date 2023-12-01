@@ -8,22 +8,13 @@
 <%@ include file="/init.jsp" %>
 
 <div>
-
-	<%
-	Map<String, Object> warningModalText = HashMapBuilder.<String, Object>put(
-		"body", Arrays.asList(LanguageUtil.format(request, "there-is-another-x-with-the-same-external-reference-code-as-the-imported-one", StringUtil.toLowerCase(LanguageUtil.get(request, "picklist"))), LanguageUtil.format(request, "before-importing-the-new-x-you-may-want-to-back-up-its-entries-to-prevent-data-loss", StringUtil.toLowerCase(LanguageUtil.get(request, "picklist"))), LanguageUtil.get(request, "do-you-want-to-proceed-with-the-import-process"))
-	).put(
-		"header", LanguageUtil.get(request, "update-existing-picklist")
-	).build();
-	%>
-
 	<react:component
 		module="js/components/ModalImport"
 		props='<%=
 			HashMapBuilder.<String, Object>put(
 				"apiURL", "/o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/"
 			).put(
-				"externalReferenceCodeFeedbackMessage", LanguageUtil.get(request, "unique-key-for-referencing-the-picklist-definition")
+				"importedEntity", LanguageUtil.get(request, "picklist")
 			).put(
 				"importURL",
 				PortletURLBuilder.createActionURL(
@@ -41,8 +32,6 @@
 				"portletNamespace", liferayPortletResponse.getNamespace()
 			).put(
 				"title", LanguageUtil.format(request, "import-x", "picklist")
-			).put(
-				"warningModalText", warningModalText
 			).build()
 		%>'
 	/>

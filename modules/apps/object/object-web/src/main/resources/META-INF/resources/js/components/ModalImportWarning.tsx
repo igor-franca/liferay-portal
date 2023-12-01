@@ -6,20 +6,19 @@
 import ClayButton from '@clayui/button';
 import {Text} from '@clayui/core';
 import ClayModal, {useModal} from '@clayui/modal';
+import {sub} from 'frontend-js-web';
 import React from 'react';
 
 interface ModalImportWarningProps {
 	handleImport: () => void;
 	handleOnClose: (value: boolean) => void;
-	header: string;
-	paragraphs: string[];
+	importedEntity: string;
 }
 
 export function ModalImportWarning({
 	handleImport,
 	handleOnClose,
-	header,
-	paragraphs,
+	importedEntity,
 }: ModalImportWarningProps) {
 	const {observer, onClose} = useModal({
 		onClose: () => handleOnClose(false),
@@ -27,15 +26,35 @@ export function ModalImportWarning({
 
 	return (
 		<ClayModal center observer={observer} status="warning">
-			<ClayModal.Header>{header}</ClayModal.Header>
+			<ClayModal.Header>
+				{sub(Liferay.Language.get('update-existing-x'), importedEntity)}
+			</ClayModal.Header>
 
 			<ClayModal.Body>
 				<div className="text-secondary">
-					{paragraphs.map((paragraph, index) => (
-						<Text as="p" color="secondary" key={index}>
-							{paragraph}
-						</Text>
-					))}
+					<Text as="p" color="secondary">
+						{sub(
+							Liferay.Language.get(
+								'there-is-another-x-with-the-same-external-reference-code-as-the-imported-one'
+							),
+							importedEntity.toLowerCase()
+						)}
+					</Text>
+
+					<Text as="p" color="secondary">
+						{sub(
+							Liferay.Language.get(
+								'before-importing-the-new-x-you-may-want-to-back-up-its-entries-to-prevent-data-loss'
+							),
+							importedEntity.toLowerCase()
+						)}
+					</Text>
+
+					<Text as="p" color="secondary">
+						{Liferay.Language.get(
+							'do-you-want-to-proceed-with-the-import-process'
+						)}
+					</Text>
 				</div>
 			</ClayModal.Body>
 

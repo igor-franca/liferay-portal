@@ -8,33 +8,28 @@
 interface ModalImportProps {
 	JSONInputId: string;
 	apiURL: string;
-	externalReferenceCodeFeedbackMessage: string;
 	handleOnClose?: () => void;
 	importExtendedInfo?: {
 		key: string;
 		value: string;
 	};
 	importURL: string;
+	importedEntity: string;
 	nameMaxLength: string;
 	portletNamespace: string;
 	showModal?: boolean;
 	title: string;
-	warningModalText: {
-		body: string[];
-		header: string;
-	};
 }
 export default function ModalImport({
 	JSONInputId,
 	apiURL,
-	externalReferenceCodeFeedbackMessage,
 	handleOnClose,
 	importExtendedInfo,
 	importURL,
+	importedEntity,
 	nameMaxLength,
 	portletNamespace,
 	showModal,
 	title,
-	warningModalText,
 }: ModalImportProps): JSX.Element | null;
 export {};

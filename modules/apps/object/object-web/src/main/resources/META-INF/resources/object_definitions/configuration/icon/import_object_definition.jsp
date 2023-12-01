@@ -8,22 +8,13 @@
 <%@ include file="/init.jsp" %>
 
 <div>
-
-	<%
-	Map<String, Object> warningModalText = HashMapBuilder.<String, Object>put(
-		"body", Arrays.asList(LanguageUtil.format(request, "there-is-another-x-with-the-same-external-reference-code-as-the-imported-one", StringUtil.toLowerCase(LanguageUtil.get(request, "object-definition"))), LanguageUtil.format(request, "before-importing-the-new-x-you-may-want-to-back-up-its-entries-to-prevent-data-loss", StringUtil.toLowerCase(LanguageUtil.get(request, "object-definition"))), LanguageUtil.get(request, "do-you-want-to-proceed-with-the-import-process"))
-	).put(
-		"header", LanguageUtil.get(request, "update-existing-object-definition")
-	).build();
-	%>
-
 	<react:component
 		module="js/components/ModalImport"
 		props='<%=
 			HashMapBuilder.<String, Object>put(
 				"apiURL", "/o/object-admin/v1.0/object-definitions/by-external-reference-code/"
 			).put(
-				"externalReferenceCodeFeedbackMessage", LanguageUtil.format(request, "unique-key-for-referencing-the-x", StringUtil.toLowerCase(LanguageUtil.get(request, "object-definition")))
+				"importedEntity", LanguageUtil.get(request, "object-definition")
 			).put(
 				"importURL",
 				PortletURLBuilder.createActionURL(
@@ -41,8 +32,6 @@
 				"portletNamespace", liferayPortletResponse.getNamespace()
 			).put(
 				"title", LanguageUtil.format(request, "import-x", "object-definition")
-			).put(
-				"warningModalText", warningModalText
 			).build()
 		%>'
 	/>

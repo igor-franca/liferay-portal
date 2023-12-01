@@ -46,14 +46,10 @@ import './ViewObjectDefinitions.scss';
 export interface ModalImportProperties {
 	JSONInputId: string;
 	apiURL: string;
-	externalReferenceCodeFeedbackMessage: string;
 	importExtendedInfo?: {key: string; value: string};
 	importURL: string;
+	importedEntity: string;
 	title: string;
-	warningModalText: {
-		body: string[];
-		header: string;
-	};
 }
 
 interface ViewObjectDefinitionsProps extends IFDSTableProps {
@@ -124,13 +120,9 @@ export default function ViewObjectDefinitions({
 	>({
 		JSONInputId: '',
 		apiURL: '',
-		externalReferenceCodeFeedbackMessage: '',
 		importURL: '',
+		importedEntity: '',
 		title: '',
-		warningModalText: {
-			body: [],
-			header: '',
-		},
 	});
 
 	const [
@@ -488,9 +480,6 @@ export default function ViewObjectDefinitions({
 				<ModalImport
 					JSONInputId={modalImportProperties.JSONInputId}
 					apiURL={modalImportProperties.apiURL}
-					externalReferenceCodeFeedbackMessage={
-						modalImportProperties.externalReferenceCodeFeedbackMessage
-					}
 					handleOnClose={() => {
 						setShowModal(
 							(previousState: ViewObjectDefinitionsModals) => ({
@@ -503,11 +492,11 @@ export default function ViewObjectDefinitions({
 						modalImportProperties.importExtendedInfo
 					}
 					importURL={modalImportProperties.importURL}
+					importedEntity={modalImportProperties.importedEntity}
 					nameMaxLength={nameMaxLength}
 					portletNamespace={portletNamespace}
 					showModal={showModal.importModal}
 					title={modalImportProperties.title}
-					warningModalText={modalImportProperties.warningModalText}
 				/>
 			)}
 

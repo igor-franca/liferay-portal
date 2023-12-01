@@ -8,7 +8,7 @@ import ClayButton from '@clayui/button';
 import ClayForm, {ClayInput} from '@clayui/form';
 import ClayModal, {useModal} from '@clayui/modal';
 import {API, Input} from '@liferay/object-js-components-web';
-import {fetch} from 'frontend-js-web';
+import {fetch, sub} from 'frontend-js-web';
 import React, {FormEvent, useEffect, useRef, useState} from 'react';
 
 import {FormDataJSONFormat, jsonToFormData} from '../utils/formData';
@@ -16,21 +16,17 @@ import {ModalImportWarning} from './ModalImportWarning';
 interface ModalImportProps {
 	JSONInputId: string;
 	apiURL: string;
-	externalReferenceCodeFeedbackMessage: string;
 	handleOnClose?: () => void;
 	importExtendedInfo?: {
 		key: string;
 		value: string;
 	};
 	importURL: string;
+	importedEntity: string;
 	nameMaxLength: string;
 	portletNamespace: string;
 	showModal?: boolean;
 	title: string;
-	warningModalText: {
-		body: string[];
-		header: string;
-	};
 }
 
 type TFile = {
@@ -41,15 +37,14 @@ type TFile = {
 export default function ModalImport({
 	JSONInputId,
 	apiURL,
-	externalReferenceCodeFeedbackMessage,
 	handleOnClose,
 	importExtendedInfo,
 	importURL,
+	importedEntity,
 	nameMaxLength,
 	portletNamespace,
 	showModal,
 	title,
-	warningModalText,
 }: ModalImportProps) {
 	const [error, setError] = useState<string>('');
 	const [externalReferenceCode, setExternalReferenceCode] = useState<string>(
@@ -229,9 +224,12 @@ export default function ModalImport({
 					{externalReferenceCode && (
 						<Input
 							disabled
-							feedbackMessage={
-								externalReferenceCodeFeedbackMessage
-							}
+							feedbackMessage={sub(
+								Liferay.Language.get(
+									'unique-key-for-referencing-the-x'
+								),
+								importedEntity.toLowerCase()
+							)}
 							id="externalReferenceCode"
 							label={Liferay.Language.get(
 								'external-reference-code'
@@ -313,8 +311,7 @@ export default function ModalImport({
 				setWarningModalVisible(false);
 				setImportFormData(undefined);
 			}}
-			header={warningModalText.header}
-			paragraphs={warningModalText.body}
+			importedEntity={importedEntity}
 		/>
 	) : null;
 }

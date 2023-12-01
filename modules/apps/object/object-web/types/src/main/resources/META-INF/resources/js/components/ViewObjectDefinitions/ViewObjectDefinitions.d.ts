@@ -10,17 +10,13 @@ import './ViewObjectDefinitions.scss';
 export interface ModalImportProperties {
 	JSONInputId: string;
 	apiURL: string;
-	externalReferenceCodeFeedbackMessage: string;
 	importExtendedInfo?: {
 		key: string;
 		value: string;
 	};
 	importURL: string;
+	importedEntity: string;
 	title: string;
-	warningModalText: {
-		body: string[];
-		header: string;
-	};
 }
 interface ViewObjectDefinitionsProps extends IFDSTableProps {
 	baseResourceURL: string;
