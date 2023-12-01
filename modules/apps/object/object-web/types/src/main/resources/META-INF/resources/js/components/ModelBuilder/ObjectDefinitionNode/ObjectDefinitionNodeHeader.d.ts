@@ -8,6 +8,7 @@
 import './ObjectDefinitionNodeHeader.scss';
 import {DropDownItems} from '../types';
 interface ObjectDefinitionNodeHeaderProps {
+	dbTableName: string | undefined;
 	dropDownItems: DropDownItems[];
 	handleSelectObjectDefinitionNode: () => void;
 	isLinkedObjectDefinition: boolean;
@@ -20,6 +21,7 @@ interface ObjectDefinitionNodeHeaderProps {
 	system: boolean;
 }
 export default function ObjectDefinitionNodeHeader({
+	dbTableName,
 	dropDownItems,
 	handleSelectObjectDefinitionNode,
 	isLinkedObjectDefinition,

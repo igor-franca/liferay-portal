@@ -28,6 +28,7 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 	switch (action.type) {
 		case TYPES.ADD_OBJECT_DEFINITION_TO_OBJECT_FOLDER: {
 			const {
+				dbTableName,
 				newObjectDefinition,
 				objectDefinitionNodes,
 				selectedObjectFolderName,
@@ -78,7 +79,9 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 							),
 							name: newObjectDefinition.name,
 							selected: true,
-							type: 'objectDefinition',
+							type: !dbTableName
+								? 'dummyObjectDefinition'
+								: 'objectDefinition',
 						} as LeftSidebarObjectDefinitionItem;
 
 						const updatedObjectDefinitions = leftSidebarItem.leftSidebarObjectDefinitionItems?.map(
@@ -137,6 +140,7 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 			const newObjectDefinitionNode = {
 				data: {
 					...newObjectDefinition,
+					dbTableName,
 					hasObjectDefinitionDeleteResourcePermission: !!newObjectDefinition
 						.actions.delete,
 					hasObjectDefinitionManagePermissionsResourcePermission: !!newObjectDefinition
@@ -417,6 +421,7 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 				const leftSidebarObjectDefinitionItems = objectFolder.objectDefinitions?.map(
 					(objectDefinition) => {
 						return {
+							dbTableName: objectDefinition.dbTableName,
 							externalReferenceCode:
 								objectDefinition.externalReferenceCode,
 							hiddenObjectDefinitionNode: false,
@@ -428,7 +433,9 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 							),
 							name: objectDefinition.name,
 							selected: false,
-							type: objectDefinition.linkedObjectDefinition
+							type: !objectDefinition.dbTableName
+								? 'dummyObjectDefinition'
+								: objectDefinition.linkedObjectDefinition
 								? 'linkedObjectDefinition'
 								: 'objectDefinition',
 						} as LeftSidebarObjectDefinitionItem;

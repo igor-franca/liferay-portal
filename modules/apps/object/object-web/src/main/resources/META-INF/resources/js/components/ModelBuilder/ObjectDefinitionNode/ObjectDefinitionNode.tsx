@@ -47,6 +47,7 @@ const selfRelationshipHandleStyle = {
 };
 export function ObjectDefinitionNode({
 	data: {
+		dbTableName,
 		defaultLanguageId,
 		externalReferenceCode,
 		hasObjectDefinitionDeleteResourcePermission,
@@ -161,6 +162,7 @@ export function ObjectDefinitionNode({
 		newObjectRelationshipId: number
 	) => {
 		const payload = await getUpdatedModelBuilderStructurePayload(
+			baseResourceURL,
 			selectedObjectFolder.name
 		);
 
@@ -219,6 +221,7 @@ export function ObjectDefinitionNode({
 				}}
 			>
 				<ObjectDefinitionNodeHeader
+					dbTableName={dbTableName}
 					dropDownItems={getObjectDefinitionNodeActions({
 						baseResourceURL,
 						handleShowDeleteObjectDefinitionModal,

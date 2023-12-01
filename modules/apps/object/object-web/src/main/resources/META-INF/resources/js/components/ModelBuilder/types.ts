@@ -35,6 +35,7 @@ export type DropDownItems = {
 export type TAction =
 	| {
 			payload: {
+				dbTableName: string;
 				newObjectDefinition: ObjectDefinition;
 				objectDefinitionNodes: Node<ObjectDefinitionNodeData>[];
 				selectedObjectFolderName: string;
@@ -226,7 +227,10 @@ export interface LeftSidebarObjectDefinitionItem {
 	linked?: boolean;
 	name: string;
 	selected: boolean;
-	type: 'linkedObjectDefinition' | 'objectDefinition';
+	type:
+		| 'dummyObjectDefinition'
+		| 'linkedObjectDefinition'
+		| 'objectDefinition';
 }
 
 export interface ObjectRelationshipEdgeData {
