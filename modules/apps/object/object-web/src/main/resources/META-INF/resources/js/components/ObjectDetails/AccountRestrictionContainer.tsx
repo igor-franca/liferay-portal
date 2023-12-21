@@ -125,39 +125,43 @@ export function AccountRestrictionContainer({
 					toggled={values.accountEntryRestricted}
 				/>
 			</ClayForm.Group>
-
-			<SingleSelect<LabelValueObject>
-				disabled={
-					!accountRelationshipFields.length ||
-					!values.accountEntryRestricted ||
-					disableAccountSelect ||
-					isLinkedObjectDefinition ||
-					isRootDescendantNode
-				}
-				error={errors.accountEntryRestrictedObjectFieldName}
-				items={accountRelationshipFields}
-				label={Liferay.Language.get(
-					'account-entry-restricted-object-field-id'
-				)}
-				onSelectionChange={(value) => {
-					setValues({
-						accountEntryRestrictedObjectFieldName: value as string,
-					});
-
-					if (onSubmit) {
-						onSubmit({
-							...values,
+			{values.accountEntryRestricted && (
+				<SingleSelect<LabelValueObject>
+					disabled={
+						!accountRelationshipFields.length ||
+						!values.accountEntryRestricted ||
+						disableAccountSelect ||
+						isLinkedObjectDefinition ||
+						isRootDescendantNode
+					}
+					error={errors.accountEntryRestrictedObjectFieldName}
+					items={accountRelationshipFields}
+					label={Liferay.Language.get(
+						'account-entry-restricted-object-field-id'
+					)}
+					onSelectionChange={(value) => {
+						setValues({
 							accountEntryRestrictedObjectFieldName: value as string,
 						});
+
+						if (onSubmit) {
+							onSubmit({
+								...values,
+								accountEntryRestrictedObjectFieldName: value as string,
+							});
+						}
+					}}
+					required={
+						!!accountRelationshipFields.length &&
+						values.accountEntryRestricted &&
+						!disableAccountSelect
 					}
-				}}
-				required={
-					!!accountRelationshipFields.length &&
-					values.accountEntryRestricted &&
-					!disableAccountSelect
-				}
-				selectedKey={values.accountEntryRestrictedObjectFieldName}
-			/>
+					selectedKey={
+						values.accountEntryRestrictedObjectFieldName ??
+						undefined
+					}
+				/>
+			)}
 		</>
 	);
 }
