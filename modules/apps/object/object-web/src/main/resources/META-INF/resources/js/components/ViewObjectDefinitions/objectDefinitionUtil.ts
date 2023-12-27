@@ -479,7 +479,7 @@ export async function getUpdatedModelBuilderStructurePayload(
 
 	return {
 		objectFolders: objectFoldersWithObjectDefinitions,
-		selectedObjectFolder: currentObjectFolder,
+		selectedObjectFolderName: currentObjectFolder.name,
 	};
 }
 
