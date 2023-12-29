@@ -72,8 +72,7 @@ export default function ObjectDefinitionNodeHeader({
 					<ClayDropDownWithItems
 						items={dropDownItems}
 						menuElementAttrs={{
-							className:
-								'lfr-objects__model-builder-node-dropdown',
+							style: {zIndex: 1034},
 						}}
 						trigger={
 							<ClayButtonWithIcon

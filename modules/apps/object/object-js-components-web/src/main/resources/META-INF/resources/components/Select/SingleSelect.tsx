@@ -6,6 +6,9 @@
 import {Option, Picker} from '@clayui/core';
 import {FieldBase} from 'frontend-js-components-web';
 import React, {Key, ReactElement} from 'react';
+import classNames from 'classnames';
+
+import './SingleSelect.scss'
 
 type SingleSelectOption = {
 	label?: string;
@@ -52,7 +55,6 @@ export function SingleSelect<T extends SingleSelectOption>({
 }: SingleSelectProps<T>) {
 	return (
 		<FieldBase
-			className={className}
 			disabled={disabled}
 			errorMessage={error}
 			helpMessage={feedbackMessage}
@@ -62,9 +64,10 @@ export function SingleSelect<T extends SingleSelectOption>({
 			tooltip={tooltip}
 		>
 			<Picker<T>
-				UNSAFE_menuClassName={className}
+				UNSAFE_menuClassName={classNames('lfr_object-single-select', {
+					className
+				})}
 				as={as}
-				className={className}
 				defaultSelectedKey={defaultSelectedKey}
 				disabled={disabled}
 				items={items}
