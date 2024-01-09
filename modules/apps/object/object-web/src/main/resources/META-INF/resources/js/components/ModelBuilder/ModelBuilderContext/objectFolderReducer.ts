@@ -65,6 +65,10 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 						selectedObjectFolder.name
 					) {
 						newLeftSidebarObjectDefinitionItem = {
+							dbTableName: newObjectDefinition.dbTableName,
+							externalReferenceCode:
+								newObjectDefinition.externalReferenceCode,
+							hiddenObjectDefinitionNode: false,
 							id: newObjectDefinition.id,
 							label: getLocalizableLabel(
 								newObjectDefinition.defaultLanguageId,
@@ -178,6 +182,7 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 				>[],
 				leftSidebarItems: newLeftSidebarItems,
 				objectFolders: updatedObjectFolders,
+				rightSidebarType: 'objectDefinitionDetails',
 				selectedObjectDefinitionNode: newObjectDefinitionNode,
 				selectedObjectFolder,
 				showChangesSaved: true,
@@ -600,6 +605,7 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 					...newObjectRelationshipEdges,
 				],
 				leftSidebarItems: newLeftSidebarItems,
+				objectFolders,
 				selectedObjectFolder: selectedObjectFolder as ObjectFolder,
 				selectedObjectRelationship: null,
 			};
