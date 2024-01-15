@@ -25,7 +25,6 @@ import {
 } from '../utils';
 import {
 	convertAllObjectFieldsToUnselected,
-	getNonOverlappingEdges,
 	objectFieldsCustomSort,
 } from './objectFolderReducerUtil';
 import {TYPES} from './typesEnum';
@@ -568,8 +567,6 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 													selectedObjectRelationshipId ===
 													objectRelationship.id,
 												selfObjectRelationships,
-												sourceY: 0,
-												targetY: 0,
 												type: objectRelationship.type,
 											},
 											id: `reactflow__edge-object-relationship-${objectRelationship.name}-parent-${objectRelationship.objectDefinitionId1}-child-${objectRelationship.objectDefinitionId2}`,
@@ -628,8 +625,6 @@ export function ObjectFolderReducer(state: TState, action: TAction): TState {
 
 				selectedObjectFolder.objectFolderItems = updatedObjectFolderItems;
 			}
-
-			const newObjectRelationshipEdges = getNonOverlappingEdges(allEdges);
 
 			let newModelBuilderState = {
 				...state,
