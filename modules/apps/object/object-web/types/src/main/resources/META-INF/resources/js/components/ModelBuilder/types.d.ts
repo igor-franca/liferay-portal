@@ -36,7 +36,7 @@ export declare type TAction =
 				dbTableName: string;
 				dispatch: React.Dispatch<TAction>;
 				elements: Elements<
-					ObjectDefinitionNodeData | ObjectRelationshipEdgeData
+					ObjectDefinitionNodeData | ObjectRelationshipEdgeData[]
 				>;
 				leftSidebarItems: LeftSidebarItem[];
 				newObjectDefinition: ObjectDefinition;
@@ -50,7 +50,7 @@ export declare type TAction =
 				newObjectField: ObjectField;
 				objectDefinitionExternalReferenceCode: string;
 				objectDefinitionNodes: Node<ObjectDefinitionNodeData>[];
-				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData>[];
+				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData[]>[];
 				selectedObjectDefinitionNode: Node<ObjectDefinitionNodeData>;
 			};
 			type: TYPES.ADD_OBJECT_FIELD;
@@ -60,7 +60,7 @@ export declare type TAction =
 				hiddenObjectFolderObjectDefinitionNodes: boolean;
 				leftSidebarItem: LeftSidebarItem;
 				objectDefinitionNodes: Node<ObjectDefinitionNodeData>[];
-				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData>[];
+				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData[]>[];
 			};
 			type: TYPES.BULK_CHANGE_NODE_VIEW;
 	  }
@@ -70,7 +70,7 @@ export declare type TAction =
 				objectDefinitionId: number;
 				objectDefinitionName: string;
 				objectDefinitionNodes: Node<ObjectDefinitionNodeData>[];
-				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData>[];
+				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData[]>[];
 				selectedSidebarItem: LeftSidebarItem;
 			};
 			type: TYPES.CHANGE_NODE_VIEW;
@@ -78,7 +78,7 @@ export declare type TAction =
 	| {
 			payload: {
 				objectDefinitionNodes: Node<ObjectDefinitionNodeData>[];
-				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData>[];
+				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData[]>[];
 				selectedObjectDefinitionNode: Node<
 					ObjectDefinitionNodeData
 				> | null;
@@ -105,7 +105,7 @@ export declare type TAction =
 	| {
 			payload: {
 				newElements: Elements<
-					ObjectDefinitionNodeData | ObjectRelationshipEdgeData
+					ObjectDefinitionNodeData | ObjectRelationshipEdgeData[]
 				>;
 			};
 			type: TYPES.SET_ELEMENTS;
@@ -131,7 +131,7 @@ export declare type TAction =
 	| {
 			payload: {
 				objectDefinitionNodes: Node<ObjectDefinitionNodeData>[];
-				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData>[];
+				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData[]>[];
 				selectedObjectDefinitionId: string;
 			};
 			type: TYPES.SET_SELECTED_OBJECT_DEFINITION_NODE;
@@ -143,7 +143,7 @@ export declare type TAction =
 					y: number;
 				};
 				objectDefinitionNodes: Node<ObjectDefinitionNodeData>[];
-				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData>[];
+				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData[]>[];
 				updatedObjectDefinitionNodeId: number;
 				updatedObjectFolder: ObjectFolder;
 			};
@@ -152,7 +152,7 @@ export declare type TAction =
 	| {
 			payload: {
 				objectDefinitionNodes: Node<ObjectDefinitionNodeData>[];
-				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData>[];
+				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData[]>[];
 				selectedObjectDefinitionId: number;
 				selectedObjectField: ObjectFieldNodeRow;
 				selectedObjectFieldName: string;
@@ -189,7 +189,7 @@ export declare type TAction =
 				currentObjectFolderName: string;
 				objectDefinitionNodes: Node<ObjectDefinitionNodeData>[];
 				objectDefinitionRelationshipEdges: Edge<
-					ObjectRelationshipEdgeData
+					ObjectRelationshipEdgeData[]
 				>[];
 				updatedObjectDefinition: Partial<ObjectDefinition>;
 			};
@@ -198,7 +198,7 @@ export declare type TAction =
 	| {
 			payload: {
 				objectDefinitionNodes: Node<ObjectDefinitionNodeData>[];
-				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData>[];
+				objectRelationshipEdges: Edge<ObjectRelationshipEdgeData[]>[];
 				selectedObjectDefinitionNode: Node<
 					ObjectDefinitionNodeData
 				> | null;
@@ -216,7 +216,7 @@ export declare type TState = {
 	baseResourceURL: string;
 	deletedObjectDefinition: DeletedObjectDefinition | null;
 	editObjectDefinitionURL: string;
-	elements: Elements<ObjectDefinitionNodeData | ObjectRelationshipEdgeData>;
+	elements: Elements<ObjectDefinitionNodeData | ObjectRelationshipEdgeData[]>;
 	filterOperators: TFilterOperators;
 	forbiddenChars: string[];
 	forbiddenLastChars: string[];
@@ -236,7 +236,7 @@ export declare type TState = {
 	selectedObjectDefinitionNode: Node<ObjectDefinitionNodeData> | null;
 	selectedObjectField?: ObjectFieldNodeRow;
 	selectedObjectFolder: ObjectFolder;
-	selectedObjectRelationship?: Edge<ObjectRelationshipEdgeData> | null;
+	selectedObjectRelationship?: ObjectRelationshipEdgeData | null;
 	showChangesSaved: boolean;
 	showSidebars: boolean;
 	workflowStatuses: LabelValueObject[];
@@ -279,12 +279,12 @@ export interface LeftSidebarObjectDefinitionItem {
 }
 export interface ObjectRelationshipEdgeData {
 	defaultLanguageId?: Liferay.Language.Locale;
+	id: number;
 	label: string;
 	markerEndId: string;
 	markerStartId: string;
-	objectRelationshipId: number;
+	name: string;
 	selected: boolean;
-	selfObjectRelationships?: ObjectRelationship[];
 	type: string;
 }
 export declare type nonRelationshipObjectFieldsInfo = {
