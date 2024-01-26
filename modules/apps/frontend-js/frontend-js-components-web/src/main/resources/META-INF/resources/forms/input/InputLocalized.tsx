@@ -51,12 +51,8 @@ const availableLocales = Object.keys(Liferay.Language.available)
 		symbol: language.replace(/_/g, '-').toLowerCase(),
 	}));
 
-const translationsNormalizer = (
-	translations: Liferay.Language.LocalizedValue<string> &
-		Partial<{
-			zh_Hans_CN: string;
-			zh_Hant_TW: string;
-		}>
+export const translationsNormalizer = (
+	translations: Liferay.Language.LocalizedValue<string>
 ): Liferay.Language.LocalizedValue<string> => {
 	const {zh_Hans_CN, zh_Hant_TW, ...normalizedTranslations} = translations;
 
