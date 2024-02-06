@@ -26,6 +26,12 @@ const INITIAL_EDITING_LOCALE = {
 	localeId: themeDisplay.getDefaultLanguageId(),
 };
 
+const ALERT_REGEX = /alert\((.*?)\)/;
+const INNER_HTML_REGEX = /innerHTML\s*=\s*.*?/;
+const ON_ERROR_REGEX = /onerror\s*=\s*.*?/;
+const ON_LOAD_REGEX = /onload\s*=\s*.*?/;
+const ON_MOUSE_OVER_REGEX = /onmouseover\s*=\s*.*?/;
+
 const RichText = ({
 	availableLocales,
 	defaultLocale = INITIAL_DEFAULT_LOCALE,
@@ -189,10 +195,14 @@ const RichText = ({
 							if (editor.mode === 'source') {
 								const value = event.data.dataValue;
 
-								const sanitizedValue = value.replace(
-									/onerror="[^"]+"/gi,
-									''
-								);
+								// const sanitizedValue = Liferay.Util.escapeHTML(value);
+
+								const sanitizedValue = value
+									.replace(ON_ERROR_REGEX, '')
+									.replace(ALERT_REGEX, '')
+									.replace(INNER_HTML_REGEX, '')
+									.replace(ON_LOAD_REGEX, '')
+									.replace(ON_MOUSE_OVER_REGEX, '');
 
 								handleContentChange(sanitizedValue);
 
