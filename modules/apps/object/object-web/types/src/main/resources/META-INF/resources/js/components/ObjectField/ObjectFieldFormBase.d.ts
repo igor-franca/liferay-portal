@@ -11,10 +11,12 @@ interface ObjectFieldFormBaseProps {
 	children?: ReactNode;
 	className?: string;
 	creationLanguageId2?: Liferay.Language.Locale;
+	dbObjectFieldRequired?: boolean;
 	disabled?: boolean;
 	editingObjectField?: boolean;
 	errors: ObjectFieldErrors;
 	handleChange: ChangeEventHandler<HTMLInputElement>;
+	isApproved?: boolean;
 	modelBuilder?: boolean;
 	objectDefinition?: Partial<ObjectDefinition>;
 	objectDefinitionExternalReferenceCode: string;
@@ -27,6 +29,7 @@ interface ObjectFieldFormBaseProps {
 		objectDefinitionExternalReferenceCode2: string
 	) => void;
 	onSubmit?: (values?: Partial<ObjectField>) => void;
+	setDbObjectFieldRequired?: (value: boolean) => void;
 	setValues: (values: Partial<ObjectField>) => void;
 }
 export declare type ObjectFieldErrors = FormError<
@@ -40,10 +43,12 @@ export default function ObjectFieldFormBase({
 	children,
 	className,
 	creationLanguageId2,
+	dbObjectFieldRequired,
 	disabled,
 	editingObjectField,
 	errors,
 	handleChange,
+	isApproved,
 	modelBuilder,
 	objectDefinition,
 	objectDefinitionExternalReferenceCode,
@@ -54,6 +59,7 @@ export default function ObjectFieldFormBase({
 	onAggregationFilterChange,
 	onObjectRelationshipChange,
 	onSubmit,
+	setDbObjectFieldRequired,
 	setValues,
 }: ObjectFieldFormBaseProps): JSX.Element;
 export {};

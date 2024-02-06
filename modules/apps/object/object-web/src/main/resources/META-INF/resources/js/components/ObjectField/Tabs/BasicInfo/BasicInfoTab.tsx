@@ -33,6 +33,7 @@ export interface AggregationFilters {
 interface BasicInfoTabProps {
 	baseResourceURL: string;
 	containerWrapper: ElementType;
+	dbObjectFieldRequired?: boolean;
 	errors: ObjectFieldErrors;
 	filterOperators: TFilterOperators;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
@@ -44,6 +45,7 @@ interface BasicInfoTabProps {
 	objectRelationshipId: number;
 	onSubmit?: (editedObjectField?: Partial<ObjectField>) => void;
 	readOnly: boolean;
+	setDbObjectFieldRequired?: (value: boolean) => void;
 	setValues: (values: Partial<ObjectField>) => void;
 	sidebarElements: SidebarCategory[];
 	values: Partial<ObjectField>;
@@ -53,6 +55,7 @@ interface BasicInfoTabProps {
 export function BasicInfoTab({
 	baseResourceURL,
 	containerWrapper: ContainerWrapper,
+	dbObjectFieldRequired,
 	errors,
 	filterOperators,
 	handleChange,
@@ -64,6 +67,7 @@ export function BasicInfoTab({
 	objectRelationshipId,
 	onSubmit,
 	readOnly,
+	setDbObjectFieldRequired,
 	setValues,
 	sidebarElements,
 	values,
@@ -110,6 +114,7 @@ export function BasicInfoTab({
 				<BasicInfoContainer
 					baseResourceURL={baseResourceURL}
 					creationLanguageId2={creationLanguageId2}
+					dbObjectFieldRequired={dbObjectFieldRequired}
 					errors={errors}
 					handleChange={handleChange}
 					isApproved={isApproved}
@@ -124,6 +129,7 @@ export function BasicInfoTab({
 					onSubmit={onSubmit}
 					readOnly={readOnly}
 					setAggregationFilters={setAggregationFilters}
+					setDbObjectFieldRequired={setDbObjectFieldRequired}
 					setObjectDefinitionExternalReferenceCode2={
 						setObjectDefinitionExternalReferenceCode2
 					}

@@ -47,6 +47,7 @@ interface ObjectFieldFormBaseProps {
 	children?: ReactNode;
 	className?: string;
 	creationLanguageId2?: Liferay.Language.Locale;
+	dbObjectFieldRequired?: boolean;
 	disabled?: boolean;
 	editingObjectField?: boolean;
 	errors: ObjectFieldErrors;
@@ -63,6 +64,7 @@ interface ObjectFieldFormBaseProps {
 		objectDefinitionExternalReferenceCode2: string
 	) => void;
 	onSubmit?: (values?: Partial<ObjectField>) => void;
+	setDbObjectFieldRequired?: (value: boolean) => void;
 	setValues: (values: Partial<ObjectField>) => void;
 }
 
@@ -176,6 +178,7 @@ export default function ObjectFieldFormBase({
 	children,
 	className,
 	creationLanguageId2,
+	dbObjectFieldRequired,
 	disabled,
 	editingObjectField = false,
 	errors,
@@ -190,6 +193,7 @@ export default function ObjectFieldFormBase({
 	onAggregationFilterChange,
 	onObjectRelationshipChange,
 	onSubmit,
+	setDbObjectFieldRequired,
 	setValues,
 }: ObjectFieldFormBaseProps) {
 	const [listTypeDefinitions, setListTypeDefinitions] = useState<
@@ -303,7 +307,15 @@ export default function ObjectFieldFormBase({
 				: false;
 		}
 
-		return disabled || values.localized || values.state;
+		if (
+			!dbObjectFieldRequired &&
+			editingObjectField &&
+			objectDefinition?.status?.label === 'approved'
+		) {
+			return true;
+		}
+
+		return !!values.relationshipType || values.localized || values.state;
 	};
 
 	const handleStateToggleChange = (toggled: boolean) => {
@@ -687,6 +699,16 @@ export default function ObjectFieldFormBase({
 							name="required"
 							onToggle={(required) => {
 								setValues({required});
+
+								if (
+									setDbObjectFieldRequired &&
+									dbObjectFieldRequired &&
+									editingObjectField &&
+									objectDefinition?.status?.label ===
+										'approved'
+								) {
+									setDbObjectFieldRequired(required);
+								}
 
 								if (onSubmit) {
 									onSubmit({

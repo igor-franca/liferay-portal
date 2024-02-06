@@ -23,6 +23,7 @@ export interface AggregationFilters {
 interface BasicInfoTabProps {
 	baseResourceURL: string;
 	containerWrapper: ElementType;
+	dbObjectFieldRequired?: boolean;
 	errors: ObjectFieldErrors;
 	filterOperators: TFilterOperators;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
@@ -34,6 +35,7 @@ interface BasicInfoTabProps {
 	objectRelationshipId: number;
 	onSubmit?: (editedObjectField?: Partial<ObjectField>) => void;
 	readOnly: boolean;
+	setDbObjectFieldRequired?: (value: boolean) => void;
 	setValues: (values: Partial<ObjectField>) => void;
 	sidebarElements: SidebarCategory[];
 	values: Partial<ObjectField>;
@@ -42,6 +44,7 @@ interface BasicInfoTabProps {
 export declare function BasicInfoTab({
 	baseResourceURL,
 	containerWrapper: ContainerWrapper,
+	dbObjectFieldRequired,
 	errors,
 	filterOperators,
 	handleChange,
@@ -53,6 +56,7 @@ export declare function BasicInfoTab({
 	objectRelationshipId,
 	onSubmit,
 	readOnly,
+	setDbObjectFieldRequired,
 	setValues,
 	sidebarElements,
 	values,

@@ -20,6 +20,7 @@ import '../../EditObjectFieldContent.scss';
 interface BasicInfoContainerProps {
 	baseResourceURL: string;
 	creationLanguageId2?: Liferay.Language.Locale;
+	dbObjectFieldRequired?: boolean;
 	errors: ObjectFieldErrors;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	isApproved: boolean;
@@ -32,6 +33,7 @@ interface BasicInfoContainerProps {
 	onSubmit?: () => void;
 	readOnly: boolean;
 	setAggregationFilters: (values: AggregationFilters[]) => void;
+	setDbObjectFieldRequired?: (value: boolean) => void;
 	setObjectDefinitionExternalReferenceCode2: (value: string) => void;
 	setValues: (values: Partial<ObjectField>) => void;
 	values: Partial<ObjectField>;
@@ -40,6 +42,7 @@ interface BasicInfoContainerProps {
 export function BasicInfoContainer({
 	baseResourceURL,
 	creationLanguageId2,
+	dbObjectFieldRequired,
 	errors,
 	handleChange,
 	isApproved,
@@ -52,6 +55,7 @@ export function BasicInfoContainer({
 	onSubmit,
 	readOnly,
 	setAggregationFilters,
+	setDbObjectFieldRequired,
 	setObjectDefinitionExternalReferenceCode2,
 	setValues,
 	values,
@@ -99,6 +103,7 @@ export function BasicInfoContainer({
 				creationLanguageId2={
 					creationLanguageId2 as Liferay.Language.Locale
 				}
+				dbObjectFieldRequired={dbObjectFieldRequired}
 				disabled={disableFieldFormBase}
 				editingObjectField
 				errors={errors}
@@ -117,6 +122,7 @@ export function BasicInfoContainer({
 					setObjectDefinitionExternalReferenceCode2
 				}
 				onSubmit={onSubmit}
+				setDbObjectFieldRequired={setDbObjectFieldRequired}
 				setValues={setValues}
 			>
 				{values.businessType === 'Attachment' && (

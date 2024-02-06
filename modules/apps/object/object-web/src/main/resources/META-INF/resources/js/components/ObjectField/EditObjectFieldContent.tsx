@@ -25,10 +25,12 @@ interface EditObjectFieldContentProps
 		| 'objectFieldId'
 	> {
 	containerWrapper: ElementType;
+	dbObjectFieldRequired?: boolean;
 	errors: ObjectFieldErrors;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	modelBuilder?: boolean;
 	onSubmit?: (editedObjectField?: Partial<ObjectField>) => void;
+	setDbObjectFieldRequired?: (value: boolean) => void;
 	setValues: (values: Partial<ObjectField>) => void;
 	values: Partial<ObjectField>;
 }
@@ -39,6 +41,7 @@ export function EditObjectFieldContent({
 	baseResourceURL,
 	containerWrapper,
 	creationLanguageId,
+	dbObjectFieldRequired,
 	errors,
 	filterOperators,
 	handleChange,
@@ -50,6 +53,7 @@ export function EditObjectFieldContent({
 	objectDefinitionExternalReferenceCode,
 	onSubmit,
 	readOnly,
+	setDbObjectFieldRequired,
 	setValues,
 	values,
 	workflowStatuses,
@@ -136,6 +140,7 @@ export function EditObjectFieldContent({
 							<BasicInfoTab
 								baseResourceURL={baseResourceURL}
 								containerWrapper={containerWrapper}
+								dbObjectFieldRequired={dbObjectFieldRequired}
 								errors={errors}
 								filterOperators={filterOperators}
 								handleChange={handleChange}
@@ -149,6 +154,9 @@ export function EditObjectFieldContent({
 								objectRelationshipId={objectRelationshipId}
 								onSubmit={onSubmit}
 								readOnly={readOnly}
+								setDbObjectFieldRequired={
+									setDbObjectFieldRequired
+								}
 								setValues={setValues}
 								sidebarElements={sidebarElements}
 								values={values}
@@ -184,6 +192,7 @@ export function EditObjectFieldContent({
 				<BasicInfoTab
 					baseResourceURL={baseResourceURL}
 					containerWrapper={containerWrapper}
+					dbObjectFieldRequired={dbObjectFieldRequired}
 					errors={errors}
 					filterOperators={filterOperators}
 					handleChange={handleChange}
@@ -197,6 +206,7 @@ export function EditObjectFieldContent({
 					objectRelationshipId={objectRelationshipId}
 					onSubmit={onSubmit}
 					readOnly={readOnly}
+					setDbObjectFieldRequired={setDbObjectFieldRequired}
 					setValues={setValues}
 					sidebarElements={sidebarElements}
 					values={values}

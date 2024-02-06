@@ -11,7 +11,7 @@ import {
 	saveAndReload,
 } from '@liferay/object-js-components-web';
 import {ILearnResourceContext} from 'frontend-js-components-web';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {EditObjectFieldContent} from './EditObjectFieldContent';
 import {useObjectFieldForm} from './useObjectFieldForm';
@@ -70,6 +70,10 @@ export default function EditObjectField({
 	readOnly,
 	workflowStatuses,
 }: EditObjectFieldProps) {
+	const [dbObjectFieldRequired, setDbObjectFieldRequired] = useState<
+		boolean
+	>();
+
 	const onSubmit = async ({id, ...objectField}: ObjectField) => {
 		delete objectField.defaultValue;
 		delete objectField.listTypeDefinitionId;
@@ -111,6 +115,7 @@ export default function EditObjectField({
 		const makeFetch = async () => {
 			const objectFieldResponse = await API.getObjectField(objectFieldId);
 
+			setDbObjectFieldRequired(objectFieldResponse.required);
 			setValues(objectFieldResponse);
 		};
 
@@ -140,6 +145,7 @@ export default function EditObjectField({
 				baseResourceURL={baseResourceURL}
 				containerWrapper={Card}
 				creationLanguageId={creationLanguageId}
+				dbObjectFieldRequired={dbObjectFieldRequired}
 				errors={errors}
 				filterOperators={filterOperators}
 				handleChange={handleChange}

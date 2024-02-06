@@ -10,6 +10,7 @@ import '../../EditObjectFieldContent.scss';
 interface BasicInfoContainerProps {
 	baseResourceURL: string;
 	creationLanguageId2?: Liferay.Language.Locale;
+	dbObjectFieldRequired?: boolean;
 	errors: ObjectFieldErrors;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	isApproved: boolean;
@@ -22,6 +23,7 @@ interface BasicInfoContainerProps {
 	onSubmit?: () => void;
 	readOnly: boolean;
 	setAggregationFilters: (values: AggregationFilters[]) => void;
+	setDbObjectFieldRequired?: (value: boolean) => void;
 	setObjectDefinitionExternalReferenceCode2: (value: string) => void;
 	setValues: (values: Partial<ObjectField>) => void;
 	values: Partial<ObjectField>;
@@ -29,6 +31,7 @@ interface BasicInfoContainerProps {
 export declare function BasicInfoContainer({
 	baseResourceURL,
 	creationLanguageId2,
+	dbObjectFieldRequired,
 	errors,
 	handleChange,
 	isApproved,
@@ -41,6 +44,7 @@ export declare function BasicInfoContainer({
 	onSubmit,
 	readOnly,
 	setAggregationFilters,
+	setDbObjectFieldRequired,
 	setObjectDefinitionExternalReferenceCode2,
 	setValues,
 	values,

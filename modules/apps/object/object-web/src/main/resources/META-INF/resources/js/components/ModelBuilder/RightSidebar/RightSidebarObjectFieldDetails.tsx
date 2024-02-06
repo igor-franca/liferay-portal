@@ -27,6 +27,10 @@ import './RightSidebarObjectFieldDetails.scss';
 import {handleTriggerDeleteObjectField} from '../../ObjectField/deleteObjectFieldUtil';
 
 export function RightSidebarObjectFieldDetails() {
+	const [dbObjectFieldRequired, setDbObjectFieldRequired] = useState<
+		boolean
+	>();
+
 	const [objectFieldDeleteInfo, setObjectFieldDeleteInfo] = useState<
 		ObjectFieldDeleteInfoProps
 	>({
@@ -141,6 +145,7 @@ export function RightSidebarObjectFieldDetails() {
 					selectedObjectField?.id as number
 				);
 
+				setDbObjectFieldRequired(objectFieldResponse.required);
 				setValues(objectFieldResponse);
 			}
 		};
@@ -217,6 +222,7 @@ export function RightSidebarObjectFieldDetails() {
 							selectedObjectDefinitionNode?.data
 								?.defaultLanguageId ?? 'en_US'
 						}
+						dbObjectFieldRequired={dbObjectFieldRequired}
 						errors={errors}
 						filterOperators={filterOperators}
 						handleChange={handleChange}
@@ -241,6 +247,7 @@ export function RightSidebarObjectFieldDetails() {
 								?.hasObjectDefinitionUpdateResourcePermission ??
 							false
 						}
+						setDbObjectFieldRequired={setDbObjectFieldRequired}
 						setValues={setValues}
 						values={values}
 						workflowStatuses={workflowStatuses}
