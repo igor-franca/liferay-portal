@@ -13,11 +13,16 @@ interface BasicInfoContainerProps {
 	dbObjectFieldRequired?: boolean;
 	errors: ObjectFieldErrors;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
-	isApproved: boolean;
 	modelBuilder?: boolean;
-	objectDefinition: Partial<ObjectDefinition>;
-	objectDefinitionExternalReferenceCode: string;
-	objectDefinitionName: string;
+	objectDefinition: Pick<
+		ObjectDefinition,
+		| 'accountEntryRestricted'
+		| 'accountEntryRestrictedObjectFieldName'
+		| 'externalReferenceCode'
+		| 'modifiable'
+		| 'name'
+		| 'status'
+	>;
 	objectFieldTypes: ObjectFieldType[];
 	objectRelationshipId: number;
 	onSubmit?: () => void;
@@ -34,11 +39,8 @@ export declare function BasicInfoContainer({
 	dbObjectFieldRequired,
 	errors,
 	handleChange,
-	isApproved,
 	modelBuilder,
 	objectDefinition,
-	objectDefinitionExternalReferenceCode,
-	objectDefinitionName,
 	objectFieldTypes,
 	objectRelationshipId,
 	onSubmit,

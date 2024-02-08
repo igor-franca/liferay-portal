@@ -23,11 +23,16 @@ interface BasicInfoContainerProps {
 	dbObjectFieldRequired?: boolean;
 	errors: ObjectFieldErrors;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
-	isApproved: boolean;
 	modelBuilder?: boolean;
-	objectDefinition: Partial<ObjectDefinition>;
-	objectDefinitionExternalReferenceCode: string;
-	objectDefinitionName: string;
+	objectDefinition: Pick<
+		ObjectDefinition,
+		| 'accountEntryRestricted'
+		| 'accountEntryRestrictedObjectFieldName'
+		| 'externalReferenceCode'
+		| 'modifiable'
+		| 'name'
+		| 'status'
+	>;
 	objectFieldTypes: ObjectFieldType[];
 	objectRelationshipId: number;
 	onSubmit?: () => void;
@@ -45,11 +50,8 @@ export function BasicInfoContainer({
 	dbObjectFieldRequired,
 	errors,
 	handleChange,
-	isApproved,
 	modelBuilder = false,
 	objectDefinition,
-	objectDefinitionExternalReferenceCode,
-	objectDefinitionName,
 	objectFieldTypes,
 	objectRelationshipId,
 	onSubmit,
@@ -61,7 +63,7 @@ export function BasicInfoContainer({
 	values,
 }: BasicInfoContainerProps) {
 	const disableFieldFormBase = !!(
-		isApproved ||
+		objectDefinition.status?.label === 'approved' ||
 		values.system ||
 		values.relationshipType
 	);
@@ -110,10 +112,6 @@ export function BasicInfoContainer({
 				handleChange={handleChange}
 				modelBuilder={modelBuilder}
 				objectDefinition={objectDefinition}
-				objectDefinitionExternalReferenceCode={
-					objectDefinitionExternalReferenceCode
-				}
-				objectDefinitionName={objectDefinitionName}
 				objectField={values}
 				objectFieldTypes={objectFieldTypes}
 				objectRelationshipId={objectRelationshipId}

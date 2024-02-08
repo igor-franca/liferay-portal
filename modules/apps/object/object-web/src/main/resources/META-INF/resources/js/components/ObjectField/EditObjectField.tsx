@@ -25,7 +25,6 @@ export interface EditObjectFieldProps {
 	forbiddenChars: string[];
 	forbiddenLastChars: string[];
 	forbiddenNames: string[];
-	isApproved: boolean;
 	isDefaultStorageType: boolean;
 	isRootDescendantNode: boolean;
 	learnResources: ILearnResourceContext;
@@ -61,7 +60,6 @@ export default function EditObjectField({
 	forbiddenChars,
 	forbiddenLastChars,
 	forbiddenNames,
-	isApproved,
 	isDefaultStorageType,
 	isRootDescendantNode,
 	learnResources,
@@ -111,6 +109,24 @@ export default function EditObjectField({
 		onSubmit,
 	});
 
+	const [objectDefinition, setObjectDefinition] = useState<
+		Partial<ObjectDefinition> | ObjectDefinition
+	>({enableLocalization: false});
+
+	useEffect(() => {
+		const makeFetch = async () => {
+			if (objectDefinitionExternalReferenceCode) {
+				const objectDefinitionResponse = await API.getObjectDefinitionByExternalReferenceCode(
+					objectDefinitionExternalReferenceCode
+				);
+
+				setObjectDefinition(objectDefinitionResponse);
+			}
+		};
+
+		makeFetch();
+	}, [objectDefinitionExternalReferenceCode]);
+
 	useEffect(() => {
 		const makeFetch = async () => {
 			const objectFieldResponse = await API.getObjectField(objectFieldId);
@@ -134,7 +150,7 @@ export default function EditObjectField({
 		}
 	}, [errors]);
 
-	return (
+	return objectDefinition.externalReferenceCode ? (
 		<SidePanelForm
 			className="lfr-objects__edit-object-field"
 			onSubmit={handleSubmit}
@@ -149,18 +165,17 @@ export default function EditObjectField({
 				errors={errors}
 				filterOperators={filterOperators}
 				handleChange={handleChange}
-				isApproved={isApproved}
 				isDefaultStorageType={isDefaultStorageType}
 				isRootDescendantNode={isRootDescendantNode}
 				learnResources={learnResources}
-				objectDefinitionExternalReferenceCode={
-					objectDefinitionExternalReferenceCode
-				}
+				objectDefinition={objectDefinition as ObjectDefinition}
 				readOnly={readOnly}
 				setValues={setValues}
 				values={values}
 				workflowStatuses={workflowStatuses}
 			/>
 		</SidePanelForm>
+	) : (
+		<></>
 	);
 }

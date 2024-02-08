@@ -53,9 +53,15 @@ interface ObjectFieldFormBaseProps {
 	errors: ObjectFieldErrors;
 	handleChange: ChangeEventHandler<HTMLInputElement>;
 	modelBuilder?: boolean;
-	objectDefinition?: Partial<ObjectDefinition>;
-	objectDefinitionExternalReferenceCode: string;
-	objectDefinitionName: string;
+	objectDefinition: Pick<
+		ObjectDefinition,
+		| 'accountEntryRestricted'
+		| 'accountEntryRestrictedObjectFieldName'
+		| 'externalReferenceCode'
+		| 'modifiable'
+		| 'name'
+		| 'status'
+	>;
 	objectField: Partial<ObjectField>;
 	objectFieldTypes: ObjectFieldType[];
 	objectRelationshipId?: number;
@@ -185,8 +191,6 @@ export default function ObjectFieldFormBase({
 	handleChange,
 	modelBuilder = false,
 	objectDefinition,
-	objectDefinitionExternalReferenceCode,
-	objectDefinitionName,
 	objectField: values,
 	objectFieldTypes,
 	objectRelationshipId,
@@ -480,7 +484,7 @@ export default function ObjectFieldFormBase({
 				<AttachmentFormBase
 					disabled={disabled}
 					error={errors.fileSource}
-					objectDefinitionName={objectDefinitionName}
+					objectDefinitionName={objectDefinition.name}
 					objectFieldSettings={
 						values.objectFieldSettings as ObjectFieldSetting[]
 					}
@@ -510,7 +514,7 @@ export default function ObjectFieldFormBase({
 					editingObjectField={editingObjectField}
 					errors={errors}
 					objectDefinitionExternalReferenceCode={
-						objectDefinitionExternalReferenceCode
+						objectDefinition.externalReferenceCode
 					}
 					objectFieldSettings={
 						values.objectFieldSettings as ObjectFieldSetting[]

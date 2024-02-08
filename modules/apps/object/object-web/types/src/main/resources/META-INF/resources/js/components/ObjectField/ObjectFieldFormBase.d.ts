@@ -16,11 +16,16 @@ interface ObjectFieldFormBaseProps {
 	editingObjectField?: boolean;
 	errors: ObjectFieldErrors;
 	handleChange: ChangeEventHandler<HTMLInputElement>;
-	isApproved?: boolean;
 	modelBuilder?: boolean;
-	objectDefinition?: Partial<ObjectDefinition>;
-	objectDefinitionExternalReferenceCode: string;
-	objectDefinitionName: string;
+	objectDefinition: Pick<
+		ObjectDefinition,
+		| 'accountEntryRestricted'
+		| 'accountEntryRestrictedObjectFieldName'
+		| 'externalReferenceCode'
+		| 'modifiable'
+		| 'name'
+		| 'status'
+	>;
 	objectField: Partial<ObjectField>;
 	objectFieldTypes: ObjectFieldType[];
 	objectRelationshipId?: number;
@@ -48,11 +53,8 @@ export default function ObjectFieldFormBase({
 	editingObjectField,
 	errors,
 	handleChange,
-	isApproved,
 	modelBuilder,
 	objectDefinition,
-	objectDefinitionExternalReferenceCode,
-	objectDefinitionName,
 	objectField: values,
 	objectFieldTypes,
 	objectRelationshipId,

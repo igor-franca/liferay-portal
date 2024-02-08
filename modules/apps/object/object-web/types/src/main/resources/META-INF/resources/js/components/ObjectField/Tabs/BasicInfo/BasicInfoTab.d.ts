@@ -27,10 +27,17 @@ interface BasicInfoTabProps {
 	errors: ObjectFieldErrors;
 	filterOperators: TFilterOperators;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
-	isApproved: boolean;
 	isDefaultStorageType: boolean;
 	modelBuilder?: boolean;
-	objectDefinitionExternalReferenceCode: string;
+	objectDefinition: Pick<
+		ObjectDefinition,
+		| 'accountEntryRestricted'
+		| 'accountEntryRestrictedObjectFieldName'
+		| 'externalReferenceCode'
+		| 'modifiable'
+		| 'name'
+		| 'status'
+	>;
 	objectFieldTypes: ObjectFieldType[];
 	objectRelationshipId: number;
 	onSubmit?: (editedObjectField?: Partial<ObjectField>) => void;
@@ -48,10 +55,9 @@ export declare function BasicInfoTab({
 	errors,
 	filterOperators,
 	handleChange,
-	isApproved,
 	isDefaultStorageType,
 	modelBuilder,
-	objectDefinitionExternalReferenceCode,
+	objectDefinition,
 	objectFieldTypes,
 	objectRelationshipId,
 	onSubmit,

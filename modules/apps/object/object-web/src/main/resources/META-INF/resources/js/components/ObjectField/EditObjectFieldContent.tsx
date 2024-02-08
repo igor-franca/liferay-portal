@@ -22,6 +22,7 @@ interface EditObjectFieldContentProps
 		| 'forbiddenChars'
 		| 'forbiddenLastChars'
 		| 'forbiddenNames'
+		| 'objectDefinitionExternalReferenceCode'
 		| 'objectFieldId'
 	> {
 	containerWrapper: ElementType;
@@ -29,6 +30,15 @@ interface EditObjectFieldContentProps
 	errors: ObjectFieldErrors;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	modelBuilder?: boolean;
+	objectDefinition: Pick<
+		ObjectDefinition,
+		| 'accountEntryRestricted'
+		| 'accountEntryRestrictedObjectFieldName'
+		| 'externalReferenceCode'
+		| 'modifiable'
+		| 'name'
+		| 'status'
+	>;
 	onSubmit?: (editedObjectField?: Partial<ObjectField>) => void;
 	setDbObjectFieldRequired?: (value: boolean) => void;
 	setValues: (values: Partial<ObjectField>) => void;
@@ -45,12 +55,11 @@ export function EditObjectFieldContent({
 	errors,
 	filterOperators,
 	handleChange,
-	isApproved,
 	isDefaultStorageType,
 	isRootDescendantNode,
 	learnResources,
 	modelBuilder = false,
-	objectDefinitionExternalReferenceCode,
+	objectDefinition,
 	onSubmit,
 	readOnly,
 	setDbObjectFieldRequired,
@@ -144,12 +153,9 @@ export function EditObjectFieldContent({
 								errors={errors}
 								filterOperators={filterOperators}
 								handleChange={handleChange}
-								isApproved={isApproved}
 								isDefaultStorageType={isDefaultStorageType}
 								modelBuilder={modelBuilder}
-								objectDefinitionExternalReferenceCode={
-									objectDefinitionExternalReferenceCode
-								}
+								objectDefinition={objectDefinition}
 								objectFieldTypes={objectFieldTypes}
 								objectRelationshipId={objectRelationshipId}
 								onSubmit={onSubmit}
@@ -196,12 +202,9 @@ export function EditObjectFieldContent({
 					errors={errors}
 					filterOperators={filterOperators}
 					handleChange={handleChange}
-					isApproved={isApproved}
 					isDefaultStorageType={isDefaultStorageType}
 					modelBuilder={modelBuilder}
-					objectDefinitionExternalReferenceCode={
-						objectDefinitionExternalReferenceCode
-					}
+					objectDefinition={objectDefinition}
 					objectFieldTypes={objectFieldTypes}
 					objectRelationshipId={objectRelationshipId}
 					onSubmit={onSubmit}

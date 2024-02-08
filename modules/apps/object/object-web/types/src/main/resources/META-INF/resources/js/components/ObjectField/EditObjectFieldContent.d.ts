@@ -13,6 +13,7 @@ interface EditObjectFieldContentProps
 		| 'forbiddenChars'
 		| 'forbiddenLastChars'
 		| 'forbiddenNames'
+		| 'objectDefinitionExternalReferenceCode'
 		| 'objectFieldId'
 	> {
 	containerWrapper: ElementType;
@@ -20,6 +21,15 @@ interface EditObjectFieldContentProps
 	errors: ObjectFieldErrors;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	modelBuilder?: boolean;
+	objectDefinition: Pick<
+		ObjectDefinition,
+		| 'accountEntryRestricted'
+		| 'accountEntryRestrictedObjectFieldName'
+		| 'externalReferenceCode'
+		| 'modifiable'
+		| 'name'
+		| 'status'
+	>;
 	onSubmit?: (editedObjectField?: Partial<ObjectField>) => void;
 	setDbObjectFieldRequired?: (value: boolean) => void;
 	setValues: (values: Partial<ObjectField>) => void;
@@ -33,12 +43,11 @@ export declare function EditObjectFieldContent({
 	errors,
 	filterOperators,
 	handleChange,
-	isApproved,
 	isDefaultStorageType,
 	isRootDescendantNode,
 	learnResources,
 	modelBuilder,
-	objectDefinitionExternalReferenceCode,
+	objectDefinition,
 	onSubmit,
 	readOnly,
 	setDbObjectFieldRequired,

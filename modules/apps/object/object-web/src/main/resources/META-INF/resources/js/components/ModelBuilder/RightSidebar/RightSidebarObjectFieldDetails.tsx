@@ -59,6 +59,26 @@ export function RightSidebarObjectFieldDetails() {
 
 	const {edges, nodes} = store.getState();
 
+	const objectDefinitionNodeData = selectedObjectDefinitionNode?.data as ObjectDefinitionNodeData;
+
+	const objectDefinition: Pick<
+		ObjectDefinition,
+		| 'accountEntryRestricted'
+		| 'accountEntryRestrictedObjectFieldName'
+		| 'externalReferenceCode'
+		| 'modifiable'
+		| 'name'
+		| 'status'
+	> = {
+		accountEntryRestricted: objectDefinitionNodeData.accountEntryRestricted,
+		accountEntryRestrictedObjectFieldName:
+			objectDefinitionNodeData.accountEntryRestrictedObjectFieldName,
+		externalReferenceCode: objectDefinitionNodeData.externalReferenceCode,
+		modifiable: objectDefinitionNodeData.modifiable,
+		name: objectDefinitionNodeData.name,
+		status: objectDefinitionNodeData.status,
+	};
+
 	const {
 		errors,
 		handleChange,
@@ -181,11 +201,9 @@ export function RightSidebarObjectFieldDetails() {
 									baseResourceURL,
 									objectFieldId: selectedObjectField?.id!,
 									objectFieldLabel: getLocalizableLabel(
-										selectedObjectDefinitionNode?.data
-											?.defaultLanguageId!,
-										selectedObjectDefinitionNode?.data
-											?.label,
-										selectedObjectDefinitionNode?.data?.name
+										objectDefinitionNodeData.defaultLanguageId,
+										objectDefinitionNodeData.label,
+										objectDefinitionNodeData.name
 									),
 									onAfterDelete: () => {
 										if (
@@ -219,33 +237,22 @@ export function RightSidebarObjectFieldDetails() {
 						baseResourceURL={baseResourceURL}
 						containerWrapper={ClayPanel}
 						creationLanguageId={
-							selectedObjectDefinitionNode?.data
-								?.defaultLanguageId ?? 'en_US'
+							objectDefinitionNodeData.defaultLanguageId
 						}
 						dbObjectFieldRequired={dbObjectFieldRequired}
 						errors={errors}
 						filterOperators={filterOperators}
 						handleChange={handleChange}
-						isApproved={
-							selectedObjectDefinitionNode?.data?.status.label ===
-							'approved'
-						}
 						isDefaultStorageType={
-							selectedObjectDefinitionNode?.data?.storageType ===
-								'default' ?? true
+							objectDefinitionNodeData.storageType === 'default'
 						}
 						isRootDescendantNode={isRootDescendantNode}
 						learnResources={learnResourceContext}
 						modelBuilder
-						objectDefinitionExternalReferenceCode={
-							selectedObjectDefinitionNode?.data
-								?.externalReferenceCode ?? ''
-						}
+						objectDefinition={objectDefinition}
 						onSubmit={onSubmit}
 						readOnly={
-							!selectedObjectDefinitionNode?.data
-								?.hasObjectDefinitionUpdateResourcePermission ??
-							false
+							!objectDefinitionNodeData.hasObjectDefinitionUpdateResourcePermission
 						}
 						setDbObjectFieldRequired={setDbObjectFieldRequired}
 						setValues={setValues}
@@ -295,8 +302,7 @@ export function RightSidebarObjectFieldDetails() {
 										'the-object-field-x-cannot-be-deleted-because-it-is-the-only-custom-object-field-of-the-published-object-definition'
 									),
 									`${getLocalizableLabel(
-										selectedObjectDefinitionNode?.data
-											?.defaultLanguageId as Liferay.Language.Locale,
+										objectDefinitionNodeData.defaultLanguageId as Liferay.Language.Locale,
 										values.label,
 										values.name
 									)}`
@@ -309,8 +315,7 @@ export function RightSidebarObjectFieldDetails() {
 										'the-object-field-x-cannot-be-deleted-because-it-is-used-in-a-unique-composite-key-validation'
 									),
 									`${getLocalizableLabel(
-										selectedObjectDefinitionNode?.data
-											?.defaultLanguageId as Liferay.Language.Locale,
+										objectDefinitionNodeData.defaultLanguageId as Liferay.Language.Locale,
 										values.label,
 										values.name
 									)}`

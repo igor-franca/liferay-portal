@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {API, Input, SidebarCategory} from '@liferay/object-js-components-web';
+import {Input, SidebarCategory} from '@liferay/object-js-components-web';
 import classNames from 'classnames';
-import React, {ElementType, useEffect, useState} from 'react';
+import React, {ElementType, useState} from 'react';
 
 import {AutoIncrementFormBase} from '../../AutoIncrementFormBase';
 import {ObjectFieldErrors} from '../../ObjectFieldFormBase';
@@ -37,10 +37,17 @@ interface BasicInfoTabProps {
 	errors: ObjectFieldErrors;
 	filterOperators: TFilterOperators;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
-	isApproved: boolean;
 	isDefaultStorageType: boolean;
 	modelBuilder?: boolean;
-	objectDefinitionExternalReferenceCode: string;
+	objectDefinition: Pick<
+		ObjectDefinition,
+		| 'accountEntryRestricted'
+		| 'accountEntryRestrictedObjectFieldName'
+		| 'externalReferenceCode'
+		| 'modifiable'
+		| 'name'
+		| 'status'
+	>;
 	objectFieldTypes: ObjectFieldType[];
 	objectRelationshipId: number;
 	onSubmit?: (editedObjectField?: Partial<ObjectField>) => void;
@@ -59,10 +66,9 @@ export function BasicInfoTab({
 	errors,
 	filterOperators,
 	handleChange,
-	isApproved,
 	isDefaultStorageType,
 	modelBuilder = false,
-	objectDefinitionExternalReferenceCode,
+	objectDefinition,
 	objectFieldTypes,
 	objectRelationshipId,
 	onSubmit,
@@ -73,13 +79,6 @@ export function BasicInfoTab({
 	values,
 	workflowStatuses,
 }: BasicInfoTabProps) {
-	const [objectDefinition, setObjectDefinition] = useState<
-		Partial<ObjectDefinition>
-	>({enableLocalization: false});
-	const [
-		objectDefinitionExternalReferenceCode2,
-		setObjectDefinitionExternalReferenceCode2,
-	] = useState<string>();
 	const [aggregationFilters, setAggregationFilters] = useState<
 		AggregationFilters[]
 	>([]);
@@ -88,19 +87,12 @@ export function BasicInfoTab({
 		Liferay.Language.Locale
 	>();
 
-	useEffect(() => {
-		const makeFetch = async () => {
-			if (objectDefinitionExternalReferenceCode) {
-				const objectDefinitionResponse = await API.getObjectDefinitionByExternalReferenceCode(
-					objectDefinitionExternalReferenceCode
-				);
+	const isApproved = objectDefinition.status!.label === 'approved';
 
-				setObjectDefinition(objectDefinitionResponse);
-			}
-		};
-
-		makeFetch();
-	}, [objectDefinitionExternalReferenceCode]);
+	const [
+		objectDefinitionExternalReferenceCode2,
+		setObjectDefinitionExternalReferenceCode2,
+	] = useState<string>();
 
 	return (
 		<>
@@ -117,13 +109,8 @@ export function BasicInfoTab({
 					dbObjectFieldRequired={dbObjectFieldRequired}
 					errors={errors}
 					handleChange={handleChange}
-					isApproved={isApproved}
 					modelBuilder={modelBuilder}
 					objectDefinition={objectDefinition}
-					objectDefinitionExternalReferenceCode={
-						objectDefinitionExternalReferenceCode
-					}
-					objectDefinitionName={objectDefinition.name ?? ''}
 					objectFieldTypes={objectFieldTypes}
 					objectRelationshipId={objectRelationshipId}
 					onSubmit={onSubmit}
@@ -161,7 +148,7 @@ export function BasicInfoTab({
 				)}
 
 			{values.businessType === 'Aggregation' &&
-				objectDefinitionExternalReferenceCode !==
+				objectDefinition.externalReferenceCode !==
 					objectDefinitionExternalReferenceCode2 && (
 					<AggregationFilterContainer
 						aggregationFilters={aggregationFilters}
