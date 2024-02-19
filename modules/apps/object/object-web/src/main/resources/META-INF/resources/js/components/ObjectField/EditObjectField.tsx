@@ -11,7 +11,7 @@ import {
 	saveAndReload,
 } from '@liferay/object-js-components-web';
 import {ILearnResourceContext} from 'frontend-js-components-web';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {EditObjectFieldContent} from './EditObjectFieldContent';
 import {useObjectFieldForm} from './useObjectFieldForm';
@@ -68,10 +68,6 @@ export default function EditObjectField({
 	readOnly,
 	workflowStatuses,
 }: EditObjectFieldProps) {
-	const [dbObjectFieldRequired, setDbObjectFieldRequired] = useState<
-		boolean
-	>();
-
 	const onSubmit = async ({id, ...objectField}: ObjectField) => {
 		delete objectField.defaultValue;
 		delete objectField.listTypeDefinitionId;
@@ -109,36 +105,6 @@ export default function EditObjectField({
 		onSubmit,
 	});
 
-	const [objectDefinition, setObjectDefinition] = useState<
-		Partial<ObjectDefinition> | ObjectDefinition
-	>({enableLocalization: false});
-
-	useEffect(() => {
-		const makeFetch = async () => {
-			if (objectDefinitionExternalReferenceCode) {
-				const objectDefinitionResponse = await API.getObjectDefinitionByExternalReferenceCode(
-					objectDefinitionExternalReferenceCode
-				);
-
-				setObjectDefinition(objectDefinitionResponse);
-			}
-		};
-
-		makeFetch();
-	}, [objectDefinitionExternalReferenceCode]);
-
-	useEffect(() => {
-		const makeFetch = async () => {
-			const objectFieldResponse = await API.getObjectField(objectFieldId);
-
-			setDbObjectFieldRequired(objectFieldResponse.required);
-			setValues(objectFieldResponse);
-		};
-
-		makeFetch();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [objectFieldId]);
-
 	useEffect(() => {
 		if (errors.defaultValue) {
 			openToast({
@@ -150,7 +116,7 @@ export default function EditObjectField({
 		}
 	}, [errors]);
 
-	return objectDefinition.externalReferenceCode ? (
+	return (
 		<SidePanelForm
 			className="lfr-objects__edit-object-field"
 			onSubmit={handleSubmit}
@@ -161,21 +127,21 @@ export default function EditObjectField({
 				baseResourceURL={baseResourceURL}
 				containerWrapper={Card}
 				creationLanguageId={creationLanguageId}
-				dbObjectFieldRequired={dbObjectFieldRequired}
 				errors={errors}
 				filterOperators={filterOperators}
 				handleChange={handleChange}
 				isDefaultStorageType={isDefaultStorageType}
 				isRootDescendantNode={isRootDescendantNode}
 				learnResources={learnResources}
-				objectDefinition={objectDefinition as ObjectDefinition}
+				objectDefinitionExternalReferenceCode={
+					objectDefinitionExternalReferenceCode
+				}
+				objectFieldId={objectFieldId}
 				readOnly={readOnly}
 				setValues={setValues}
 				values={values}
 				workflowStatuses={workflowStatuses}
 			/>
 		</SidePanelForm>
-	) : (
-		<></>
 	);
 }

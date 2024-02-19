@@ -17,15 +17,7 @@ interface ObjectFieldFormBaseProps {
 	errors: ObjectFieldErrors;
 	handleChange: ChangeEventHandler<HTMLInputElement>;
 	modelBuilder?: boolean;
-	objectDefinition: Pick<
-		ObjectDefinition,
-		| 'accountEntryRestricted'
-		| 'accountEntryRestrictedObjectFieldName'
-		| 'externalReferenceCode'
-		| 'modifiable'
-		| 'name'
-		| 'status'
-	>;
+	objectDefinition?: ObjectDefinition;
 	objectField: Partial<ObjectField>;
 	objectFieldTypes: ObjectFieldType[];
 	objectRelationshipId?: number;

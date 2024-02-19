@@ -14,15 +14,7 @@ interface BasicInfoContainerProps {
 	errors: ObjectFieldErrors;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	modelBuilder?: boolean;
-	objectDefinition: Pick<
-		ObjectDefinition,
-		| 'accountEntryRestricted'
-		| 'accountEntryRestrictedObjectFieldName'
-		| 'externalReferenceCode'
-		| 'modifiable'
-		| 'name'
-		| 'status'
-	>;
+	objectDefinition?: ObjectDefinition;
 	objectFieldTypes: ObjectFieldType[];
 	objectRelationshipId: number;
 	onSubmit?: () => void;

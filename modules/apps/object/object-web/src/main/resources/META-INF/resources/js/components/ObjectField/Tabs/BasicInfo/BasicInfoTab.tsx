@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {Input, SidebarCategory} from '@liferay/object-js-components-web';
+import {API, Input, SidebarCategory} from '@liferay/object-js-components-web';
 import classNames from 'classnames';
-import React, {ElementType, useState} from 'react';
+import React, {ElementType, useEffect, useState} from 'react';
 
 import {AutoIncrementFormBase} from '../../AutoIncrementFormBase';
 import {ObjectFieldErrors} from '../../ObjectFieldFormBase';
@@ -39,15 +39,7 @@ interface BasicInfoTabProps {
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	isDefaultStorageType: boolean;
 	modelBuilder?: boolean;
-	objectDefinition: Pick<
-		ObjectDefinition,
-		| 'accountEntryRestricted'
-		| 'accountEntryRestrictedObjectFieldName'
-		| 'externalReferenceCode'
-		| 'modifiable'
-		| 'name'
-		| 'status'
-	>;
+	objectDefinition?: ObjectDefinition;
 	objectFieldTypes: ObjectFieldType[];
 	objectRelationshipId: number;
 	onSubmit?: (editedObjectField?: Partial<ObjectField>) => void;
@@ -87,7 +79,7 @@ export function BasicInfoTab({
 		Liferay.Language.Locale
 	>();
 
-	const isApproved = objectDefinition.status!.label === 'approved';
+	const isApproved = objectDefinition?.status!.label === 'approved';
 
 	const [
 		objectDefinitionExternalReferenceCode2,
@@ -148,7 +140,7 @@ export function BasicInfoTab({
 				)}
 
 			{values.businessType === 'Aggregation' &&
-				objectDefinition.externalReferenceCode !==
+				objectDefinition?.externalReferenceCode !==
 					objectDefinitionExternalReferenceCode2 && (
 					<AggregationFilterContainer
 						aggregationFilters={aggregationFilters}

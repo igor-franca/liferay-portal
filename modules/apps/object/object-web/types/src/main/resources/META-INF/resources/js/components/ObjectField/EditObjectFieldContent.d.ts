@@ -17,21 +17,12 @@ interface EditObjectFieldContentProps
 		| 'objectFieldId'
 	> {
 	containerWrapper: ElementType;
-	dbObjectFieldRequired?: boolean;
 	errors: ObjectFieldErrors;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	modelBuilder?: boolean;
-	objectDefinition: Pick<
-		ObjectDefinition,
-		| 'accountEntryRestricted'
-		| 'accountEntryRestrictedObjectFieldName'
-		| 'externalReferenceCode'
-		| 'modifiable'
-		| 'name'
-		| 'status'
-	>;
+	objectDefinitionExternalReferenceCode: string;
+	objectFieldId: number;
 	onSubmit?: (editedObjectField?: Partial<ObjectField>) => void;
-	setDbObjectFieldRequired?: (value: boolean) => void;
 	setValues: (values: Partial<ObjectField>) => void;
 	values: Partial<ObjectField>;
 }
@@ -39,7 +30,6 @@ export declare function EditObjectFieldContent({
 	baseResourceURL,
 	containerWrapper,
 	creationLanguageId,
-	dbObjectFieldRequired,
 	errors,
 	filterOperators,
 	handleChange,
@@ -47,10 +37,10 @@ export declare function EditObjectFieldContent({
 	isRootDescendantNode,
 	learnResources,
 	modelBuilder,
-	objectDefinition,
+	objectDefinitionExternalReferenceCode,
+	objectFieldId,
 	onSubmit,
 	readOnly,
-	setDbObjectFieldRequired,
 	setValues,
 	values,
 	workflowStatuses,

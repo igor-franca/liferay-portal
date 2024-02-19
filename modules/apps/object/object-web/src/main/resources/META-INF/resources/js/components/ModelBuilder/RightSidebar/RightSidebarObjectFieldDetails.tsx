@@ -27,10 +27,6 @@ import './RightSidebarObjectFieldDetails.scss';
 import {handleTriggerDeleteObjectField} from '../../ObjectField/deleteObjectFieldUtil';
 
 export function RightSidebarObjectFieldDetails() {
-	const [dbObjectFieldRequired, setDbObjectFieldRequired] = useState<
-		boolean
-	>();
-
 	const [objectFieldDeleteInfo, setObjectFieldDeleteInfo] = useState<
 		ObjectFieldDeleteInfoProps
 	>({
@@ -60,24 +56,6 @@ export function RightSidebarObjectFieldDetails() {
 	const {edges, nodes} = store.getState();
 
 	const objectDefinitionNodeData = selectedObjectDefinitionNode?.data as ObjectDefinitionNodeData;
-
-	const objectDefinition: Pick<
-		ObjectDefinition,
-		| 'accountEntryRestricted'
-		| 'accountEntryRestrictedObjectFieldName'
-		| 'externalReferenceCode'
-		| 'modifiable'
-		| 'name'
-		| 'status'
-	> = {
-		accountEntryRestricted: objectDefinitionNodeData.accountEntryRestricted,
-		accountEntryRestrictedObjectFieldName:
-			objectDefinitionNodeData.accountEntryRestrictedObjectFieldName,
-		externalReferenceCode: objectDefinitionNodeData.externalReferenceCode,
-		modifiable: objectDefinitionNodeData.modifiable,
-		name: objectDefinitionNodeData.name,
-		status: objectDefinitionNodeData.status,
-	};
 
 	const {
 		errors,
@@ -159,22 +137,6 @@ export function RightSidebarObjectFieldDetails() {
 	};
 
 	useEffect(() => {
-		const makeFetch = async () => {
-			if (selectedObjectField) {
-				const objectFieldResponse = await API.getObjectField(
-					selectedObjectField?.id as number
-				);
-
-				setDbObjectFieldRequired(objectFieldResponse.required);
-				setValues(objectFieldResponse);
-			}
-		};
-
-		makeFetch();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
 		if (errors.defaultValue) {
 			openToast({
 				message: Liferay.Language.get(
@@ -233,32 +195,36 @@ export function RightSidebarObjectFieldDetails() {
 
 			<div>
 				<div className="lfr-objects__model-builder-right-sidebar-definition-node-content">
-					<EditObjectFieldContent
-						baseResourceURL={baseResourceURL}
-						containerWrapper={ClayPanel}
-						creationLanguageId={
-							objectDefinitionNodeData.defaultLanguageId
-						}
-						dbObjectFieldRequired={dbObjectFieldRequired}
-						errors={errors}
-						filterOperators={filterOperators}
-						handleChange={handleChange}
-						isDefaultStorageType={
-							objectDefinitionNodeData.storageType === 'default'
-						}
-						isRootDescendantNode={isRootDescendantNode}
-						learnResources={learnResourceContext}
-						modelBuilder
-						objectDefinition={objectDefinition}
-						onSubmit={onSubmit}
-						readOnly={
-							!objectDefinitionNodeData.hasObjectDefinitionUpdateResourcePermission
-						}
-						setDbObjectFieldRequired={setDbObjectFieldRequired}
-						setValues={setValues}
-						values={values}
-						workflowStatuses={workflowStatuses}
-					/>
+					{selectedObjectField?.id && (
+						<EditObjectFieldContent
+							baseResourceURL={baseResourceURL}
+							containerWrapper={ClayPanel}
+							creationLanguageId={
+								objectDefinitionNodeData.defaultLanguageId
+							}
+							errors={errors}
+							filterOperators={filterOperators}
+							handleChange={handleChange}
+							isDefaultStorageType={
+								objectDefinitionNodeData.storageType ===
+								'default'
+							}
+							isRootDescendantNode={isRootDescendantNode}
+							learnResources={learnResourceContext}
+							modelBuilder
+							objectDefinitionExternalReferenceCode={
+								objectDefinitionNodeData.externalReferenceCode
+							}
+							objectFieldId={selectedObjectField.id}
+							onSubmit={onSubmit}
+							readOnly={
+								!objectDefinitionNodeData.hasObjectDefinitionUpdateResourcePermission
+							}
+							setValues={setValues}
+							values={values}
+							workflowStatuses={workflowStatuses}
+						/>
+					)}
 				</div>
 			</div>
 

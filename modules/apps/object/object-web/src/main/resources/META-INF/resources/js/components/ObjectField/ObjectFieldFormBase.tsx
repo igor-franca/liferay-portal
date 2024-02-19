@@ -53,15 +53,7 @@ interface ObjectFieldFormBaseProps {
 	errors: ObjectFieldErrors;
 	handleChange: ChangeEventHandler<HTMLInputElement>;
 	modelBuilder?: boolean;
-	objectDefinition: Pick<
-		ObjectDefinition,
-		| 'accountEntryRestricted'
-		| 'accountEntryRestrictedObjectFieldName'
-		| 'externalReferenceCode'
-		| 'modifiable'
-		| 'name'
-		| 'status'
-	>;
+	objectDefinition?: ObjectDefinition;
 	objectField: Partial<ObjectField>;
 	objectFieldTypes: ObjectFieldType[];
 	objectRelationshipId?: number;
@@ -506,26 +498,27 @@ export default function ObjectFieldFormBase({
 					/>
 				)}
 
-			{values.businessType === 'Aggregation' && (
-				<AggregationFormBase
-					creationLanguageId2={
-						creationLanguageId2 as Liferay.Language.Locale
-					}
-					editingObjectField={editingObjectField}
-					errors={errors}
-					objectDefinitionExternalReferenceCode={
-						objectDefinition.externalReferenceCode
-					}
-					objectFieldSettings={
-						values.objectFieldSettings as ObjectFieldSetting[]
-					}
-					onAggregationFilterChange={onAggregationFilterChange}
-					onObjectRelationshipChange={onObjectRelationshipChange}
-					onSubmit={onSubmit}
-					setValues={setValues}
-					values={values}
-				/>
-			)}
+			{values.businessType === 'Aggregation' &&
+				objectDefinition?.externalReferenceCode && (
+					<AggregationFormBase
+						creationLanguageId2={
+							creationLanguageId2 as Liferay.Language.Locale
+						}
+						editingObjectField={editingObjectField}
+						errors={errors}
+						objectDefinitionExternalReferenceCode={
+							objectDefinition.externalReferenceCode
+						}
+						objectFieldSettings={
+							values.objectFieldSettings as ObjectFieldSetting[]
+						}
+						onAggregationFilterChange={onAggregationFilterChange}
+						onObjectRelationshipChange={onObjectRelationshipChange}
+						onSubmit={onSubmit}
+						setValues={setValues}
+						values={values}
+					/>
+				)}
 
 			{values.businessType === 'Formula' && (
 				<SingleSelect<FormulaOutput>
@@ -707,6 +700,7 @@ export default function ObjectFieldFormBase({
 								if (
 									setDbObjectFieldRequired &&
 									dbObjectFieldRequired &&
+									modelBuilder &&
 									editingObjectField &&
 									objectDefinition?.status?.label ===
 										'approved'

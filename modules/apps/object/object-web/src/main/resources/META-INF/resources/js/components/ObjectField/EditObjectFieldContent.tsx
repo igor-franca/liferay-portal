@@ -4,7 +4,7 @@
  */
 
 import ClayTabs from '@clayui/tabs';
-import {SidebarCategory} from '@liferay/object-js-components-web';
+import {API, SidebarCategory} from '@liferay/object-js-components-web';
 import classNames from 'classnames';
 import {createResourceURL, fetch} from 'frontend-js-web';
 import React, {ElementType, useEffect, useState} from 'react';
@@ -26,21 +26,12 @@ interface EditObjectFieldContentProps
 		| 'objectFieldId'
 	> {
 	containerWrapper: ElementType;
-	dbObjectFieldRequired?: boolean;
 	errors: ObjectFieldErrors;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	modelBuilder?: boolean;
-	objectDefinition: Pick<
-		ObjectDefinition,
-		| 'accountEntryRestricted'
-		| 'accountEntryRestrictedObjectFieldName'
-		| 'externalReferenceCode'
-		| 'modifiable'
-		| 'name'
-		| 'status'
-	>;
+	objectDefinitionExternalReferenceCode: string;
+	objectFieldId: number;
 	onSubmit?: (editedObjectField?: Partial<ObjectField>) => void;
-	setDbObjectFieldRequired?: (value: boolean) => void;
 	setValues: (values: Partial<ObjectField>) => void;
 	values: Partial<ObjectField>;
 }
@@ -51,7 +42,6 @@ export function EditObjectFieldContent({
 	baseResourceURL,
 	containerWrapper,
 	creationLanguageId,
-	dbObjectFieldRequired,
 	errors,
 	filterOperators,
 	handleChange,
@@ -59,15 +49,21 @@ export function EditObjectFieldContent({
 	isRootDescendantNode,
 	learnResources,
 	modelBuilder = false,
-	objectDefinition,
+	objectDefinitionExternalReferenceCode,
+	objectFieldId,
 	onSubmit,
 	readOnly,
-	setDbObjectFieldRequired,
 	setValues,
 	values,
 	workflowStatuses,
 }: EditObjectFieldContentProps) {
 	const [activeIndex, setActiveIndex] = useState(0);
+	const [dbObjectFieldRequired, setDbObjectFieldRequired] = useState<
+		boolean
+	>();
+	const [objectDefinition, setObjectDefinition] = useState<
+	ObjectDefinition
+>();
 	const [objectFieldTypes, setObjectFieldTypes] = useState<ObjectFieldType[]>(
 		[]
 	);
@@ -85,6 +81,26 @@ export function EditObjectFieldContent({
 	) {
 		TABS.push(Liferay.Language.get('advanced'));
 	}
+
+	useEffect(() => {
+		const makeFetch = async () => {
+			const objectFieldResponse = await API.getObjectField(objectFieldId);
+
+			setDbObjectFieldRequired(objectFieldResponse.required);
+			setValues(objectFieldResponse);
+
+			if (objectDefinitionExternalReferenceCode) {
+				const objectDefinitionResponse = await API.getObjectDefinitionByExternalReferenceCode(
+					objectDefinitionExternalReferenceCode
+				);
+
+				setObjectDefinition(objectDefinitionResponse);
+			}
+		};
+
+		makeFetch();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		const makeFetch = async () => {
@@ -155,7 +171,9 @@ export function EditObjectFieldContent({
 								handleChange={handleChange}
 								isDefaultStorageType={isDefaultStorageType}
 								modelBuilder={modelBuilder}
-								objectDefinition={objectDefinition}
+								objectDefinition={
+									objectDefinition
+								}
 								objectFieldTypes={objectFieldTypes}
 								objectRelationshipId={objectRelationshipId}
 								onSubmit={onSubmit}
@@ -204,7 +222,9 @@ export function EditObjectFieldContent({
 					handleChange={handleChange}
 					isDefaultStorageType={isDefaultStorageType}
 					modelBuilder={modelBuilder}
-					objectDefinition={objectDefinition}
+					objectDefinition={
+						objectDefinition
+					}
 					objectFieldTypes={objectFieldTypes}
 					objectRelationshipId={objectRelationshipId}
 					onSubmit={onSubmit}

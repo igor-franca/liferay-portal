@@ -29,15 +29,7 @@ interface BasicInfoTabProps {
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	isDefaultStorageType: boolean;
 	modelBuilder?: boolean;
-	objectDefinition: Pick<
-		ObjectDefinition,
-		| 'accountEntryRestricted'
-		| 'accountEntryRestrictedObjectFieldName'
-		| 'externalReferenceCode'
-		| 'modifiable'
-		| 'name'
-		| 'status'
-	>;
+	objectDefinition?: ObjectDefinition;
 	objectFieldTypes: ObjectFieldType[];
 	objectRelationshipId: number;
 	onSubmit?: (editedObjectField?: Partial<ObjectField>) => void;
