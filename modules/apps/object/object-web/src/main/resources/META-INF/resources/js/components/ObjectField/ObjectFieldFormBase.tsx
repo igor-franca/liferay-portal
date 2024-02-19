@@ -47,14 +47,13 @@ interface ObjectFieldFormBaseProps {
 	children?: ReactNode;
 	className?: string;
 	creationLanguageId2?: Liferay.Language.Locale;
+	dbObjectFieldRequired?: boolean;
 	disabled?: boolean;
 	editingObjectField?: boolean;
 	errors: ObjectFieldErrors;
 	handleChange: ChangeEventHandler<HTMLInputElement>;
 	modelBuilder?: boolean;
-	objectDefinition?: Partial<ObjectDefinition>;
-	objectDefinitionExternalReferenceCode: string;
-	objectDefinitionName: string;
+	objectDefinition?: ObjectDefinition;
 	objectField: Partial<ObjectField>;
 	objectFieldBusinessTypesInfo: ObjectFieldBusinessType[];
 	objectRelationshipId?: number;
@@ -63,6 +62,7 @@ interface ObjectFieldFormBaseProps {
 		objectDefinitionExternalReferenceCode2: string
 	) => void;
 	onSubmit?: (values?: Partial<ObjectField>) => void;
+	setDbObjectFieldRequired?: (value: boolean) => void;
 	setValues: (values: Partial<ObjectField>) => void;
 }
 
@@ -176,20 +176,20 @@ export default function ObjectFieldFormBase({
 	children,
 	className,
 	creationLanguageId2,
+	dbObjectFieldRequired,
 	disabled,
 	editingObjectField = false,
 	errors,
 	handleChange,
 	modelBuilder = false,
 	objectDefinition,
-	objectDefinitionExternalReferenceCode,
-	objectDefinitionName,
 	objectField: values,
 	objectFieldBusinessTypesInfo,
 	objectRelationshipId,
 	onAggregationFilterChange,
 	onObjectRelationshipChange,
 	onSubmit,
+	setDbObjectFieldRequired,
 	setValues,
 }: ObjectFieldFormBaseProps) {
 	const [listTypeDefinitions, setListTypeDefinitions] = useState<
@@ -304,7 +304,15 @@ export default function ObjectFieldFormBase({
 				: false;
 		}
 
-		return disabled || values.localized || values.state;
+		if (
+			!dbObjectFieldRequired &&
+			editingObjectField &&
+			objectDefinition?.status?.label === 'approved'
+		) {
+			return true;
+		}
+
+		return !!values.relationshipType || values.localized || values.state;
 	};
 
 	const handleStateToggleChange = (toggled: boolean) => {
@@ -468,7 +476,7 @@ export default function ObjectFieldFormBase({
 				<AttachmentFormBase
 					disabled={disabled}
 					error={errors.fileSource}
-					objectDefinitionName={objectDefinitionName}
+					objectDefinitionName={objectDefinition.name}
 					objectFieldSettings={
 						values.objectFieldSettings as ObjectFieldSetting[]
 					}
@@ -490,26 +498,27 @@ export default function ObjectFieldFormBase({
 					/>
 				)}
 
-			{values.businessType === 'Aggregation' && (
-				<AggregationFormBase
-					creationLanguageId2={
-						creationLanguageId2 as Liferay.Language.Locale
-					}
-					editingObjectField={editingObjectField}
-					errors={errors}
-					objectDefinitionExternalReferenceCode={
-						objectDefinitionExternalReferenceCode
-					}
-					objectFieldSettings={
-						values.objectFieldSettings as ObjectFieldSetting[]
-					}
-					onAggregationFilterChange={onAggregationFilterChange}
-					onObjectRelationshipChange={onObjectRelationshipChange}
-					onSubmit={onSubmit}
-					setValues={setValues}
-					values={values}
-				/>
-			)}
+			{values.businessType === 'Aggregation' &&
+				objectDefinition?.externalReferenceCode && (
+					<AggregationFormBase
+						creationLanguageId2={
+							creationLanguageId2 as Liferay.Language.Locale
+						}
+						editingObjectField={editingObjectField}
+						errors={errors}
+						objectDefinitionExternalReferenceCode={
+							objectDefinition.externalReferenceCode
+						}
+						objectFieldSettings={
+							values.objectFieldSettings as ObjectFieldSetting[]
+						}
+						onAggregationFilterChange={onAggregationFilterChange}
+						onObjectRelationshipChange={onObjectRelationshipChange}
+						onSubmit={onSubmit}
+						setValues={setValues}
+						values={values}
+					/>
+				)}
 
 			{values.businessType === 'Formula' && (
 				<SingleSelect<FormulaOutput>
@@ -687,6 +696,17 @@ export default function ObjectFieldFormBase({
 							name="required"
 							onToggle={(required) => {
 								setValues({required});
+
+								if (
+									dbObjectFieldRequired &&
+									editingObjectField &&
+									modelBuilder &&
+									objectDefinition?.status?.label ===
+										'approved' &&
+									setDbObjectFieldRequired
+								) {
+									setDbObjectFieldRequired(required);
+								}
 
 								if (onSubmit) {
 									onSubmit({
