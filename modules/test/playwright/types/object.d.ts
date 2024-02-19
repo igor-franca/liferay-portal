@@ -7,13 +7,11 @@ interface DataObject {
 	[K: string]: unknown;
 }
 
-type LocalizedValue<T> = Liferay.Language.LocalizedValue<T>;
-
 interface ObjectRelationship {
 	deletionType: string;
 	edge: boolean;
 	id: number;
-	label: LocalizedValue<string>;
+	label: any;
 	name: string;
 	objectDefinitionExternalReferenceCode1: string;
 	objectDefinitionExternalReferenceCode2: string;
