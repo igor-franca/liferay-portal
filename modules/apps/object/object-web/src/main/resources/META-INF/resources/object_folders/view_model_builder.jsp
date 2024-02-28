@@ -9,12 +9,23 @@
 
 <%
 String backURL = ParamUtil.getString(request, "backURL", String.valueOf(renderResponse.createRenderURL()));
+
+<<<<<<< Updated upstream
+String viewObjectDefinitionsURL = PortletURLBuilder.createRenderURL(
+	renderResponse
+).setMVCRenderCommandName(
+	"/object_definitions/view_object_definitions"
+).buildString();
+=======
+String viewObjectDefinitionsURL = String.valueOf(PortalUtil.getControlPanelPortletURL(request, ObjectPortletKeys.OBJECT_DEFINITIONS, PortletRequest.RENDER_PHASE));
+>>>>>>> Stashed changes
+
 ObjectDefinitionsDetailsDisplayContext objectDefinitionsDetailsDisplayContext = (ObjectDefinitionsDetailsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_DETAILS_DISPLAY_CONTEXT);
 ObjectDefinitionsFieldsDisplayContext objectDefinitionsFieldsDisplayContext = (ObjectDefinitionsFieldsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_FIELD_DISPLAY_CONTEXT);
 ObjectDefinitionsRelationshipsDisplayContext objectDefinitionsRelationshipsDisplayContext = (ObjectDefinitionsRelationshipsDisplayContext)request.getAttribute(ObjectWebKeys.OBJECT_DEFINITIONS_RELATIONSHIP_DISPLAY_CONTEXT);
 
 portletDisplay.setShowBackIcon(true);
-portletDisplay.setURLBack(backURL);
+portletDisplay.setURLBack(backURL + "&objectFolderName=Default");
 
 renderResponse.setTitle(LanguageUtil.get(request, "object-model-builder"));
 %>
@@ -51,6 +62,12 @@ renderResponse.setTitle(LanguageUtil.get(request, "object-model-builder"));
 				"sites", objectDefinitionsDetailsDisplayContext.getScopeJSONArray("site")
 			).put(
 				"viewApiURL", "/o/object-admin/v1.0/object-definitions"
+			).put(
+<<<<<<< Updated upstream
+				"viewObjectDefinitionsURL", viewObjectDefinitionsURL
+=======
+				"viewObjectDefinitionsURL", viewObjectDefinitionsURL + "&objectFolderName=Default"
+>>>>>>> Stashed changes
 			).put(
 				"workflowStatuses", LocalizedJSONArrayUtil.getWorkflowStatusJSONArray(locale)
 			).build()

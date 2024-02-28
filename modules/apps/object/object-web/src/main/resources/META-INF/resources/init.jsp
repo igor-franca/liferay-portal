@@ -24,6 +24,7 @@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 page import="com.liferay.learn.LearnMessageUtil" %><%@
 page import="com.liferay.list.type.model.ListTypeDefinition" %><%@
 page import="com.liferay.object.constants.ObjectLayoutBoxConstants" %><%@
+page import="com.liferay.object.constants.ObjectPortletKeys" %><%@
 page import="com.liferay.object.constants.ObjectWebKeys" %><%@
 page import="com.liferay.object.display.context.ObjectEntryDisplayContext" %><%@
 page import="com.liferay.object.model.ObjectAction" %><%@
@@ -63,12 +64,17 @@ page import="com.liferay.portal.kernel.util.HashMapBuilder" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.LocalizationUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
+page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
 page import="com.liferay.portal.kernel.util.PropsKeys" %><%@
 page import="com.liferay.portal.kernel.util.PropsUtil" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %>
 
 <%@ page import="java.util.Objects" %>
+
+<%@ page import="javax.portlet.PortletRequest" %><%@
+page import="javax.portlet.PortletURL" %><%@
+page import="javax.portlet.WindowState" %>
 
 <liferay-frontend:defineObjects />
 

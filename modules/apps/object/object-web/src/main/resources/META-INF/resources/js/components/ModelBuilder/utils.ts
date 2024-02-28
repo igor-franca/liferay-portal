@@ -369,20 +369,36 @@ export function getUnsupportedObjectRelationshipErrorMessage(
 	}
 }
 
-export function updatePreviousURLParam(paramType: string, paramValue: string) {
-	const previousPath = document.referrer;
+interface updatePreviousURLParam {
+<<<<<<< Updated upstream
+	paramType: string;
+	paramValue: string;
+	previousURL: string;
+}
 
-	const newPreviousURL = new URL(previousPath);
+export function updatePreviousURLParam({
+	paramType,
+	paramValue,
+	previousURL,
+}: updatePreviousURLParam) {
+	const newPreviousURL = new URL(previousURL);
+=======
+	paramType: string,
+	paramValue: string,
+	paramURL: string,
+}
+export function updatePreviousURLParam({
+	paramType,
+	paramURL,
+	paramValue,
+} : updatePreviousURLParam) {
+	const newPreviousURL = new URL(paramURL);
+>>>>>>> Stashed changes
 
-	const objectFolderNameParam = newPreviousURL.searchParams.get(paramType);
+	newPreviousURL.searchParams.append(paramType, paramValue);
 
-	if (objectFolderNameParam) {
-		newPreviousURL.searchParams.set(paramType, paramValue);
-
-		window.history.pushState(null, '', newPreviousURL.toString());
-
-		window.location.href = newPreviousURL.toString();
-	}
+	window.history.pushState(null, '', newPreviousURL.toString());
+	window.location.href = newPreviousURL.toString();
 }
 
 export function updateURLParam(paramType: string, paramValue: string) {

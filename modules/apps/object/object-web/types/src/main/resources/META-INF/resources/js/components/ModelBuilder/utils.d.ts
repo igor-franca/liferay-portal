@@ -87,10 +87,25 @@ export declare function getUnsupportedObjectRelationshipErrorMessage(
 			learnMessage: string;
 	  }
 	| undefined;
-export declare function updatePreviousURLParam(
-	paramType: string,
-	paramValue: string
-): void;
+interface updatePreviousURLParam {
+	paramType: string;
+	paramValue: string;
+<<<<<<< Updated upstream
+	previousURL: string;
+}
+export declare function updatePreviousURLParam({
+	paramType,
+	paramValue,
+	previousURL,
+=======
+	paramURL: string;
+}
+export declare function updatePreviousURLParam({
+	paramType,
+	paramURL,
+	paramValue,
+>>>>>>> Stashed changes
+}: updatePreviousURLParam): void;
 export declare function updateURLParam(
 	paramType: string,
 	paramValue: string

@@ -49,12 +49,14 @@ interface EditObjectFolder {
 	companies: Scope[];
 	objectRelationshipDeletionTypes: LabelValueObject[];
 	sites: Scope[];
+	viewObjectDefinitionsURL: string;
 }
 
 export default function EditObjectFolder({
 	companies,
 	objectRelationshipDeletionTypes,
 	sites,
+	viewObjectDefinitionsURL,
 }: EditObjectFolder) {
 	const [
 		{
@@ -243,13 +245,35 @@ export default function EditObjectFolder({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedObjectFolder.objectFolderItems?.length]);
 
+<<<<<<< Updated upstream
 	Liferay.on('beforeNavigate', () => {
-		updatePreviousURLParam('objectFolderName', objectFolderName);
+		updatePreviousURLParam({
+			paramType: 'objectFolderName',
+			paramValue: objectFolderName,
+			previousURL: viewObjectDefinitionsURL,
+		});
 	});
 
 	window.addEventListener('popstate', () => {
-		updatePreviousURLParam('objectFolderName', objectFolderName);
+		updatePreviousURLParam({
+			paramType: 'objectFolderName',
+			paramValue: objectFolderName,
+			previousURL: viewObjectDefinitionsURL,
+		});
 	});
+=======
+	Liferay.on('beforeNavigate', (event) => {
+		console.log(event);
+
+		if((event.path as string).includes("objectFolderName")){
+			updatePreviousURLParam({paramType: 'objectFolderName', paramValue: objectFolderName, paramURL: viewObjectDefinitionsURL});
+		}
+	});
+
+	// window.addEventListener('popstate', () => {
+	// 	updatePreviousURLParam('objectFolderName', objectFolderName);
+	// });
+>>>>>>> Stashed changes
 
 	return (
 		<>

@@ -19,7 +19,9 @@ interface CustomObjectFolderWrapperProps {
 	objectDefinitionPermissionsURL: string;
 	objectDefinitionsStorageTypes: LabelValueObject[];
 	objectRelationshipDeletionTypes: LabelValueObject[];
+	viewObjectDefinitionsURL: string;
 	sites: Scope[];
+	viewObjectDefinitionsURL: string;
 	workflowStatuses: LabelValueObject[];
 }
 export default function CustomObjectFolderWrapper({
@@ -35,6 +37,7 @@ export default function CustomObjectFolderWrapper({
 	objectDefinitionsStorageTypes,
 	objectRelationshipDeletionTypes,
 	sites,
+	viewObjectDefinitionsURL,
 	workflowStatuses,
 }: CustomObjectFolderWrapperProps): JSX.Element;
 export {};
