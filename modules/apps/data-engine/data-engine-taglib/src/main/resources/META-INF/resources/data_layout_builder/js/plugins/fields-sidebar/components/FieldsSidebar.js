@@ -14,7 +14,7 @@ import SidebarFieldSettings from './SidebarFieldSettings';
 export function FieldsSidebar({title}) {
 	const {focusedField} = useFormState();
 
-	return Object.keys(focusedField).length ? (
+	return focusedField && Object.keys(focusedField).length ? (
 		<SidebarFieldSettings field={focusedField} />
 	) : (
 		<FieldListSidebar title={title} />

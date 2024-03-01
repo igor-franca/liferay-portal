@@ -168,7 +168,7 @@ export default function FormBuilder() {
 	 * Opens the sidebar whenever a field is focused
 	 */
 	useEffect(() => {
-		const hasFocusedField = !!Object.keys(focusedField).length;
+		const hasFocusedField = focusedField && !!Object.keys(focusedField).length;
 
 		if (hasFocusedField) {
 			setSidebarState(({sidebarPanelId}) => ({

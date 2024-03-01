@@ -79,8 +79,9 @@ const isFieldGroupMovingIntoItself = ({
 		[sourceIndexes, ...(sourceParentField?.loc ?? [])]
 	);
 
-const isDroppingFieldGroupIntoField = (targetField, sourceField) =>
-	sourceField?.type === 'fieldset' && targetField !== undefined;
+// const isDroppingFieldGroupIntoField = (targetField, sourceField) => {
+// 	sourceField?.type === 'fieldset' && targetField !== undefined;
+// }
 
 /**
  * Determines whether the source Field is being moved into inside a Field
@@ -152,7 +153,7 @@ export function useDrop({
 			!isElementsSetOverTarget(field, item.data) &&
 			!isElementsSetOverTarget(parentField, item.data) &&
 			!isSameField(field, item.data) &&
-			!isDroppingFieldGroupIntoField(field, item.data) &&
+			// !isDroppingFieldGroupIntoField(field, item.data) &&
 			!isDroppingFieldIntoFieldset(item.data, field) &&
 			!isFieldGroupMovingIntoItself({
 				sourceIndexes: item.sourceIndexes,

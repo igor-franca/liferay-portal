@@ -639,7 +639,7 @@ export default function fieldEditableReducer(state, action, config) {
 		case EVENT_TYPES.DND.MOVE: {
 			const {focusedField, pages} = state;
 
-			if (!focusedField.fieldName) {
+			if (focusedField.fieldName) {
 				return state;
 			}
 
