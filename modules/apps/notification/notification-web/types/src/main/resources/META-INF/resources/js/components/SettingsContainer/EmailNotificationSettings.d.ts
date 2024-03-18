@@ -6,6 +6,7 @@
 /// <reference types="react" />
 
 import {FormError} from '@liferay/object-js-components-web';
+import './EmailNotificationSettings.scss';
 import {NotificationTemplateError} from '../EditNotificationTemplate';
 interface EmailNotificationSettingsProps {
 	errors: FormError<NotificationTemplate & NotificationTemplateError>;
