@@ -12,6 +12,7 @@ import {
 	openToast,
 	useForm,
 } from '@liferay/object-js-components-web';
+import classNames from 'classnames';
 import {fetch} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
 
@@ -294,45 +295,47 @@ export default function EditNotificationTemplate({
 
 			<div className="lfr__notification-template-container">
 				<div className="lfr__notification-template-cards">
-					{Liferay.FeatureFlags['LPD-6604'] &&
-					values.type === 'email' ? (
-						<>
-							<div className="lfr__notification-template-basic-info">
-								<div className="lfr__notification-template-card">
-									<BasicInfoContainer
-										errors={errors}
-										setValues={setValues}
-										values={values}
-									/>
-								</div>
-							</div>
-							<SettingsContainer
+					<div
+						className={
+							Liferay.FeatureFlags['LPD-6604'] &&
+							values.type === 'email'
+								? 'lfr__notification-template-basic-info'
+								: 'row'
+						}
+					>
+						<div
+							className={classNames(
+								'lfr__notification-template-card',
+								{
+									'col-lg-6': !(
+										Liferay.FeatureFlags['LPD-6604'] &&
+										values.type === 'email'
+									),
+								}
+							)}
+						>
+							<BasicInfoContainer
 								errors={errors}
-								selectedLocale={selectedLocale}
 								setValues={setValues}
 								values={values}
 							/>
-						</>
-					) : (
-						<div className="row">
-							<div className="col-lg-6 lfr__notification-template-card">
-								<BasicInfoContainer
-									errors={errors}
-									setValues={setValues}
-									values={values}
-								/>
-							</div>
-
-							<div className="col-lg-6 lfr__notification-template-card">
-								<SettingsContainer
-									errors={errors}
-									selectedLocale={selectedLocale}
-									setValues={setValues}
-									values={values}
-								/>
-							</div>
 						</div>
-					)}
+					</div>
+
+					<div
+						className={classNames({
+							'col-lg-6 lfr__ntification-template-basic-info':
+								!(Liferay.FeatureFlags['LPD-6604'] &&
+								values.type === 'email'),
+						})}
+					>
+						<SettingsContainer
+							errors={errors}
+							selectedLocale={selectedLocale}
+							setValues={setValues}
+							values={values}
+						/>
+					</div>
 
 					<ContentContainer
 						baseResourceURL={baseResourceURL}
