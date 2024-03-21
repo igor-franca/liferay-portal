@@ -19,7 +19,7 @@ import {
 
 interface ModalImportContentProps extends ModalImportProperties {
 	error?: API.ErrorDetails;
-	externalReferenceCode: string;
+	JSONFile: any;
 	fileName: string;
 	handleOnClose: () => void;
 	handleSubmit: (value: FormEvent<HTMLFormElement>) => void;
@@ -27,19 +27,21 @@ interface ModalImportContentProps extends ModalImportProperties {
 	modalImportKey: string;
 	name: string;
 	nameMaxLength: string;
-	objectDefinitions?: ObjectDefinition[];
+	// objectDefinitions?: ObjectDefinition[];
 	portletNamespace: string;
 	setError: (value?: API.ErrorDetails) => void;
-	setExternalReferenceCode: (value: string) => void;
+	// setExternalReferenceCode: (value: string) => void;
 	setFile: (value: TFile) => void;
+	setJSONFile: (value: any) => void;
 	setName: (value: string) => void;
-	setObjectDefinitions: (value?: ObjectDefinition[]) => void;
+	// setObjectDefinitions: (value?: ObjectDefinition[]) => void;
 }
 
 export function ModalImportContent({
 	JSONInputId,
+	JSONFile,
 	error,
-	externalReferenceCode,
+	// externalReferenceCode,
 	fileName,
 	handleOnClose,
 	handleSubmit,
@@ -47,13 +49,14 @@ export function ModalImportContent({
 	modalImportKey,
 	name,
 	nameMaxLength,
-	objectDefinitions,
+	// objectDefinitions,
 	portletNamespace,
 	setError,
-	setExternalReferenceCode,
+	// setExternalReferenceCode,
 	setFile,
+	setJSONFile,
 	setName,
-	setObjectDefinitions,
+	// setObjectDefinitions,
 }: ModalImportContentProps) {
 	const importFormId = `${portletNamespace}importForm`;
 	const inputFileRef = useRef() as React.MutableRefObject<HTMLInputElement>;
@@ -63,7 +66,7 @@ export function ModalImportContent({
 		if (
 			Liferay.FeatureFlags['LPS-187142'] &&
 			inputFile &&
-			objectDefinitions
+			Array.isArray(JSONFile)
 		) {
 			return false;
 		}
@@ -111,7 +114,7 @@ export function ModalImportContent({
 						)}
 					</ClayAlert>
 
-					{!objectDefinitions && (
+					{!Array.isArray(JSONFile) && (
 						<ClayForm.Group>
 							<label htmlFor={nameInputId}>
 								{Liferay.Language.get('name')}
@@ -159,12 +162,13 @@ export function ModalImportContent({
 									<ClayButton
 										displayType="secondary"
 										onClick={() => {
-											setExternalReferenceCode('');
+											// setExternalReferenceCode('');
 											setFile({
 												fileName: '',
 												inputFile: null,
 											});
-											setObjectDefinitions(undefined);
+											setJSONFile(null);
+											// setObjectDefinitions(undefined);
 											inputFileRef.current.value = '';
 										}}
 									>
@@ -175,7 +179,7 @@ export function ModalImportContent({
 						</ClayInput.Group>
 					</ClayForm.Group>
 
-					{externalReferenceCode && !objectDefinitions && (
+					{!Array.isArray(JSONFile) && JSONFile.externalReferenceCode && (
 						<Input
 							disabled
 							feedbackMessage={
@@ -188,7 +192,7 @@ export function ModalImportContent({
 								'external-reference-code'
 							)}
 							name="externalReferenceCode"
-							value={externalReferenceCode}
+							value={JSONFile.externalReferenceCode}
 						/>
 					)}
 
@@ -216,26 +220,29 @@ export function ModalImportContent({
 											| {externalReferenceCode: string}
 											| ObjectDefinition[];
 
-										if (
-											Liferay.FeatureFlags[
-												'LPS-187142'
-											] &&
-											Array.isArray(JSONFile) &&
-											JSONFile[0].scope
-										) {
+											setJSONFile(JSONFile);
 											setError(undefined);
-											setObjectDefinitions(JSONFile);
-											setExternalReferenceCode('');
-										}
-										else {
-											setError(undefined);
-											setExternalReferenceCode(
-												(JSONFile as {
-													externalReferenceCode: string;
-												}).externalReferenceCode
-											);
-											setObjectDefinitions(undefined);
-										}
+
+										// if (
+										// 	Liferay.FeatureFlags[
+										// 		'LPS-187142'
+										// 	] &&
+										// 	Array.isArray(JSONFile) &&
+										// 	JSONFile[0].scope
+										// ) {
+										// 	setError(undefined);
+										// 	setObjectDefinitions(JSONFile);
+										// 	setExternalReferenceCode('');
+										// }
+										// else {
+										// 	setError(undefined);
+										// 	setExternalReferenceCode(
+										// 		(JSONFile as {
+										// 			externalReferenceCode: string;
+										// 		}).externalReferenceCode
+										// 	);
+										// 	setObjectDefinitions(undefined);
+										// }
 									}
 									catch (error) {
 										setError({
@@ -244,11 +251,12 @@ export function ModalImportContent({
 											),
 											name: '',
 										});
-										setExternalReferenceCode('');
+										// setExternalReferenceCode('');
 										setFile({
 											fileName: '',
 											inputFile: null,
 										});
+										setJSONFile(undefined);
 										inputFileRef.current.value = '';
 									}
 								};

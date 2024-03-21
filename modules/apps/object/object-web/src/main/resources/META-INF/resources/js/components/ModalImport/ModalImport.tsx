@@ -49,9 +49,7 @@ export default function ModalImport({
 	const [externalReferenceCode, setExternalReferenceCode] = useState<string>(
 		''
 	);
-	const [objectDefinitions, setObjectDefinitions] = useState<
-		ObjectDefinition[]
-	>();
+	const [JSONFile, setJSONFile] = useState<any>();
 	const [{fileName, inputFile}, setFile] = useState<TFile>({});
 	const [importFormData, setImportFormData] = useState<FormData>();
 	const importModalComponentId = `${portletNamespace}importModal`;
@@ -108,7 +106,10 @@ export default function ModalImport({
 		}
 	};
 
-	const handleDefaultImport = async (event: FormEvent<HTMLFormElement>) => {
+	const handleDefaultImport = async (event: FormEvent<HTMLFormElement>, JSONFile: any) => {
+
+		// Add New Logic to Improve this function and support Array
+
 		const formData = new FormData(event.currentTarget);
 		const formDataObject: FormDataJSONFormat = {};
 		formData.forEach((value, key) => {
@@ -143,17 +144,17 @@ export default function ModalImport({
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		if (
-			Liferay.FeatureFlags['LPS-187142'] &&
-			objectDefinitions &&
-			objectDefinitions.length > 1
-		) {
-			handleImport(objectDefinitions);
+		// if (
+		// 	Liferay.FeatureFlags['LPS-187142'] &&
+		// 	Array.isArray(JSONFile) &&
+		// 	JSONFile.length > 1
+		// ) {
+		// 	handleImport(JSONFile);
 
-			return;
-		}
+		// 	return;
+		// }
 
-		handleDefaultImport(event);
+		handleDefaultImport(event, JSONFile);
 	};
 
 	useEffect(() => {
@@ -190,9 +191,10 @@ export default function ModalImport({
 			) : (
 				<ModalImportContent
 					JSONInputId={JSONInputId}
+					JSONFile={JSONFile}
 					apiURL={apiURL}
 					error={error}
-					externalReferenceCode={externalReferenceCode}
+					// externalReferenceCode={externalReferenceCode}
 					fileName={fileName as string}
 					handleOnClose={onClose}
 					handleSubmit={handleSubmit}
@@ -201,13 +203,14 @@ export default function ModalImport({
 					modalImportKey={modalImportKey}
 					name={name}
 					nameMaxLength={nameMaxLength}
-					objectDefinitions={objectDefinitions}
+					// objectDefinitions={objectDefinitions}
 					portletNamespace={portletNamespace}
 					setError={setError}
-					setExternalReferenceCode={setExternalReferenceCode}
+					// setExternalReferenceCode={setExternalReferenceCode}
 					setFile={setFile}
+					setJSONFile={setJSONFile}
 					setName={setName}
-					setObjectDefinitions={setObjectDefinitions}
+					// setObjectDefinitions={setObjectDefinitions}
 				/>
 			)}
 		</ClayModal>
