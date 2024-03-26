@@ -11,6 +11,7 @@ import {
 	DatePicker,
 	Input,
 	MultiSelectItem,
+	MultiSelectItemChild,
 	MultipleSelect,
 	SingleSelect,
 	stringUtils,
@@ -46,15 +47,7 @@ interface ModalAddFilterProps {
 	objectFields: ObjectField[];
 	observer: Observer;
 	onClose: () => void;
-	onSave: (
-		objectFieldName: string,
-		filterBy?: string,
-		fieldLabel?: LocalizedValue<string>,
-		objectFieldBusinessType?: string,
-		filterType?: string,
-		valueList?: MultiSelectItem[],
-		value?: string
-	) => void;
+	onSave: (props: OnSaveProps) => void;
 	validate: ({
 		checkedItems,
 		disableDateValues,
@@ -67,6 +60,16 @@ interface ModalAddFilterProps {
 	workflowStatuses: LabelValueObject[];
 }
 
+export interface OnSaveProps {
+	fieldLabel?: LocalizedValue<string>;
+	filterBy?: string;
+	filterType?: string;
+	objectFieldBusinessType?: string;
+	objectFieldName: string;
+	value?: string;
+	valueList?: MultiSelectItemChild[];
+}
+
 export type FilterErrors = {
 	endDate?: string;
 	items?: string;
@@ -77,9 +80,9 @@ export type FilterErrors = {
 };
 
 export type FilterValidation = {
-	checkedItems: MultiSelectItem[];
+	checkedItems: MultiSelectItemChild[];
 	disableDateValues?: boolean;
-	items: MultiSelectItem[];
+	items: MultiSelectItem[] | LabelValueObject[];
 	selectedFilterBy?: ObjectField;
 	selectedFilterTypeValue?: string;
 	setErrors: (value: FilterErrors) => void;
@@ -127,7 +130,9 @@ export function ModalAddFilter({
 	validate,
 	workflowStatuses,
 }: ModalAddFilterProps) {
-	const [items, setItems] = useState<MultiSelectItem[]>([]);
+	const [items, setItems] = useState<MultiSelectItem[] | LabelValueObject[]>(
+		[]
+	);
 
 	const [selectedFilterBy, setSelectedFilterBy] = useState<ObjectField>();
 
@@ -197,14 +202,18 @@ export function ModalAddFilter({
 							);
 						}
 						else {
-							setItems(
-								items.map((item) => {
-									return {
-										label: item.name,
-										value: item.key,
-									};
-								})
-							);
+							setItems([
+								{
+									children: items.map((item) => {
+										return {
+											label: item.name,
+											value: item.key,
+										};
+									}),
+									label: '',
+									value: 'listTypeEntries',
+								},
+							]);
 						}
 					}
 				};
@@ -221,12 +230,18 @@ export function ModalAddFilter({
 					);
 				}
 				else {
-					newItems = workflowStatuses.map((workflowStatus) => {
-						return {
-							label: workflowStatus.label,
-							value: workflowStatus.value,
-						};
-					});
+					newItems = [
+						{
+							children: workflowStatuses.map((workflowStatus) => {
+								return {
+									label: workflowStatus.label,
+									value: workflowStatus.value,
+								};
+							}),
+							label: '',
+							value: 'workflowStatuses',
+						},
+					];
 				}
 
 				setItems(newItems);
@@ -275,7 +290,7 @@ export function ModalAddFilter({
 						);
 					}
 					else {
-						const newItems = relatedObjectEntries.map(
+						const newChildren = relatedObjectEntries.map(
 							(objectEntry) => {
 								const newItemsObject = {
 									value: system
@@ -310,6 +325,14 @@ export function ModalAddFilter({
 								};
 							}
 						);
+
+						const newItems = [
+							{
+								children: newChildren,
+								label: '',
+								value: 'objectEntries',
+							},
+						];
 
 						setItems(newItems);
 					}
@@ -354,63 +377,6 @@ export function ModalAddFilter({
 		}
 	}, [editingFilter, editingObjectFieldName, objectFields]);
 
-	const handleSaveFilter = (event: FormEvent) => {
-		event.preventDefault();
-
-		const checkedItems = items.filter((item) => item.checked);
-
-		const currentErrors = validate({
-			checkedItems,
-			disableDateValues,
-			items,
-			selectedFilterBy,
-			selectedFilterTypeValue,
-			setErrors,
-			value,
-		});
-
-		if (Object.keys(currentErrors).length) {
-			return;
-		}
-
-		if (editingFilter) {
-			onSave(
-				editingObjectFieldName,
-				selectedFilterBy?.name,
-				selectedFilterBy?.label,
-				selectedFilterBy?.businessType,
-				selectedFilterTypeValue,
-				selectedFilterBy?.name === 'status' ||
-					selectedFilterBy?.businessType === 'MultiselectPicklist' ||
-					selectedFilterBy?.businessType === 'Picklist' ||
-					selectedFilterBy?.businessType === 'Relationship'
-					? checkedItems
-					: undefined,
-				value ?? undefined
-			);
-		}
-		else {
-			onSave(
-				selectedFilterBy?.name!,
-				selectedFilterBy?.name,
-				selectedFilterBy?.label,
-				selectedFilterBy?.businessType,
-				selectedFilterTypeValue,
-				selectedFilterBy?.name === 'status' ||
-					selectedFilterBy?.businessType === 'MultiselectPicklist' ||
-					selectedFilterBy?.businessType === 'Picklist' ||
-					selectedFilterBy?.businessType === 'Relationship'
-					? checkedItems
-					: selectedFilterBy?.businessType === 'Date'
-					? items
-					: undefined,
-				value ?? undefined
-			);
-		}
-
-		onClose();
-	};
-
 	const isMultiSelectValue = () => {
 		if (
 			aggregationFilter &&
@@ -428,6 +394,64 @@ export function ModalAddFilter({
 		) {
 			return true;
 		}
+	};
+
+	const handleSaveFilter = (event: FormEvent) => {
+		event.preventDefault();
+
+		const checkedItems: MultiSelectItemChild[] = [];
+
+		if (!!items.length && selectedFilterBy?.businessType !== 'Date') {
+			const [itemGroup] = items as MultiSelectItem[];
+			itemGroup.children.forEach((child) => {
+				if (child.checked) {
+					checkedItems.push(child);
+				}
+			});
+		}
+
+		const currentErrors = validate({
+			checkedItems,
+			disableDateValues,
+			items,
+			selectedFilterBy,
+			selectedFilterTypeValue,
+			setErrors,
+			value,
+		});
+
+		if (Object.keys(currentErrors).length) {
+			return;
+		}
+
+		if (editingFilter) {
+			onSave({
+				fieldLabel: selectedFilterBy?.label,
+				filterBy: selectedFilterBy?.name,
+				filterType: selectedFilterTypeValue,
+				objectFieldBusinessType: selectedFilterBy?.businessType,
+				objectFieldName: editingObjectFieldName,
+				value: value ?? undefined,
+				valueList: isMultiSelectValue() ? checkedItems : undefined,
+			});
+		}
+		else {
+			onSave({
+				fieldLabel: selectedFilterBy?.label,
+				filterBy: selectedFilterBy?.name,
+				filterType: selectedFilterTypeValue,
+				objectFieldBusinessType: selectedFilterBy?.businessType,
+				objectFieldName: selectedFilterBy?.name!,
+				value: value ?? undefined,
+				valueList: isMultiSelectValue()
+					? checkedItems
+					: selectedFilterBy?.businessType === 'Date'
+					? items
+					: undefined,
+			});
+		}
+
+		onClose();
 	};
 
 	const aggregationRelationshipOrDateFieldBusinessType =
@@ -536,7 +560,7 @@ export function ModalAddFilter({
 					<MultipleSelect
 						error={errors.items}
 						label={Liferay.Language.get('value')}
-						options={items}
+						options={items as MultiSelectItem[]}
 						required
 						setOptions={setItems}
 					/>
