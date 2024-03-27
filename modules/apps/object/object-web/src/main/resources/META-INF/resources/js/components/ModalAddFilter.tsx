@@ -146,6 +146,11 @@ export function ModalAddFilter({
 	const [filterStartDate, setFilterStartDate] = useState('');
 	const [filterEndDate, setFilterEndDate] = useState('');
 
+	const aggregationRelationshipOrDateFieldBusinessType =
+		selectedFilterBy?.businessType === 'Date' ||
+		(aggregationFilter &&
+			selectedFilterBy?.businessType === 'Relationship');
+
 	const filterByItems = useMemo(() => {
 		return objectFields.map(({id, label, name}) => ({
 			label: stringUtils.getLocalizableLabel(
@@ -345,38 +350,6 @@ export function ModalAddFilter({
 		[]
 	);
 
-	useEffect(() => {
-		if (!selectedFilterBy && !editingObjectFieldName) {
-			setItems([]);
-		}
-		else {
-			if (selectedFilterBy) {
-				setFieldValues(
-					(selectedFilterBy as unknown) as ObjectFieldView
-				);
-			}
-			else {
-				const objectField = objectFields.find(
-					({name}) => name === editingObjectFieldName
-				);
-
-				objectField && setFieldValues(objectField);
-			}
-		}
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [editingFilter, setFieldValues, selectedFilterBy, workflowStatuses]);
-
-	useEffect(() => {
-		if (editingFilter) {
-			const editingObjectFieldFilter = objectFields.find(
-				(objectField) => objectField.name === editingObjectFieldName
-			);
-
-			setSelectedFilterBy(editingObjectFieldFilter);
-		}
-	}, [editingFilter, editingObjectFieldName, objectFields]);
-
 	const isMultiSelectValue = () => {
 		if (
 			aggregationFilter &&
@@ -454,10 +427,37 @@ export function ModalAddFilter({
 		onClose();
 	};
 
-	const aggregationRelationshipOrDateFieldBusinessType =
-		selectedFilterBy?.businessType === 'Date' ||
-		(aggregationFilter &&
-			selectedFilterBy?.businessType === 'Relationship');
+	useEffect(() => {
+		if (!selectedFilterBy && !editingObjectFieldName) {
+			setItems([]);
+		}
+		else {
+			if (selectedFilterBy) {
+				setFieldValues(
+					(selectedFilterBy as unknown) as ObjectFieldView
+				);
+			}
+			else {
+				const objectField = objectFields.find(
+					({name}) => name === editingObjectFieldName
+				);
+
+				objectField && setFieldValues(objectField);
+			}
+		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [editingFilter, setFieldValues, selectedFilterBy, workflowStatuses]);
+
+	useEffect(() => {
+		if (editingFilter) {
+			const editingObjectFieldFilter = objectFields.find(
+				(objectField) => objectField.name === editingObjectFieldName
+			);
+
+			setSelectedFilterBy(editingObjectFieldFilter);
+		}
+	}, [editingFilter, editingObjectFieldName, objectFields]);
 
 	return (
 		<ClayModal
