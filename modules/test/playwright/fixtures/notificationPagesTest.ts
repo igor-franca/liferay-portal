@@ -7,11 +7,16 @@
 
 import {test} from '@playwright/test';
 
+import {EmailNotificationTemplatePage} from '../pages/notification-web/EmailNotificationTemplatePage';
 import {QueuePage} from '../pages/notification-web/QueuePage';
 
 const notificationPagesTest = test.extend<{
+	emailNotificationTemplatePage: EmailNotificationTemplatePage;
 	queuePage: QueuePage;
 }>({
+	emailNotificationTemplatePage: async ({page}, use) => {
+		await use(new EmailNotificationTemplatePage(page));
+	},
 	queuePage: async ({page}, use) => {
 		await use(new QueuePage(page));
 	},
