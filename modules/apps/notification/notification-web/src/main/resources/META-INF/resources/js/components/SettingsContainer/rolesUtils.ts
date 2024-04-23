@@ -9,9 +9,22 @@ import {
 } from '@liferay/object-js-components-web';
 import {createResourceURL, fetch} from 'frontend-js-web';
 
-interface Role {
+interface Roles {
+	accountRoles: RoleTypes[];
+	organizationRoles: RoleTypes[];
+	regularRoles: RoleTypes[];
+}
+
+interface RoleTypes {
+	label: string;
 	name: string;
 }
+
+const accountLabels = {
+	accountRoles: Liferay.Language.get('account-roles'),
+	organizationRoles: Liferay.Language.get('organization-roles'),
+	regularRoles: Liferay.Language.get('regular-roles'),
+};
 
 export async function getEmailNotificationRoles(baseResourceURL: string) {
 	const response = await fetch(
@@ -21,21 +34,27 @@ export async function getEmailNotificationRoles(baseResourceURL: string) {
 		}).toString()
 	);
 
-	const items = (await response.json()).accountRoles as Role[];
+	const rolesResponse = (await response.json()) as Roles;
 
-	const accountRolesGroup = {
-		children: items.map(({name}) => {
-			return {
-				checked: false,
-				label: name,
-				value: name,
-			};
-		}),
-		label: 'Account Roles',
-		value: 'accountRolesList',
-	} as MultiSelectItem;
+	const roles = [] as MultiSelectItem[];
 
-	return [accountRolesGroup];
+	(Object.entries(rolesResponse) as [keyof Roles, RoleTypes[]][]).forEach(
+		([accountRoleKey, accountRoleValues]) => {
+			roles.push({
+				children: accountRoleValues.map((accountInfo) => {
+					return {
+						checked: false,
+						label: accountInfo.label,
+						value: accountInfo.name,
+					};
+				}),
+				label: accountLabels[accountRoleKey],
+				value: accountRoleKey,
+			});
+		}
+	);
+
+	return roles;
 }
 
 export function getCheckedChildren(
