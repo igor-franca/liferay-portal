@@ -74,8 +74,7 @@ export function MultipleSelect({
 	useEffect(() => {
 		if (selectAllOption) {
 			let firstRender = false;
-
-			let notAllSelected: MultiSelectItemChild | undefined;
+			let allSelected = true;
 
 			(options as MultiSelectItem[]).forEach(({children}) => {
 				children.forEach((child) => {
@@ -84,13 +83,13 @@ export function MultipleSelect({
 					}
 
 					if (child.checked === false) {
-						notAllSelected = child;
+						allSelected = false;
 					}
 				});
 			});
 
-			if (!firstRender && !notAllSelected) {
-				setSelectAllChecked(true);
+			if (!firstRender) {
+				setSelectAllChecked(allSelected);
 			}
 		}
 	}, [options, selectAllOption]);
@@ -130,9 +129,6 @@ export function MultipleSelect({
 					onChange={setQuery}
 					onFocus={() => setDropdownActive((active) => !active)}
 					onItemsChange={(items: MultiSelectItem[]) => {
-						if (!items.length && setSelectAllChecked) {
-							setSelectAllChecked(false);
-						}
 						const newDropDownOptions = options?.map((option) => {
 							const newChildren = option.children.map((child) => {
 								const checkedItem = items.find(
