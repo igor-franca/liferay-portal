@@ -42,12 +42,14 @@ export function SecondaryRecipient({
 		const newRecipients: EmailNotificationRecipients[] = [];
 
 		if (items.length) {
-			const [itemsGroup] = items as MultiSelectItem[];
+			const itemsGroup = items as MultiSelectItem[];
 
-			itemsGroup.children.forEach((child) => {
-				if (child.checked) {
-					newRecipients.push({['roleName']: child.value});
-				}
+			itemsGroup.map((itemGroup) => {
+				itemGroup.children.forEach((child) => {
+					if (child.checked) {
+						newRecipients.push({['roleName']: child.value});
+					}
+				});
 			});
 		}
 
@@ -66,18 +68,20 @@ export function SecondaryRecipient({
 			(!!ccRolesList.length || !!emailNotificationRoles.length)
 		) {
 			const baseRoleList = ccRolesList.length
-				? ccRolesList[0]
-				: emailNotificationRoles[0];
+				? ccRolesList
+				: emailNotificationRoles;
 
-			setCCRolesList([
-				{
-					...baseRoleList,
-					children: getCheckedChildren(
-						recipient.cc,
-						baseRoleList.children
-					),
-				},
-			]);
+			setCCRolesList(
+				baseRoleList.map((baseRoleElement) => {
+					return {
+						...baseRoleElement,
+						children: getCheckedChildren(
+							recipient.cc as EmailNotificationRecipients[],
+							baseRoleElement.children
+						),
+					};
+				})
+			);
 
 			return;
 		}
@@ -97,18 +101,20 @@ export function SecondaryRecipient({
 			(!!bccRolesList.length || !!emailNotificationRoles.length)
 		) {
 			const baseRoleList = bccRolesList.length
-				? bccRolesList[0]
-				: emailNotificationRoles[0];
+				? bccRolesList
+				: emailNotificationRoles;
 
-			setBCCRolesList([
-				{
-					...baseRoleList,
-					children: getCheckedChildren(
-						recipient.bcc,
-						baseRoleList.children
-					),
-				},
-			]);
+			setBCCRolesList(
+				baseRoleList.map((baseRoleElement) => {
+					return {
+						...baseRoleElement,
+						children: getCheckedChildren(
+							recipient.bcc as EmailNotificationRecipients[],
+							baseRoleElement.children
+						),
+					};
+				})
+			);
 
 			return;
 		}
