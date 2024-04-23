@@ -10,6 +10,8 @@ export const PORTLET_URLS = {
 		'/~/control_panel/manage?p_p_id=com_liferay_layout_page_template_admin_web_portlet_LayoutPageTemplatesPortlet&_com_liferay_layout_page_template_admin_web_portlet_LayoutPageTemplatesPortlet_tabs1=display-page-templates',
 	documentLibrary:
 		'/~/control_panel/manage?p_p_id=com_liferay_document_library_web_portlet_DLAdminPortlet',
+	editNotificationTemplate:
+		'/~/control_panel/manage?p_p_id=com_liferay_notification_web_internal_portlet_NotificationTemplatesPortlet&_com_liferay_notification_web_internal_portlet_NotificationTemplatesPortlet_mvcRenderCommandName=/notification_templates/edit_notification_template',
 	fragments: '/~/control_panel/manage/-/fragments/fragment_collections',
 	journal:
 		'/~/control_panel/manage?p_p_id=com_liferay_journal_web_portlet_JournalPortlet',
@@ -25,6 +27,8 @@ export const PORTLET_URLS = {
 		'/~/control_panel/manage?p_p_id=com_liferay_portal_workflow_task_web_portlet_MyWorkflowTaskPortlet',
 	navigationMenus:
 		'/~/control_panel/manage?p_p_id=com_liferay_site_navigation_admin_web_portlet_SiteNavigationAdminPortlet',
+	notificationTemplates:
+		'/~/control_panel/manage?p_p_id=com_liferay_notification_web_internal_portlet_NotificationTemplatesPortlet',
 	objects:
 		'/~/control_panel/manage?p_p_id=com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet',
 	pages: '/~/control_panel/manage?p_p_id=com_liferay_layout_admin_web_portlet_GroupPagesPortlet',
