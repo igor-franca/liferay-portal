@@ -11,6 +11,7 @@ export class EmailPage {
 	readonly page: Page;
 	readonly notificationTemplateLabel: Locator;
 	readonly notificationTemplateTitle: Locator;
+	readonly recipientTypeSingleSelect: Locator;
 
 	constructor(page: Page) {
 		this.page = page;
@@ -20,7 +21,10 @@ export class EmailPage {
 		this.notificationTemplateLabel = page
 			.getByRole('navigation')
 			.getByRole('strong')
-			.getByText('email');	
+			.getByText('email');
+		this.recipientTypeSingleSelect = page
+			.getByRole('combobox')
+			.getByText('User Email Address' || 'Roles')
 	}
 
 	getNotificationTemplateTitle(notificationName: string) {
