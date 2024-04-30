@@ -9,18 +9,50 @@ import {PORTLET_URLS} from '../../utils/portletUrls';
 
 export class EmailNotificationTemplatePage {
 	readonly page: Page;
+	readonly accountRolesGroupTitle: Locator;
 	readonly notificationTemplateLabel: Locator;
 	readonly notificationTemplateTitle: Locator;
+	readonly organizationRolesGroupTitle: Locator;
+	readonly primaryRecipientRoles: Locator;
+	readonly primaryRecipientType: Locator;
+	readonly regularRolesGroupTitle: Locator;
+	readonly secondaryRecipientRolesBCC: Locator;
+	readonly secondaryRecipientRolesCC: Locator;
+	readonly secondaryRecipientTypeBCC: Locator;
+	readonly secondaryRecipientTypeCC: Locator;
 
 	constructor(page: Page) {
 		this.page = page;
-		this.notificationTemplateTitle = page
-			.getByRole('navigation')
-			.getByRole('heading');
+		this.accountRolesGroupTitle = page
+			.getByText('Account Roles', {exact: true})
+			.locator('visible=true');
 		this.notificationTemplateLabel = page
 			.getByRole('navigation')
 			.getByRole('strong')
 			.getByText('email');
+		this.notificationTemplateTitle = page
+			.getByRole('navigation')
+			.getByRole('heading');
+		this.organizationRolesGroupTitle = page
+			.getByText('Organization Roles')
+			.locator('visible=true');
+		this.primaryRecipientType = page.getByLabel('TypeMandatory');
+		this.primaryRecipientRoles = page.getByLabel('RoleMandatory');
+		this.regularRolesGroupTitle = page
+			.getByText('Regular Roles')
+			.locator('visible=true');
+		this.secondaryRecipientRolesBCC = page
+			.getByLabel('Role', {exact: true})
+			.last();
+		this.secondaryRecipientRolesCC = page
+			.getByLabel('Role', {exact: true})
+			.first();
+		this.secondaryRecipientTypeBCC = page
+			.getByLabel('Type', {exact: true})
+			.last();
+		this.secondaryRecipientTypeCC = page
+			.getByLabel('Type', {exact: true})
+			.first();
 	}
 
 	getNotificationTemplateTitle(notificationName: string) {

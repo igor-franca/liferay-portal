@@ -29,3 +29,51 @@ test('can open edit email notification template page', async ({
 		emailNotificationTemplatePage.notificationTemplateLabel
 	).toBeVisible();
 });
+
+test('can see all roles groups in email notification template recipients', async ({
+	emailNotificationTemplatePage,
+	page,
+}) => {
+	await emailNotificationTemplatePage.goto();
+
+	await emailNotificationTemplatePage.primaryRecipientType.click();
+	await page.getByRole('option', {name: 'Roles'}).click();
+	await emailNotificationTemplatePage.primaryRecipientRoles.click();
+	await expect(
+		emailNotificationTemplatePage.accountRolesGroupTitle
+	).toBeVisible();
+	await expect(
+		emailNotificationTemplatePage.regularRolesGroupTitle
+	).toBeVisible();
+	await expect(
+		emailNotificationTemplatePage.organizationRolesGroupTitle
+	).toBeVisible();
+	await page.keyboard.press('Escape');
+
+	await emailNotificationTemplatePage.secondaryRecipientTypeCC.click();
+	await page.getByRole('option', {name: 'Roles'}).click();
+	await emailNotificationTemplatePage.secondaryRecipientRolesCC.click();
+	await expect(
+		emailNotificationTemplatePage.accountRolesGroupTitle
+	).toBeVisible();
+	await expect(
+		emailNotificationTemplatePage.regularRolesGroupTitle
+	).toBeVisible();
+	await expect(
+		emailNotificationTemplatePage.organizationRolesGroupTitle
+	).toBeVisible();
+	await page.keyboard.press('Escape');
+
+	await emailNotificationTemplatePage.secondaryRecipientTypeBCC.click();
+	await page.getByRole('option', {name: 'Roles'}).click();
+	await emailNotificationTemplatePage.secondaryRecipientRolesBCC.click();
+	await expect(
+		emailNotificationTemplatePage.accountRolesGroupTitle
+	).toBeVisible();
+	await expect(
+		emailNotificationTemplatePage.regularRolesGroupTitle
+	).toBeVisible();
+	await expect(
+		emailNotificationTemplatePage.organizationRolesGroupTitle
+	).toBeVisible();
+});
