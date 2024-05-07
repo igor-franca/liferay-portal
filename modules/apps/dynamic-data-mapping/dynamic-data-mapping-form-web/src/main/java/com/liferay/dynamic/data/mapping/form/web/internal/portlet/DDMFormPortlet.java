@@ -29,28 +29,40 @@ import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.object.service.ObjectFieldLocalService;
 import com.liferay.object.service.ObjectFieldSettingLocalService;
 import com.liferay.object.service.ObjectRelationshipLocalService;
+import com.liferay.petra.io.unsync.UnsyncStringWriter;
 import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.GroupLocalService;
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.service.LayoutSetLocalService;
+import com.liferay.portal.kernel.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalService;
+import com.liferay.portal.kernel.servlet.PipingServletResponse;
+import com.liferay.portal.kernel.servlet.ServletContextPool;
+import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.theme.ThemeUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.URLCodec;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.IOException;
-
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
@@ -59,6 +71,9 @@ import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Activate;
@@ -155,7 +170,7 @@ public class DDMFormPortlet extends MVCPortlet {
 
 			if (ddmFormDisplayContext.isFormShared()) {
 				_saveRefererGroupIdInRequest(
-					renderRequest, ddmFormDisplayContext);
+					renderRequest, renderResponse, ddmFormDisplayContext);
 			}
 
 			if ((DDMFormInstanceSubmissionLimitStatusUtil.
@@ -254,9 +269,15 @@ public class DDMFormPortlet extends MVCPortlet {
 		}
 	}
 
+	@Reference(
+		target = "(osgi.web.symbolicname=com.liferay.dynamic.data.mapping.form.web)"
+	)
+	private ServletContext _servletContext;
+
 	private void _saveRefererGroupIdInRequest(
 		RenderRequest renderRequest,
-		DDMFormDisplayContext ddmFormDisplayContext) {
+		RenderResponse renderResponse,
+		DDMFormDisplayContext ddmFormDisplayContext) throws Exception {
 
 		DDMFormInstance ddmFormInstance =
 			ddmFormDisplayContext.getFormInstance();
@@ -264,6 +285,56 @@ public class DDMFormPortlet extends MVCPortlet {
 		if (ddmFormInstance != null) {
 			renderRequest.setAttribute(
 				DDMFormWebKeys.REFERER_GROUP_ID, ddmFormInstance.getGroupId());
+
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)renderRequest.getAttribute(
+					WebKeys.THEME_DISPLAY);
+
+			LayoutSet layoutSet2 = _layoutSetLocalService.getLayoutSet(
+				themeDisplay.getScopeGroupId(), false);
+
+			LayoutSet layoutSet = LayoutSetLocalServiceUtil.fetchLayoutSet(
+				ddmFormInstance.getGroupId(), false);
+
+			if (layoutSet == null) {
+				return;
+			}
+
+			themeDisplay.setLayoutSet(layoutSet);
+			themeDisplay.setLookAndFeel(
+				layoutSet.getTheme(), layoutSet.getColorScheme());
+
+			HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(renderRequest);
+
+			HttpServletResponse httpServletResponse = _portal.getHttpServletResponse(renderResponse);
+
+			httpServletRequest.setAttribute(WebKeys.THEME_DISPLAY, themeDisplay);
+
+			// -----------------------------
+
+			RequestDispatcher requestDispatcher =
+				_servletContext.getRequestDispatcher("/display/view.jsp");
+
+			UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
+
+			PipingServletResponse pipingServletResponse = new PipingServletResponse(
+				httpServletResponse, unsyncStringWriter);
+
+			requestDispatcher.include(httpServletRequest, pipingServletResponse);
+			// -----------------------------
+
+			String content = ThemeUtil.include(
+				ServletContextPool.get(StringPool.BLANK), httpServletRequest,
+				httpServletResponse, "portal_normal.ftl", layoutSet.getTheme(),
+				false);
+
+			Document document = Jsoup.parse(content);
+
+			Element contentElement = document.getElementById("content");
+
+			contentElement.html(unsyncStringWriter.toString());
+
+			ServletResponseUtil.write(httpServletResponse, document.html());
 		}
 	}
 
@@ -314,6 +385,9 @@ public class DDMFormPortlet extends MVCPortlet {
 
 	@Reference
 	private JSONFactory _jsonFactory;
+
+	@Reference
+	private LayoutSetLocalService _layoutSetLocalService;
 
 	@Reference
 	private NPMResolver _npmResolver;
