@@ -19,7 +19,6 @@ import {INITIAL_MODAL_SIZE} from '../utils/modals/constants';
 import {resolveModalHeight} from '../utils/modals/resolveModalHeight';
 
 function Modal({
-	disableHeader: disableHeaderProp,
 	id,
 	onClose: onCloseProp,
 	status,
@@ -32,9 +31,6 @@ function Modal({
 	const [title, setTitle] = useState(titleProp);
 	const [url, setURL] = useState(urlProp);
 	const [size, setSize] = useState(INITIAL_MODAL_SIZE);
-	const [disableHeader, setDisableHeader] = useState(
-		disableHeaderProp || false
-	);
 
 	const iframeRef = useRef(null);
 
@@ -76,10 +72,6 @@ function Modal({
 
 			if (data.title) {
 				setTitle(data.title);
-			}
-
-			if (data.disableHeader) {
-				setDisableHeader(data.disableHeader);
 			}
 
 			setSize(data.size || INITIAL_MODAL_SIZE);
@@ -149,11 +141,7 @@ function Modal({
 					size={size}
 					status={status}
 				>
-					{!disableHeader && (
-						<ClayModal.Header withTitle={!disableHeader}>
-							{title}
-						</ClayModal.Header>
-					)}
+					{title && <ClayModal.Header>{title}</ClayModal.Header>}
 
 					<div
 						className="fds-modal-body modal-body modal-body-iframe"
@@ -178,7 +166,6 @@ function Modal({
 
 Modal.propTypes = {
 	closeOnSubmit: PropTypes.bool,
-	disableHeader: PropTypes.bool,
 	id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 	onClose: PropTypes.func,
 	status: PropTypes.string,

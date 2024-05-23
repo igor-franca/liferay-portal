@@ -14,7 +14,6 @@ import {triggerAction} from '../../utils/actionItems/triggerAction';
 
 export interface ICreationActionItem {
 	data?: {
-		disableHeader?: boolean;
 		permissionKey?: string;
 		size?: string;
 		title?: string;

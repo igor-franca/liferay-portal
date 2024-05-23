@@ -361,9 +361,6 @@ public class FDSViewFragmentRenderer implements FragmentRenderer {
 					return JSONUtil.put(
 						"data",
 						JSONUtil.put(
-							"disableHeader",
-							(boolean)Validator.isNull(properties.get("title"))
-						).put(
 							"permissionKey", properties.get("permissionKey")
 						).put(
 							"size", properties.get("modalSize")
@@ -740,9 +737,6 @@ public class FDSViewFragmentRenderer implements FragmentRenderer {
 					JSONUtil.put(
 						"confirmationMessage",
 						properties.get("confirmationMessage")
-					).put(
-						"disableHeader",
-						(boolean)Validator.isNull(properties.get("title"))
 					).put(
 						"errorMessage", properties.get("errorMessage")
 					).put(

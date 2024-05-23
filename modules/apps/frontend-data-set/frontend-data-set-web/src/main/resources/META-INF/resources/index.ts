@@ -116,7 +116,6 @@ export interface IItemsActions {
 
 export interface IItemActionsData {
 	confirmationMessage?: string;
-	disableHeader?: boolean;
 	errorMessage?: string;
 	id?: string | number;
 	method?: 'delete' | 'get' | 'patch' | 'post';
