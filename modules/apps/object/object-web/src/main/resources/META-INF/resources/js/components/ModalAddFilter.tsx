@@ -311,9 +311,9 @@ export function ModalAddFilter({
 									) as LabelValueObject;
 								}
 
-								let label = objectEntry[
+								let label = `${objectEntry[
 									titleObjectField?.name
-								] as string;
+								]}`;
 
 								if (
 									titleObjectField.businessType ===

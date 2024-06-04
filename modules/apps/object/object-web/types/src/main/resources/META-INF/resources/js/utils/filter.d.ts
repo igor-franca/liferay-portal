@@ -17,7 +17,7 @@ export declare function getSystemObjectFieldLabelFromObjectEntry(
 	entry: ObjectEntry,
 	itemObject: LabelValueObject
 ): {
-	label: unknown;
+	label: string;
 	value: string;
 };
 export declare function getCheckedObjectRelationshipItems(

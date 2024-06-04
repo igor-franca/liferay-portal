@@ -102,7 +102,7 @@ export function getSystemObjectFieldLabelFromObjectEntry(
 
 	return {
 		...itemObject,
-		label: entry[titleFieldName],
+		label: `${entry[titleFieldName]}`,
 	};
 }
 
