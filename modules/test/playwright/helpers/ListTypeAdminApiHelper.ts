@@ -21,6 +21,14 @@ export class ListTypeAdminApiHelper {
 		);
 	}
 
+	async getFilteredListTypeDefinition(filterParamKey: string, filterParamValue: string): Promise<PickList[]> {
+		const response: Picklists = await this.apiHelpers.get(
+			`${this.apiHelpers.baseUrl}${this.basePath}/list-type-definitions?filter=${filterParamKey} eq '${filterParamValue}'`
+		);
+
+		return response.items;
+	};
+
 	async getListTypeDefinitions() {
 		return this.apiHelpers.get(
 			`${this.apiHelpers.baseUrl}${this.basePath}/list-type-definitions`

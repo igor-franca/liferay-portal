@@ -347,6 +347,11 @@ interface ObjectValidationRuleSetting {
 	value: string;
 }
 
+interface Picklists {
+	actions: Actions;
+	items: PickList[];
+}
+
 interface PickListItem {
 	externalReferenceCode: string;
 	id: number;

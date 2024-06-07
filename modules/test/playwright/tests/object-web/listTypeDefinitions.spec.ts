@@ -89,4 +89,48 @@ test.describe('manage picklists inside the picklists portlet', () => {
 			page.getByRole('link', {name: listTypeDefinitionName})
 		).toBeVisible();
 	});
+
+	test('picklist entry must support capital letter keys', 
+		async ({apiHelpers, listTypeDefinitionPage, page}) => {
+			await listTypeDefinitionPage.goto();
+
+			const listTypeDefinitionEntryName = 'listTypeDefinitionEntryName';
+
+			const listTypeDefinitionEntryKey = 'listTypeDefinitionEntryKey';
+
+			const listTypeDefinitionName = 'picklist' + getRandomInt();
+
+			await listTypeDefinitionPage.createPicklist(listTypeDefinitionName);
+
+			await listTypeDefinitionPage.addPicklistItem(listTypeDefinitionName,listTypeDefinitionEntryName,listTypeDefinitionEntryKey);
+
+			const [response] = await apiHelpers.listTypeAdmin.getFilteredListTypeDefinition('name', listTypeDefinitionName)
+
+			const mockList1 = [
+				'Name',
+				'Key',
+				'External Reference Code',
+				'',
+			];
+
+			const mockLIst2 = [
+				listTypeDefinitionEntryName,
+				listTypeDefinitionEntryKey,
+				response.externalReferenceCode,
+				'Actions'
+			];
+
+			const cellContent = await page.frameLocator('iframe').locator('div.dnd-td').allInnerTexts();
+			const cellHeader = await page.frameLocator('iframe').locator('div.dnd-th').allInnerTexts();
+
+			console.log(cellContent);
+
+			// for (let i = 0; i < newValuesCount.length; i++) {
+			// const tdLocator = await newValuesCount[i];
+			// const chosenValue = mockList[i]; 
+
+			// expect(tdLocator).toBe(chosenValue);
+			
+
+	});
 });

@@ -35,6 +35,16 @@ export class ListTypeDefinitionsPage {
 		await this.savePicklistButton.click();
 	}
 
+	async addPicklistItem(picklistName: string,picklistItem: string,picklistKey: string) {
+        await this.page.getByRole('link', {name: picklistName}).click()
+        await this.page.frameLocator('iframe').getByLabel('Add Item').click();;
+        await this.page.getByPlaceholder('Text to translate...').fill(picklistItem);
+        await this.page.locator('input[name="name"]').fill(picklistKey);
+        await this.page.getByRole('button', {
+            name: 'Save',
+        }).click();
+    }
+
 	async goto() {
 		await this.applicationsMenuPage.goToPicklists();
 	}
