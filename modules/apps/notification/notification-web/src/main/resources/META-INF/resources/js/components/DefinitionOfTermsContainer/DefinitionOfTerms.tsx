@@ -17,7 +17,7 @@ import RelationshipSection from './RelationshipSection';
 
 interface DefinitionOfTermsProps {
 	baseResourceURL: string;
-	objectDefinitions: ObjectDefinition[];
+	objectDefinitions: Pick<ObjectDefinition, 'defaultLanguageId' | 'id' | 'label' | 'name'>[];
 }
 export interface RelationshipSections {
 	objectRelationshipId: number;
