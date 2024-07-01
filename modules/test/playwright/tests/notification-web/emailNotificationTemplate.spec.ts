@@ -257,3 +257,177 @@ test('can see all roles groups in email notification template recipients', async
 		emailNotificationTemplatePage.organizationRolesGroupTitle
 	).toBeVisible();
 });
+
+test('can see all general terms', async ({
+	emailNotificationTemplatePage,
+	page,
+}) => {
+	const mockGeneralTerms = [
+		{
+			label: 'Label',
+			term: 'Term',
+		},
+		{
+			label: 'Current User First Name',
+			term: '[%CURRENT_USER_FIRST_NAME%]',
+		},
+		{
+			label: 'Current User Prefix',
+			term: '[%CURRENT_USER_PREFIX%]',
+		},
+		{
+			label: 'Current Date',
+			term: '[%CURRENT_DATE%]',
+		},
+		{
+			label: 'Current User Last Name',
+			term: '[%CURRENT_USER_LAST_NAME%]',
+		},
+		{
+			label: 'Current User Middle Name',
+			term: '[%CURRENT_USER_MIDDLE_NAME%]',
+		},
+		{
+			label: 'Current User Email Address',
+			term: '[%CURRENT_USER_EMAIL_ADDRESS%]',
+		},
+		{
+			label: 'Current User ID',
+			term: '[%CURRENT_USER_ID%]',
+		},
+		{
+			label: 'Current User Suffix',
+			term: '[%CURRENT_USER_SUFFIX%]',
+		},
+	];
+
+	await emailNotificationTemplatePage.goto();
+
+	await expect(
+		page.getByRole('heading', {name: 'Definition of Terms'})
+	).toBeVisible();
+
+	await expect(
+		page.getByRole('button', {name: 'General Terms'})
+	).toBeVisible();
+
+	const rows = await page.locator('.dnd-tr').all();
+
+	for (let i = 0; i < rows.length; i++) {
+		expect(await rows[i].innerText()).toStrictEqual(
+			i >= 1
+				? mockGeneralTerms[i].label +
+						'\n' +
+						mockGeneralTerms[i].term +
+						'\n' +
+						'Copy'
+				: mockGeneralTerms[i].label + '\n' + mockGeneralTerms[i].term
+		);
+	}
+});
+
+test('can see entity terms', async ({emailNotificationTemplatePage, page}) => {
+	const mockOrganizationTerms = [
+		{
+			label: 'Label',
+			term: 'Term',
+		},
+		{
+			label: 'Comments',
+			term: '[%ORGANIZATION_COMMENT%]',
+		},
+		{
+			label: 'Create Date',
+			term: '[%ORGANIZATION_CREATEDATE%]',
+		},
+		{
+			label: 'Author Email Address',
+			term: '[%ORGANIZATION_AUTHOR_EMAIL_ADDRESS%]',
+		},
+		{
+			label: 'Author Suffix',
+			term: '[%ORGANIZATION_AUTHOR_SUFFIX%]',
+		},
+		{
+			label: 'Author Prefix',
+			term: '[%ORGANIZATION_AUTHOR_PREFIX%]',
+		},
+		{
+			label: 'Author First Name',
+			term: '[%ORGANIZATION_AUTHOR_FIRST_NAME%]',
+		},
+		{
+			label: 'Author Last Name',
+			term: '[%ORGANIZATION_AUTHOR_LAST_NAME%]',
+		},
+		{
+			label: 'Author Middle Name',
+			term: '[%ORGANIZATION_AUTHOR_MIDDLE_NAME%]',
+		},
+		{
+			label: 'Author ID',
+			term: '[%ORGANIZATION_AUTHOR_ID%]',
+		},
+		{
+			label: 'External Reference Code',
+			term: '[%ORGANIZATION_EXTERNALREFERENCECODE%]',
+		},
+		{
+			label: 'ID',
+			term: '[%ORGANIZATION_ID%]',
+		},
+		{
+			label: 'Modified Date',
+			term: '[%ORGANIZATION_MODIFIEDDATE%]',
+		},
+		{
+			label: 'Name',
+			term: '[%ORGANIZATION_NAME%]',
+		},
+		{
+			label: 'Status',
+			term: '[%ORGANIZATION_STATUS%]',
+		},
+	];
+
+	await emailNotificationTemplatePage.goto();
+
+	await page.getByRole('button', {name: 'General Terms'}).click();
+
+	await page.getByText('Select an Option').click();
+
+	const entities = [
+		'Postal Address',
+		'Account',
+		'Organization',
+		'User',
+		'Commerce Product Group',
+		'Commerce Order',
+		'Commerce Order Item',
+		'Commerce Product',
+	];
+
+	for (const entity of entities) {
+		await expect(
+			page.getByRole('option', {name: entity, exact: true})
+		).toBeVisible();
+	}
+
+	await page.getByRole('option', {name: 'Organization'}).click();
+
+	const rows = await page.locator('.fds').last().locator('.dnd-tr').all();
+
+	for (let i = 0; i < rows.length; i++) {
+		expect(await rows[i].innerText()).toStrictEqual(
+			i >= 1
+				? mockOrganizationTerms[i].label +
+						'\n' +
+						mockOrganizationTerms[i].term +
+						'\n' +
+						'Copy'
+				: mockOrganizationTerms[i].label +
+						'\n' +
+						mockOrganizationTerms[i].term
+		);
+	}
+});
