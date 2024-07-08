@@ -36,7 +36,7 @@ export class WorkflowTaskDetailsPage {
 	async goTo(assetTitle: string) {
 		await this.workflowTasksPage.goto();
 
-		this.selectAsset(assetTitle);
+		await this.selectAsset(assetTitle);
 	}
 
 	async selectAsset(assetTitle: string) {

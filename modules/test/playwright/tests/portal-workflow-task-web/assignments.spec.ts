@@ -76,7 +76,7 @@ test('send user back to my workflow tasks page after assign another user to revi
 	workflowDefinitionName = 'Workflow Definition' + getRandomString();
 
 	workflowXMLDefinition = readFileSync(
-		__dirname + '/dependencies/test-workflow-definition.xml',
+		__dirname + '/dependencies/administrator-role-assignments-workflow-definition.xml',
 		'utf-8'
 	);
 
