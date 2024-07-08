@@ -62,6 +62,11 @@ export class BlogsPage {
 		await this.assertPermissions(permissions);
 	}
 
+	async deleteAllBlogEntries() {
+		await this.selectAllBlogEntriesCheckBox.check();
+		await this.deleteAllBlogEntriesButton.click();
+	}
+
 	async assertPermissions(
 		permissions: {enabled: boolean; locator: string}[]
 	) {
@@ -85,10 +90,5 @@ export class BlogsPage {
 		await this.permissionsFrameLocator
 			.getByRole('button', {name: 'Cancel'})
 			.click();
-	}
-
-	async deleteAllBlogEntries() {
-		await this.selectAllBlogEntriesCheckBox.check();
-		await this.deleteAllBlogEntriesButton.click();
 	}
 }

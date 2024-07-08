@@ -35,6 +35,11 @@ export class WorkflowTaskDetailsPage {
 
 	async goTo(assetTitle: string) {
 		await this.workflowTasksPage.goto();
+
+		this.selectAsset(assetTitle);
+	}
+
+	async selectAsset(assetTitle: string) {
 		const assetLink = this.page.getByRole('link', {name: assetTitle});
 		await assetLink.click({force: true});
 	}
