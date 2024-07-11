@@ -9,37 +9,36 @@ import {ClayTooltipProvider} from '@clayui/tooltip';
 import React from 'react';
 
 interface CheckboxParameterProps {
-	setValues: (values: Partial<ObjectAction>) => void;
+	checked: boolean;
+	label: string;
+	onChange: (values: boolean) => void;
+	title: string;
 	values: Partial<ObjectAction>;
 }
 
 import './CheckboxParameter.scss';
 
-export function CheckboxParameter({setValues, values}: CheckboxParameterProps) {
+export function CheckboxParameter({
+	checked,
+	label,
+	onChange,
+	title,
+	values,
+}: CheckboxParameterProps) {
 	return (
 		<>
 			<div className="lfr-object__action-builder-checkbox-parameter-container">
 				<ClayCheckbox
-					checked={false}
+					checked={checked}
 					disabled={values.system}
-					label={Liferay.Language.get('also-relate-entries')}
+					label={label}
 					onChange={({target: {checked}}) => {
-						setValues({
-							parameters: {
-								...values.parameters,
-								relatedObjectEntries: checked,
-							},
-						});
+						onChange(checked);
 					}}
 				/>
 
 				<ClayTooltipProvider>
-					<div
-						data-tooltip-align="top"
-						title={Liferay.Language.get(
-							'automatically-relate-object-entries-involved-in-the-action'
-						)}
-					>
+					<div data-tooltip-align="top" title={title}>
 						<ClayIcon
 							className="lfr-object__action-builder-tooltip-icon"
 							symbol="question-circle-full"
