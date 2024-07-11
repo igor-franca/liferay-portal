@@ -167,6 +167,8 @@ export function ThenContainer({
 					}
 				: undefined;
 
+	console.log(values);
+
 	return (
 		<Card title={Liferay.Language.get('then[object]')} viewMode="inline">
 			<div className="lfr-object__action-builder-then-container">
