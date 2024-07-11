@@ -10,6 +10,7 @@ import React from 'react';
 
 import {ActionError} from '../../ObjectActionContainer';
 import {NotificationTemplateAction} from './ThenContainer';
+import {updateUsePreferredLanguageForGuestsParameter} from './updateUsePreferredLanguageForGuestsParameter';
 
 import './SingleSelectNotification.scss';
 
@@ -17,12 +18,16 @@ interface SingleSelectAddObejctEntryProps {
 	errors: ActionError;
 	notificationTemplates: NotificationTemplateAction[];
 	setValues: (values: Partial<ObjectAction>) => void;
+	setSelectedNotificationTemplate: (
+		value: Partial<NotificationTemplateAction>
+	) => void;
 	values: Partial<ObjectAction>;
 }
 
 export function SingleSelectNotification({
 	errors,
 	notificationTemplates,
+	setSelectedNotificationTemplate,
 	setValues,
 	values,
 }: SingleSelectAddObejctEntryProps) {
@@ -33,13 +38,32 @@ export function SingleSelectNotification({
 			error={errors.objectActionExecutorKey}
 			items={notificationTemplates}
 			onSelectionChange={(value) => {
-				setValues({
-					parameters: {
-						...values.parameters,
-						notificationTemplateExternalReferenceCode:
-							value as string,
-					},
-				});
+				const selectNotificationTemplate = notificationTemplates.find(
+					(notificationTemplate) => {
+						return notificationTemplate.value === value;
+					}
+				);
+
+				if (selectNotificationTemplate) {
+					setSelectedNotificationTemplate(
+						selectNotificationTemplate
+					);
+
+					const parameters =
+						updateUsePreferredLanguageForGuestsParameter(
+							values,
+							selectNotificationTemplate.type
+						);
+
+					setValues({
+						...values,
+						parameters: {
+							...parameters,
+							notificationTemplateExternalReferenceCode:
+								selectNotificationTemplate.value,
+						},
+					});
+				}
 			}}
 			required
 			selectedKey={
