@@ -63,6 +63,8 @@ renderResponse.setTitle(LanguageUtil.get(request, titleKey));
 		).put(
 			"translations", (currentKaleoDefinitionVersion == null) ? new HashMap<>() : currentKaleoDefinitionVersion.getTitleMap()
 		).put(
+			"userTimeZone", kaleoDesignerDisplayContext.getUserTimeZone()
+		).put(
 			"version", (currentKaleoDefinitionVersion == null) ? "0" : currentKaleoDefinitionVersion.getVersion()
 		).build()
 	%>'

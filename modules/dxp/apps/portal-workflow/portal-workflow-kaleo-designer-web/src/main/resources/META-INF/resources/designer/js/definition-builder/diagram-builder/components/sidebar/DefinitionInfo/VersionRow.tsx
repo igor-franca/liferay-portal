@@ -4,7 +4,6 @@
  */
 
 import {ClayButtonWithIcon} from '@clayui/button';
-import moment from 'moment';
 import React, {useContext} from 'react';
 
 import {DefinitionBuilderContext} from '../../../../DefinitionBuilderContext';
@@ -14,6 +13,7 @@ import {
 	saveDefinitionRequest,
 } from '../../../../util/fetchUtil';
 import lang from '../../../../util/lang';
+import toLocalDateTimeFormatted from '../../../util/toLocalDateTimeFormatted';
 
 import './VersionRow.scss';
 
@@ -22,6 +22,7 @@ interface RetrieveWorkflowDefinitionResponseProps {
 	content: string;
 	title: string;
 	title_i18n: Liferay.Language.FullyLocalizedValue<string>;
+	userTimeZone: string;
 	version: string;
 }
 
@@ -31,6 +32,7 @@ interface VersionRowProps {
 	setWorkflowDefinitionVersions: React.Dispatch<
 		React.SetStateAction<WorkflowDefinitionVersion[]>
 	>;
+	userTimeZone: string;
 	versionNumber: number;
 }
 
@@ -38,6 +40,7 @@ export function VersionRow({
 	creatorName,
 	dateCreated,
 	setWorkflowDefinitionVersions,
+	userTimeZone,
 	versionNumber,
 }: VersionRowProps) {
 	const {
@@ -151,8 +154,10 @@ export function VersionRow({
 						</label>
 
 						<span className="lfr-workflow__version-row-info-date-user">
-							{moment(dateCreated).format(
-								Liferay.Language.get('mmm-dd-yyyy-lt')
+							{toLocalDateTimeFormatted(
+								dateCreated,
+								Liferay.ThemeDisplay.getBCP47LanguageId(),
+								userTimeZone
 							)}{' '}
 
 							by {creatorName}

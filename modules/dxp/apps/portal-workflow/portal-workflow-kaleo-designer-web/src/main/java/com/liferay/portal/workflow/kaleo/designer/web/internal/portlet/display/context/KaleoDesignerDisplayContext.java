@@ -515,6 +515,18 @@ public class KaleoDesignerDisplayContext {
 		return userName;
 	}
 
+	public String getUserTimeZone() {
+		User user = _themeDisplay.getUser();
+
+		if ((user == null) || user.isGuestUser() ||
+			Validator.isNull(user.getFullName())) {
+
+			return null;
+		}
+
+		return user.getTimeZoneId();
+	}
+
 	public boolean isAllowScriptContentToBeExecutedOrIncluded() {
 		return _scriptManagementConfigurationHelper.
 			isAllowScriptContentToBeExecutedOrIncluded();
