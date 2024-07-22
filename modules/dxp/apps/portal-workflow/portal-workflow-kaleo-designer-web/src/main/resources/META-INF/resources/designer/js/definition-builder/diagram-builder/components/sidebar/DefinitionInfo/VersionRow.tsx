@@ -52,6 +52,12 @@ export function VersionRow({
 		setVersion,
 	} = useContext(DefinitionBuilderContext);
 
+	const versionCreationDate = toLocalDateTimeFormatted(
+		dateCreated,
+		Liferay.ThemeDisplay.getBCP47LanguageId(),
+		userTimeZone
+	);
+
 	const restoreSuccess = async (response: Response) => {
 		const alertMessage = lang.sub(
 			Liferay.Language.get('restored-to-revision-x'),
@@ -155,13 +161,7 @@ export function VersionRow({
 						</label>
 
 						<span className="lfr-workflow__version-row-info-date-user">
-							{toLocalDateTimeFormatted(
-								dateCreated,
-								Liferay.ThemeDisplay.getBCP47LanguageId(),
-								userTimeZone
-							)}{' '}
-
-							by {creatorName}
+							{`${versionCreationDate} ${Liferay.Language.get('by').toLowerCase()} ${creatorName}`}
 						</span>
 					</div>
 				) : (
