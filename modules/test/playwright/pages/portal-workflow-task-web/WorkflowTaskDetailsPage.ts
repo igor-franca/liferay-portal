@@ -9,37 +9,37 @@ import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
 import {WorkflowTasksPage} from './WorkflowTasksPage';
 
 export class WorkflowTaskDetailsPage {
+	readonly activitiesButton: Locator;
 	readonly approveMenuItem: Locator;
 	readonly assignee: FrameLocator;
 	readonly assignToDialogIFRAME: FrameLocator;
 	readonly assignToMenuItem: Locator;
 	readonly assignToSingleSelect: Locator;
-	readonly subscribeButton: Locator;
-	readonly doneAssigneeButton: Locator;
-	readonly doneButton: Locator;
 	readonly commentBox: Locator;
 	readonly commentSectionButton: Locator;
+	readonly detailsMessage: Locator;
+	readonly doneAssigneeButton: Locator;
+	readonly doneButton: Locator;
 	readonly page: Page;
+	readonly previewMessageBoards: Locator;
 	readonly rejectMenuItem: Locator;
 	readonly reply: Locator;
-	readonly viewButton: Locator;
 	readonly reviewActionMenu: Locator;
 	readonly reviewComment: Locator;
-	readonly workflowTasksPage: WorkflowTasksPage;
-	readonly detailsMessage: Locator;
-	readonly previewMessageBoards: Locator;
-	readonly activitiesButton: Locator;
+	readonly subscribeButton: Locator;
+	readonly viewButton: Locator;
 	readonly viewUsagesButton: Locator;
+	readonly workflowTasksPage: WorkflowTasksPage;
 
 	constructor(page: Page) {
 		this.activitiesButton = page.getByRole('button', {name: 'Activities'});
 		this.approveMenuItem = page.getByRole('menuitem', {name: 'approve'});
-		this.assignToDialogIFRAME = page
-		.frameLocator(
+		this.assignToDialogIFRAME = page.frameLocator(
 			'iframe[name="_com_liferay_portal_workflow_task_web_portlet_MyWorkflowTaskPortlet_assignToDialog_iframe_"]'
 		);
 		this.assignToMenuItem = page.getByRole('link', {name: 'Assign to...'});
-		this.assignToSingleSelect = this.assignToDialogIFRAME.getByLabel('Assign to');
+		this.assignToSingleSelect =
+			this.assignToDialogIFRAME.getByLabel('Assign to');
 		this.commentBox = page.frameLocator('iframe').getByRole('textbox');
 		this.commentSectionButton = page.getByRole('button', {
 			name: 'Comments',
@@ -47,7 +47,10 @@ export class WorkflowTaskDetailsPage {
 		this.detailsMessage = page.getByLabel(
 			'Ask a user to work on the item.'
 		);
-		this.doneAssigneeButton = this.assignToDialogIFRAME.getByRole('button', {name: 'Done'});
+		this.doneAssigneeButton = this.assignToDialogIFRAME.getByRole(
+			'button',
+			{name: 'Done'}
+		);
 		this.doneButton = page.getByRole('button', {name: 'Done'});
 		this.page = page;
 		this.previewMessageBoards = page.getByRole('button', {

@@ -19,7 +19,6 @@ import performLogin, {
 	performUserSwitch,
 } from '../../utils/performLogin';
 import {blogsPagesTest} from '../blogs-web/fixtures/blogsPagesTest';
-import { MessageBoardsPage } from '../../pages/message-boards/MessageBoardsPage';
 
 export const test = mergeTests(
 	apiHelpersTest,
@@ -61,20 +60,19 @@ test.afterEach(
 			await blogsPage.deleteAllBlogEntries();
 		}
 
-		if(layoutId){
-			await apiHelpers.jsonWebServicesLayout.deleteLayout(
-				layoutId
-			)
+		if (layoutId) {
+			await apiHelpers.jsonWebServicesLayout.deleteLayout(layoutId);
 		}
 
-		if(messageBoardTitle){
-			await messageBoardsPage.goto()
+		if (messageBoardTitle) {
+			await messageBoardsPage.goto();
 			await messageBoardsPage.deleteAllMBEntries();
 		}
 
 		if (roleId && demoUserId) {
 			await apiHelpers.headlessAdminUser.deleteRoleUserAccountAssociation(
-				roleId, demoUserId
+				roleId,
+				demoUserId
 			);
 		}
 
@@ -231,9 +229,7 @@ test('logged user must be able to see workflow task at least from a read-only pe
 
 	await apiHelpers.headlessAdminUser.assignUserToRole(role.name, user.id);
 
-	const site = await apiHelpers.headlessSite.getSiteByERC(
-		'L_GUEST'
-	);
+	const site = await apiHelpers.headlessSite.getSiteByERC('L_GUEST');
 
 	const layout = await messageBoardsWidgetPage.addMessageBoardsPortlet(site);
 
