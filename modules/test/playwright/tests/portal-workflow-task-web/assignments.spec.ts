@@ -19,6 +19,7 @@ import performLogin, {
 	performUserSwitch,
 } from '../../utils/performLogin';
 import {blogsPagesTest} from '../blogs-web/fixtures/blogsPagesTest';
+import { MessageBoardsPage } from '../../pages/message-boards/MessageBoardsPage';
 
 export const test = mergeTests(
 	apiHelpersTest,
@@ -33,6 +34,7 @@ let assetType: string;
 let blogTitle: string;
 let demoUserId: number;
 let layoutId: string;
+let messageBoardTitle: string;
 let roleId: number;
 let workflowDefinitionId: number;
 let workflowDefinitionName: string;
@@ -43,6 +45,7 @@ test.afterEach(
 		apiHelpers,
 		blogsPage,
 		configurationTabPage,
+		messageBoardsPage,
 		processBuilderPage,
 	}) => {
 		if (assetType && workflowDefinitionName) {
@@ -58,27 +61,33 @@ test.afterEach(
 			await blogsPage.deleteAllBlogEntries();
 		}
 
-		if (workflowDefinitionId) {
-			await apiHelpers.headlessAdminWorkflow.deleteWorkflowDefinition(
-				workflowDefinitionId
-			);
-		}
-
-		if (roleId && demoUserId) {
-			await apiHelpers.headlessAdminUser.deleteRoleUserAccountAssociation(
-				roleId,demoUserId
-			);
-		}
-
 		if(layoutId){
 			await apiHelpers.jsonWebServicesLayout.deleteLayout(
 				layoutId
 			)
 		}
 
+		if(messageBoardTitle){
+			await messageBoardsPage.goto()
+			await messageBoardsPage.deleteAllMBEntries();
+		}
+
+		if (roleId && demoUserId) {
+			await apiHelpers.headlessAdminUser.deleteRoleUserAccountAssociation(
+				roleId, demoUserId
+			);
+		}
+
+		if (workflowDefinitionId) {
+			await apiHelpers.headlessAdminWorkflow.deleteWorkflowDefinition(
+				workflowDefinitionId
+			);
+		}
+
 		assetType = null;
 		blogTitle = null;
 		demoUserId = null;
+		messageBoardTitle = null;
 		roleId = null;
 		workflowDefinitionId = null;
 		workflowDefinitionName = null;
@@ -228,7 +237,7 @@ test('logged user must be able to see workflow task at least from a read-only pe
 
 	const layout = await messageBoardsWidgetPage.addMessageBoardsPortlet(site);
 
-	layoutId = layout.titleCurrentValue;
+	layoutId = layout.plid;
 
 	await messageBoardsPage.setRoleCategoryPermissions(
 		role.name.toLowerCase(),
@@ -264,9 +273,11 @@ test('logged user must be able to see workflow task at least from a read-only pe
 
 	await performUserSwitch(page, user.alternateName);
 
-	await page.goto(layoutId);
+	await page.goto(layout.titleCurrentValue);
 
 	const threadTitle = 'ThreadTitle' + getRandomInt();
+
+	messageBoardTitle = threadTitle;
 
 	await messageBoardsEditThreadPage.publishNewThreadForWorkflow(
 		threadTitle,
