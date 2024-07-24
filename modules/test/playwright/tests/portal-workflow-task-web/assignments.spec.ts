@@ -8,7 +8,6 @@ import {readFileSync} from 'fs';
 import path from 'path';
 
 import {apiHelpersTest} from '../../fixtures/apiHelpersTest';
-import {isolatedSiteTest} from '../../fixtures/isolatedSiteTest';
 import {loginTest} from '../../fixtures/loginTest';
 import {messageBoardsPagesTest} from '../../fixtures/messageBoardsTest';
 import {userPersonalBarPagesTest} from '../../fixtures/userPersonalBarPagesTest';
@@ -22,7 +21,6 @@ import performLogin, {
 import {blogsPagesTest} from '../blogs-web/fixtures/blogsPagesTest';
 
 export const test = mergeTests(
-	isolatedSiteTest,
 	apiHelpersTest,
 	blogsPagesTest,
 	loginTest(),
@@ -33,6 +31,9 @@ export const test = mergeTests(
 
 let assetType: string;
 let blogTitle: string;
+let demoUserId: number;
+let layoutId: string;
+let roleId: number;
 let workflowDefinitionId: number;
 let workflowDefinitionName: string;
 let workflowXMLDefinition: string;
@@ -63,8 +64,22 @@ test.afterEach(
 			);
 		}
 
+		if (roleId && demoUserId) {
+			await apiHelpers.headlessAdminUser.deleteRoleUserAccountAssociation(
+				roleId,demoUserId
+			);
+		}
+
+		if(layoutId){
+			await apiHelpers.jsonWebServicesLayout.deleteLayout(
+				layoutId
+			)
+		}
+
 		assetType = null;
 		blogTitle = null;
+		demoUserId = null;
+		roleId = null;
 		workflowDefinitionId = null;
 		workflowDefinitionName = null;
 		workflowXMLDefinition = null;
@@ -171,7 +186,6 @@ test('logged user must be able to see workflow task at least from a read-only pe
 	messageBoardsWidgetPage,
 	page,
 	processBuilderPage,
-	site,
 	userPersonalBarPage,
 	workflowTaskDetailsPage,
 	workflowTasksPage,
@@ -181,12 +195,14 @@ test('logged user must be able to see workflow task at least from a read-only pe
 			'demo.unprivileged@liferay.com'
 		);
 
+	demoUserId = user.id;
+
 	const defaultUser =
 		await apiHelpers.headlessAdminUser.getUserAccountByEmailAddress(
 			'test@liferay.com'
 		);
 
-	const content = JSON.parse(
+	const rolesPermissionsJSON = JSON.parse(
 		readFileSync(
 			path.join(
 				__dirname,
@@ -197,23 +213,29 @@ test('logged user must be able to see workflow task at least from a read-only pe
 	);
 
 	const role = await apiHelpers.headlessAdminUser.postRole({
-		name: 'AdminWorkflowTask' + getRandomInt(),
-		rolePermissions: content,
+		name: 'MessageBoardAdmin' + getRandomInt(),
+		rolePermissions: rolesPermissionsJSON,
 		roleType: 'regular',
 	});
 
-	const roleName = role.name;
+	roleId = role.id;
 
-	await apiHelpers.headlessAdminUser.assignUserToRole(roleName, user.id);
+	await apiHelpers.headlessAdminUser.assignUserToRole(role.name, user.id);
 
-	await messageBoardsWidgetPage.addMessageBoardsPortlet(site);
+	const site = await apiHelpers.headlessSite.getSiteByERC(
+		'L_GUEST'
+	);
+
+	const layout = await messageBoardsWidgetPage.addMessageBoardsPortlet(site);
+
+	layoutId = layout.titleCurrentValue;
 
 	await messageBoardsPage.setRoleCategoryPermissions(
-		roleName.toLowerCase(),
+		role.name.toLowerCase(),
 		site.friendlyUrlPath
 	);
 
-	workflowDefinitionName = 'WorkflowDefinition' + getRandomInt();
+	workflowDefinitionName = 'MBWorkflowDefinition' + getRandomInt();
 	workflowXMLDefinition = readFileSync(
 		__dirname +
 			'/dependencies/administrator-role-assignments-workflow-definition.xml',
@@ -233,8 +255,6 @@ test('logged user must be able to see workflow task at least from a read-only pe
 
 	await diagramViewPage.publishWorkflowDefinition();
 
-	await diagramViewPage.goBack();
-
 	await configurationTabPage.goTo();
 
 	await configurationTabPage.assignWorkflowToAssetType(
@@ -244,7 +264,7 @@ test('logged user must be able to see workflow task at least from a read-only pe
 
 	await performUserSwitch(page, user.alternateName);
 
-	await page.goto(`/web/${site.name}`);
+	await page.goto(layoutId);
 
 	const threadTitle = 'ThreadTitle' + getRandomInt();
 
@@ -255,8 +275,6 @@ test('logged user must be able to see workflow task at least from a read-only pe
 
 	await performUserSwitch(page, defaultUser.alternateName);
 
-	await page.goto(`/web/${site.name}`);
-
 	await workflowTasksPage.goToAssignedToMyRoles();
 
 	await workflowTasksPage.assignToMe(threadTitle);
@@ -264,8 +282,6 @@ test('logged user must be able to see workflow task at least from a read-only pe
 	await workflowTasksPage.reject(threadTitle);
 
 	await performUserSwitch(page, user.alternateName);
-
-	await page.goto(`/web/${site.name}`);
 
 	await userPersonalBarPage.notificationBadge.click();
 

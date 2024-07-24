@@ -13,10 +13,10 @@ export class MessageBoardsPage {
 	readonly actionReplyMessage: Locator;
 	readonly homeCategoryPermissionsFrame: FrameLocator;
 	readonly homeCategoryPermissionsMenuItem: Locator;
+	readonly newThreadButton: Locator;
 	readonly page: Page;
 	readonly optionsMenu: Locator;
 	readonly saveButton: Locator;
-	readonly newThreadButton: Locator;
 
 	constructor(page: Page) {
 		this.homeCategoryPermissionsFrame = page.frameLocator(
@@ -32,13 +32,13 @@ export class MessageBoardsPage {
 		this.homeCategoryPermissionsMenuItem = page.getByRole('menuitem', {
 			name: 'Home Category Permissions',
 		});
+		this.newThreadButton = page.getByRole('link', {name: 'New Thread'});
 		this.page = page;
 		this.optionsMenu = page.getByLabel('Options');
 		this.saveButton = this.homeCategoryPermissionsFrame.getByRole(
 			'button',
 			{name: 'Save'}
 		);
-		this.newThreadButton = page.getByRole('link', {name: 'New Thread'});
 	}
 
 	async goto(siteUrl?: Site['friendlyUrlPath']) {

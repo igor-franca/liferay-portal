@@ -26,11 +26,11 @@ export class MessageBoardsEditThreadPage {
 			exact: true,
 			name: 'Publish',
 		});
+		this.subjectSelector = page.getByLabel('Subject');
 		this.submitForWorkflowButton = page.getByRole('button', {
 			exact: true,
 			name: 'Submit for Workflow',
 		});
-		this.subjectSelector = page.getByLabel('Subject');
 	}
 
 	async goto(siteUrl?: Site['friendlyUrlPath']) {

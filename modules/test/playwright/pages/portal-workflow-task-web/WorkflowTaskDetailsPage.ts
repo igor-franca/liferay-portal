@@ -11,7 +11,9 @@ import {WorkflowTasksPage} from './WorkflowTasksPage';
 export class WorkflowTaskDetailsPage {
 	readonly approveMenuItem: Locator;
 	readonly assignee: FrameLocator;
+	readonly assignToDialogIFRAME: FrameLocator;
 	readonly assignToMenuItem: Locator;
+	readonly assignToSingleSelect: Locator;
 	readonly subscribeButton: Locator;
 	readonly doneAssigneeButton: Locator;
 	readonly doneButton: Locator;
@@ -30,9 +32,14 @@ export class WorkflowTaskDetailsPage {
 	readonly viewUsagesButton: Locator;
 
 	constructor(page: Page) {
-		this.approveMenuItem = page.getByRole('menuitem', {name: 'approve'});
-		this.assignToMenuItem = page.getByRole('link', {name: 'Assign to...'});
 		this.activitiesButton = page.getByRole('button', {name: 'Activities'});
+		this.approveMenuItem = page.getByRole('menuitem', {name: 'approve'});
+		this.assignToDialogIFRAME = page
+		.frameLocator(
+			'iframe[name="_com_liferay_portal_workflow_task_web_portlet_MyWorkflowTaskPortlet_assignToDialog_iframe_"]'
+		);
+		this.assignToMenuItem = page.getByRole('link', {name: 'Assign to...'});
+		this.assignToSingleSelect = this.assignToDialogIFRAME.getByLabel('Assign to');
 		this.commentBox = page.frameLocator('iframe').getByRole('textbox');
 		this.commentSectionButton = page.getByRole('button', {
 			name: 'Comments',
@@ -40,11 +47,7 @@ export class WorkflowTaskDetailsPage {
 		this.detailsMessage = page.getByLabel(
 			'Ask a user to work on the item.'
 		);
-		this.doneAssigneeButton = page
-			.frameLocator(
-				'iframe[name="_com_liferay_portal_workflow_task_web_portlet_MyWorkflowTaskPortlet_assignToDialog_iframe_"]'
-			)
-			.getByRole('button', {name: 'Done'});
+		this.doneAssigneeButton = this.assignToDialogIFRAME.getByRole('button', {name: 'Done'});
 		this.doneButton = page.getByRole('button', {name: 'Done'});
 		this.page = page;
 		this.previewMessageBoards = page.getByRole('button', {
@@ -62,14 +65,16 @@ export class WorkflowTaskDetailsPage {
 		this.workflowTasksPage = new WorkflowTasksPage(page);
 	}
 
-	async clickDoneButton() {
-		await this.doneButton.click();
+	async clickDoneAssigneeButton() {
+		await this.doneAssigneeButton.click();
 
 		await waitForSuccessAlert(this.page);
 	}
 
-	async fillReviewComment(comment: string) {
-		await this.commentBox.fill(comment);
+	async clickDoneButton() {
+		await this.doneButton.click();
+
+		await waitForSuccessAlert(this.page);
 	}
 
 	async goTo(assetTitle: string) {
@@ -84,26 +89,10 @@ export class WorkflowTaskDetailsPage {
 	}
 
 	async selectAssignee(assignee: string) {
-		await this.page
-			.frameLocator(
-				'iframe[name="_com_liferay_portal_workflow_task_web_portlet_MyWorkflowTaskPortlet_assignToDialog_iframe_"]'
-			)
-			.getByLabel('Assign to')
-			.selectOption(assignee);
+		await this.assignToSingleSelect.selectOption(assignee);
 	}
 
-	async clickDoneAssigneeButton() {
-		await this.page
-			.frameLocator(
-				'iframe[name="_com_liferay_portal_workflow_task_web_portlet_MyWorkflowTaskPortlet_assignToDialog_iframe_"]'
-			)
-			.getByRole('button', {name: 'Done'})
-			.click();
-
-		await waitForSuccessAlert(this.page);
-	}
-
-	async writeTaskComment(threadTitle, comment) {
+	async writeTaskComment(threadTitle: string, comment: string) {
 		await this.selectAsset(threadTitle);
 
 		await this.commentSectionButton.first().click();
@@ -112,7 +101,7 @@ export class WorkflowTaskDetailsPage {
 
 		await this.commentSectionButton.first().click();
 
-		await this.fillReviewComment(comment);
+		await this.commentBox.fill(comment);
 
 		await this.reply.click();
 	}
