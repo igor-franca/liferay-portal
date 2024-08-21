@@ -3,7 +3,9 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {act, cleanup, render} from '@testing-library/react';
+import {act, cleanup, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event'
+
 import React from 'react';
 
 import PerformanceByAssigneeCard from '../../../../src/main/resources/META-INF/resources/js/components/process-metrics/performance-by-assignee-card/PerformanceByAssigneeCard.es';
@@ -82,14 +84,26 @@ const timeRangeData = {
 };
 
 describe('The performance by assignee card component should', () => {
-	let getByText;
+	const {getByRole, getByText} = screen;
+	// const user = userEvent.setup()
 
 	beforeAll(() => {
 		jsonSessionStorage.set('timeRanges', timeRangeData);
+
+		const wrapper = ({children}) => (
+			<MockRouter query={query}>{children}</MockRouter>
+		);
+
+		render(
+			<PerformanceByAssigneeCard routeParams={{processId}} />,
+			{wrapper}
+		);
+
+		// getByText = renderResult.getByText;
 	});
 
 	describe('Be rendered with results', () => {
-		afterEach(cleanup);
+		// afterEach(cleanup);
 
 		beforeEach(async () => {
 			fetch
@@ -103,20 +117,9 @@ describe('The performance by assignee card component should', () => {
 					ok: true,
 				});
 
-			const wrapper = ({children}) => (
-				<MockRouter query={query}>{children}</MockRouter>
-			);
-
-			const renderResult = render(
-				<PerformanceByAssigneeCard routeParams={{processId}} />,
-				{wrapper}
-			);
-
-			getByText = renderResult.getByText;
-
-			await act(async () => {
-				jest.runAllTimers();
-			});
+			// await act(async () => {
+			// 	jest.runAllTimers();
+			// });
 		});
 
 		it('Be rendered with "View All Assignees" button and total "(3)"', () => {
@@ -137,16 +140,17 @@ describe('The performance by assignee card component should', () => {
 		});
 
 		it('Be rendered with time range filter', async () => {
-			const timeRangeFilter = getByText('Last 30 Days');
-			const activeItem = document.querySelectorAll('.active')[1];
+			const timeRangeFilter = getByRole('button', {name: 'Last 30 Days'});
+			expect(timeRangeFilter).toBeVisible();
 
-			expect(timeRangeFilter).not.toBeNull();
+			await userEvent.click(timeRangeFilter);
+			const activeItem = getByRole('menuitem', {name: 'Last 30 Days'});
 			expect(activeItem).toHaveTextContent('Last 7 Days');
 		});
 	});
 
 	describe('Be rendered without results', () => {
-		beforeAll(async () => {
+		beforeEach(async () => {
 			fetch
 				.mockResolvedValueOnce({
 					json: () => Promise.resolve({items: [], totalCount: 0}),
@@ -156,14 +160,6 @@ describe('The performance by assignee card component should', () => {
 					json: () => Promise.resolve(processStepsData),
 					ok: true,
 				});
-
-			const wrapper = ({children}) => (
-				<MockRouter query={query}>{children}</MockRouter>
-			);
-
-			render(<PerformanceByAssigneeCard routeParams={{processId}} />, {
-				wrapper,
-			});
 
 			await act(async () => {
 				jest.runAllTimers();
