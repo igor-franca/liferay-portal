@@ -72,6 +72,8 @@ test.describe('Revision History tab', () => {
 			workflowDefinitionName
 		);
 
+		await page.waitForTimeout(3000);
+
 		await nodePropertiesSidebarPage.dragNodeToDiagram('Task', 200, 200);
 
 		await nodePropertiesSidebarPage.nodeLabelInput.fill('Task 1');

@@ -15,7 +15,7 @@ export const test = mergeTests(apiHelpersTest, loginTest(), workflowPagesTest);
 let workflowDefinitionId: number;
 let workflowDefinitionName: string;
 
-test.beforeEach(async ({apiHelpers}) => {
+test.beforeEach(async ({apiHelpers}) => {	
 	const singleApproverWorkflowDefinition =
 		await apiHelpers.headlessAdminWorkflow.getWorkflowDefinitionByName(
 			'Single Approver'
