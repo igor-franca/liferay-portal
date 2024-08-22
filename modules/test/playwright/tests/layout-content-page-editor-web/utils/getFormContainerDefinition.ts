@@ -5,7 +5,7 @@
 
 type Props = {
 	id: string;
-	objectDefinitionId?: string;
+	objectDefinitionId?: number;
 	pageElements?: PageElement[];
 };
 
