@@ -39,11 +39,9 @@ export class ProcessBuilderPage {
 	async switchToSourceViewAndBackToDiagram() {
 		await this.diagramViewPage.clickSourceViewButton();
 
-		await this.page.waitForTimeout(3000);
-
 		await this.page
-			.getByText('SourceWrite your definition or import a file.')
-			.click();
+			.getByText('xml version	')
+			.waitFor({state: 'visible'});
 
 		await this.sourceViewPage.clickDiagramViewButton();
 	}
