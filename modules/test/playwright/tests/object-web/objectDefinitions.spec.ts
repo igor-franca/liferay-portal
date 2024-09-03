@@ -443,6 +443,10 @@ test.describe('Manage object definitions through Model Builder', () => {
 				.click();
 
 			await expect(
+				modelBuilderPage.objectDefinitionNodes.filter({hasText: objectDefinition.label['en_US']})
+			).toBeVisible();
+
+			await expect(
 				modelBuilderPage.rightSidebar.getByTitle(
 					`${objectDefinition.label['en_US']} Details`
 				)
