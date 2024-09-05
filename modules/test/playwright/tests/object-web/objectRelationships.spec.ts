@@ -89,7 +89,7 @@ test.describe('Manage object relationships through Model Builder', () => {
 		const objectRelationship =
 			await modelBuilderObjectDefinitionNodePage.handleObjectRelationshipModal(
 				{
-				objectRelationshipLabel,
+					objectRelationshipLabel,
 					type: 'One to Many',
 				}
 			);
@@ -114,6 +114,89 @@ test.describe('Manage object relationships through Model Builder', () => {
 				.filter({hasText: objectDefinition2.label['en_US']})
 				.getByText(objectRelationshipLabel)
 		).toBeVisible();
+	});
+
+	test('can create two self object relationship', async ({
+		apiHelpers,
+		modelBuilderDiagramPage,
+		modelBuilderObjectDefinitionNodePage,
+		page,
+		viewObjectDefinitionsPage,
+	}) => {
+		const objectFolder =
+			await apiHelpers.objectAdmin.postRandomObjectFolder();
+
+		createdEntities.objectFolderIds.push(objectFolder.id);
+
+		const objectDefinition1 =
+			await apiHelpers.objectAdmin.postRandomObjectDefinition({
+				objectFolderExternalReferenceCode:
+					objectFolder.externalReferenceCode,
+				status: {code: 0},
+			});
+
+		createdEntities.objectDefinitionIds.push(objectDefinition1.id);
+
+		await viewObjectDefinitionsPage.goto();
+
+		await viewObjectDefinitionsPage.openObjectFolder(
+			objectFolder.label['en_US']
+		);
+
+		await viewObjectDefinitionsPage.viewInModelBuilderButton.click();
+
+		await modelBuilderDiagramPage.toggleSidebarsButton.click();
+
+		await modelBuilderDiagramPage.fitViewButton.click();
+
+		const objectRelationshipLabel1 = 'objectRelationship' + getRandomInt();
+
+		await modelBuilderDiagramPage.connectObjectDefinitionsNodeHandles(
+			objectDefinition1.id,
+			objectDefinition1.id
+		);
+
+		const objectRelationship1 =
+			await modelBuilderObjectDefinitionNodePage.handleObjectRelationshipModal(
+				{
+					objectRelationshipLabel: objectRelationshipLabel1,
+					type: 'One to Many',
+				}
+			);
+
+		createdEntities.objectRelationshipIds.push(objectRelationship1.id);
+
+		await expect(
+			modelBuilderDiagramPage.objectRelationshipEdges.filter({
+				hasText: objectRelationshipLabel1,
+			})
+		).toBeVisible();
+
+		const secondObjectRelationshipLabel =
+			'objectRelationship' + getRandomInt();
+
+		const objectRelationship2 =
+			await modelBuilderObjectDefinitionNodePage.createObjectRelationship(
+				objectDefinition1.label['en_US'],
+				secondObjectRelationshipLabel,
+				'One to One'
+			);
+
+		for (const objectRelationship of [
+			objectRelationship1,
+			objectRelationship2,
+		]) {
+			modelBuilderDiagramPage.objectRelationshipEdges
+				.filter({
+					hasText: '2',
+				})
+				.click();
+
+			page.getByRole('menuitem', {
+				exact: true,
+				name: objectRelationship.label['en_US'],
+			}).click();
+		}
 	});
 
 	test('can delete object relationship from different folders', async ({
