@@ -5,7 +5,7 @@
 
 import {Locator, Page} from '@playwright/test';
 
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 import {ModalRecurrencePage} from './ModalRecurrencePage';
 
 export class CalendarWidgetPage {
@@ -87,10 +87,9 @@ export class CalendarWidgetPage {
 
 	async publishEvent() {
 		await this.publishEventButton.click();
-		await waitForSuccessAlert(
-			this.page.frameLocator('iframe'),
-			`Success:Your request completed successfully.`
-		);
+		await waitForAlert({
+			page: this.page.frameLocator('iframe'),
+		});
 	}
 
 	async fillEventWithRecurrence(allDay: boolean, recurrence: Recurrence) {

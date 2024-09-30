@@ -5,7 +5,7 @@
 
 import {FrameLocator, Locator, Page, expect} from '@playwright/test';
 
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 import {ApplicationsMenuPage} from '../product-navigation-applications-menu/ApplicationsMenuPage';
 import {searchTableRowByValue} from './commerceDNDTablePage';
 
@@ -118,7 +118,7 @@ export class CommerceAdminChannelsPage {
 			label: buyerOrderApprovalWorkflow,
 		});
 		await this.headerActionsSaveButton.click();
-		await waitForSuccessAlert(this.page);
+		await waitForAlert({page: this.page});
 	}
 
 	async changeCommerceChannelSiteType(channelName: string, siteType: string) {

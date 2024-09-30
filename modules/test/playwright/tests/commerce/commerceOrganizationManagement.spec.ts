@@ -11,7 +11,7 @@ import {loginTest} from '../../fixtures/loginTest';
 import {usersAndOrganizationsPagesTest} from '../../fixtures/usersAndOrganizationsPagesTest';
 import {getRandomInt} from '../../utils/getRandomInt';
 import getRandomString from '../../utils/getRandomString';
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 
 export const test = mergeTests(
 	commercePagesTest,
@@ -189,7 +189,10 @@ test('LPD-31011 Can associate existing user using the widget', async ({
 	await waitForAnimationEnd(organizationManagementPage.addNode);
 
 	await organizationManagementPage.addUserToOrganization();
-	await waitForSuccessAlert(page, `1 user was added to ${organization.name}`);
+	await waitForAlert({
+		page,
+		text: `1 user was added to ${organization.name}`,
+	});
 
 	apiHelpers.data.push({
 		id: `${organization.id}_test@liferay.com`,
@@ -238,7 +241,10 @@ test('LPD-31026 Can add new user using the widget', async ({
 	await organizationManagementPage.addUserToOrganization({
 		email: userEmailAddress,
 	});
-	await waitForSuccessAlert(page, `1 user was added to ${organization.name}`);
+	await waitForAlert({
+		page,
+		text: `1 user was added to ${organization.name}`,
+	});
 
 	const user =
 		await apiHelpers.headlessAdminUser.getUserAccountByEmailAddress(
@@ -303,10 +309,10 @@ test('LPD-31052 Can associate existing account using the widget', async ({
 		accountName: account.name,
 		isNew: false,
 	});
-	await waitForSuccessAlert(
+	await waitForAlert({
 		page,
-		`1 account was added to ${organization.name}`
-	);
+		text: `1 account was added to ${organization.name}`,
+	});
 
 	await page.reload();
 
@@ -351,10 +357,10 @@ test('LPD-31052 Can add new account using the widget', async ({
 		accountName,
 		isNew: true,
 	});
-	await waitForSuccessAlert(
+	await waitForAlert({
 		page,
-		`1 account was added to ${organization.name}`
-	);
+		text: `1 account was added to ${organization.name}`,
+	});
 
 	const account =
 		await apiHelpers.headlessAdminUser.getAccountByName(accountName);
@@ -403,10 +409,10 @@ test('LPD-31403 Can add new organization using the widget', async ({
 	await organizationManagementPage.addOrganizationToOrganization({
 		organizationName,
 	});
-	await waitForSuccessAlert(
+	await waitForAlert({
 		page,
-		`1 organization was added to ${organization1.name}`
-	);
+		text: `1 organization was added to ${organization1.name}`,
+	});
 
 	const organization2 =
 		await apiHelpers.headlessAdminUser.getOrganizationByName(

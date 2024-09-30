@@ -10,7 +10,7 @@ import {apiHelpersTest} from '../../fixtures/apiHelpersTest';
 import {changeTrackingPagesTest} from '../../fixtures/changeTrackingPagesTest';
 import {workflowPagesTest} from '../../fixtures/workflowPagesTest';
 import getRandomString from '../../utils/getRandomString';
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 import {journalPagesTest} from '../journal-web/fixtures/journalPagesTest';
 
 export const test = mergeTests(
@@ -647,10 +647,10 @@ test('LPD-28975 Workflow tab shows unexpected error for asset added in publicati
 
 	await page.getByRole('button', {name: 'Publish'}).click();
 
-	await waitForSuccessAlert(
+	await waitForAlert({
 		page,
-		`Success:${title1} was created successfully.`
-	);
+		text: `Success:${title1} was created successfully.`,
+	});
 
 	await workflowPage.goto();
 

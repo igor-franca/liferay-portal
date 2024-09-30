@@ -9,7 +9,7 @@ import {clickAndExpectToBeHidden} from '../../../utils/clickAndExpectToBeHidden'
 import {clickAndExpectToBeVisible} from '../../../utils/clickAndExpectToBeVisible';
 import fillAndClickOutside from '../../../utils/fillAndClickOutside';
 import getRandomString from '../../../utils/getRandomString';
-import {waitForSuccessAlert} from '../../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../../utils/waitForAlert';
 import {JournalPage} from './JournalPage';
 
 export class JournalEditArticlePage {
@@ -110,10 +110,10 @@ export class JournalEditArticlePage {
 
 		await this.publishArticle();
 
-		await waitForSuccessAlert(
-			this.page,
-			`Success:${title} was created successfully.`
-		);
+		await waitForAlert({
+			page: this.page,
+			text: `Success:${title} was created successfully.`,
+		});
 	}
 
 	async createAndPublishBasicArticle(title?: string) {
@@ -187,10 +187,10 @@ export class JournalEditArticlePage {
 
 		await this.publishButton.click();
 
-		await waitForSuccessAlert(
-			this.page,
-			`Success:${title} was updated successfully.`
-		);
+		await waitForAlert({
+			page: this.page,
+			text: `Success:${title} was updated successfully.`,
+		});
 	}
 
 	async openDMItemSelectorForImages() {
@@ -299,12 +299,12 @@ export class JournalEditArticlePage {
 			})
 			.click();
 
-		await waitForSuccessAlert(
-			this.page,
-			workflow
+		await waitForAlert({
+			page: this.page,
+			text: workflow
 				? `Success:${title} has been scheduled and submitted for workflow.`
-				: `Success:${title} will be published on`
-		);
+				: `Success:${title} will be published on`,
+		});
 
 		const row = await this.page
 			.locator('.list-group-item')

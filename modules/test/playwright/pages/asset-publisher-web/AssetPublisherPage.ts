@@ -5,7 +5,7 @@
 
 import {FrameLocator, Page} from '@playwright/test';
 
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 
 export class AssetPublisherPage {
 	readonly page: Page;
@@ -23,10 +23,10 @@ export class AssetPublisherPage {
 	async changeAssetSelection(type: 'Collection' | 'Dynamic' | 'Manual') {
 		await this.configurationIframe.getByLabel(type, {exact: true}).click();
 
-		await waitForSuccessAlert(
-			this.configurationIframe,
-			'Success:You have successfully updated the setup.'
-		);
+		await waitForAlert({
+			page: this.configurationIframe,
+			text: 'Success:You have successfully updated the setup.',
+		});
 	}
 
 	async createCollectionFromAssetPublisher(collectionName: string) {
@@ -43,9 +43,9 @@ export class AssetPublisherPage {
 			.getByRole('button', {name: 'Save'})
 			.click();
 
-		await waitForSuccessAlert(
-			this.configurationIframe,
-			'Success:The collection was created successfully.'
-		);
+		await waitForAlert({
+			page: this.configurationIframe,
+			text: 'Success:The collection was created successfully.',
+		});
 	}
 }

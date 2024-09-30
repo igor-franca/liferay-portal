@@ -10,7 +10,7 @@ import {changeTrackingPagesTest} from '../../fixtures/changeTrackingPagesTest';
 import {isolatedSiteTest} from '../../fixtures/isolatedSiteTest';
 import getRandomString from '../../utils/getRandomString';
 import performLogin, {performLogout} from '../../utils/performLogin';
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 import {journalPagesTest} from '../journal-web/fixtures/journalPagesTest';
 
 export const test = mergeTests(
@@ -81,10 +81,10 @@ test.beforeEach(async ({journalEditArticlePage, page, site}) => {
 
 	await page.getByRole('button', {name: 'Publish'}).click();
 
-	await waitForSuccessAlert(
+	await waitForAlert({
 		page,
-		`Success:${journalArticleTitle} was created successfully.`
-	);
+		text: `Success:${journalArticleTitle} was created successfully.`,
+	});
 });
 
 test('LPD-29282 Assert administrator can not see the hidden fields if show all data configuration is disabled', async ({

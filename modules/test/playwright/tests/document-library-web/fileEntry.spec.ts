@@ -17,7 +17,7 @@ import {createCategories} from '../../helpers/CreateCategories';
 import {clickAndExpectToBeVisible} from '../../utils/clickAndExpectToBeVisible';
 import getRandomString from '../../utils/getRandomString';
 import {performLogout} from '../../utils/performLogin';
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 import getPageDefinition from '../layout-content-page-editor-web/utils/getPageDefinition';
 import getWidgetDefinition from '../layout-content-page-editor-web/utils/getWidgetDefinition';
 
@@ -94,10 +94,7 @@ baseTest(
 			getRandomString()
 		);
 		await documentLibraryEditFilePage.publishButton.click();
-		await waitForSuccessAlert(
-			page,
-			'Success:Your request completed successfully.'
-		);
+		await waitForAlert({page});
 		await page.getByRole('link', {name: 'Back'}).click();
 
 		await documentLibraryPage.orderBy('Modified Date');
@@ -381,7 +378,7 @@ baseTest(
 			[{categoryNames: ['Furniture'], vocabularyName}]
 		);
 
-		await waitForSuccessAlert(page, 'Success:Changes Saved');
+		await waitForAlert({page, text: 'Success:Changes Saved'});
 
 		for (const document of [document1, document2]) {
 			await documentLibraryPage.goto(site.friendlyUrlPath);

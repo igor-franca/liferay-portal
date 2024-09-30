@@ -5,7 +5,7 @@
 
 import {Locator, Page} from '@playwright/test';
 
-import {waitForSuccessAlert} from '../../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../../utils/waitForAlert';
 import {JournalStructuresPage} from './JournalStructuresPage';
 
 export enum FIELD_TYPES {
@@ -61,9 +61,9 @@ export class JournalEditStructurePage {
 	async save() {
 		await this.saveButton.click();
 
-		await waitForSuccessAlert(
-			this.page,
-			`Success:Your request completed successfully.`
-		);
+		await waitForAlert({
+			page: this.page,
+			text: `Success:Your request completed successfully.`,
+		});
 	}
 }

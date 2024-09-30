@@ -7,7 +7,7 @@ import {Locator, Page} from '@playwright/test';
 
 import {clickAndExpectToBeVisible} from '../../utils/clickAndExpectToBeVisible';
 import {PORTLET_URLS} from '../../utils/portletUrls';
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 
 export class DisplayPageTemplatesPage {
 	readonly page: Page;
@@ -48,10 +48,10 @@ export class DisplayPageTemplatesPage {
 
 		await this.page.getByRole('button', {name: 'Delete'}).click();
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:You successfully deleted 1 display page template(s).'
-		);
+		await waitForAlert({
+			page: this.page,
+			text: 'Success:You successfully deleted 1 display page template(s).',
+		});
 	}
 
 	async deleteAllDisplayPageTemplates() {
@@ -114,10 +114,10 @@ export class DisplayPageTemplatesPage {
 			.getByRole('button', {exact: true, name: 'Save'})
 			.click();
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:The page was updated successfully.'
-		);
+		await waitForAlert({
+			page: this.page,
+			text: 'Success:The page was updated successfully.',
+		});
 	}
 
 	async markAsDefault(name: string) {
@@ -127,7 +127,7 @@ export class DisplayPageTemplatesPage {
 
 		await this.clickMoreActions(name, 'Mark as Default');
 
-		await waitForSuccessAlert(this.page);
+		await waitForAlert({page: this.page});
 	}
 
 	async renameTemplate(newName: string, oldName: string) {
@@ -137,7 +137,7 @@ export class DisplayPageTemplatesPage {
 
 		await this.page.getByRole('button', {name: 'Save'}).click();
 
-		await waitForSuccessAlert(this.page);
+		await waitForAlert({page: this.page});
 	}
 
 	async createFolder(name: string) {
@@ -153,7 +153,7 @@ export class DisplayPageTemplatesPage {
 
 		await this.page.getByRole('button', {name: 'Create'}).click();
 
-		await waitForSuccessAlert(this.page);
+		await waitForAlert({page: this.page});
 	}
 
 	async createTemplate({
@@ -208,10 +208,10 @@ export class DisplayPageTemplatesPage {
 
 		await this.page.getByRole('button', {name: 'Save'}).click();
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:The display page template was created successfully.'
-		);
+		await waitForAlert({
+			page: this.page,
+			text: 'Success:The display page template was created successfully.',
+		});
 
 		await this.publishTemplate();
 	}
@@ -220,9 +220,9 @@ export class DisplayPageTemplatesPage {
 		await this.publishButton.waitFor();
 		await this.publishButton.click();
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:The display page template was published successfully.'
-		);
+		await waitForAlert({
+			page: this.page,
+			text: 'Success:The display page template was published successfully.',
+		});
 	}
 }

@@ -7,7 +7,7 @@ import {Page} from '@playwright/test';
 
 import {clickAndExpectToBeVisible} from '../../../utils/clickAndExpectToBeVisible';
 import getRandomString from '../../../utils/getRandomString';
-import {waitForSuccessAlert} from '../../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../../utils/waitForAlert';
 import getPageDefinition from '../../layout-content-page-editor-web/utils/getPageDefinition';
 import getWidgetDefinition from '../../layout-content-page-editor-web/utils/getWidgetDefinition';
 
@@ -69,10 +69,10 @@ export async function createAssetPublisherAndConfigure({
 	if (!(await configurationDynamicInput.isChecked())) {
 		await configurationDynamicInput.click();
 
-		await waitForSuccessAlert(
-			configurationModal,
-			'Success:You have successfully updated the setup.'
-		);
+		await waitForAlert({
+			page: configurationModal,
+			text: 'Success:You have successfully updated the setup.',
+		});
 	}
 
 	const configurationSourceAssetTypeSelect =
@@ -85,10 +85,10 @@ export async function createAssetPublisherAndConfigure({
 	});
 
 	await configurationModal.getByRole('button', {name: 'Save'}).click();
-	await waitForSuccessAlert(
-		configurationModal,
-		'Success:You have successfully updated the setup.'
-	);
+	await waitForAlert({
+		page: configurationModal,
+		text: 'Success:You have successfully updated the setup.',
+	});
 	await page.getByLabel('close', {exact: true}).click();
 
 	await pageEditorPage.publishPage();

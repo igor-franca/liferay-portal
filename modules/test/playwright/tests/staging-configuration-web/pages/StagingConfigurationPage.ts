@@ -6,7 +6,7 @@
 import {Locator, Page} from '@playwright/test';
 
 import {PORTLET_URLS} from '../../../utils/portletUrls';
-import {waitForSuccessAlert} from '../../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../../utils/waitForAlert';
 
 export class StagingConfigurationPage {
 	readonly page: Page;
@@ -41,10 +41,10 @@ export class StagingConfigurationPage {
 
 		await this.saveButton.click();
 
-		await waitForSuccessAlert(
-			this.page,
-			`Local staging is successfully enabled.`
-		);
+		await waitForAlert({
+			page: this.page,
+			text: `Local staging is successfully enabled.`,
+		});
 
 		const succesfull = this.page.getByText('Successful');
 

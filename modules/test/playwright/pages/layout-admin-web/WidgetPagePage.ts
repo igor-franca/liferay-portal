@@ -5,7 +5,7 @@
 
 import {Locator, Page} from '@playwright/test';
 
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 
 export class WidgetPagePage {
 	readonly page: Page;
@@ -50,10 +50,10 @@ export class WidgetPagePage {
 			.getByRole('button', {name: 'Add Content'})
 			.click();
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:The application was added to the page.'
-		);
+		await waitForAlert({
+			page: this.page,
+			text: 'Success:The application was added to the page.',
+		});
 	}
 
 	async addPortlet(portletName: string, category: string = undefined) {
@@ -90,10 +90,10 @@ export class WidgetPagePage {
 				.click();
 		}
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:The application was added to the page.'
-		);
+		await waitForAlert({
+			page: this.page,
+			text: 'Success:The application was added to the page.',
+		});
 	}
 
 	async clickOnAction(portletName: string, action: string) {
@@ -168,10 +168,10 @@ export class WidgetPagePage {
 
 		await configurationIFrame.getByRole('button', {name: 'Save'}).click();
 
-		await waitForSuccessAlert(
-			configurationIFrame,
-			'Success:You have successfully updated the setup.'
-		);
+		await waitForAlert({
+			page: configurationIFrame,
+			text: 'Success:You have successfully updated the setup.',
+		});
 
 		await this.page
 			.locator('.modal-header')

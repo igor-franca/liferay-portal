@@ -10,7 +10,7 @@ import {changeTrackingPagesTest} from '../../fixtures/changeTrackingPagesTest';
 import {featureFlagsTest} from '../../fixtures/featureFlagsTest';
 import {getRandomInt} from '../../utils/getRandomInt';
 import getRandomString from '../../utils/getRandomString';
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 import {journalPagesTest} from '../journal-web/fixtures/journalPagesTest';
 
 export const test = mergeTests(
@@ -40,10 +40,10 @@ test.beforeEach(
 		await journalEditArticlePage.goto();
 		await journalEditArticlePage.fillTitle(articleTitle);
 		await page.getByRole('button', {name: 'Publish'}).click();
-		await waitForSuccessAlert(
+		await waitForAlert({
 			page,
-			`Success:${articleTitle} was created successfully.`
-		);
+			text: `Success:${articleTitle} was created successfully.`,
+		});
 
 		const ctCollectionNamePrefix = getRandomString();
 		for (let i = 0; i < publicationCount; i++) {
@@ -68,10 +68,10 @@ test.beforeEach(
 					'Delete',
 					articleTitle
 				);
-				await waitForSuccessAlert(
+				await waitForAlert({
 					page,
-					`Success: The element ${articleTitle} was moved to the Recycle Bin.`
-				);
+					text: `Success: The element ${articleTitle} was moved to the Recycle Bin.`,
+				});
 			}
 		}
 	}

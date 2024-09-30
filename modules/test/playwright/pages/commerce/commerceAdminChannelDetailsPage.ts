@@ -5,7 +5,7 @@
 
 import {FrameLocator, Locator, Page} from '@playwright/test';
 
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 import {ApplicationsMenuPage} from '../product-navigation-applications-menu/ApplicationsMenuPage';
 import {searchTableRowByValue} from './commerceDNDTablePage';
 
@@ -290,9 +290,9 @@ export class CommerceAdminChannelDetailsPage {
 			.getByLabel('Key')
 			.fill(name);
 		await (await this.frameSaveButton(true, tableName)).click();
-		await waitForSuccessAlert(
-			await this.sidePanelNestedFrame('Shipping Methods')
-		);
+		await waitForAlert({
+			page: await this.sidePanelNestedFrame('Shipping Methods'),
+		});
 		await (
 			await this.closeSidePanelFrame(true, 'Shipping Methods')
 		).click();
@@ -324,9 +324,9 @@ export class CommerceAdminChannelDetailsPage {
 		}
 
 		await (await this.frameSaveButton(true, tableName)).click();
-		await waitForSuccessAlert(
-			await this.sidePanelNestedFrame('Shipping Methods')
-		);
+		await waitForAlert({
+			page: await this.sidePanelNestedFrame('Shipping Methods'),
+		});
 	}
 
 	async setEntryEligibility(
@@ -357,7 +357,7 @@ export class CommerceAdminChannelDetailsPage {
 			await (
 				await this.frameSaveButton(isNestedFrame, tableName)
 			).click();
-			await waitForSuccessAlert(await this.sidePanelFrame(tableName));
+			await waitForAlert({page: await this.sidePanelFrame(tableName)});
 			await (
 				await this.closeSidePanelFrame(isNestedFrame, tableName)
 			).click();
@@ -389,9 +389,9 @@ export class CommerceAdminChannelDetailsPage {
 			await (
 				await this.frameSaveButton(isNestedFrame, tableName)
 			).click();
-			await waitForSuccessAlert(
-				await this.sidePanelNestedFrame(tableName)
-			);
+			await waitForAlert({
+				page: await this.sidePanelNestedFrame(tableName),
+			});
 			await (
 				await this.closeSidePanelFrame(isNestedFrame, tableName)
 			).click();

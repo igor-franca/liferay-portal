@@ -9,7 +9,7 @@ import {ApiHelpers} from '../../helpers/ApiHelpers';
 import getRandomString from '../../utils/getRandomString';
 import {userData} from '../../utils/performLogin';
 import {PORTLET_URLS} from '../../utils/portletUrls';
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 import {InstanceSettingsPage} from '../configuration-admin-web/InstanceSettingsPage';
 
 export class ChangeTrackingPage {
@@ -68,10 +68,10 @@ export class ChangeTrackingPage {
 
 		await this.page.getByLabel('Submit').click();
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:Users were invited successfully.'
-		);
+		await waitForAlert({
+			page: this.page,
+			text: 'Success:Users were invited successfully.',
+		});
 	}
 
 	async addUserWithPublicationsUserRole() {
@@ -274,10 +274,9 @@ export class ChangeTrackingPage {
 
 		await this.instanceSettingsPage.saveButton.click();
 
-		await waitForSuccessAlert(
-			this.page,
-			`Success:Your request completed successfully.`
-		);
+		await waitForAlert({
+			page: this.page,
+		});
 	}
 
 	async toggleSandboxConfiguration(check: boolean) {
@@ -295,20 +294,18 @@ export class ChangeTrackingPage {
 
 			await this.instanceSettingsPage.saveButton.click();
 
-			await waitForSuccessAlert(
-				this.page,
-				`Success:Your request completed successfully.`
-			);
+			await waitForAlert({
+				page: this.page,
+			});
 		}
 		else {
 			await checkBox.setChecked(false);
 
 			await this.instanceSettingsPage.saveButton.click();
 
-			await waitForSuccessAlert(
-				this.page,
-				`Success:Your request completed successfully.`
-			);
+			await waitForAlert({
+				page: this.page,
+			});
 		}
 	}
 

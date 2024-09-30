@@ -8,7 +8,7 @@ import {Locator, Page} from '@playwright/test';
 import {PagesAdminPage} from '../../../pages/layout-admin-web/PagesAdminPage';
 import {clickAndExpectToBeVisible} from '../../../utils/clickAndExpectToBeVisible';
 import fillAndClickOutside from '../../../utils/fillAndClickOutside';
-import {waitForSuccessAlert} from '../../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../../utils/waitForAlert';
 
 export class PageConfigurationPage {
 	readonly page: Page;
@@ -54,10 +54,10 @@ export class PageConfigurationPage {
 	async save() {
 		await this.saveButton.click();
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:The page was updated successfully.'
-		);
+		await waitForAlert({
+			page: this.page,
+			text: 'Success:The page was updated successfully.',
+		});
 	}
 
 	async setCanonicalURL(canonicalURL: string) {

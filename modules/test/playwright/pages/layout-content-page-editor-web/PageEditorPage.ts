@@ -13,7 +13,7 @@ import {expandSection} from '../../utils/expandSection';
 import fillAndClickOutside from '../../utils/fillAndClickOutside';
 import {hoverAndExpectToBeVisible} from '../../utils/hoverAndExpectToBeVisible';
 import {selectElement} from '../../utils/selectElement';
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 import {SegmentEditorPage} from '../segments-web/SegmentEditorPage';
 
 const VIEWPORTS_CLASSNAMES = {
@@ -391,11 +391,11 @@ export class PageEditorPage {
 
 		await this.closeExperienceSelector();
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:The experience was created successfully.',
-			{autoClose: false}
-		);
+		await waitForAlert({
+			autoClose: false,
+			page: this.page,
+			text: 'Success:The experience was created successfully.',
+		});
 	}
 
 	async cutFragment(fragmentId: string) {
@@ -420,11 +420,11 @@ export class PageEditorPage {
 
 		await this.closeExperienceSelector();
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:The experience was deleted successfully.',
-			{autoClose: false}
-		);
+		await waitForAlert({
+			autoClose: false,
+			page: this.page,
+			text: 'Success:The experience was deleted successfully.',
+		});
 	}
 
 	async deleteFragment(fragmentId: string) {
@@ -442,11 +442,11 @@ export class PageEditorPage {
 			.getByLabel('Duplicate Experience')
 			.click();
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:The experience was duplicated successfully.',
-			{autoClose: false}
-		);
+		await waitForAlert({
+			autoClose: false,
+			page: this.page,
+			text: 'Success:The experience was duplicated successfully.',
+		});
 	}
 
 	async duplicateFragment(fragmentId: string) {
@@ -559,11 +559,11 @@ export class PageEditorPage {
 
 		await this.closeExperienceSelector();
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:The experience was updated successfully.',
-			{autoClose: false}
-		);
+		await waitForAlert({
+			autoClose: false,
+			page: this.page,
+			text: 'Success:The experience was updated successfully.',
+		});
 	}
 
 	async editExperienceSegment(name: string, segment: string) {
@@ -606,11 +606,11 @@ export class PageEditorPage {
 
 		await this.closeExperienceSelector();
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:The experience was updated successfully.',
-			{autoClose: false}
-		);
+		await waitForAlert({
+			autoClose: false,
+			page: this.page,
+			text: 'Success:The experience was updated successfully.',
+		});
 	}
 
 	/**
@@ -754,10 +754,10 @@ export class PageEditorPage {
 			trigger: this.page.locator('.modal-footer').getByText('Save'),
 		});
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:Your form has been successfully loaded.'
-		);
+		await waitForAlert({
+			page: this.page,
+			text: 'Success:Your form has been successfully loaded.',
+		});
 	}
 
 	async openExperienceSelector() {
@@ -826,7 +826,7 @@ export class PageEditorPage {
 		await button.waitFor();
 		await button.click();
 
-		await waitForSuccessAlert(this.page, successMessage);
+		await waitForAlert({page: this.page, text: successMessage});
 	}
 
 	async removeFragment(fragmentId: string) {

@@ -7,7 +7,7 @@ import {Page} from '@playwright/test';
 
 import {clickAndExpectToBeVisible} from '../../utils/clickAndExpectToBeVisible';
 import {PORTLET_URLS} from '../../utils/portletUrls';
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 
 export class WorkflowPage {
 	readonly page: Page;
@@ -40,11 +40,11 @@ export class WorkflowPage {
 
 		await this.page.getByRole('button', {name: 'Save'}).click();
 
-		await waitForSuccessAlert(
-			this.page,
-			disable
+		await waitForAlert({
+			page: this.page,
+			text: disable
 				? `Success:Workflow unassigned from ${asset}.`
-				: `Success:Workflow assigned to ${asset}.`
-		);
+				: `Success:Workflow assigned to ${asset}.`,
+		});
 	}
 }

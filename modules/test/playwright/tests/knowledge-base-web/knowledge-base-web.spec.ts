@@ -15,7 +15,7 @@ import {KnowledgeBaseEditArticlePage} from '../../pages/knowledge-base-web/Knowl
 import getLoggedInPage from '../../utils/getLoggedInPage';
 import getRandomString from '../../utils/getRandomString';
 import {performLogout} from '../../utils/performLogin';
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 import {KnowledgeBaseUrls} from './utils/knowledgeBaseUrls';
 
 const test = mergeTests(
@@ -138,10 +138,10 @@ test('can publish and delete an article', async ({
 		title
 	);
 
-	await waitForSuccessAlert(
+	await waitForAlert({
 		page,
-		`Success:${title} was successfully published.`
-	);
+		text: `Success:${title} was successfully published.`,
+	});
 
 	await expect(kbArticle).toBeVisible();
 	await expect(page.locator('.workflow-status-approved')).toBeVisible();
@@ -172,10 +172,10 @@ test('can delete all articles (recycle bin enabled)', async ({
 		title
 	);
 
-	await waitForSuccessAlert(
+	await waitForAlert({
 		page,
-		`Success:${title} was successfully published.`
-	);
+		text: `Success:${title} was successfully published.`,
+	});
 
 	await knowledgeBasePage.goto(site.friendlyUrlPath);
 	await knowledgeBasePage.deleteAll(true);
@@ -207,7 +207,7 @@ test('can schedule and delete an article', async ({
 		title
 	);
 
-	await waitForSuccessAlert(page, `Success:${title} will be published on`);
+	await waitForAlert({page, text: `Success:${title} will be published on`});
 
 	await expect(kbArticle).toBeVisible();
 	await expect(page.locator('.workflow-status-scheduled')).toBeVisible();

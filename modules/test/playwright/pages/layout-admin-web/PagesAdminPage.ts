@@ -9,7 +9,7 @@ import {clickAndExpectToBeHidden} from '../../utils/clickAndExpectToBeHidden';
 import {clickAndExpectToBeVisible} from '../../utils/clickAndExpectToBeVisible';
 import fillAndClickOutside from '../../utils/fillAndClickOutside';
 import {PORTLET_URLS} from '../../utils/portletUrls';
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 import {PageEditorPage} from '../layout-content-page-editor-web/PageEditorPage';
 
 export class PagesAdminPage {
@@ -222,7 +222,7 @@ export class PagesAdminPage {
 		await this.addButton.hover();
 		await this.addButton.click();
 
-		await waitForSuccessAlert(this.page, successMessage);
+		await waitForAlert({page: this.page, text: successMessage});
 	}
 
 	private async addThemeFaviconClientExtension(clientExtensionName: string) {
@@ -305,10 +305,10 @@ export class PagesAdminPage {
 
 		await this.configurationSaveButton.click();
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:The page was updated successfully.'
-		);
+		await waitForAlert({
+			page: this.page,
+			text: 'Success:The page was updated successfully.',
+		});
 	}
 
 	async clickOnJavaScriptClientExtensionsTab() {
@@ -361,13 +361,13 @@ export class PagesAdminPage {
 		await this.configurationSaveButton.click();
 
 		if (!layoutTitle) {
-			await waitForSuccessAlert(this.page);
+			await waitForAlert({page: this.page});
 		}
 		else {
-			await waitForSuccessAlert(
-				this.page,
-				'Success:The page was updated successfully.'
-			);
+			await waitForAlert({
+				page: this.page,
+				text: 'Success:The page was updated successfully.',
+			});
 		}
 	}
 
@@ -433,10 +433,9 @@ export class PagesAdminPage {
 
 		await this.page.getByRole('button', {name: 'Delete'}).click();
 
-		await waitForSuccessAlert(
-			this.page,
-			'Success:Your request completed successfully.'
-		);
+		await waitForAlert({
+			page: this.page,
+		});
 	}
 
 	async editPage(name: string) {
@@ -521,13 +520,13 @@ export class PagesAdminPage {
 		}
 
 		if (!layoutTitle) {
-			await waitForSuccessAlert(this.page);
+			await waitForAlert({page: this.page});
 		}
 		else {
-			await waitForSuccessAlert(
-				this.page,
-				'Success:The page was updated successfully.'
-			);
+			await waitForAlert({
+				page: this.page,
+				text: 'Success:The page was updated successfully.',
+			});
 		}
 	}
 
@@ -616,7 +615,7 @@ export class PagesAdminPage {
 				? `Success:${pageNames.length} permissions were updated successfully.`
 				: undefined;
 
-		await waitForSuccessAlert(permissionsFrame, successMessage);
+		await waitForAlert({page: permissionsFrame, text: successMessage});
 
 		await this.page.getByLabel('close', {exact: true}).click();
 

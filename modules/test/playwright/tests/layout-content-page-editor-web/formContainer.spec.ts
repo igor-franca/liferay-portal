@@ -12,7 +12,7 @@ import {pageEditorPagesTest} from '../../fixtures/pageEditorPagesTest';
 import {pageManagementSiteTest} from '../../fixtures/pageManagementSiteTest';
 import {clickAndExpectToBeVisible} from '../../utils/clickAndExpectToBeVisible';
 import getRandomString from '../../utils/getRandomString';
-import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {waitForAlert} from '../../utils/waitForAlert';
 import {
 	LEMON_OBJECT_ERC,
 	POTATO_OBJECT_ERC,
@@ -1125,10 +1125,10 @@ test.describe('Multistep', () => {
 
 			await page.locator('.modal-footer').getByText('Publish').click();
 
-			await waitForSuccessAlert(
+			await waitForAlert({
 				page,
-				'Success:The page was published successfully.'
-			);
+				text: 'Success:The page was published successfully.',
+			});
 
 			// Go to view mode
 
