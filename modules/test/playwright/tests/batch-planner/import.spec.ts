@@ -484,14 +484,9 @@ test('can handle OnlyAddNewRecords and UpdateChangedRecordFields import strategi
 	dataMigrationCenterPage,
 	page,
 }) => {
-	const objectAdminRestClient = await apiHelpers.buildRestClient(
-		ObjectAdminRestClient
+	const objectDefinition = await apiHelpers.objectAdmin.postObjectDefinition(
+		companyObjectDefinition
 	);
-
-	const objectDefinition =
-		await objectAdminRestClient.objectDefinition.postObjectDefinition({
-			requestBody: companyObjectDefinition,
-		});
 
 	await dataMigrationCenterPage.goto();
 	await dataMigrationCenterPage.goToImportFile();
@@ -522,9 +517,7 @@ test('can handle OnlyAddNewRecords and UpdateChangedRecordFields import strategi
 		)
 	).toBeVisible();
 
-	await objectAdminRestClient.objectDefinition.deleteObjectDefinition({
-		objectDefinitionId: objectDefinition.id,
-	});
+	await apiHelpers.objectAdmin.deleteObjectDefinition(objectDefinition.id);
 });
 
 test('can import CSV file with an unexisting field', async ({

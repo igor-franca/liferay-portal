@@ -1455,15 +1455,9 @@ test.describe('Multistep', () => {
 
 			// Get the id of Lemon object from the site initializer
 
-			const objectAdminRestClient = await apiHelpers.buildRestClient(
-				ObjectAdminRestClient
-			);
-
 			const {id: objectDefinitionId} =
-				await objectAdminRestClient.objectDefinition.getObjectDefinitionByExternalReferenceCode(
-					{
-						externalReferenceCode: LEMON_OBJECT_ERC,
-					}
+				await apiHelpers.objectAdmin.getObjectDefinitionByExternalReferenceCode(
+					LEMON_OBJECT_ERC
 				);
 
 			// Create a form with a Stepper
