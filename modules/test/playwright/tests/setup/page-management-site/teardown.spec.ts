@@ -5,7 +5,6 @@
 
 import {expect, mergeTests} from '@playwright/test';
 
-import {ObjectAdminRestClient} from '../../../../../apps/object/object-admin-rest-client-js/src/main/resources/META-INF/resources/node';
 import {backendPageTest} from '../../../fixtures/backendPageTest';
 import {ApiHelpers} from '../../../helpers/ApiHelpers';
 import {
@@ -21,10 +20,6 @@ test('Teardown: Delete site and data for Page Management tests', async ({
 	backendPage,
 }) => {
 	const apiHelpers = new ApiHelpers(backendPage);
-
-	const objectAdminRestClient = await apiHelpers.buildRestClient(
-		ObjectAdminRestClient
-	);
 
 	const {id: siteId} = await apiHelpers.headlessSite.getSiteByERC(
 		PAGE_MANAGEMENT_SITE_ERC
@@ -44,18 +39,16 @@ test('Teardown: Delete site and data for Page Management tests', async ({
 		POTATO_OBJECT_ERC,
 	]) {
 		const {id: objectDefinitionId} =
-			await objectAdminRestClient.objectDefinition.getObjectDefinitionByExternalReferenceCode(
-				{
-					externalReferenceCode: ERC,
-				}
+			await apiHelpers.objectAdmin.getObjectDefinitionByExternalReferenceCode(
+				ERC
 			);
 
 		if (objectDefinitionId) {
-			await objectAdminRestClient.objectDefinition.deleteObjectDefinition(
-				{
-					objectDefinitionId,
-				}
-			);
+			await expect(
+				await apiHelpers.objectAdmin.deleteObjectDefinition(
+					objectDefinitionId
+				)
+			).toBeOK();
 		}
 	}
 

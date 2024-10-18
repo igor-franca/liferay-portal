@@ -5,7 +5,6 @@
 
 import {Page} from '@playwright/test';
 
-import {ObjectAdminRestClient} from '../../../apps/object/object-admin-rest-client-js/src/main/resources/META-INF/resources/node';
 import {liferayConfig} from '../liferay.config';
 import {ApiBuilderHelper} from './ApiBuilderHelper';
 import {DataEngineApiHelper} from './DataEngineApiHelper';
@@ -392,32 +391,10 @@ export class DataApiHelpers extends ApiHelpers {
 					await this.listTypeAdmin.deleteListTypeDefinition(item.id);
 
 					break;
-				case 'objectDefinition': {
-					const objectAdminRESTClient = await this.buildRestClient(
-						ObjectAdminRestClient
-					);
-
-					await objectAdminRESTClient.objectDefinition.deleteObjectDefinition(
-						{
-							objectDefinitionId: item.id,
-						}
-					);
+				case 'objectDefinition':
+					await this.objectAdmin.deleteObjectDefinition(item.id);
 
 					break;
-				}
-				case 'objectFolder': {
-					const objectAdminRESTClient = await this.buildRestClient(
-						ObjectAdminRestClient
-					);
-
-					await objectAdminRESTClient.objectFolder.deleteObjectFolder(
-						{
-							objectFolderId: item.id,
-						}
-					);
-
-					break;
-				}
 				case 'option':
 					await this.headlessCommerceAdminCatalog.deleteOption(
 						item.id
