@@ -5,21 +5,33 @@
 
 import {Page, expect, mergeTests} from '@playwright/test';
 
+import {apiHelpersTest} from '../../fixtures/apiHelpersTest';
 import {applicationsMenuPageTest} from '../../fixtures/applicationsMenuPageTest';
-import {dataApiHelpersTest} from '../../fixtures/dataApiHelpersTest';
 import {formsPagesTest} from '../../fixtures/formsPagesTest';
 import {loginTest} from '../../fixtures/loginTest';
 import {getRandomInt} from '../../utils/getRandomInt';
 import {deleteItems} from './utils/deleteItems';
 
 export const test = mergeTests(
+	apiHelpersTest,
 	applicationsMenuPageTest,
-	dataApiHelpersTest,
 	formsPagesTest,
 	loginTest()
 );
 
-test.afterEach(async ({formsPage, page}) => {
+let objectDefinitions: ObjectDefinition[] = [];
+
+test.afterEach(async ({apiHelpers, formsPage, page}) => {
+	if (objectDefinitions.length) {
+		for (const objectDefinition of objectDefinitions) {
+			await apiHelpers.objectAdmin.deleteObjectDefinition(
+				objectDefinition.id
+			);
+		}
+
+		objectDefinitions = [];
+	}
+
 	await formsPage.goTo();
 
 	await deleteItems(formsPage, page);
@@ -46,10 +58,7 @@ test.describe('FormView when form storage type is object', () => {
 				status: {code: 0},
 			});
 
-		apiHelpers.data.push({
-			id: objectDefinition.id,
-			type: 'objectDefinition',
-		});
+		objectDefinitions.push(objectDefinition);
 
 		await formBuilderPage.goToNew();
 

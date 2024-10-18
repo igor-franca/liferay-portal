@@ -5,11 +5,6 @@
 
 import {expect, mergeTests} from '@playwright/test';
 
-import {
-	ObjectAdminRestClient,
-	ObjectDefinition,
-	ObjectField,
-} from '../../../../apps/object/object-admin-rest-client-js/src/main/resources/META-INF/resources/node';
 import {apiHelpersTest} from '../../fixtures/apiHelpersTest';
 import {applicationsMenuPageTest} from '../../fixtures/applicationsMenuPageTest';
 import {collectionsPagesTest} from '../../fixtures/collectionsPagesTest';
@@ -51,14 +46,16 @@ const createdEntities = {
 };
 
 test.afterEach(async ({apiHelpers}) => {
-	const objectAdminRestClient = await apiHelpers.buildRestClient(
-		ObjectAdminRestClient
-	);
+	for (const listTypeDefinition of createdEntities.listTypeDefinitions) {
+		await apiHelpers.listTypeAdmin.deleteListTypeDefinition(
+			listTypeDefinition.id
+		);
+	}
 
 	for (const objectDefinition of createdEntities.objectDefinitions) {
-		await objectAdminRestClient.objectDefinition.deleteObjectDefinition({
-			objectDefinitionId: objectDefinition.id,
-		});
+		await apiHelpers.objectAdmin.deleteObjectDefinition(
+			objectDefinition.id
+		);
 	}
 
 	for (const listTypeDefinition of createdEntities.listTypeDefinitions) {
@@ -76,7 +73,7 @@ test.describe('Manage object entries through Page Templates', () => {
 	}) => {
 		const {objectDefinitions} = createdEntities;
 
-		const objectFields: ObjectField[] = [
+		const objectFields = [
 			{
 				DBType: 'String',
 				businessType: 'Text',
@@ -97,31 +94,24 @@ test.describe('Manage object entries through Page Templates', () => {
 		const objectDefinitionExternalReferenceCode =
 			'ObjectDefinition' + getRandomInt();
 
-		const objectAdminRestClient = await apiHelpers.buildRestClient(
-			ObjectAdminRestClient
-		);
-
 		const objectDefinition1 =
-			await objectAdminRestClient.objectDefinition.postObjectDefinition({
-				requestBody: {
-					active: true,
-					enableLocalization: true,
-					externalReferenceCode:
-						objectDefinitionExternalReferenceCode,
-					label: {
-						en_US: objectDefinitionExternalReferenceCode,
-					},
-					name: objectDefinitionExternalReferenceCode,
-					objectFields,
-					objectFolderExternalReferenceCode: 'default',
-					pluralLabel: {
-						en_US: objectDefinitionExternalReferenceCode,
-					},
-					portlet: true,
-					scope: 'company',
-					status: {code: 0},
-					titleObjectFieldName: 'textField',
+			await apiHelpers.objectAdmin.postObjectDefinition({
+				active: true,
+				enableLocalization: true,
+				externalReferenceCode: objectDefinitionExternalReferenceCode,
+				label: {
+					en_US: objectDefinitionExternalReferenceCode,
 				},
+				name: objectDefinitionExternalReferenceCode,
+				objectFields,
+				objectFolderExternalReferenceCode: 'default',
+				pluralLabel: {
+					en_US: objectDefinitionExternalReferenceCode,
+				},
+				portlet: true,
+				scope: 'company',
+				status: {code: 0},
+				titleObjectFieldName: 'textField',
 			});
 
 		objectDefinitions.push(objectDefinition1);
@@ -139,24 +129,23 @@ test.describe('Manage object entries through Page Templates', () => {
 		const objectRelationshipName =
 			'objectRelationshipName' + Math.floor(Math.random() * 99);
 
-		await objectAdminRestClient.objectRelationship.postObjectDefinitionByExternalReferenceCodeObjectRelationship(
-			{
-				externalReferenceCode: objectDefinition1.externalReferenceCode,
-				requestBody: {
-					label: {
-						en_US: objectRelationshipLabel,
-					},
-					name: objectRelationshipName,
-					objectDefinitionExternalReferenceCode1:
-						objectDefinition1.externalReferenceCode,
-					objectDefinitionExternalReferenceCode2:
-						objectDefinition2.externalReferenceCode,
-					objectDefinitionId1: objectDefinition1.id,
-					objectDefinitionId2: objectDefinition2.id,
-					objectDefinitionName2: objectDefinition2.name,
-					type: 'oneToMany' as ObjectRelationshipType,
-				},
-			}
+		const objectRelationshipData: Partial<ObjectRelationship> = {
+			label: {
+				en_US: objectRelationshipLabel,
+			},
+			name: objectRelationshipName,
+			objectDefinitionExternalReferenceCode1:
+				objectDefinition1.externalReferenceCode,
+			objectDefinitionExternalReferenceCode2:
+				objectDefinition2.externalReferenceCode,
+			objectDefinitionId1: objectDefinition1.id,
+			objectDefinitionId2: objectDefinition2.id,
+			objectDefinitionName2: objectDefinition2.name,
+			type: 'oneToMany' as ObjectRelationshipType,
+		};
+
+		await apiHelpers.objectAdmin.postObjectRelationship(
+			objectRelationshipData
 		);
 
 		const applicationName =
@@ -230,29 +219,23 @@ test.describe('Manage object entries through Page Templates', () => {
 			titleObjectFieldName: 'text',
 		});
 
-		const objectAdminRestClient = await apiHelpers.buildRestClient(
-			ObjectAdminRestClient
-		);
-
 		const objectDefinition =
-			await objectAdminRestClient.objectDefinition.postObjectDefinition({
-				requestBody: {
-					active: true,
-					label: {
-						en_US: objectDefinitionLabel,
-					},
-					name: objectDefinitionName,
-					objectFields,
-					pluralLabel: {
-						en_US: objectDefinitionLabel,
-					},
-					portlet: true,
-					scope: 'company',
-					status: {
-						code: 0,
-					},
-					titleObjectFieldName,
+			await apiHelpers.objectAdmin.postObjectDefinition({
+				active: true,
+				label: {
+					en_US: objectDefinitionLabel,
 				},
+				name: objectDefinitionName,
+				objectFields,
+				pluralLabel: {
+					en_US: objectDefinitionLabel,
+				},
+				portlet: true,
+				scope: 'company',
+				status: {
+					code: 0,
+				},
+				titleObjectFieldName,
 			});
 
 		listTypeDefinitions.push(listTypeDefinition);
@@ -376,29 +359,23 @@ test.describe('Manage object entries through View Object Entries', () => {
 				],
 			});
 
-		const objectAdminRestClient = await apiHelpers.buildRestClient(
-			ObjectAdminRestClient
-		);
-
 		const objectDefinition =
-			await objectAdminRestClient.objectDefinition.postObjectDefinition({
-				requestBody: {
-					active: true,
-					externalReferenceCode: getRandomString(),
-					label: {
-						en_US: getRandomString(),
-					},
-					name: 'ObjectDefinitionName' + getRandomInt(),
-					objectFields,
-					panelCategoryKey: 'control_panel.object',
-					pluralLabel: {
-						en_US: 'NewObject',
-					},
-					portlet: true,
-					scope: 'company',
-					status: {
-						code: 0,
-					},
+			await apiHelpers.objectAdmin.postObjectDefinition({
+				active: true,
+				externalReferenceCode: getRandomString(),
+				label: {
+					en_US: getRandomString(),
+				},
+				name: 'ObjectDefinitionName' + getRandomInt(),
+				objectFields,
+				panelCategoryKey: 'control_panel.object',
+				pluralLabel: {
+					en_US: 'NewObject',
+				},
+				portlet: true,
+				scope: 'company',
+				status: {
+					code: 0,
 				},
 			});
 
@@ -535,29 +512,23 @@ test.describe('Manage object entries through View Object Entries', () => {
 				],
 			});
 
-		const objectAdminRestClient = await apiHelpers.buildRestClient(
-			ObjectAdminRestClient
-		);
-
 		const objectDefinition =
-			await objectAdminRestClient.objectDefinition.postObjectDefinition({
-				requestBody: {
-					active: true,
-					externalReferenceCode: getRandomString(),
-					label: {
-						en_US: getRandomString(),
-					},
-					name: 'ObjectDefinitionName' + getRandomInt(),
-					objectFields,
-					panelCategoryKey: 'control_panel.object',
-					pluralLabel: {
-						en_US: 'NewObject',
-					},
-					portlet: true,
-					scope: 'company',
-					status: {
-						code: 0,
-					},
+			await apiHelpers.objectAdmin.postObjectDefinition({
+				active: true,
+				externalReferenceCode: getRandomString(),
+				label: {
+					en_US: getRandomString(),
+				},
+				name: 'ObjectDefinitionName' + getRandomInt(),
+				objectFields,
+				panelCategoryKey: 'control_panel.object',
+				pluralLabel: {
+					en_US: 'NewObject',
+				},
+				portlet: true,
+				scope: 'company',
+				status: {
+					code: 0,
 				},
 			});
 
@@ -619,29 +590,23 @@ test.describe('Manage object entries through View Object Entries', () => {
 			objectFieldBusinessTypes: ['attachment'],
 		});
 
-		const objectAdminRestClient = await apiHelpers.buildRestClient(
-			ObjectAdminRestClient
-		);
-
 		const objectDefinition =
-			await objectAdminRestClient.objectDefinition.postObjectDefinition({
-				requestBody: {
-					active: true,
-					externalReferenceCode: getRandomString(),
-					label: {
-						en_US: getRandomString(),
-					},
-					name: 'ObjectDefinitionName' + getRandomInt(),
-					objectFields,
-					panelCategoryKey: 'control_panel.object',
-					pluralLabel: {
-						en_US: 'NewObject',
-					},
-					portlet: true,
-					scope: 'company',
-					status: {
-						code: 0,
-					},
+			await apiHelpers.objectAdmin.postObjectDefinition({
+				active: true,
+				externalReferenceCode: getRandomString(),
+				label: {
+					en_US: getRandomString(),
+				},
+				name: 'ObjectDefinitionName' + getRandomInt(),
+				objectFields,
+				panelCategoryKey: 'control_panel.object',
+				pluralLabel: {
+					en_US: 'NewObject',
+				},
+				portlet: true,
+				scope: 'company',
+				status: {
+					code: 0,
 				},
 			});
 
@@ -713,28 +678,23 @@ test.describe('Manage object entries through View Object Entries', () => {
 		const objectRelationshipName =
 			'objectRelationshipName' + Math.floor(Math.random() * 99);
 
-		const objectAdminRestClient = await apiHelpers.buildRestClient(
-			ObjectAdminRestClient
-		);
+		const objectRelationshipData: Partial<ObjectRelationship> = {
+			label: {
+				en_US: objectRelationshipLabel,
+			},
+			name: objectRelationshipName,
+			objectDefinitionExternalReferenceCode1:
+				objectDefinition1.externalReferenceCode,
+			objectDefinitionExternalReferenceCode2:
+				objectDefinition2.externalReferenceCode,
+			objectDefinitionId1: objectDefinition1.id,
+			objectDefinitionId2: objectDefinition2.id,
+			objectDefinitionName2: objectDefinition2.name,
+			type: 'oneToMany' as ObjectRelationshipType,
+		};
 
-		await objectAdminRestClient.objectRelationship.postObjectDefinitionByExternalReferenceCodeObjectRelationship(
-			{
-				externalReferenceCode: objectDefinition1.externalReferenceCode,
-				requestBody: {
-					label: {
-						en_US: objectRelationshipLabel,
-					},
-					name: objectRelationshipName,
-					objectDefinitionExternalReferenceCode1:
-						objectDefinition1.externalReferenceCode,
-					objectDefinitionExternalReferenceCode2:
-						objectDefinition2.externalReferenceCode,
-					objectDefinitionId1: objectDefinition1.id,
-					objectDefinitionId2: objectDefinition2.id,
-					objectDefinitionName2: objectDefinition2.name,
-					type: 'oneToMany' as ObjectRelationshipType,
-				},
-			}
+		await apiHelpers.objectAdmin.postObjectRelationship(
+			objectRelationshipData
 		);
 
 		const applicationName =
