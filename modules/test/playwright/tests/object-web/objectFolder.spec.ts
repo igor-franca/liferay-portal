@@ -5,7 +5,6 @@
 
 import {expect, mergeTests} from '@playwright/test';
 
-import {ObjectFolder} from '../../../../apps/object/object-admin-rest-client-js/src/main/resources/META-INF/resources/node';
 import {apiHelpersTest} from '../../fixtures/apiHelpersTest';
 import {dataApiHelpersTest} from '../../fixtures/dataApiHelpersTest';
 import {loginTest} from '../../fixtures/loginTest';
@@ -18,6 +17,18 @@ export const test = mergeTests(
 	loginTest(),
 	objectPagesTest
 );
+
+test.afterEach(async ({apiHelpers}) => {
+	for (const objectFolder of createdEntities.objectFolders) {
+		await apiHelpers.objectAdmin.deleteObjectFolder(objectFolder.id);
+	}
+
+	for (const objectDefinition of createdEntities.objectDefinitions) {
+		await apiHelpers.objectAdmin.deleteObjectDefinition(
+			objectDefinition.id
+		);
+	}
+});
 
 test.describe('manage object definitions through model builder', () => {
 	test('can edit object folder label and ERC by Model Builder', async ({
@@ -344,15 +355,6 @@ test.describe('manage object definitions through view object definitions', () =>
 		await viewObjectDefinitionsPage.objectFolderActions.click();
 
 		await viewObjectDefinitionsPage.deleteObjectFolder(objectFolder.name);
-
-		apiHelpers.data.splice(
-			apiHelpers.data.findIndex(
-				(object) =>
-					object.id === objectFolder.id &&
-					object.type === 'objectFolder'
-			),
-			1
-		);
 
 		await viewObjectDefinitionsPage.defaultObjectFolder.click();
 
