@@ -57,6 +57,8 @@ export class SiteSettingsPage {
 	async saveConfiguration() {
 		await this.saveButton.click();
 
+		await this.page.waitForLoadState('networkidle');
+
 		await waitForAlert(this.page);
 	}
 }
