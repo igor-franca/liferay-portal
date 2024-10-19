@@ -20,6 +20,7 @@ import {ClientExtensionsPage} from './pages/ClientExtensionsPage';
 import {EditJSClientExtensionsPage} from './pages/EditJSClientExtensionsPage';
 import {ViewClientExtensionPage} from './pages/ViewClientExtensionPage';
 
+let defaultSiteLanguage = 'en_US';
 const SAMPLES = [
 	{
 		erc: 'LXC:liferay-sample-global-js-1',
@@ -115,6 +116,19 @@ export const test = mergeTests(
 	loginTest(),
 	pagesAdminPagesTest,
 	siteSettingsPagesTest
+);
+
+test.afterEach(
+	async ({page, siteSettingsLocalizationPage, siteSettingsPage}) => {
+		if (defaultSiteLanguage !== 'en_US') {
+			await page.goto('/');
+			await siteSettingsLocalizationPage.goto();
+			await siteSettingsLocalizationPage.selectDefaultLanguageOption();
+			await siteSettingsPage.saveConfiguration();
+
+			defaultSiteLanguage = 'en_US';
+		}
+	}
 );
 
 test('Create a new JS client extension with a script element attribute', async ({
@@ -454,6 +468,8 @@ test('JS client extension can be created with name translations while having a l
 			site.friendlyUrlPath
 		);
 	});
+
+	defaultSiteLanguage = 'es_ES';
 
 	const englishName = getRandomString();
 	const spanishName = getRandomString();
