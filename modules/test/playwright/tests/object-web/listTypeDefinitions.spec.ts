@@ -24,9 +24,9 @@ export const test = mergeTests(
 	siteSettingsPagesTest
 );
 
-let customDefaultSiteLanguage: string;
-let siteLanguage: string;
-let userLanguage: string;
+let customDefaultSiteLanguage = 'en_US';
+let siteLanguage = 'en';
+let userLanguage = 'en_US';
 
 const createdEntities = {
 	listTypeDefinitions: [],
@@ -66,7 +66,7 @@ test.afterEach(
 			siteLanguage = 'en';
 		}
 
-		if (userLanguage === 'pt_BR') {
+		if (userLanguage !== 'en_US') {
 			await page.goto('en');
 
 			await page.locator('button[data-qa-id="userPersonalMenu"]').click();
@@ -80,12 +80,13 @@ test.afterEach(
 			userLanguage = 'en_US';
 		}
 
-		if (customDefaultSiteLanguage) {
+		if (customDefaultSiteLanguage !== 'en_US') {
 			await page.goto('/');
 			await siteSettingsLocalizationPage.goto();
 			await siteSettingsLocalizationPage.selectDefaultLanguageOption();
 			await siteSettingsPage.saveConfiguration();
-			customDefaultSiteLanguage = '';
+
+			customDefaultSiteLanguage = 'en_US';
 		}
 	}
 );
