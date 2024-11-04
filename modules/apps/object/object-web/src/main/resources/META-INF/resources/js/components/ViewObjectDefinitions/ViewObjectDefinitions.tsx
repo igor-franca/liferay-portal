@@ -117,14 +117,12 @@ export default function ViewObjectDefinitions({
 		addObjectDefinition: false,
 		addObjectField: false,
 		addObjectFolder: false,
-		bindToRootObjectDefinition: false,
 		deleteObjectDefinition: false,
 		deleteObjectFolder: false,
 		editObjectFolder: false,
 		importModal: false,
 		moveObjectDefinition: false,
 		objectFieldDeletionNotAllowed: false,
-		unbindFromRootObjectDefinition: false,
 	});
 
 	const [updatedFDSItemsActions, setUpdatedFDSItemsActions] = useState(
@@ -497,7 +495,6 @@ export default function ViewObjectDefinitions({
 
 			{objectFoldersRequestInfo && selectedObjectFolder && (
 				<ViewObjectDefinitionsModals
-					baseResourceURL={baseResourceURL}
 					deletedObjectDefinition={deletedObjectDefinition}
 					learnResourceContext={learnResourceContext}
 					modalImportProperties={modalImportProperties}
