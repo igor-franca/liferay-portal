@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import ClayAlert from '@clayui/alert';
 import {
 	API,
 	FormError,
@@ -10,19 +11,32 @@ import {
 	SingleSelect,
 	stringUtils,
 } from '@liferay/object-js-components-web';
+import {
+	ILearnResourceContext,
+	LearnMessage,
+	LearnResourcesContext,
+} from 'frontend-js-components-web';
 import {createResourceURL} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
 
 import CurrentObjectDefinition from './CurrentObjectDefinition';
+import {ObjectRelationshipInheritanceCheckbox} from './ObjectRelationshipInheritanceCheckbox';
 import SelectObjectDefinition from './SelectObjectDefinition';
 
+export type Alert = {
+	displayType: 'info' | 'warning';
+	message: string;
+};
+
 interface ObjectRelationshipFormBaseProps {
+	alert?: Alert;
 	baseResourceURL: string;
 	children?: JSX.Element;
 	className?: string;
 	errors: FormError<ObjectRelationship>;
 	handleChange: React.ChangeEventHandler<HTMLInputElement>;
 	hasDefinedObjectDefinitionTarget?: boolean;
+	learnResourceContext?: ILearnResourceContext;
 	objectDefinitionExternalReferenceCode1: string;
 	objectDefinitionExternalReferenceCode2?: string;
 	readonly?: boolean;
@@ -77,12 +91,14 @@ export const OBJECT_RELATIONSHIP_TYPES = [
 ];
 
 export function ObjectRelationshipFormBase({
+	alert,
 	baseResourceURL,
 	children,
 	className,
 	errors,
 	handleChange,
 	hasDefinedObjectDefinitionTarget,
+	learnResourceContext,
 	objectDefinitionExternalReferenceCode1,
 	objectDefinitionExternalReferenceCode2,
 	readonly,
@@ -433,6 +449,38 @@ export function ObjectRelationshipFormBase({
 				))}
 
 			{children}
+
+			{alert &&
+				learnResourceContext &&
+				values.type === 'oneToMany' &&
+				Liferay.FeatureFlags['LPS-187142'] && (
+					<>
+						<ObjectRelationshipInheritanceCheckbox
+							learnResourceContext={learnResourceContext}
+							setValues={setValues}
+							values={values}
+						/>
+
+						<ClayAlert
+							displayType={alert.displayType}
+							title={`${alert.displayType === 'info' ? Liferay.Language.get('info') : Liferay.Language.get('warning')}:`}
+						>
+							<>
+								{alert.message}
+								&nbsp;
+								<LearnResourcesContext.Provider
+									value={learnResourceContext}
+								>
+									<LearnMessage
+										className="alert-link"
+										resource="object-web"
+										resourceKey="expression-builder-validations-reference"
+									/>
+								</LearnResourcesContext.Provider>
+							</>
+						</ClayAlert>
+					</>
+				)}
 		</>
 	);
 }

@@ -10,14 +10,17 @@ import {
 	openToast,
 	saveAndReload,
 } from '@liferay/object-js-components-web';
-import React from 'react';
+import {ILearnResourceContext} from 'frontend-js-components-web';
+import React, {useState} from 'react';
 
 import {EditObjectRelationshipContent} from './EditObjectRelationshipContent';
+import {Alert} from './ObjectRelationshipFormBase';
 import {useObjectRelationshipForm} from './useObjectRelationshipForm';
 
 interface EditObjectRelationshipProps {
 	baseResourceURL: string;
 	hasUpdateObjectDefinitionPermission: boolean;
+	learnResourceContext: ILearnResourceContext;
 	objectDefinitionExternalReferenceCode: string;
 	objectRelationship: ObjectRelationship;
 	objectRelationshipDeletionTypes: LabelValueObject[];
@@ -28,12 +31,20 @@ interface EditObjectRelationshipProps {
 export default function EditObjectRelationship({
 	baseResourceURL,
 	hasUpdateObjectDefinitionPermission,
+	learnResourceContext,
 	objectDefinitionExternalReferenceCode,
 	objectRelationship: initialValues,
 	objectRelationshipDeletionTypes,
 	parameterRequired,
 	restContextPath,
 }: EditObjectRelationshipProps) {
+	const [alert, setAlert] = useState<Alert>({
+		displayType: 'info',
+		message: Liferay.Language.get(
+			'when-enabled,-the-child-object-is-bound-to-the-parent'
+		),
+	});
+
 	const onSubmit = async (objectRelationship: ObjectRelationship) => {
 		try {
 			if (!Liferay.FeatureFlags['LPS-187142']) {
@@ -52,7 +63,12 @@ export default function EditObjectRelationship({
 		catch (error: unknown) {
 			const {message} = error as Error;
 
-			openToast({message, type: 'danger'});
+			if (!Liferay.FeatureFlags['LPS-187142']) {
+				openToast({message, type: 'danger'});
+			}
+			else {
+				setAlert({displayType: 'warning', message});
+			}
 		}
 	};
 
@@ -81,10 +97,12 @@ export default function EditObjectRelationship({
 			title={Liferay.Language.get('relationship')}
 		>
 			<EditObjectRelationshipContent
+				alert={alert}
 				baseResourceURL={baseResourceURL}
 				containerWrapper={Card}
 				errors={errors}
 				handleChange={handleChange}
+				learnResourceContext={learnResourceContext}
 				objectDefinitionExternalReferenceCode={
 					objectDefinitionExternalReferenceCode
 				}
