@@ -89,11 +89,13 @@ export default function Relationships({
 
 	const [objectRelationship, setObjectRelationship] =
 		useState<ObjectRelationship | null>();
-	const [showAddModal, setShowAddModal] = useState(false);
-	const [showDeleteModal, setShowDeleteModal] = useState(false);
 
 	const [selectedObjectRelationship, setSelectedObjectRelationship] =
 		useState<ObjectRelationship>();
+
+	const [showAddModal, setShowAddModal] = useState(false);
+
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
 
 	const [showDeletionNotAllowedModal, setShowDeletionNotAllowedModal] =
 		useState(false);
