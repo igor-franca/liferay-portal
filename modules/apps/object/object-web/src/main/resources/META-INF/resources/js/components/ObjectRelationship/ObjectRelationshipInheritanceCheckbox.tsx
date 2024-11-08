@@ -6,13 +6,12 @@
 import {ClayCheckbox} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import ClayPopover from '@clayui/popover';
-import React, {useState} from 'react';
-
 import {
 	ILearnResourceContext,
 	LearnMessage,
 	LearnResourcesContext,
 } from 'frontend-js-components-web';
+import React, {useState} from 'react';
 
 import './ObjectRelationshipInheritanceCheckbox.scss';
 

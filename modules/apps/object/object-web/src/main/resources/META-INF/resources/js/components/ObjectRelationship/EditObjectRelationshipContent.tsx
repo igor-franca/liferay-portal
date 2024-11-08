@@ -4,7 +4,6 @@
  */
 
 import ClayAlert from '@clayui/alert';
-import {Input} from '@liferay/object-js-components-web';
 import {
 	ILearnResourceContext,
 	InputLocalized,
@@ -13,7 +12,7 @@ import React from 'react';
 
 import {ObjectRelationshipDeletionType} from './ObjectRelationshipDeletionType';
 import {Alert, ObjectRelationshipFormBase} from './ObjectRelationshipFormBase';
-import {SelectObjectRelationship} from './SelectObjectRelationship';
+import {ObjectRelationshipParameterRequired} from './ObjectRelationshipParameterRequired';
 
 import type {FormError} from '@liferay/object-js-components-web';
 import type {ChangeEventHandler, ElementType} from 'react';
@@ -110,36 +109,16 @@ export function EditObjectRelationshipContent({
 							values={values}
 						/>
 
-						{parameterRequired && values.type === 'oneToMany' && (
-							<ContainerWrapper
-								title={Liferay.Language.get('parameters')}
-							>
-								<Input
-									id="lfr-objects__object-relationship-api-endpoint"
-									label={Liferay.Language.get('api-endpoint')}
-									readOnly
-									value={restContextPath}
-								/>
-
-								<SelectObjectRelationship
-									error={errors.parameterObjectFieldName}
-									objectDefinitionExternalReferenceCode1={
-										values.objectDefinitionExternalReferenceCode2 as string
-									}
-									onChange={(parameterObjectFieldName) => {
-										setValues({parameterObjectFieldName});
-
-										if (autoSave) {
-											onSubmit({
-												...values,
-												parameterObjectFieldName,
-											});
-										}
-									}}
-									value={values.parameterObjectFieldName}
-								/>
-							</ContainerWrapper>
-						)}
+						<ObjectRelationshipParameterRequired
+							autoSave={autoSave}
+							containerWrapper={ContainerWrapper}
+							errors={errors}
+							onSubmit={onSubmit}
+							parameterRequired={parameterRequired}
+							restContextPath={restContextPath}
+							setValues={setValues}
+							values={values}
+						/>
 					</>
 				</ObjectRelationshipFormBase>
 			</ContainerWrapper>
