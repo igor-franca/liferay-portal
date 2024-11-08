@@ -39,6 +39,7 @@ interface ObjectRelationshipFormBaseProps {
 	learnResourceContext?: ILearnResourceContext;
 	objectDefinitionExternalReferenceCode1: string;
 	objectDefinitionExternalReferenceCode2?: string;
+	onSubmit?: (values?: Partial<ObjectRelationship>) => Promise<void>;
 	readonly?: boolean;
 	setValues: (values: Partial<ObjectRelationship>) => void;
 	values: Partial<ObjectRelationship>;
@@ -101,6 +102,7 @@ export function ObjectRelationshipFormBase({
 	learnResourceContext,
 	objectDefinitionExternalReferenceCode1,
 	objectDefinitionExternalReferenceCode2,
+	onSubmit,
 	readonly,
 	setValues,
 	values,
@@ -452,11 +454,13 @@ export function ObjectRelationshipFormBase({
 
 			{alert &&
 				learnResourceContext &&
+				onSubmit &&
 				values.type === 'oneToMany' &&
 				Liferay.FeatureFlags['LPS-187142'] && (
 					<>
 						<ObjectRelationshipInheritanceCheckbox
 							learnResourceContext={learnResourceContext}
+							onSubmit={onSubmit}
 							setValues={setValues}
 							values={values}
 						/>

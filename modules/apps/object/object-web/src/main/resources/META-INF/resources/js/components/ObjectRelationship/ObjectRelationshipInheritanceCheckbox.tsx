@@ -25,6 +25,7 @@ interface ObjectRelationshipInheritanceCheckbox {
 
 export function ObjectRelationshipInheritanceCheckbox({
 	learnResourceContext,
+	onSubmit,
 	setValues,
 	values,
 }: ObjectRelationshipInheritanceCheckbox) {
@@ -44,6 +45,26 @@ export function ObjectRelationshipInheritanceCheckbox({
 								...values,
 								edge: true,
 							});
+						}
+						else {
+							const parentWindow = Liferay.Util.getOpener();
+
+							parentWindow.Liferay.fire(
+								'openModalDisableInheritance',
+								{
+									handleDisable: async () => {
+										setValues({
+											...values,
+											edge: false,
+										});
+
+										await onSubmit({
+											...values,
+											edge: false,
+										});
+									},
+								}
+							);
 						}
 					}}
 				/>

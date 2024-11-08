@@ -20,6 +20,7 @@ import type {ChangeEventHandler, ElementType} from 'react';
 
 interface EditObjectRelationshipContentProps {
 	alert?: Alert;
+	autoSave?: boolean;
 	baseResourceURL: string;
 	containerWrapper: ElementType;
 	errors: FormError<ObjectRelationship>;
@@ -27,7 +28,7 @@ interface EditObjectRelationshipContentProps {
 	learnResourceContext?: ILearnResourceContext;
 	objectDefinitionExternalReferenceCode: string;
 	objectRelationshipDeletionTypes: LabelValueObject[];
-	onSubmit?: (editedObjectRelationship?: Partial<ObjectRelationship>) => void;
+	onSubmit: (values?: Partial<ObjectRelationship>) => Promise<void>;
 	parameterRequired: boolean;
 	readOnly?: boolean;
 	restContextPath: string;
@@ -37,6 +38,7 @@ interface EditObjectRelationshipContentProps {
 
 export function EditObjectRelationshipContent({
 	alert,
+	autoSave,
 	baseResourceURL,
 	containerWrapper: ContainerWrapper,
 	errors,
@@ -70,11 +72,11 @@ export function EditObjectRelationshipContent({
 					error={errors.label}
 					id="lfr-objects__object-relationship-form-base-label"
 					label={Liferay.Language.get('label')}
-					onBlur={(event) => {
+					onBlur={async (event) => {
 						event.stopPropagation();
 
-						if (onSubmit) {
-							onSubmit();
+						if (autoSave) {
+							await onSubmit();
 						}
 					}}
 					onChange={(label) => setValues({label})}
@@ -91,12 +93,14 @@ export function EditObjectRelationshipContent({
 					objectDefinitionExternalReferenceCode1={
 						objectDefinitionExternalReferenceCode
 					}
+					onSubmit={onSubmit}
 					readonly
 					setValues={setValues}
 					values={values}
 				>
 					<>
 						<ObjectRelationshipDeletionType
+							autoSave={autoSave}
 							objectRelationshipDeletionTypes={
 								objectRelationshipDeletionTypes
 							}
@@ -125,7 +129,7 @@ export function EditObjectRelationshipContent({
 									onChange={(parameterObjectFieldName) => {
 										setValues({parameterObjectFieldName});
 
-										if (onSubmit) {
+										if (autoSave) {
 											onSubmit({
 												...values,
 												parameterObjectFieldName,
