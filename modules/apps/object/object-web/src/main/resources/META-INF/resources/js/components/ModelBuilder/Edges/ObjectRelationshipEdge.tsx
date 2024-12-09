@@ -115,6 +115,7 @@ export default function ObjectRelationshipEdge({
 		/>
 	) : (
 		<SimpleObjectRelationshipEdge
+		    objectRelationshipInheritance={true}
 			edgeCenterX={edgeCenterX}
 			edgeCenterY={edgeCenterY}
 			edgeId={edgeId}
