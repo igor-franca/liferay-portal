@@ -15,6 +15,8 @@ import {loginTest} from '../../fixtures/loginTest';
 import {objectPagesTest} from '../../fixtures/objectPagesTest';
 import {getRandomInt} from '../../utils/getRandomInt';
 import {pushToApiHelpersData} from '../../utils/pushToApiHelpersData';
+import { ApiHelpers } from '../../helpers/ApiHelpers';
+import getRandomString from '../../utils/getRandomString';
 
 export const test = mergeTests(
 	dataApiHelpersTest,
@@ -24,6 +26,93 @@ export const test = mergeTests(
 	loginTest(),
 	objectPagesTest
 );
+
+test.describe('Manage object entry permission in root model context', () => {
+	test('account restricted object entry', async ({
+		apiHelpers,
+		page,
+	}) => {
+		const companyId = await page.evaluate(() => {
+			return Liferay.ThemeDisplay.getCompanyId();
+		});
+
+		// Create an role to users view and add object entries by control panel
+
+		const role = await apiHelpers.headlessAdminUser.postRole({
+			name: 'Object entry manager ' + getRandomString(),
+			rolePermissions: [
+				{
+					actionIds: [
+						'MANAGE_ORGANIZATIONS',
+						'MANAGE_USERS',
+						'MANAGE_CHANNEL_DEFAULTS',
+						'UPDATE',
+					],
+					primaryKey: companyId,
+					resourceName: 'com.liferay.account.model.AccountEntry',
+					scope: 1,
+				},
+				{
+					actionIds: ['VIEW'],
+					primaryKey: companyId,
+					resourceName: 'com.liferay.account.model.AccountRole',
+					scope: 1,
+				},
+
+				/// ...
+			],
+		});
+
+		const account1 = await apiHelpers.headlessAdminUser.postAccount();
+
+		apiHelpers.data.push({id: account1.id, type: 'account'});
+	
+		const account2 = await apiHelpers.headlessAdminUser.postAccount();
+
+		apiHelpers.data.push({id: account2.id, type: 'account'});
+
+		const user1 = await apiHelpers.headlessAdminUser.postUserAccount();
+
+		apiHelpers.data.push({
+			id: user1.id,
+			type: 'userAccount',
+		});
+
+		const user2 = await apiHelpers.headlessAdminUser.postUserAccount();
+
+		apiHelpers.data.push({
+			id: user2.id,
+			type: 'userAccount',
+		});
+
+		await apiHelpers.headlessAdminUser.assignUserToAccountByEmailAddress(
+			account1.id,
+			[user1.emailAddress]
+		);
+
+		await apiHelpers.headlessAdminUser.assignUserToAccountByEmailAddress(
+			account1.id,
+			[user2.emailAddress]
+		);
+
+		// Create two custom objects 
+
+		// Create an object relationship (one to many) Account -> custom object 1 in model builder
+
+		// Enable the toggle related to account restricted in custom object 1
+
+		// Create an inheritance relationship between custom object 1 and custom object 2
+
+		// Add entreis related to account 1 
+
+		// Add entreis related to account 2 
+
+		// Log in using the user 1, check for view and edit entreies related to account1
+
+		// Log in using the user 2, check for view and edit entreies related to account2
+	})
+
+});
 
 test.describe('Manage root models elements through Objects Admin', () => {
 	test('cannot delete an object definition with inheritance enabled on its relationship', async ({
