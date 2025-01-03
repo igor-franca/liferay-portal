@@ -30,7 +30,7 @@ interface AggregationFilters {
 	filterType?: string;
 	label?: LocalizedValue<string>;
 	objectFieldBusinessType?: string;
-	objectFieldName?: string;
+	objectFieldName: string;
 	priority?: number;
 	sortOrder?: string;
 	type?: string;
@@ -149,19 +149,20 @@ export function AggregationFilterContainer({
 				);
 
 				const filterType = parsedFilter.filterType as string;
+				const filterBy = parsedFilter.filterBy;
 
-				if (filterType) {
+				if (filterType && filterBy) {
 					const aggregationFilter: AggregationFilters = {
 						fieldLabel: stringUtils.getLocalizableLabel(
 							creationLanguageId2 as Liferay.Language.Locale,
 							objectField?.label,
-							objectField?.name || parsedFilter.filterBy
+							objectField?.name || filterBy
 						),
-						filterBy: parsedFilter.filterBy,
+						filterBy,
 						filterType,
 						label: objectField?.label,
 						objectFieldBusinessType: objectField?.businessType,
-						objectFieldName: objectField?.name,
+						objectFieldName: objectField?.name || filterBy,
 						value:
 							objectField?.businessType === 'Integer' ||
 							objectField?.businessType === 'LongInteger'
