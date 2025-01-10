@@ -13,7 +13,7 @@ import {ClayTooltipProvider} from '@clayui/tooltip';
 import classNames from 'classnames';
 import {getTooltipTitle} from 'util/tooltip';
 
-import {IProps} from './Numeric';
+import {NumericProps} from './Numeric';
 import {ISymbols} from 'NumericInputMask/NumericInputMask';
 import {formatValue, getFormattedValue, getMaskedValue, getValue, IMaskedNumber} from 'localizedObjectFields/util/numericUtil';
 import {LocalizedValue} from 'types';
@@ -47,7 +47,7 @@ const NumericBase = ({
 	tip,
 	valid,
 	value,
-}: IProps) => {
+}: Omit<NumericProps, 'availableLocales' | 'fieldName'>) => {
 	const accessibleProperties = {
 		...(tip && {
 			'aria-describedby': `${id ?? name}_fieldHelp`,
@@ -81,9 +81,12 @@ const NumericBase = ({
 		return localizedSymbolsContext?.[editingLocale.localeId] || symbolsProp;
 	}, [editingLocale.localeId, inputMask, localizedSymbolsContext, symbolsProp]);
 
+	// tentar remover a passagem do lacalized value no caso do numericLocalizedObjectField
+
 	const inputValue = useMemo<IMaskedNumber>(() => {
 		let newValue =
 			getValue({editingLanguageId: editingLocale.localeId, localizedObjectField, value}) ??
+			getValue({editingLanguageId: defaultLanguageId, localizedObjectField, value}) ??
 			localizedValue?.[editingLocale.localeId] ??
 			localizedValue?.[defaultLanguageId] ??
 			predefinedValue ??
@@ -147,8 +150,8 @@ const NumericBase = ({
 		});
 
 		if (localizedObjectField && formatedValue && formatedValue.masked !== inputValue.masked) {
-			const localazedValue : Partial<LocalizedValue<string>> = {	
-				...(value as Partial<LocalizedValue<string>>),
+			const localazedValue = {	
+				...(value as LocalizedValue<string>),
 				[editingLocale.localeId]: formatedValue.raw,
 			};
 

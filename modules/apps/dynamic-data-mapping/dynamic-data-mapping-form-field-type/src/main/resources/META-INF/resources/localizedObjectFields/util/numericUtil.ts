@@ -1,9 +1,9 @@
 import {NumericDataType } from "Numeric/Numeric";
-import { ISymbols } from "NumericInputMask/NumericInputMask";
-import { createNumberMask } from "text-mask-addons";
-import { conformToMask } from "text-mask-core";
-import { LocalizedValue } from "types";
-import { trimLeftZero } from "util/numericalOperations";
+import {ISymbols} from "NumericInputMask/NumericInputMask";
+import {createNumberMask} from "text-mask-addons";
+import {conformToMask} from "text-mask-core";
+import {LocalizedValue} from "types";
+import {trimLeftZero} from "util/numericalOperations";
 
 const NON_NUMERIC_REGEX = /[\D]/g;
 

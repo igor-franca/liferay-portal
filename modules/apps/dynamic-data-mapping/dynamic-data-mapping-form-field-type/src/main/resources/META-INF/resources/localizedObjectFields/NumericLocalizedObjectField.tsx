@@ -8,11 +8,20 @@ import React, {useState} from 'react';
 import LocalesDropdown, {EditingLocale} from 'util/localizable/LocalesDropdown';
 import {getEditingLocales, getLocale} from './util/locales';
 import NumericBase from 'Numeric/NumericBase';
-import {IProps} from 'Numeric/Numeric';
+import {NumericProps} from 'Numeric/Numeric';
+import { LocalizedValue } from 'types';
 
-export default function NumericLocalizedObjectField(props: IProps) {
-	const {availableLocales, dataType, defaultLocale, defaultLanguageId, fieldName, onChange, symbols, value} = props;
-
+export default function NumericLocalizedObjectField({
+		availableLocales,
+		dataType,
+		defaultLocale,
+		defaultLanguageId,
+		fieldName,
+		onChange,
+		value,
+		...otherProps
+	}: Omit<NumericProps, 'value'> & {value: string | LocalizedValue<string>}
+) {
 	const initialEditingLocales = getEditingLocales(
 		availableLocales,
 		defaultLocale,
@@ -23,27 +32,30 @@ export default function NumericLocalizedObjectField(props: IProps) {
 		initialEditingLocales
 	);
 
+	const [localizedValue, setLocalizedValue] = useState(value);
+
 	const [currentEditingLocale, setCurrentEditingLocale] = useState({
 		...getLocale(editingLocales, defaultLocale, defaultLocale.localeId),
 	});
 
 	const handleTranslationChange = (localeId: Liferay.Language.Locale) => {
 		if (typeof value === 'object' && !Object.hasOwn(value, localeId)) {
-			let defaultValue = String(value[defaultLanguageId]);
+			let formatedValue = value[defaultLanguageId] ?? '';
 
 			if (dataType === 'double' &&  value[defaultLanguageId] !== undefined) {
-				const symbolsValue =  defaultValue.match(/[^-\d]/g);
+				const symbolsValue =  formatedValue.match(/[^-\d]/g);
 	
-				defaultValue = symbolsValue
-					? defaultValue.replace(symbolsValue[0], '.')
-					: defaultValue;
+				formatedValue = symbolsValue
+					? formatedValue.replace(symbolsValue[0], '.')
+					: formatedValue;
 			}
 
 			const newValue = {
 				...value,
-				[localeId]: defaultValue,
+				[localeId]: formatedValue,
 			};
 			
+			setLocalizedValue(newValue);
 			onChange({target: {value: newValue}});
 		}
 
@@ -67,7 +79,15 @@ export default function NumericLocalizedObjectField(props: IProps) {
 
 	return (
 		<>
-			<NumericBase {...props} editingLocale={currentEditingLocale}/>
+			<NumericBase
+				{...otherProps}
+				dataType={dataType}
+				defaultLocale={defaultLocale}
+				defaultLanguageId={defaultLanguageId}
+				editingLocale={currentEditingLocale}
+				onChange={onChange}
+				value={value}
+			/>
 
 			<ClayInput.GroupItem shrink>
 				<LocalesDropdown

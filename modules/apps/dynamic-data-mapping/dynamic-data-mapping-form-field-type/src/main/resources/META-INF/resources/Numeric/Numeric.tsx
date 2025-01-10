@@ -26,7 +26,7 @@ const Numeric = ({
 	localizedObjectField,
 	localizedValue,
 	...otherProps
-}: IProps) => {
+}: NumericProps) => {
 	const Component =
 		Liferay.FeatureFlags['LPD-32050'] && localizedObjectField
 			? NumericLocalizedObjectField
@@ -44,7 +44,7 @@ const Numeric = ({
 export {Numeric};
 export default withConfirmationField(Numeric);
 
-export type IProps = {
+export type NumericProps = {
 	append: string;
 	appendType: 'prefix' | 'suffix';
 	availableLocales: EditingLocale[];
@@ -60,9 +60,9 @@ export type IProps = {
 	id: string;
 	inputMask?: boolean;
 	inputMaskFormat?: string;
+	localizedObjectField: boolean;
 	localizedSymbols?: LocalizedValue<ISymbols>;
 	localizedValue?: LocalizedValue<string>;
-	localizedObjectField: boolean;
 	name: string;
 	onBlur: FocusEventHandler<HTMLInputElement>;
 	onChange: FieldChangeEventHandler<string | LocalizedValue<string>>;
@@ -75,7 +75,8 @@ export type IProps = {
 	symbols: ISymbols;
 	tip?: string;
 	valid?: boolean;
-	value: string | LocalizedValue<string>;
-}
+	value: LocalizedValue<string> | string;
+};
+
 
 export type NumericDataType = 'integer' | 'double';
