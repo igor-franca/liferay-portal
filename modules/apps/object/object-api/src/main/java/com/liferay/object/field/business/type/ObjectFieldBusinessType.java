@@ -94,7 +94,13 @@ public interface ObjectFieldBusinessType {
 		throws PortalException {
 
 		return HashMapBuilder.<String, Object>put(
+			"editOnlyInDefaultLanguage",
+			!objectField.isLocalized() &&
+			!GetterUtil.getBoolean(objectField.getReadOnly())
+		).put(
 			"localizedObjectField", objectField.isLocalized()
+		).put(
+			"supportLocalization", supportLocalization(objectField)
 		).build();
 	}
 
