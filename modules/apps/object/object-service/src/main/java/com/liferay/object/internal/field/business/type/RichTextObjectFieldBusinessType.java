@@ -97,7 +97,7 @@ public class RichTextObjectFieldBusinessType
 	}
 
 	@Override
-	public boolean isLocalizable() {
+	public boolean supportLocalization(ObjectField objectField) {
 		return true;
 	}
 

@@ -96,7 +96,7 @@ public class LongTextObjectFieldBusinessType
 	}
 
 	@Override
-	public boolean isLocalizable() {
+	public boolean supportLocalization(ObjectField objectField) {
 		return true;
 	}
 
