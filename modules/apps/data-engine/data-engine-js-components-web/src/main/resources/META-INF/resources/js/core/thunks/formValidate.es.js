@@ -42,6 +42,13 @@ export default function formValidate({
 				({valid}) => {
 					if (!valid) {
 						validForm = false;
+
+						dispatch({
+							payload: {
+								editingLanguageId: defaultLanguageId,
+							},
+							type: 'language_locales_dropdown_change',
+						});
 					}
 				},
 				true,
