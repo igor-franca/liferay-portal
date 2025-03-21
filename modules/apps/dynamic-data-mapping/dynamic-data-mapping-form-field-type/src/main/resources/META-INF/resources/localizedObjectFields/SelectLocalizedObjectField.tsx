@@ -79,10 +79,7 @@ export default function SelectLocalizedObjectField({
 	value,
 	...otherProps
 }: SelectLocalizedObjectFieldProps) {
-	const {
-		defaultLanguageId,
-		editingLanguageId,
-	}: {defaultLanguageId: Locale; editingLanguageId: Locale} = useFormState();
+	const {defaultLanguageId, editingLanguageId} = useFormState();
 
 	const normalizedOptions = useNormalizedOptionsMemo({
 		editingLanguageId,

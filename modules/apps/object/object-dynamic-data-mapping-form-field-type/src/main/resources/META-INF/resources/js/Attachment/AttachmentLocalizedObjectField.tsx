@@ -35,13 +35,7 @@ export default function AttachmentLocalizedObjectField({
 	value,
 	...otherProps
 }: AttachmentLocalizedObjectFieldProps) {
-	const {
-		defaultLanguageId,
-		editingLanguageId,
-	}: {
-		defaultLanguageId: Liferay.Language.Locale;
-		editingLanguageId: Liferay.Language.Locale;
-	} = useFormState();
+	const {defaultLanguageId, editingLanguageId} = useFormState();
 
 	const [attachment, setAttachment] =
 		useState<LocalizedValue<AttachmentFile>>(fileEntryProperties);
