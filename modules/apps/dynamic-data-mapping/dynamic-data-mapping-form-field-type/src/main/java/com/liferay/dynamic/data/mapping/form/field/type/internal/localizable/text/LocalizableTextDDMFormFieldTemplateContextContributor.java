@@ -70,6 +70,10 @@ public class LocalizableTextDDMFormFieldTemplateContextContributor
 			parameters.putAll(
 				DDMFormFieldTemplateContextContributorUtil.getLocaleMap(
 					ddmForm.getDefaultLocale()));
+
+			parameters.putAll(
+				DDMFormFieldTemplateContextContributorUtil.getParameters(
+					ddmFormField));
 		}
 
 		parameters.put(

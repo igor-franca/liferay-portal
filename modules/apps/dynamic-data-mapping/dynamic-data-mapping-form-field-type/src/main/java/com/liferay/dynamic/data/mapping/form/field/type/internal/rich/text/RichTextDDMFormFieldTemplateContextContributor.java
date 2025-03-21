@@ -82,6 +82,9 @@ public class RichTextDDMFormFieldTemplateContextContributor
 			DDMFormFieldTemplateContextContributorUtil.getLocaleMap(
 				ddmForm.getDefaultLocale())
 		).putAll(
+			DDMFormFieldTemplateContextContributorUtil.getParameters(
+				ddmFormField)
+		).putAll(
 			getData(
 				ddmFormField, ddmFormFieldRenderingContext,
 				ddmFormField.getType())

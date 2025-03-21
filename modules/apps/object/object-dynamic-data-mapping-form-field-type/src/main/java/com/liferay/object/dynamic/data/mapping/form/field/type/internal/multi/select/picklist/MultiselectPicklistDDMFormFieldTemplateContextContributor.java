@@ -96,6 +96,9 @@ public class MultiselectPicklistDDMFormFieldTemplateContextContributor
 		).putAll(
 			DDMFormFieldTemplateContextContributorUtil.getLocaleMap(
 				ddmForm.getDefaultLocale())
+		).putAll(
+			DDMFormFieldTemplateContextContributorUtil.getParameters(
+				ddmFormField)
 		).build();
 	}
 

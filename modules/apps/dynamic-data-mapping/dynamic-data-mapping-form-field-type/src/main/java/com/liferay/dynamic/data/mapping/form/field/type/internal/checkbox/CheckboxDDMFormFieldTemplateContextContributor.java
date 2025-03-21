@@ -96,6 +96,9 @@ public class CheckboxDDMFormFieldTemplateContextContributor
 		).putAll(
 			DDMFormFieldTemplateContextContributorUtil.getLocaleMap(
 				ddmForm.getDefaultLocale())
+		).putAll(
+			DDMFormFieldTemplateContextContributorUtil.getParameters(
+				ddmFormField)
 		).build();
 	}
 
