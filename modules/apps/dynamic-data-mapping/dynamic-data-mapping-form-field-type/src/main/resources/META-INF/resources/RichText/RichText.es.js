@@ -4,7 +4,7 @@
  */
 
 import {ClayInput} from '@clayui/form';
-import {useConfig} from 'data-engine-js-components-web';
+import {useConfig, useFormState} from 'data-engine-js-components-web';
 import {
 	CKEditor5ClassicEditor,
 	ClassicEditor,
@@ -53,7 +53,6 @@ const RichText = ({
 	availableLocales,
 	defaultLocale = INITIAL_DEFAULT_LOCALE,
 	editable,
-	editingLanguageId,
 	editingLocale = INITIAL_EDITING_LOCALE,
 	editorConfig,
 	evaluable,
@@ -72,6 +71,7 @@ const RichText = ({
 	visible,
 	...otherProps
 }) => {
+	const {editingLanguageId} = useFormState();
 	const contents = useMemo(
 		() => (editable ? predefinedValue : value ?? predefinedValue),
 		[editable, predefinedValue, value]
@@ -345,11 +345,8 @@ const RichText = ({
 					>
 						<LocalesDropdown
 							availableLocales={currentAvailableLocales}
-							editingLocale={currentEditingLocale}
 							fieldName={fieldName}
-							onLanguageClicked={(localeId) => {
-								changeLanguage(localeId);
-							}}
+							value={currentValue}
 						/>
 					</ClayInput.GroupItem>
 				)}
