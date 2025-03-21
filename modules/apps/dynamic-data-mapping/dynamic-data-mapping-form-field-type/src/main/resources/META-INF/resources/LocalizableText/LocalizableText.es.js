@@ -4,6 +4,7 @@
  */
 
 import {ClayInput} from '@clayui/form';
+import {useFormState} from 'data-engine-js-components-web';
 import React, {useEffect, useState} from 'react';
 
 import FieldBase from '../FieldBase/ReactFieldBase.es';
@@ -46,6 +47,7 @@ const LocalizableText = ({
 	readOnly,
 	value,
 }) => {
+	const {editingLanguageId} = useFormState();
 	const [currentAvailableLocales, setCurrentAvailableLocales] =
 		useState(availableLocales);
 
@@ -113,6 +115,26 @@ const LocalizableText = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [defaultLocale, fieldName]);
 
+	useEffect(() => {
+		const newEditingLocale = currentAvailableLocales.find(
+			(availableLocale) => availableLocale.localeId === editingLanguageId
+		);
+
+		setCurrentEditingLocale({
+			...newEditingLocale,
+			icon: normalizeLocaleId(newEditingLocale.localeId),
+		});
+
+		setCurrentInternalValue(
+			getEditingValue({
+				defaultLocale,
+				editingLocale: newEditingLocale,
+				fieldName,
+				value: currentValue,
+			})
+		);
+	}, [currentAvailableLocales, editingLanguageId]);
+
 	return (
 		<ClayInput.Group>
 			<InputComponent
@@ -166,28 +188,8 @@ const LocalizableText = ({
 			>
 				<LocalesDropdown
 					availableLocales={currentAvailableLocales}
-					editingLocale={currentEditingLocale}
 					fieldName={fieldName}
-					onLanguageClicked={(localeId) => {
-						const newEditingLocale = currentAvailableLocales.find(
-							(availableLocale) =>
-								availableLocale.localeId === localeId
-						);
-
-						setCurrentEditingLocale({
-							...newEditingLocale,
-							icon: normalizeLocaleId(newEditingLocale.localeId),
-						});
-
-						setCurrentInternalValue(
-							getEditingValue({
-								defaultLocale,
-								editingLocale: newEditingLocale,
-								fieldName,
-								value: currentValue,
-							})
-						);
-					}}
+					value={currentValue}
 				/>
 			</ClayInput.GroupItem>
 		</ClayInput.Group>
