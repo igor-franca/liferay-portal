@@ -262,7 +262,6 @@ const RichText = ({
 			label={label}
 			name={name}
 			readOnly={readOnly}
-			style={readOnly ? {pointerEvents: 'none'} : null}
 			visible={visible}
 		>
 			<ClayInput.Group>
@@ -288,6 +287,7 @@ const RichText = ({
 							onChange={(event, editor) =>
 								handleContentChange(editor.getData())
 							}
+							style={readOnly ? {pointerEvents: 'none'} : null}
 						/>
 					) : (
 						<ClassicEditor
@@ -321,6 +321,7 @@ const RichText = ({
 							}}
 							readOnly={readOnly}
 							ref={editorRef}
+							style={readOnly ? {pointerEvents: 'none'} : null}
 						/>
 					)}
 				</ClayInput.GroupItem>
