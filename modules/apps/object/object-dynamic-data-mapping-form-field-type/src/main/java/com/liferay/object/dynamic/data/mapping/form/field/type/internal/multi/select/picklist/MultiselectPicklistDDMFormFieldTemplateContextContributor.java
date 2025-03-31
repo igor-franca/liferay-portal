@@ -14,13 +14,17 @@ import com.liferay.dynamic.data.mapping.render.DDMFormFieldRenderingContext;
 import com.liferay.dynamic.data.mapping.util.DDMFormFieldTemplateContextContributorUtil;
 import com.liferay.list.type.service.ListTypeEntryLocalService;
 import com.liferay.object.dynamic.data.mapping.form.field.type.constants.ObjectDDMFormFieldTypeConstants;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -42,6 +46,9 @@ public class MultiselectPicklistDDMFormFieldTemplateContextContributor
 
 		DDMForm ddmForm = ddmFormField.getDDMForm();
 
+		Boolean localizedObjectField = GetterUtil.getBoolean(
+			ddmFormField.getProperty("localizedObjectField"));
+
 		return HashMapBuilder.<String, Object>put(
 			"editOnlyInDefaultLanguage",
 			GetterUtil.getBoolean(
@@ -51,9 +58,7 @@ public class MultiselectPicklistDDMFormFieldTemplateContextContributor
 			GetterUtil.getBoolean(
 				ddmFormField.getProperty("isLocalizationSupported"))
 		).put(
-			"localizedObjectField",
-			GetterUtil.getBoolean(
-				ddmFormField.getProperty("localizedObjectField"))
+			"localizedObjectField", localizedObjectField
 		).put(
 			"options",
 			() -> {
@@ -68,14 +73,26 @@ public class MultiselectPicklistDDMFormFieldTemplateContextContributor
 						continue;
 					}
 
+					ThemeDisplay themeDisplay = getThemeDisplay(
+						ddmFormFieldRenderingContext.getHttpServletRequest());
+
 					LocalizedValue localizedValue =
 						ddmFormFieldOptions.getOptionLabels(optionValue);
 
 					options.add(
 						HashMapBuilder.<String, Object>put(
 							"label",
-							localizedValue.getString(
-								localizedValue.getDefaultLocale())
+							() -> {
+								if (localizedObjectField) {
+									return GetterUtil.getString(
+										localizedValue.getString(
+											localizedValue.getDefaultLocale()));
+								}
+
+								return GetterUtil.getString(
+									localizedValue.getString(
+										themeDisplay.getLocale()));
+							}
 						).put(
 							"labelMap",
 							() -> {
@@ -105,6 +122,13 @@ public class MultiselectPicklistDDMFormFieldTemplateContextContributor
 			DDMFormFieldTemplateContextContributorUtil.getLocaleMap(
 				ddmForm.getDefaultLocale())
 		).build();
+	}
+
+	protected ThemeDisplay getThemeDisplay(
+		HttpServletRequest httpServletRequest) {
+
+		return (ThemeDisplay)httpServletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 	}
 
 	@Reference
