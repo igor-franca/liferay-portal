@@ -15,6 +15,7 @@ import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -64,7 +65,9 @@ public class DDMFormFieldTemplateContextContributorUtil {
 					String.valueOf(localizedValue.getDefaultLocale())
 				).put(
 					"label",
-					localizedValue.getString(localizedValue.getDefaultLocale())
+					GetterUtil.getString(
+						localizedValue.getString(
+							localizedValue.getDefaultLocale()))
 				).put(
 					"labelMap",
 					() -> {
