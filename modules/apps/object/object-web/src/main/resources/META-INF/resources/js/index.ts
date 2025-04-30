@@ -36,3 +36,4 @@ export {default as Views} from './components/ObjectView/Views';
 export {default as ObjectView} from './components/ObjectView/index';
 export {default as StateManager} from './components/StateManager/StateManager';
 export {default as ViewObjectDefinitions} from './components/ViewObjectDefinitions/ViewObjectDefinitions';
+export {default as Component} from '../object_entries/object_entry/Component'

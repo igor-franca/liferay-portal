@@ -60,6 +60,17 @@ public interface ObjectEntryDisplayContext {
 		return FriendlyURLResolverConstants.URL_SEPARATOR_OBJECT_ENTRY;
 	}
 
+	public default String getSchedulePropesties(ObjectDefinition objectDefinition) {
+		{
+			expirationDate: {}
+			reviewDate: {
+				checked: false
+				value: DDMFormFieldTypeUtil.getValue(objectEntry.getReviewDate());
+			}
+			schedule:{}
+		}
+	}
+
 	public boolean isGuestUser();
 
 	public boolean isReadOnly();

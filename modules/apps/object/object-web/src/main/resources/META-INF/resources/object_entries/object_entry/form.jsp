@@ -1,4 +1,4 @@
-<%--
+	<%--
 /**
  * SPDX-FileCopyrightText: (c) 2000 Liferay, Inc. https://liferay.com
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
@@ -65,6 +65,16 @@ portletDisplay.setURLBack(backURL);
 		</clay:sheet-section>
 
 		<%@ include file="/object_entries/object_entry/categorization.jspf" %>
+		
+		when(FF){
+			<div>
+				<react:component
+					module="{Component} from object-web"
+					props="objectEntryDisplayContext.getScheduleProps()"
+				/>
+			</div>
+		}
+
 	</liferay-frontend:edit-form-body>
 
 	<c:if test="<%= !objectEntryDisplayContext.isReadOnly() %>">
