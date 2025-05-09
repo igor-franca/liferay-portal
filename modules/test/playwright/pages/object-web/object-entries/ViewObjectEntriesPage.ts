@@ -153,6 +153,8 @@ export class ViewObjectEntriesPage {
 				.frameLocator('iframe')
 				.getByRole('textbox');
 
+			await richTextInput.clear();
+
 			await richTextInput.fill(objectFieldValue);
 
 			await richTextInput.click({button: 'left'});
