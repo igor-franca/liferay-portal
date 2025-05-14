@@ -7,7 +7,10 @@ import {ObjectField} from '@liferay/object-admin-rest-client-js';
 import {FrameLocator, Locator, Page, expect} from '@playwright/test';
 import path from 'path';
 
+import {getFDSDateFormat} from '../../../tests/object-web/main/utils/dateFormat';
 import {PORTLET_URLS} from '../../../utils/portletUrls';
+
+import type {ObjectFieldBusinessTypes} from '../..//../tests/object-web/main/utils/mockObjectFields';
 
 export class ViewObjectEntriesPage {
 	readonly addObjectEntryButton: Locator;
@@ -20,6 +23,7 @@ export class ViewObjectEntriesPage {
 	readonly frameSelect: FrameLocator;
 	readonly frontendDatasetActions: Locator;
 	readonly frontendDatasetDeleteAction: Locator;
+	readonly frontendDatasetItems: Locator;
 	readonly neverReview: Locator;
 	readonly objectEntryButton: Locator;
 	readonly page: Page;
@@ -64,6 +68,7 @@ export class ViewObjectEntriesPage {
 		this.frontendDatasetDeleteAction = page.getByRole('menuitem', {
 			name: 'Delete',
 		});
+		this.frontendDatasetItems = page.getByRole('cell').getByRole('link');
 		this.neverReview = page.getByLabel('Never Review', {exact: true});
 		this.objectEntryButton = page.getByRole('link', {name: 'View'});
 		this.page = page;
@@ -276,5 +281,116 @@ export class ViewObjectEntriesPage {
 		);
 
 		await this.page.getByText(fileName).waitFor({state: 'visible'});
+	}
+
+	async fillObjectFields({attachmentFileName, objectEntry, objectFields}) {
+		const objectEntries: {
+			businessType: ObjectFieldBusinessTypes;
+			entry: string;
+			name: string;
+		}[] = [];
+
+		for (const objectField of objectFields) {
+			switch (objectField.businessType) {
+				case 'Attachment': {
+					await this.selectFileButton.click();
+
+					await this.selectFileFromDocumentsAndMedia(
+						attachmentFileName
+							? attachmentFileName
+							: 'astronaut.png'
+					);
+
+					objectEntries.push({
+						businessType: objectField.businessType,
+						entry: attachmentFileName,
+						name: objectField.name,
+					});
+
+					break;
+				}
+				case 'Boolean': {
+					objectEntry[objectField.name]
+						? await this.page
+								.getByLabel(objectField.label['en_US'])
+								.check()
+						: await this.page
+								.getByLabel(objectField.label['en_US'])
+								.uncheck();
+
+					objectEntries.push({
+						businessType: objectField.businessType,
+						entry: objectEntry[objectField.name] ? 'Yes' : 'No',
+						name: objectField.name,
+					});
+
+					break;
+				}
+
+				case 'Picklist': {
+					await this.selectDropdownItem(
+						objectField.label['en_US'],
+						objectEntry[objectField.name].key.toString()
+					);
+
+					objectEntries.push({
+						businessType: objectField.businessType,
+						entry: objectEntry[objectField.name].key.toString(),
+						name: objectField.name,
+					});
+
+					break;
+				}
+				case 'RichText': {
+					await this.fillObjectEntry({
+						objectFieldBusinessType: objectField.businessType,
+						objectFieldLabel: objectField.label['en_US'],
+						objectFieldValue: objectEntry[objectField.name]
+							.toString()
+							.substring(0, 35),
+					});
+
+					objectEntries.push({
+						businessType: objectField.businessType,
+						entry: objectEntry[objectField.name]
+							.toString()
+							.substring(0, 34),
+						name: objectField.name,
+					});
+
+					break;
+				}
+				default: {
+					await this.fillObjectEntry({
+						objectFieldBusinessType: objectField.businessType,
+						objectFieldLabel: objectField.label['en_US'],
+						objectFieldValue:
+							objectEntry[objectField.name].toString(),
+					});
+
+					if (
+						objectField.businessType === 'Date' ||
+						objectField.businessType === 'DateTime'
+					) {
+						objectEntries.push({
+							businessType: objectField.businessType,
+							entry: getFDSDateFormat(
+								new Date(objectEntry[objectField.name])
+							),
+							name: objectField.name,
+						});
+					}
+					else {
+						objectEntries.push({
+							businessType: objectField.businessType,
+							entry: objectEntry[objectField.name].toString(),
+							name: objectField.name,
+						});
+					}
+				}
+			}
+		}
+
+		return objectEntries;
 	}
 }
