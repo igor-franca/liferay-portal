@@ -9,8 +9,7 @@ import path from 'path';
 
 import {getFDSDateFormat} from '../../../tests/object-web/main/utils/dateFormat';
 import {PORTLET_URLS} from '../../../utils/portletUrls';
-
-import type {ObjectFieldBusinessTypes} from '../..//../tests/object-web/main/utils/mockObjectFields';
+import {ObjectFieldBusinessType} from '../../../tests/object-web/main/utils/generateObjectFieldsObjectEntryValues';
 
 export class ViewObjectEntriesPage {
 	readonly addObjectEntryButton: Locator;
@@ -283,11 +282,11 @@ export class ViewObjectEntriesPage {
 		await this.page.getByText(fileName).waitFor({state: 'visible'});
 	}
 
-	async fillObjectFields({attachmentFileName, objectEntry, objectFields}) {
+	async fillObjectFields({attachmentFileName, objectFieldsObjectEntryValues, objectFields}) {
 		const objectEntries: {
-			businessType: ObjectFieldBusinessTypes;
-			entry: string;
+			businessType: ObjectFieldBusinessType;
 			name: string;
+			value: string;
 		}[] = [];
 
 		for (const objectField of objectFields) {
@@ -303,14 +302,14 @@ export class ViewObjectEntriesPage {
 
 					objectEntries.push({
 						businessType: objectField.businessType,
-						entry: attachmentFileName,
 						name: objectField.name,
+						value: attachmentFileName,
 					});
 
 					break;
 				}
 				case 'Boolean': {
-					objectEntry[objectField.name]
+					objectFieldsObjectEntryValues[objectField.name]
 						? await this.page
 								.getByLabel(objectField.label['en_US'])
 								.check()
@@ -320,8 +319,8 @@ export class ViewObjectEntriesPage {
 
 					objectEntries.push({
 						businessType: objectField.businessType,
-						entry: objectEntry[objectField.name] ? 'Yes' : 'No',
 						name: objectField.name,
+						value: objectFieldsObjectEntryValues[objectField.name] ? 'Yes' : 'No',
 					});
 
 					break;
@@ -330,13 +329,13 @@ export class ViewObjectEntriesPage {
 				case 'Picklist': {
 					await this.selectDropdownItem(
 						objectField.label['en_US'],
-						objectEntry[objectField.name].key.toString()
+						objectFieldsObjectEntryValues[objectField.name].key.toString()
 					);
 
 					objectEntries.push({
 						businessType: objectField.businessType,
-						entry: objectEntry[objectField.name].key.toString(),
 						name: objectField.name,
+						value: objectFieldsObjectEntryValues[objectField.name].key.toString(),
 					});
 
 					break;
@@ -345,17 +344,17 @@ export class ViewObjectEntriesPage {
 					await this.fillObjectEntry({
 						objectFieldBusinessType: objectField.businessType,
 						objectFieldLabel: objectField.label['en_US'],
-						objectFieldValue: objectEntry[objectField.name]
+						objectFieldValue: objectFieldsObjectEntryValues[objectField.name]
 							.toString()
 							.substring(0, 35),
 					});
 
 					objectEntries.push({
 						businessType: objectField.businessType,
-						entry: objectEntry[objectField.name]
-							.toString()
-							.substring(0, 34),
 						name: objectField.name,
+						value: objectFieldsObjectEntryValues[objectField.name]
+						.toString()
+						.substring(0, 34),
 					});
 
 					break;
@@ -365,17 +364,17 @@ export class ViewObjectEntriesPage {
 						objectFieldBusinessType: objectField.businessType,
 						objectFieldLabel: objectField.label['en_US'],
 						objectFieldValue:
-							objectEntry[objectField.name].toString(),
+							objectFieldsObjectEntryValues[objectField.name].toString(),
 					});
 
 					objectEntries.push({
 						businessType: objectField.businessType,
-						entry: objectField.businessType.includes('Date')
-							? getFDSDateFormat(
-									new Date(objectEntry[objectField.name])
-								)
-							: objectEntry[objectField.name].toString(),
 						name: objectField.name,
+						value: objectField.businessType.includes('Date')
+						? getFDSDateFormat(
+								new Date(objectFieldsObjectEntryValues[objectField.name])
+							)
+						: objectFieldsObjectEntryValues[objectField.name].toString(),
 					});
 				}
 			}

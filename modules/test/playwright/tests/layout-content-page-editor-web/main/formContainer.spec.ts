@@ -3582,10 +3582,11 @@ test.describe('Form Localization', () => {
 			const options = ['Spain', 'Italy', 'Germany', 'Brasil'];
 
 			for (const option of options) {
-				await apiHelpers.listTypeAdmin.postListTypeEntry(
-					listTypeDefinition.externalReferenceCode,
-					option
-				);
+				await apiHelpers.listTypeAdmin.postListTypeEntry({
+					key: option.toLocaleLowerCase(),
+					listTypeDefinitionExternalReferenceCode: listTypeDefinition.externalReferenceCode,
+					name_i18n: {en_US: option}
+				});
 			}
 
 			const {body: objectDefinition} =
@@ -3734,10 +3735,11 @@ test.describe('Form Localization', () => {
 				await apiHelpers.listTypeAdmin.postRandomListTypeDefinition();
 
 			for (const option of ['Spain', 'Italy', 'Germany']) {
-				await apiHelpers.listTypeAdmin.postListTypeEntry(
-					listTypeDefinition.externalReferenceCode,
-					option
-				);
+				await apiHelpers.listTypeAdmin.postListTypeEntry({
+					key: option.toLocaleLowerCase(),
+					listTypeDefinitionExternalReferenceCode: listTypeDefinition.externalReferenceCode,
+					name_i18n: {en_US: option}
+				});
 			}
 
 			const objectDefinitionAPIClient =
@@ -4777,10 +4779,11 @@ test.describe('Form Localization', () => {
 				await apiHelpers.listTypeAdmin.postRandomListTypeDefinition();
 
 			for (const option of ['Spain', 'Italy']) {
-				await apiHelpers.listTypeAdmin.postListTypeEntry(
-					listTypeDefinition.externalReferenceCode,
-					option
-				);
+				await apiHelpers.listTypeAdmin.postListTypeEntry({
+					key: option.toLocaleLowerCase(),
+					listTypeDefinitionExternalReferenceCode: listTypeDefinition.externalReferenceCode,
+					name_i18n: {en_US: option}
+				});
 			}
 
 			const objectDefinitionAPIClient =
@@ -5569,10 +5572,11 @@ test.describe('Form Localization', () => {
 				await apiHelpers.listTypeAdmin.postRandomListTypeDefinition();
 
 			for (const option of ['Spain', 'Italy']) {
-				await apiHelpers.listTypeAdmin.postListTypeEntry(
-					listTypeDefinition.externalReferenceCode,
-					option
-				);
+				await apiHelpers.listTypeAdmin.postListTypeEntry({
+					key: option.toLocaleLowerCase(),
+					listTypeDefinitionExternalReferenceCode: listTypeDefinition.externalReferenceCode,
+					name_i18n: {en_US: option}
+				});
 			}
 
 			const objectFields: ObjectField[] = [
@@ -6946,10 +6950,11 @@ test.describe('Picklist input field', () => {
 			];
 
 			for (const country of countries) {
-				await apiHelpers.listTypeAdmin.postListTypeEntry(
-					listTypeDefinition.externalReferenceCode,
-					country
-				);
+				await apiHelpers.listTypeAdmin.postListTypeEntry({
+					key: country.toLocaleLowerCase(),
+					listTypeDefinitionExternalReferenceCode: listTypeDefinition.externalReferenceCode,
+					name_i18n: {en_US: country}
+				});
 			}
 
 			// Create object definition
