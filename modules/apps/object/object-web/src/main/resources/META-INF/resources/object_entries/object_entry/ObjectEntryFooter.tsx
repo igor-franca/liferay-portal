@@ -12,13 +12,11 @@ import {callWindowGlobalFunction} from '../../js/utils/callWindowGlobalFunction'
 
 interface ObjectEntryFooterProps {
 	backURL: string;
-	portletNamespace: string;
 	submitRef: string;
 }
 
 export default function ObjectEntryFooter({
 	backURL,
-	portletNamespace,
 	submitRef,
 }: ObjectEntryFooterProps) {
 	return (
