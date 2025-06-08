@@ -390,12 +390,15 @@ public class ObjectEntryLocalServiceImpl
 
 		_setExternalReferenceCode(objectEntry, values);
 		_setRootObjectEntryId(objectDefinition, objectEntry, values);
-		_setDisplayDate(objectDefinition.getCompanyId(), objectEntry, values);
+		_setDisplayDate(objectDefinition, objectEntry, values);
 		_setExpirationDate(
 			objectDefinition.getCompanyId(), objectEntry, values);
 		_setReviewDate(objectDefinition.getCompanyId(), objectEntry, values);
 
-		objectEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
+		if (objectEntry.getDisplayDate() == null) {
+			objectEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
+		}
+
 		objectEntry.setStatusByUserId(user.getUserId());
 		objectEntry.setStatusDate(serviceContext.getModifiedDate(null));
 
@@ -5275,12 +5278,42 @@ public class ObjectEntryLocalServiceImpl
 	}
 
 	private void _setDisplayDate(
-		long companyId, ObjectEntry objectEntry,
-		Map<String, Serializable> values) {
+			ObjectDefinition objectDefinition, ObjectEntry objectEntry,
+			Map<String, Serializable> values)
+		throws PortalException {
 
-		if (FeatureFlagManagerUtil.isEnabled(companyId, "LPD-17564")) {
-			objectEntry.setDisplayDate((Date)values.get("displayDate"));
+		if (!FeatureFlagManagerUtil.isEnabled(
+				objectDefinition.getCompanyId(), "LPD-17564")) {
+
+			return;
 		}
+
+		Date displayDate = (Date)values.get("displayDate");
+
+		objectEntry.setDisplayDate(displayDate);
+
+		if (displayDate == null) {
+			return;
+		}
+
+		objectEntry.setStatus(WorkflowConstants.STATUS_SCHEDULED);
+
+		int version = objectEntry.getVersion();
+
+		if (!objectDefinition.isEnableObjectEntryVersioning() ||
+			(version == 0)) {
+
+			return;
+		}
+
+		ObjectEntryVersion objectEntryVersion =
+			_objectEntryVersionLocalService.getObjectEntryVersion(
+				objectEntry.getObjectEntryId(), version);
+
+		objectEntryVersion.setStatus(WorkflowConstants.STATUS_INACTIVE);
+
+		_objectEntryVersionLocalService.updateObjectEntryVersion(
+			objectEntryVersion);
 	}
 
 	private void _setExpirationDate(
@@ -5664,13 +5697,14 @@ public class ObjectEntryLocalServiceImpl
 		objectEntry.setModifiedDate(serviceContext.getModifiedDate(null));
 
 		_setRootObjectEntryId(objectDefinition, objectEntry, values);
-		_setDisplayDate(objectDefinition.getCompanyId(), objectEntry, values);
+		_setDisplayDate(objectDefinition, objectEntry, values);
 		_setExpirationDate(
 			objectDefinition.getCompanyId(), objectEntry, values);
 		_setReviewDate(objectDefinition.getCompanyId(), objectEntry, values);
 
 		if ((workflowAction == WorkflowConstants.ACTION_SAVE_DRAFT) &&
-			!objectEntry.isPending()) {
+			!objectEntry.isPending() &&
+			(objectEntry.getDisplayDate() == null)) {
 
 			objectEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
 			objectEntry.setStatusByUserId(user.getUserId());
