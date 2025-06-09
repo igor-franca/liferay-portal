@@ -65,7 +65,7 @@ portletDisplay.setURLBack(backURL);
 				</clay:panel-group>
 			</c:if>
 
-			<c:if test='<%= FeatureFlagManagerUtil.isEnabled("LPD-17564") && (objectEntryDisplayContext.getObjectLayoutTab() == null) %>'>
+			<c:if test="<%= objectDefinition.isEnableObjectEntrySchedule() && (objectEntryDisplayContext.getObjectLayoutTab() == null) %>">
 				<div>
 					<react:component
 						module="{ScheduleContainer} from object-web"
@@ -88,7 +88,7 @@ portletDisplay.setURLBack(backURL);
 
 	<c:if test="<%= !objectEntryDisplayContext.isReadOnly() %>">
 		<c:choose>
-			<c:when test='<%= FeatureFlagManagerUtil.isEnabled("LPD-17564") && (objectEntryDisplayContext.getObjectLayoutTab() == null) %>'>
+			<c:when test='<%= objectDefinition.isEnableObjectEntrySchedule() && (objectEntryDisplayContext.getObjectLayoutTab() == null) %>'>
 				<div>
 					<react:component
 						module="{ObjectEntryFooter} from object-web"
