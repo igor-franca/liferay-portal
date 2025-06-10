@@ -2526,6 +2526,38 @@ public class ObjectEntryLocalServiceImpl
 			});
 	}
 
+	private void _checkObjectEntriesByDisplayDate(
+		long companyId, Date currentDate)
+		throws PortalException {
+
+		List<ObjectEntry> objectEntries = objectEntryPersistence.dslQuery(
+			DSLQueryFactoryUtil.select(
+				ObjectEntryTable.INSTANCE
+			).from(
+				ObjectEntryTable.INSTANCE
+			).where(
+				ObjectEntryTable.INSTANCE.companyId.eq(
+					companyId
+				).and(
+					ObjectEntryTable.INSTANCE.displayDate.gte(
+						_companyPreviousCheckDate.get(companyId))
+				).and(
+					ObjectEntryTable.INSTANCE.displayDate.lte(currentDate)
+				).and(
+					ObjectEntryTable.INSTANCE.status.eq(
+						WorkflowConstants.STATUS_SCHEDULED)
+				)
+			));
+
+		if (!objectEntries.isEmpty()) {
+			for (ObjectEntry objectEntry : objectEntries) {
+				updateStatus(
+					objectEntry.getUserId(), objectEntry,
+					WorkflowConstants.STATUS_APPROVED, new ServiceContext());
+			}
+		}
+	}
+
 	private void _checkObjectEntriesByExpirationDate(
 		long companyId, Date currentDate)
 		throws PortalException {
