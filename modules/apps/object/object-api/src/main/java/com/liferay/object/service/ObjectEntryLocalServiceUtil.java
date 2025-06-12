@@ -666,6 +666,10 @@ public class ObjectEntryLocalServiceUtil {
 			groupId, companyId, userId, objectDefinitionId, predicate, search);
 	}
 
+	public static boolean hasApprovedVersion(long objectEntryId, int status) {
+		return getService().hasApprovedVersion(objectEntryId, status);
+	}
+
 	public static void insertIntoOrUpdateExtensionTable(
 			long userId, long objectDefinitionId, long primaryKey,
 			Map<String, Serializable> values)

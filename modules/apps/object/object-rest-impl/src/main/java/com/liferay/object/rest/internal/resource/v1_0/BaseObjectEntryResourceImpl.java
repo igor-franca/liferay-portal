@@ -801,6 +801,11 @@ public abstract class BaseObjectEntryResourceImpl
 				objectEntry.getFriendlyUrlPath_i18n());
 		}
 
+		if (objectEntry.getHasApprovedVersion() != null) {
+			existingObjectEntry.setHasApprovedVersion(
+				objectEntry.getHasApprovedVersion());
+		}
+
 		if (objectEntry.getKeywords() != null) {
 			existingObjectEntry.setKeywords(objectEntry.getKeywords());
 		}
@@ -904,6 +909,11 @@ public abstract class BaseObjectEntryResourceImpl
 		if (objectEntry.getFriendlyUrlPath_i18n() != null) {
 			existingObjectEntry.setFriendlyUrlPath_i18n(
 				objectEntry.getFriendlyUrlPath_i18n());
+		}
+
+		if (objectEntry.getHasApprovedVersion() != null) {
+			existingObjectEntry.setHasApprovedVersion(
+				objectEntry.getHasApprovedVersion());
 		}
 
 		if (objectEntry.getKeywords() != null) {
@@ -1045,6 +1055,11 @@ public abstract class BaseObjectEntryResourceImpl
 		if (objectEntry.getFriendlyUrlPath_i18n() != null) {
 			existingObjectEntry.setFriendlyUrlPath_i18n(
 				objectEntry.getFriendlyUrlPath_i18n());
+		}
+
+		if (objectEntry.getHasApprovedVersion() != null) {
+			existingObjectEntry.setHasApprovedVersion(
+				objectEntry.getHasApprovedVersion());
 		}
 
 		if (objectEntry.getKeywords() != null) {

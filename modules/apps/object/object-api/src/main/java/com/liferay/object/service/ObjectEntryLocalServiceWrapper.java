@@ -765,6 +765,12 @@ public class ObjectEntryLocalServiceWrapper
 	}
 
 	@Override
+	public boolean hasApprovedVersion(long objectEntryId, int status) {
+		return _objectEntryLocalService.hasApprovedVersion(
+			objectEntryId, status);
+	}
+
+	@Override
 	public void insertIntoOrUpdateExtensionTable(
 			long userId, long objectDefinitionId, long primaryKey,
 			java.util.Map<String, java.io.Serializable> values)

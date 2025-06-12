@@ -325,6 +325,14 @@ public class ObjectEntryVersionLocalServiceWrapper
 			getIndexableActionableDynamicQuery();
 	}
 
+	@Override
+	public com.liferay.object.model.ObjectEntryVersion
+		getLatestObjectEntryVersion(long objectEntryId, int status) {
+
+		return _objectEntryVersionLocalService.getLatestObjectEntryVersion(
+			objectEntryId, status);
+	}
+
 	/**
 	 * Returns the object entry version with the primary key.
 	 *

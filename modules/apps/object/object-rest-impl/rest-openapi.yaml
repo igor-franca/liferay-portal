@@ -139,6 +139,8 @@ components:
                     description:
                         The localized relative URLs to the page's rendered content.
                     type: object
+                hasApprovedVersion:
+                    type: boolean
                 id:
                     format: int64
                     type: integer

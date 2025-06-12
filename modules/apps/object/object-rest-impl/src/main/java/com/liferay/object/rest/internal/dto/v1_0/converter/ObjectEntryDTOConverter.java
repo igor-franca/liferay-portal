@@ -312,6 +312,10 @@ public class ObjectEntryDTOConverter
 						dtoConverterContext.getLocale()));
 				setFriendlyUrlPath_i18n(
 					serviceBuilderObjectEntry::getURLTitleMap);
+				setHasApprovedVersion(
+					() -> _objectEntryLocalService.hasApprovedVersion(
+						serviceBuilderObjectEntry.getObjectEntryId(), WorkflowConstants.STATUS_APPROVED)
+				);
 				setId(serviceBuilderObjectEntry::getObjectEntryId);
 				setKeywords(
 					() -> {

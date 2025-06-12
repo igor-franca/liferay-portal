@@ -314,6 +314,18 @@ public class ObjectEntryLocalServiceImpl
 	extends ObjectEntryLocalServiceBaseImpl {
 
 	@Override
+	public boolean hasApprovedVersion(long objectEntryId, int status) {
+		ObjectEntryVersion objectEntryVersion =
+			_objectEntryVersionLocalService.getLatestObjectEntryVersion(
+		 objectEntryId, status);
+
+		if (Validator.isNotNull(objectEntryVersion)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public ObjectEntry addObjectEntry(
 			long userId, long groupId, long objectDefinitionId,
 			long objectEntryFolderId, String defaultLanguageId,

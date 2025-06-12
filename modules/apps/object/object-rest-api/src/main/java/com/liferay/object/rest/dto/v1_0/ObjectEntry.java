@@ -529,6 +529,47 @@ public class ObjectEntry implements Serializable {
 	private Supplier<Map<String, String>> _friendlyUrlPath_i18nSupplier;
 
 	@io.swagger.v3.oas.annotations.media.Schema
+	public Boolean getHasApprovedVersion() {
+		if (_hasApprovedVersionSupplier != null) {
+			hasApprovedVersion = _hasApprovedVersionSupplier.get();
+
+			_hasApprovedVersionSupplier = null;
+		}
+
+		return hasApprovedVersion;
+	}
+
+	public void setHasApprovedVersion(Boolean hasApprovedVersion) {
+		this.hasApprovedVersion = hasApprovedVersion;
+
+		_hasApprovedVersionSupplier = null;
+	}
+
+	@JsonIgnore
+	public void setHasApprovedVersion(
+		UnsafeSupplier<Boolean, Exception> hasApprovedVersionUnsafeSupplier) {
+
+		_hasApprovedVersionSupplier = () -> {
+			try {
+				return hasApprovedVersionUnsafeSupplier.get();
+			}
+			catch (RuntimeException runtimeException) {
+				throw runtimeException;
+			}
+			catch (Exception exception) {
+				throw new RuntimeException(exception);
+			}
+		};
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Boolean hasApprovedVersion;
+
+	@JsonIgnore
+	private Supplier<Boolean> _hasApprovedVersionSupplier;
+
+	@io.swagger.v3.oas.annotations.media.Schema
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -1175,6 +1216,9 @@ public class ObjectEntry implements Serializable {
 		else if (Objects.equals(propertyName, "friendlyUrlPath_i18n")) {
 			return getFriendlyUrlPath_i18n();
 		}
+		else if (Objects.equals(propertyName, "hasApprovedVersion")) {
+			return getHasApprovedVersion();
+		}
 		else if (Objects.equals(propertyName, "id")) {
 			return getId();
 		}
@@ -1446,6 +1490,18 @@ public class ObjectEntry implements Serializable {
 			sb.append("\"friendlyUrlPath_i18n\": ");
 
 			sb.append(_toJSON(friendlyUrlPath_i18n));
+		}
+
+		Boolean hasApprovedVersion = getHasApprovedVersion();
+
+		if (hasApprovedVersion != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"hasApprovedVersion\": ");
+
+			sb.append(hasApprovedVersion);
 		}
 
 		Long id = getId();

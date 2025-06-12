@@ -253,6 +253,20 @@ public class ObjectEntryVersionPersistenceTest {
 	}
 
 	@Test
+	public void testCountByOEI_S() throws Exception {
+		_persistence.countByOEI_S(
+			RandomTestUtil.nextLong(), RandomTestUtil.nextInt());
+
+		_persistence.countByOEI_S(0L, 0);
+	}
+
+	@Test
+	public void testCountByOEI_SArrayable() throws Exception {
+		_persistence.countByOEI_S(
+			RandomTestUtil.nextLong(), new int[] {RandomTestUtil.nextInt(), 0});
+	}
+
+	@Test
 	public void testCountByOEI_V() throws Exception {
 		_persistence.countByOEI_V(
 			RandomTestUtil.nextLong(), RandomTestUtil.nextInt());

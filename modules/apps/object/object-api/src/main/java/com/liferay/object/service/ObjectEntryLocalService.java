@@ -496,6 +496,9 @@ public interface ObjectEntryLocalService
 			Predicate predicate, String search)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean hasApprovedVersion(long objectEntryId, int status);
+
 	public void insertIntoOrUpdateExtensionTable(
 			long userId, long objectDefinitionId, long primaryKey,
 			Map<String, Serializable> values)

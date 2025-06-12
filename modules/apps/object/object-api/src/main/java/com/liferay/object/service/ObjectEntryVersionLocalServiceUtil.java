@@ -285,6 +285,12 @@ public class ObjectEntryVersionLocalServiceUtil {
 		return getService().getIndexableActionableDynamicQuery();
 	}
 
+	public static ObjectEntryVersion getLatestObjectEntryVersion(
+		long objectEntryId, int status) {
+
+		return getService().getLatestObjectEntryVersion(objectEntryId, status);
+	}
+
 	/**
 	 * Returns the object entry version with the primary key.
 	 *
