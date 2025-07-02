@@ -342,6 +342,7 @@ const Main = ({
 			{...otherProps}
 			displayErrors={isSignedIn ? displayErrors : true}
 			errorMessage={getErrorMessages(errorMessage, isSignedIn)}
+			fieldLabelHtmlFor={otherProps.id ?? name}
 			id={id}
 			localizedValue={localizedValue}
 			name={name}

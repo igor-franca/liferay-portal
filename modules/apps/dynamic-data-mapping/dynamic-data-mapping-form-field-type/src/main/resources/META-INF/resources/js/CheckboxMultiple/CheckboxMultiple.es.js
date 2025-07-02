@@ -25,6 +25,7 @@ const Switcher = ({checked, inline, ...otherProps}) => {
 const CheckboxMultiple = ({
 	accessibleProps,
 	disabled,
+	id,
 	inline,
 	isSwitcher,
 	localizedValueEdited,
@@ -72,6 +73,7 @@ const CheckboxMultiple = ({
 					checked={displayValues.includes(option.value)}
 					data-option-reference={option.reference}
 					disabled={disabled}
+					id={id}
 					inline={inline}
 					key={option.value}
 					label={option.label}
@@ -111,12 +113,9 @@ const Main = ({
 	localizedValueEdited,
 	...otherProps
 }) => (
-	<FieldBase name={name} readOnly={readOnly} {...otherProps}>
+	<FieldBase name={name} readOnly={readOnly} showGroup {...otherProps}>
 		<CheckboxMultiple
 			accessibleProps={{
-				...((otherProps.errorMessage || otherProps.tip) && {
-					'aria-describedby': `${otherProps.id ?? name}_fieldFeedback`,
-				}),
 				'aria-required': otherProps.required,
 			}}
 			disabled={readOnly}

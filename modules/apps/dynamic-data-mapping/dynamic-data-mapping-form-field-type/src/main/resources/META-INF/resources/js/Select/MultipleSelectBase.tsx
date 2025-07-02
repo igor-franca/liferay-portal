@@ -11,8 +11,6 @@ import {MultiSelectItem, MultipleSelectBaseProps} from './select.d';
 
 const MultipleSelectBase = ({
 	errorMessage,
-	id,
-	label,
 	name,
 	onChange,
 	options,
@@ -24,9 +22,6 @@ const MultipleSelectBase = ({
 	const [items, setItems] = useState<MultiSelectItem[]>([]);
 
 	const accessibleProps = {
-		...(label && {
-			'aria-labelledby': `${id ?? name}`,
-		}),
 		...((errorMessage || tip) && {
 			'aria-describedby': `${id ?? name}_fieldFeedback`,
 		}),
@@ -66,6 +61,7 @@ const MultipleSelectBase = ({
 			{...accessibleProps}
 			clearAllTitle={Liferay.Language.get('clear-all')}
 			disabled={readOnly}
+			id={id}
 			items={items}
 			messages={messages}
 			onItemsChange={(itemsChanged: MultiSelectItem[]) => {

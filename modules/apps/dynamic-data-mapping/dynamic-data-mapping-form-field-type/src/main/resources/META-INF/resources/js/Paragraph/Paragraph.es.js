@@ -7,7 +7,7 @@ import {ReactFieldBase as FieldBase} from 'dynamic-data-mapping-form-field-type/
 import React from 'react';
 
 const Paragraph = ({name, text, ...otherProps}) => (
-	<FieldBase {...otherProps} name={name} text={text}>
+	<FieldBase {...otherProps} name={name} showGroup text={text}>
 		<div
 			className="form-group liferay-ddm-form-field-paragraph"
 			data-field-name={name}

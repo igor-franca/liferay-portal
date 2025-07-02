@@ -105,6 +105,7 @@ const Main = ({
 		<FieldBase
 			{...otherProps}
 			{...(!localizedObjectField && {localizedValue})}
+			fieldLabelHtmlFor={otherProps.id ?? otherProps.name}
 		>
 			<ClayInput.Group>
 				<Component {...otherProps} localizedValue={localizedValue} />

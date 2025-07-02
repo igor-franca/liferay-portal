@@ -97,20 +97,13 @@ const FieldSet = ({
 			readOnly={readOnly}
 			repeatable={collapsible ? false : repeatable}
 			required={false}
-			showLabel={false}
+			separator
+			showGroup
+			showLabel={collapsible ? false : showLabel}
 			tip={null}
 			type={type}
 		>
 			<div className="ddm-field-types-fieldset__nested">
-				{showLabel && !collapsible && (
-					<>
-						<label className="text-uppercase">{label}</label>
-						<div className="ddm-field-types-fieldset__nested-separator">
-							<hr className="mt-1 separator" />
-						</div>
-					</>
-				)}
-
 				{collapsible ? (
 					<Panel
 						name={name}

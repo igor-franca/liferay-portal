@@ -502,6 +502,7 @@ const Main = ({
 			{...otherProps}
 			{...error}
 			displayErrors={error.displayErrors ?? displayErrors}
+			fieldLabelHtmlFor={name}
 			fieldName={fieldName}
 			id={id}
 			localizedValue={localizedValue}

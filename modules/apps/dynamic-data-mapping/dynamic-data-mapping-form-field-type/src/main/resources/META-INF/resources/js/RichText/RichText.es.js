@@ -353,7 +353,7 @@ const RichText = ({
 					) : (
 						<ClassicEditor
 							ariaLabel={label}
-							ariaRequired={otherProps.required}
+							ariaRequired={!!otherProps.required}
 							className="w-100"
 							contents={
 								currentValue

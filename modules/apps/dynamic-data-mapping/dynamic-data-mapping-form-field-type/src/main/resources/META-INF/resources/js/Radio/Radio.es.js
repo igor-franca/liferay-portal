@@ -67,7 +67,7 @@ const Radio = ({
 	);
 
 	return (
-		<FieldBase {...otherProps} name={name} readOnly={disabled}>
+		<FieldBase {...otherProps} name={name} readOnly={disabled} showGroup>
 			<div className="ddm__radio" onBlur={onBlur} onFocus={onFocus}>
 				<ClayRadioGroup
 					inline={inline}

@@ -70,6 +70,7 @@ const Field = ({
 	return (
 		<FieldBase
 			{...otherProps}
+			fieldLabelHtmlFor={id}
 			hideEditedFlag
 			label={label[editingLanguageId] ?? label}
 			localizedValue={{}}

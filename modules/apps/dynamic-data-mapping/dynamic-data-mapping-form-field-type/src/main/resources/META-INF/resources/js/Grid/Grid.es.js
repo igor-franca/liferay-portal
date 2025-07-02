@@ -137,7 +137,7 @@ const Main = ({
 	const [state, setState] = useSyncValue(value, false);
 
 	return (
-		<FieldBase name={name} readOnly={readOnly} {...otherProps}>
+		<FieldBase name={name} readOnly={readOnly} showGroup {...otherProps}>
 			<Grid
 				accessibleProps={{
 					'aria-required': otherProps.required,

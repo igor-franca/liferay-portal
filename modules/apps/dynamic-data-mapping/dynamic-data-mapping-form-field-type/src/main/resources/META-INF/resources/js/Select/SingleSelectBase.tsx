@@ -72,13 +72,10 @@ export default function SingleSelectBase({
 	}
 
 	const accessibleProps = {
-		...(label && {
-			'aria-labelledby': `${id ?? name}`,
-		}),
 		...((errorMessage || tip) && {
 			'aria-describedby': `${id ?? name}_fieldFeedback`,
 		}),
-		'aria-required': required,
+		'aria-required': !!required,
 	};
 
 	useEffect(() => {
@@ -120,6 +117,7 @@ export default function SingleSelectBase({
 					{...accessibleProps}
 					data-testid={id}
 					disabled={readOnly}
+					id={id}
 					items={[{items: options, label}]}
 					onSelectionChange={onSelectionChange}
 					placeholder={placeholder}

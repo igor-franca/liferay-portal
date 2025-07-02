@@ -136,6 +136,7 @@ export default function DatePicker({
 			{...otherProps}
 			displayErrors={validField.displayErrors}
 			errorMessage={validField.errorMessage}
+			fieldLabelHtmlFor={name}
 			name={name}
 			type={type}
 			valid={validField.valid}

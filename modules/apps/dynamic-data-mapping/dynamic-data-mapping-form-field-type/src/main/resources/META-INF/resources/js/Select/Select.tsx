@@ -99,6 +99,7 @@ const Select = ({
 
 	return (
 		<FieldBase
+			fieldLabelHtmlFor={id ?? name}
 			label={label}
 			localizedValue={localizedValue}
 			name={name}
@@ -109,6 +110,7 @@ const Select = ({
 				<MultipleSelectionComponent
 					defaultLanguageId={defaultLanguageId}
 					fixedOptions={[]}
+					id={id ?? name}
 					label={label}
 					name={name}
 					onChange={onChange}
@@ -126,7 +128,7 @@ const Select = ({
 				<SingleSelectBase
 					defaultLanguageId={defaultLanguageId}
 					fixedOptions={fixedOptions}
-					id={id}
+					id={id ?? name}
 					label={label}
 					multiple={multiple}
 					name={name}

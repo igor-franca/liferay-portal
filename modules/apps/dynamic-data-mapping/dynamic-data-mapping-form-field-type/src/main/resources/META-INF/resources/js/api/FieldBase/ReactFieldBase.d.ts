@@ -8,10 +8,10 @@ type LocalizedValue<T> = Liferay.Language.LocalizedValue<T>;
 export default function FieldBase(props: IFieldBase): JSX.Element;
 
 interface IFieldBase {
-	accessible?: boolean;
 	children?: any;
 	displayErrors?: any;
 	errorMessage?: any;
+	fieldLabelHtmlFor?: string;
 	fieldName?: any;
 	hideEditedFlag?: any;
 	hideField?: any;
@@ -25,6 +25,8 @@ interface IFieldBase {
 	readOnly?: any;
 	repeatable?: any;
 	required?: any;
+	separator?: boolean;
+	showGroup?: boolean;
 	showLabel?: boolean;
 	style?: any;
 	text?: any;

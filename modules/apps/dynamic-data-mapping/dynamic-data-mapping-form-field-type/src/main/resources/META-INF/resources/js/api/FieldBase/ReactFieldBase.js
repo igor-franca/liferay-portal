@@ -46,44 +46,6 @@ export function normalizeInputValue(fieldType, value) {
 	return value;
 }
 
-const getFieldDetails = ({
-	errorMessage,
-	hasError,
-	label,
-	required,
-	text,
-	tip,
-	warningMessage,
-}) => {
-	const fieldDetails = [];
-
-	if (label) {
-		fieldDetails.push(Liferay.Util.escape(label));
-	}
-
-	if (tip) {
-		fieldDetails.push(Liferay.Util.escape(tip));
-	}
-
-	if (text) {
-		fieldDetails.push(Liferay.Util.escape(text));
-	}
-
-	if (hasError) {
-		fieldDetails.push(Liferay.Util.escape(errorMessage));
-	}
-	else {
-		if (warningMessage) {
-			fieldDetails.push(Liferay.Util.escape(warningMessage));
-		}
-		if (required) {
-			fieldDetails.push(Liferay.Language.get('required'));
-		}
-	}
-
-	return fieldDetails.length ? fieldDetails.join('<br>') : false;
-};
-
 const HideFieldProperty = () => {
 	return (
 		<ClayLabel className="ml-1" displayType="secondary">
@@ -92,8 +54,20 @@ const HideFieldProperty = () => {
 	);
 };
 
-const LabelProperty = ({hideField, label}) => {
-	return hideField ? <span className="text-secondary">{label}</span> : label;
+const LabelProperty = ({hideField, label, required}) => {
+	return (
+		<>
+			{hideField ? (
+				<span className="text-secondary">{label}</span>
+			) : (
+				label
+			)}
+
+			{required && <RequiredProperty />}
+
+			{hideField && <HideFieldProperty />}
+		</>
+	);
 };
 
 const RequiredProperty = () => {
@@ -116,6 +90,34 @@ const FieldInformation = ({popover, tooltip}) => {
 		>
 			<ClayIcon symbol="question-circle-full" />
 		</span>
+	);
+};
+
+const FieldInformations = ({
+	children,
+	nonLocalizableFieldMessage,
+	popover,
+	popoverOrTooltip,
+	showDisabledFieldIcon,
+	showLabel,
+	tooltip,
+}) => {
+	return (
+		<>
+			{showLabel && popoverOrTooltip && (
+				<FieldInformation popover={popover} tooltip={tooltip} />
+			)}
+
+			{showDisabledFieldIcon && (
+				<FieldInformation tooltip={nonLocalizableFieldMessage} />
+			)}
+
+			{children}
+
+			{!showLabel && popoverOrTooltip && (
+				<FieldInformation popover={popover} tooltip={tooltip} />
+			)}
+		</>
 	);
 };
 
@@ -169,12 +171,12 @@ const FIELDSET_REGEX = /Fieldset\d+/g;
 const FIELDSET_REPEAT_INDEX_REGEX = /\$(\d+)(?:#|\$|$)/g;
 
 export default function FieldBase({
-	accessible = true,
 	children,
 	displayErrors,
 	editOnlyInDefaultLanguage,
 	errorMessage,
 	fieldName,
+	fieldLabelHtmlFor,
 	fieldReference,
 	hideField,
 	hideEditedFlag,
@@ -193,9 +195,10 @@ export default function FieldBase({
 	readOnly,
 	repeatable,
 	required,
+	separator,
+	showGroup,
 	showLabel = true,
 	style,
-	text,
 	tip,
 	tooltip,
 	type,
@@ -206,20 +209,9 @@ export default function FieldBase({
 	const {editingLanguageId, pages} = useFormState();
 	const dispatch = useForm();
 
+	const fieldFeedbackId = `${name}_fieldFeedback`;
+	const fieldLabelId = `${name}_fieldLabel`;
 	const hasError = displayErrors && errorMessage && !valid;
-
-	const fieldDetails = getFieldDetails({
-		errorMessage,
-		hasError,
-		label,
-		required,
-		text,
-		tip,
-		warningMessage,
-	});
-
-	const fieldDetailsId = `${id ?? name}_fieldDetails`;
-	const fieldLabelId = `${id ?? name}_fieldLabel`;
 
 	const hiddenTranslations = useMemo(() => {
 		if (!localizedValue) {
@@ -268,38 +260,11 @@ export default function FieldBase({
 
 	const renderLabel =
 		(label && showLabel) || hideField || repeatable || required || tooltip;
+
 	const showDisabledFieldIcon =
 		editOnlyInDefaultLanguage && showLabel && readOnly;
-	const showGroup =
-		type === 'checkbox_multiple' ||
-		type === 'grid' ||
-		type === 'paragraph' ||
-		type === 'radio';
+
 	const popoverOrTooltip = !!popover || !!tooltip;
-	const showFor =
-		type === 'date' ||
-		type === 'date_time' ||
-		type === 'document_library' ||
-		type === 'image' ||
-		type === 'numeric' ||
-		type === 'rich_text' ||
-		type === 'search_location' ||
-		type === 'text';
-	const readFieldDetails = !showFor;
-	const hasFieldDetails =
-		accessible && fieldDetails && readFieldDetails && type !== 'select';
-
-	const accessiblePropsGroup = {
-		...(!renderLabel &&
-			hasFieldDetails && {'aria-labelledby': fieldDetailsId}),
-		...(type === 'fieldset' && {role: 'group'}),
-	};
-
-	const accessiblePropsFields = {
-		...(hasFieldDetails && {'aria-labelledby': fieldDetailsId}),
-		...(showFor && {htmlFor: id ?? name}),
-		...readFieldDetails,
-	};
 
 	const defaultRows = nestedFields?.map((field) => ({
 		columns: [{fields: [field], size: 12}],
@@ -490,7 +455,6 @@ export default function FieldBase({
 
 	return (
 		<ClayForm.Group
-			{...accessiblePropsGroup}
 			className={classNames({
 				'has-error': hasError,
 				'has-warning': warningMessage && !hasError,
@@ -500,6 +464,11 @@ export default function FieldBase({
 			data-field-reference={fieldReference}
 			onClick={onClick}
 			style={style}
+			{...(repeatable &&
+				label && {
+					'aria-labelledby': fieldLabelId,
+					'role': 'group',
+				})}
 		>
 			{repeatable && (
 				<div className="lfr-ddm-form-field-repeatable-toolbar">
@@ -578,79 +547,77 @@ export default function FieldBase({
 			{renderLabel && (
 				<>
 					{showGroup ? (
-						<div aria-labelledby={fieldLabelId} role="group">
-							<label
-								{...accessiblePropsFields}
+						<fieldset>
+							<legend
+								aria-describedby={fieldFeedbackId}
 								className={classNames('lfr-ddm-legend', {
 									'text-muted': showDisabledFieldIcon,
+									'text-uppercase': separator,
 								})}
 								id={fieldLabelId}
 							>
-								{showLabel && label}
+								{showLabel && (
+									<LabelProperty
+										hideField={hideField}
+										label={label}
+										required={required}
+									/>
+								)}
+							</legend>
 
-								{required && <RequiredProperty />}
-							</label>
-
-							{popoverOrTooltip && (
-								<FieldInformation
-									popover={popover}
-									tooltip={tooltip}
-								/>
+							{separator && (
+								<div className="ddm-field-types-fieldset__nested-separator">
+									<hr className="mt-1 separator" />
+								</div>
 							)}
 
-							{showDisabledFieldIcon && (
-								<FieldInformation
-									tooltip={nonLocalizableFieldMessage}
-								/>
-							)}
-
-							{children}
-						</div>
+							<FieldInformations
+								nonLocalizableFieldMessage={
+									nonLocalizableFieldMessage
+								}
+								popover={popover}
+								popoverOrTooltip={popoverOrTooltip}
+								showDisabledFieldIcon={showDisabledFieldIcon}
+								showLabel={showLabel}
+								tooltip={tooltip}
+							>
+								{children}
+							</FieldInformations>
+						</fieldset>
 					) : (
 						<>
 							<label
-								{...accessiblePropsFields}
 								className={classNames({
 									'ddm-empty': !showLabel && !required,
 									'ddm-label': showLabel || required,
 									'ddm-repeatable': repeatable,
 									'text-muted': showDisabledFieldIcon,
 								})}
-								{...(type === 'select' && {id: id ?? name})}
+								{...(fieldLabelHtmlFor && {
+									htmlFor: fieldLabelHtmlFor,
+								})}
+								id={fieldLabelId}
 							>
-								{showLabel && label && (
+								{showLabel && (
 									<LabelProperty
 										hideField={hideField}
 										label={label}
+										required={required}
 									/>
 								)}
-
-								{required && <RequiredProperty />}
-
-								{hideField && <HideFieldProperty />}
 							</label>
 
-							{showLabel && popoverOrTooltip && (
-								<FieldInformation
-									popover={popover}
-									tooltip={tooltip}
-								/>
-							)}
-
-							{showDisabledFieldIcon && (
-								<FieldInformation
-									tooltip={nonLocalizableFieldMessage}
-								/>
-							)}
-
-							{children}
-
-							{!showLabel && popoverOrTooltip && (
-								<FieldInformation
-									popover={popover}
-									tooltip={tooltip}
-								/>
-							)}
+							<FieldInformations
+								nonLocalizableFieldMessage={
+									nonLocalizableFieldMessage
+								}
+								popover={popover}
+								popoverOrTooltip={popoverOrTooltip}
+								showDisabledFieldIcon={showDisabledFieldIcon}
+								showLabel={showLabel}
+							>
+								{children}
+							</FieldInformations>
 						</>
 					)}
 				</>
@@ -671,19 +638,9 @@ export default function FieldBase({
 			<FieldFeedback
 				errorMessage={hasError ? errorMessage : undefined}
 				helpMessage={typeof tip === 'string' ? tip : undefined}
-				id={`${id ?? name}_fieldFeedback`}
+				id={fieldFeedbackId}
 				warningMessage={warningMessage}
 			/>
-
-			{hasFieldDetails && (
-				<span
-					className="sr-only"
-					dangerouslySetInnerHTML={{
-						__html: fieldDetails,
-					}}
-					id={fieldDetailsId}
-				/>
-			)}
 
 			{defaultRows && <Layout itemPath={itemPath} rows={defaultRows} />}
 		</ClayForm.Group>
