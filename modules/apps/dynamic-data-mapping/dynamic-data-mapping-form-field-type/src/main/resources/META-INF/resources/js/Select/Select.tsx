@@ -28,7 +28,6 @@ const Select = ({
 	multiple = false,
 	name,
 	onChange,
-	id,
 	onSelectionChange,
 	options = [],
 	placeholder = Liferay.Language.get('choose-an-option'),
@@ -99,7 +98,7 @@ const Select = ({
 
 	return (
 		<FieldBase
-			fieldLabelHtmlFor={id ?? name}
+			fieldLabelHtmlFor={name}
 			label={label}
 			localizedValue={localizedValue}
 			name={name}
@@ -110,7 +109,6 @@ const Select = ({
 				<MultipleSelectionComponent
 					defaultLanguageId={defaultLanguageId}
 					fixedOptions={[]}
-					id={id ?? name}
 					label={label}
 					name={name}
 					onChange={onChange}
@@ -128,7 +126,6 @@ const Select = ({
 				<SingleSelectBase
 					defaultLanguageId={defaultLanguageId}
 					fixedOptions={fixedOptions}
-					id={id ?? name}
 					label={label}
 					multiple={multiple}
 					name={name}

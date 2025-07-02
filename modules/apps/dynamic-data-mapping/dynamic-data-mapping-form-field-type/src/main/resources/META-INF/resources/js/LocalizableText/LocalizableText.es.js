@@ -35,7 +35,6 @@ const LocalizableText = ({
 	displayStyle = 'singleline',
 	editingLocale = INITIAL_EDITING_LOCALE,
 	fieldName,
-	id,
 	label,
 	localizedObjectField,
 	name,
@@ -126,7 +125,6 @@ const LocalizableText = ({
 				dir={Liferay.Language.direction[currentEditingLocale.localeId]}
 				displayStyle={displayStyle}
 				fieldName={fieldName}
-				id={id}
 				inputValue={inputValue}
 				label={label}
 				name={name}
@@ -161,7 +159,7 @@ const LocalizableText = ({
 			/>
 
 			<input
-				id={id}
+				id={name}
 				name={name}
 				type="hidden"
 				value={currentValue || ''}
@@ -210,7 +208,6 @@ const Main = ({
 	displayStyle,
 	editingLocale,
 	fieldName,
-	id,
 	label,
 	localizedObjectField,
 	name,
@@ -230,7 +227,7 @@ const Main = ({
 	return (
 		<FieldBase
 			{...otherProps}
-			id={id}
+			id={name}
 			label={label}
 			name={name}
 			readOnly={readOnly}
@@ -257,7 +254,6 @@ const Main = ({
 						: editingLocale
 				}
 				fieldName={fieldName}
-				id={id}
 				label={label}
 				localizedObjectField={localizedObjectField}
 				name={name}

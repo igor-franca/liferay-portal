@@ -56,7 +56,6 @@ const RichText = ({
 	editorConfig,
 	evaluable,
 	fieldName,
-	id,
 	label = '',
 	locale,
 	name,
@@ -331,7 +330,7 @@ const RichText = ({
 		<FieldBase
 			{...otherProps}
 			fieldName={fieldName}
-			id={id}
+			id={name}
 			label={label}
 			name={name}
 			readOnly={readOnly}
@@ -406,7 +405,7 @@ const RichText = ({
 				</ClayInput.GroupItem>
 
 				<input
-					id={id}
+					id={name}
 					name={name}
 					type="hidden"
 					value={

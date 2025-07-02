@@ -28,7 +28,6 @@ function getDefaultValue(locale: Locale, value: valueTypes) {
 export default function MultipleSelectLocalizedObjectField({
 	errorMessage,
 	fieldName,
-	id,
 	label,
 	name,
 	onChange,
@@ -86,7 +85,6 @@ export default function MultipleSelectLocalizedObjectField({
 				defaultLanguageId={defaultLanguageId}
 				errorMessage={errorMessage}
 				fieldName={fieldName}
-				id={id}
 				label={label}
 				name={name}
 				onChange={handleChange}

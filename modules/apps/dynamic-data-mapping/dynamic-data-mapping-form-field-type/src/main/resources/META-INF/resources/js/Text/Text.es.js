@@ -72,7 +72,6 @@ const Text = ({
 	error,
 	fieldName,
 	htmlAutocompleteAttribute,
-	id,
 	invalidCharacters,
 	localizable,
 	localizedValue,
@@ -170,7 +169,7 @@ const Text = ({
 						className="ddm-field-text"
 						dir={Liferay.Language.direction[editingLanguageId]}
 						disabled={disabled}
-						id={id}
+						id={name}
 						lang={editingLanguageId?.replaceAll('_', '-')}
 						maxLength={showCounter ? '' : maxLength}
 						name={name}
@@ -459,7 +458,6 @@ const Main = ({
 	showCounter,
 	fieldName,
 	htmlAutocompleteAttribute,
-	id,
 	invalidCharacters = '',
 	locale,
 	localizable,
@@ -504,7 +502,7 @@ const Main = ({
 			displayErrors={error.displayErrors ?? displayErrors}
 			fieldLabelHtmlFor={name}
 			fieldName={fieldName}
-			id={id}
+			id={name}
 			localizedValue={localizedValue}
 			name={name}
 			popover={fieldPopoverMap[fieldName]}
@@ -515,7 +513,7 @@ const Main = ({
 			<Component
 				accessibleProps={{
 					...((otherProps.errorMessage || otherProps.tip) && {
-						'aria-describedby': `${otherProps.id ?? name}_fieldFeedback`,
+						'aria-describedby': `${name}_fieldFeedback`,
 					}),
 					'aria-invalid': !valid,
 					'aria-required': otherProps.required,
@@ -527,7 +525,7 @@ const Main = ({
 				error={error}
 				fieldName={fieldName}
 				htmlAutocompleteAttribute={htmlAutocompleteAttribute}
-				id={id ?? name}
+				id={name}
 				invalidCharacters={invalidCharacters}
 				localizable={localizable}
 				localizedValue={localizedValue}

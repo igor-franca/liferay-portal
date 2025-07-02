@@ -33,7 +33,6 @@ const isEmpty = (object) => {
 const Field = ({
 	disabled,
 	editingLanguageId,
-	id,
 	label,
 	name,
 	onBlur,
@@ -61,7 +60,7 @@ const Field = ({
 
 	const accessibleProps = {
 		...((otherProps.errorMessage || otherProps.tip) && {
-			'aria-describedby': `${id ?? name}_fieldFeedback`,
+			'aria-describedby': `${name}_fieldFeedback`,
 		}),
 		'aria-invalid': !valid,
 		'aria-required': otherProps.required,
@@ -85,7 +84,7 @@ const Field = ({
 				className="ddm-field-text"
 				dir={Liferay.Language.direction[editingLanguageId]}
 				disabled={disabled}
-				id={id}
+				id={name}
 				name={name}
 				onBlur={(event) => {
 					setValid(initialValid);

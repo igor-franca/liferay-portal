@@ -75,7 +75,6 @@ const DocumentLibrary = ({
 	editingLanguageId,
 	fileEntryTitle = '',
 	fileEntryURL = '',
-	id,
 	message,
 	name,
 	onClearButtonClicked,
@@ -150,7 +149,7 @@ const DocumentLibrary = ({
 			)}
 
 			<input
-				id={id}
+				id={name}
 				name={name}
 				placeholder={placeholder}
 				type="hidden"
@@ -164,7 +163,6 @@ const DocumentLibrary = ({
 
 const GuestUploadFile = ({
 	fileEntryTitle = '',
-	id,
 	message,
 	name,
 	onClearButtonClicked,
@@ -235,7 +233,7 @@ const GuestUploadFile = ({
 			</ClayInput.Group>
 
 			<input
-				id={id}
+				id={name}
 				name={name}
 				placeholder={placeholder}
 				type="hidden"
@@ -261,7 +259,6 @@ const Main = ({
 	fileEntryTitle,
 	fileEntryURL,
 	guestUploadURL,
-	id,
 	itemSelectorURL,
 	maximumRepetitions,
 	maximumSubmissionLimitReached,
@@ -636,8 +633,8 @@ const Main = ({
 			{...otherProps}
 			displayErrors={hasCustomError ? true : displayErrors}
 			errorMessage={errorMessage}
-			fieldLabelHtmlFor={id ?? name}
-			id={id}
+			fieldLabelHtmlFor={name}
+			id={name}
 			name={name}
 			overMaximumRepetitionsLimit={
 				maximumRepetitions > 0 ? checkMaximumRepetitions() : false
@@ -648,7 +645,7 @@ const Main = ({
 			{allowGuestUsers && !isSignedIn ? (
 				<GuestUploadFile
 					fileEntryTitle={fileEntryTitle}
-					id={id}
+					id={name}
 					message={message}
 					name={name}
 					onBlur={onBlur}
@@ -668,14 +665,14 @@ const Main = ({
 				<DocumentLibrary
 					accessibleProps={{
 						...((errorMessage || otherProps.tip) && {
-							'aria-describedby': `${id ?? name}_fieldFeedback`,
+							'aria-describedby': `${name}_fieldFeedback`,
 						}),
 						'aria-required': otherProps.required,
 					}}
 					editingLanguageId={editingLanguageId}
 					fileEntryTitle={fileEntryTitle}
 					fileEntryURL={fileEntryURL}
-					id={id}
+					id={name}
 					message={message}
 					name={name}
 					onClearButtonClicked={(event) => {

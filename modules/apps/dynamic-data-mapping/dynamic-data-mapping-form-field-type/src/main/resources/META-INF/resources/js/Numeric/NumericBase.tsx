@@ -31,7 +31,6 @@ const NumericBase = ({
 	errorMessage,
 	focused,
 	htmlAutocompleteAttribute,
-	id,
 	inputMask,
 	inputMaskFormat,
 	inputValue,
@@ -51,7 +50,7 @@ const NumericBase = ({
 }) => {
 	const accessibleProperties = {
 		...((errorMessage || tip) && {
-			'aria-describedby': `${id ?? name}_fieldFeedback`,
+			'aria-describedby': `${name}_fieldFeedback`,
 		}),
 		'aria-invalid': !valid,
 		'aria-required': required,
@@ -94,7 +93,7 @@ const NumericBase = ({
 							'rtl',
 					})}
 					disabled={readOnly}
-					id={id ?? name}
+					id={name}
 					name={`${name}${inputMask ? '_masked' : ''}`}
 					onBlur={onBlur}
 					onChange={handleChange}

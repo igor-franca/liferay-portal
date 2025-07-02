@@ -23,7 +23,7 @@ const MultipleSelectBase = ({
 
 	const accessibleProps = {
 		...((errorMessage || tip) && {
-			'aria-describedby': `${id ?? name}_fieldFeedback`,
+			'aria-describedby': `${name}_fieldFeedback`,
 		}),
 		'aria-required': required,
 	};
@@ -61,7 +61,7 @@ const MultipleSelectBase = ({
 			{...accessibleProps}
 			clearAllTitle={Liferay.Language.get('clear-all')}
 			disabled={readOnly}
-			id={id}
+			id={name}
 			items={items}
 			messages={messages}
 			onItemsChange={(itemsChanged: MultiSelectItem[]) => {

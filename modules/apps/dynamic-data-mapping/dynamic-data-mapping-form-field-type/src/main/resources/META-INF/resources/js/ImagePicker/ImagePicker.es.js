@@ -19,7 +19,6 @@ const defaultValue = {description: '', title: '', url: ''};
 const ImagePicker = ({
 	accessibleProps,
 	editingLanguageId,
-	id,
 	inputValue,
 	itemSelectorURL,
 	message,
@@ -153,7 +152,7 @@ const ImagePicker = ({
 							className="field"
 							dir={Liferay.Language.direction[editingLanguageId]}
 							disabled={readOnly}
-							id={id}
+							id={name}
 							lang={editingLanguageId}
 							onClick={handleItemSelectorTriggerClick}
 							type="text"
@@ -284,7 +283,6 @@ const Main = ({
 	displayErrors,
 	editingLanguageId,
 	errorMessage,
-	id,
 	inputValue,
 	itemSelectorURL,
 	localizable,
@@ -342,8 +340,8 @@ const Main = ({
 			{...otherProps}
 			displayErrors={isSignedIn ? displayErrors : true}
 			errorMessage={getErrorMessages(errorMessage, isSignedIn)}
-			fieldLabelHtmlFor={otherProps.id ?? name}
-			id={id}
+			fieldLabelHtmlFor={name}
+			id={name}
 			localizedValue={localizedValue}
 			name={name}
 			readOnly={isSignedIn ? readOnly : true}
@@ -352,13 +350,12 @@ const Main = ({
 			<ImagePicker
 				accessibleProps={{
 					...((otherProps.errorMessage || otherProps.tip) && {
-						'aria-describedby': `${otherProps.id ?? name}_fieldFeedback`,
+						'aria-describedby': `${name}_fieldFeedback`,
 					}),
 					'aria-invalid': !valid,
 					'aria-required': otherProps.required,
 				}}
 				editingLanguageId={editingLanguageId}
-				id={id ?? name}
 				inputValue={
 					transformValue(inputValue) ??
 					transformValue(value) ??

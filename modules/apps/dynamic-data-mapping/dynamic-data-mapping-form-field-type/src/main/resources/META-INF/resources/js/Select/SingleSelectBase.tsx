@@ -21,7 +21,6 @@ interface SingleSelectBaseProps
 export default function SingleSelectBase({
 	className,
 	errorMessage,
-	id,
 	label,
 	name,
 	onSelectionChange,
@@ -73,7 +72,7 @@ export default function SingleSelectBase({
 
 	const accessibleProps = {
 		...((errorMessage || tip) && {
-			'aria-describedby': `${id ?? name}_fieldFeedback`,
+			'aria-describedby': `${name}_fieldFeedback`,
 		}),
 		'aria-required': !!required,
 	};
@@ -115,9 +114,9 @@ export default function SingleSelectBase({
 			{!loading && (
 				<Picker
 					{...accessibleProps}
-					data-testid={id}
+					data-testid={name}
 					disabled={readOnly}
-					id={id}
+					id={name}
 					items={[{items: options, label}]}
 					onSelectionChange={onSelectionChange}
 					placeholder={placeholder}

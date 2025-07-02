@@ -74,7 +74,6 @@ export default function DatePickerBase({
 	displayErrors,
 	errorMessage,
 	htmlAutocompleteAttribute,
-	id,
 	locale,
 	months,
 	name,
@@ -268,7 +267,7 @@ export default function DatePickerBase({
 						autoComplete: htmlAutocompleteAttribute,
 					})}
 					{...((errorMessage || tip) && {
-						'aria-describedby': `${id ?? name}_fieldFeedback`,
+						'aria-describedby': `${name}_fieldFeedback`,
 					})}
 					aria-required={required}
 					ariaLabels={{

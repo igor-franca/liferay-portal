@@ -25,7 +25,6 @@ const Switcher = ({checked, inline, ...otherProps}) => {
 const CheckboxMultiple = ({
 	accessibleProps,
 	disabled,
-	id,
 	inline,
 	isSwitcher,
 	localizedValueEdited,
@@ -67,17 +66,17 @@ const CheckboxMultiple = ({
 
 	return (
 		<div className="lfr-ddm-checkbox-multiple">
-			{options.map((option, index) => (
+			{options.map((option) => (
 				<Toggle
 					{...accessibleProps}
 					checked={displayValues.includes(option.value)}
 					data-option-reference={option.reference}
 					disabled={disabled}
-					id={id}
+					id={`${name}_${option.label}`}
 					inline={inline}
 					key={option.value}
 					label={option.label}
-					name={`${name}_${index}`}
+					name={`${name}_${option.label}`}
 					onBlur={onBlur}
 					onChange={handleChange}
 					onFocus={onFocus}

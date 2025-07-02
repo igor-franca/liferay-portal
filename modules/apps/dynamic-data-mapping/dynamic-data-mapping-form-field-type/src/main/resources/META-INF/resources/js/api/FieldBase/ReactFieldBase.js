@@ -180,7 +180,6 @@ export default function FieldBase({
 	fieldReference,
 	hideField,
 	hideEditedFlag,
-	id,
 	instanceId,
 	isLocalizationSupported,
 	itemPath,

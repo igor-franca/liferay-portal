@@ -40,7 +40,7 @@ const Radio = ({
 }) => {
 	const accessibleProps = {
 		...((otherProps.errorMessage || otherProps.tip) && {
-			'aria-describedby': `${otherProps.id ?? name}_fieldFeedback`,
+			'aria-describedby': `${name}_fieldFeedback`,
 		}),
 		'aria-required': otherProps.required,
 	};

@@ -62,7 +62,6 @@ function normalizeValues(
 export default function SelectLocalizedObjectField({
 	fieldName,
 	fixedOptions = [],
-	id,
 	label,
 	name,
 	onChange,
@@ -142,7 +141,6 @@ export default function SelectLocalizedObjectField({
 					className="ddm-object-field-single-select-localized"
 					defaultLanguageId={defaultLanguageId}
 					fieldName={fieldName}
-					id={id}
 					label={label}
 					name={name}
 					onSelectionChange={handleChange}
