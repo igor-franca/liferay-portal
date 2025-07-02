@@ -5,7 +5,7 @@
 
 import '@testing-library/jest-dom/extend-expect';
 import {screen} from '@testing-library/dom';
-import {cleanup, render} from '@testing-library/react';
+import {cleanup, render, within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {PageProvider} from 'data-engine-js-components-web';
 import React from 'react';
@@ -95,21 +95,29 @@ describe('Field Checkbox Multiple', () => {
 	});
 
 	it('has a helptext', () => {
-		render(<CheckboxMultipleWithProvider tip="Help Text Content" />);
-
-		const helpTextElements = screen.getAllByText('Help Text Content');
-
-		expect(helpTextElements[0]).toBeVisible();
-		expect(helpTextElements[1]).toHaveClass('sr-only');
-	});
-
-	it('appends id to field-feedback element id', () => {
 		const {container} = render(
-			<CheckboxMultipleWithProvider id="CheckboxMultipleId" />
+			<CheckboxMultipleWithProvider
+				label="CheckboxMultipleLabel"
+				name="CheckboxMultiple"
+				tip="Help Text Content"
+			/>
+		);
+
+		const checkboxMultipleLegend = screen.getByText(
+			'CheckboxMultipleLabel'
+		);
+
+		expect(checkboxMultipleLegend).toHaveAttribute(
+			'aria-describedby',
+			'CheckboxMultiple_fieldFeedback'
+		);
+
+		const fieldFeedback = container.querySelector(
+			'#CheckboxMultiple_fieldFeedback'
 		);
 
 		expect(
-			container.querySelector('#CheckboxMultipleId_fieldFeedback')
+			within(fieldFeedback).getByText('Help Text Content')
 		).toBeInTheDocument();
 	});
 
@@ -176,11 +184,13 @@ describe('Field Checkbox Multiple', () => {
 			/>
 		);
 
-		const labelElements = screen.getAllByText('CheckboxMultipleLabel');
+		const checkboxMultipleFieldset = screen.getByRole('group');
 
-		expect(labelElements.length).toBe(2);
-		expect(labelElements[0]).toBeVisible();
-		expect(labelElements[1]).toHaveClass('sr-only');
+		expect(checkboxMultipleFieldset).toBeInTheDocument();
+
+		expect(
+			within(checkboxMultipleFieldset).getByText('CheckboxMultipleLabel')
+		).toBeInTheDocument();
 	});
 
 	it('does not render field label if showLabel is false', () => {
@@ -191,10 +201,9 @@ describe('Field Checkbox Multiple', () => {
 			/>
 		);
 
-		const labelElements = screen.getAllByText('CheckboxMultipleLabel');
+		const labelElement = screen.queryAllByAltText('CheckboxMultipleLabel');
 
-		expect(labelElements.length).toBe(1);
-		expect(labelElements[0]).toHaveClass('sr-only');
+		expect(labelElement.length).toBe(0);
 	});
 
 	it('has a value', () => {

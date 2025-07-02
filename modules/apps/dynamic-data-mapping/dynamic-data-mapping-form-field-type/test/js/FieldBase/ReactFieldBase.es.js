@@ -261,19 +261,29 @@ describe('ReactFieldBase', () => {
 	});
 
 	it('renders the label with info icon and its corresponding styles when the field is non-localizable', () => {
-		const {getByLabelText, getByTitle} = render(
-			<FieldBaseWithProvider
-				editOnlyInDefaultLanguage
-				label="my-label"
-				readOnly
-			/>
+		const {getByLabelText, getByText, getByTitle} = render(
+			<>
+				<FieldBaseWithProvider
+					editOnlyInDefaultLanguage
+					fieldLabelHtmlFor="field-id"
+					label="my-label"
+					readOnly
+					showLabel
+				/>
+				<input id="field-id" />
+				<FieldBaseWithProvider />
+			</>
 		);
 
 		expect(
 			getByTitle('this-field-cannot-be-localized')
 		).toBeInTheDocument();
 
-		expect(getByLabelText('my-label')).toHaveClass('text-muted');
+		const input = getByLabelText('my-label');
+		const label = getByText('my-label');
+
+		expect(input).toBeInTheDocument();
+		expect(label).toHaveClass('text-muted');
 	});
 
 	describe('Hide Field', () => {
@@ -289,16 +299,14 @@ describe('ReactFieldBase', () => {
 			expect(getByText('hidden')).toBeInTheDocument();
 
 			const allByText = getAllByText('Text');
-			expect(allByText).toHaveLength(2);
+			expect(allByText).toHaveLength(1);
 			expect(allByText[0]).toBeInTheDocument();
-			expect(allByText[1]).toBeInTheDocument();
 
 			expect(getByText('hidden').parentNode).toHaveAttribute(
 				'class',
 				'label ml-1 label-secondary'
 			);
 			expect(allByText[0]).toHaveAttribute('class', 'text-secondary');
-			expect(allByText[1]).toHaveAttribute('class', 'sr-only');
 		});
 
 		it('renders the FieldBase with hideField markup when the label is empty', () => {
