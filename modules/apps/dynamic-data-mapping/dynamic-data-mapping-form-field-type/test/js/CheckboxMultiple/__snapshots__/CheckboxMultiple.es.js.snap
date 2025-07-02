@@ -21,7 +21,8 @@ exports[`Smoke test field Checkbox Multiple renders the expected structure with 
             <input
               class="toggle-switch-check"
               data-option-reference="Option1Reference"
-              name="namePropertyValue_0"
+              id="namePropertyValue_Option1"
+              name="namePropertyValue_Option1"
               role="switch"
               type="checkbox"
               value="Option1Value"
@@ -54,7 +55,8 @@ exports[`Smoke test field Checkbox Multiple renders the expected structure with 
             <input
               class="toggle-switch-check"
               data-option-reference="Option2Reference"
-              name="namePropertyValue_1"
+              id="namePropertyValue_Option2"
+              name="namePropertyValue_Option2"
               role="switch"
               type="checkbox"
               value="Option2Value"

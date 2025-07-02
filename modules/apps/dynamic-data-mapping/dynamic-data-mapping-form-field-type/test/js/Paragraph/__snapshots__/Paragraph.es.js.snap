@@ -38,20 +38,22 @@ exports[`Field Paragraph has a label 1`] = `
     class="form-group hide"
     data-field-name="textField"
   >
-    <label
-      aria-labelledby="textField_fieldDetails"
-      class="ddm-label"
-    >
-      label
-    </label>
-    <div
-      class="form-group liferay-ddm-form-field-paragraph"
-      data-field-name="textField"
-    >
+    <fieldset>
+      <legend
+        class="lfr-ddm-legend"
+        id="textField_fieldLabel"
+      >
+        label
+      </legend>
       <div
-        class="liferay-ddm-form-field-paragraph-text"
-      />
-    </div>
+        class="form-group liferay-ddm-form-field-paragraph"
+        data-field-name="textField"
+      >
+        <div
+          class="liferay-ddm-form-field-paragraph-text"
+        />
+      </div>
+    </fieldset>
     <input
       name="textField_edited"
       type="hidden"
@@ -66,12 +68,6 @@ exports[`Field Paragraph has a label 1`] = `
         class="form-feedback-item"
       />
     </div>
-    <span
-      class="sr-only"
-      id="textField_fieldDetails"
-    >
-      label
-    </span>
   </div>
 </div>
 `;
@@ -161,7 +157,7 @@ exports[`Field Paragraph has an id 1`] = `
     />
     <div
       class="form-feedback-group field-feedback"
-      id="Id_fieldFeedback"
+      id="textField_fieldFeedback"
     >
       <div
         aria-live="assertive"
@@ -242,20 +238,22 @@ exports[`Field Paragraph renders Label if showLabel is true 1`] = `
     class="form-group hide"
     data-field-name="textField"
   >
-    <label
-      aria-labelledby="textField_fieldDetails"
-      class="ddm-label"
-    >
-      text
-    </label>
-    <div
-      class="form-group liferay-ddm-form-field-paragraph"
-      data-field-name="textField"
-    >
+    <fieldset>
+      <legend
+        class="lfr-ddm-legend"
+        id="textField_fieldLabel"
+      >
+        text
+      </legend>
       <div
-        class="liferay-ddm-form-field-paragraph-text"
-      />
-    </div>
+        class="form-group liferay-ddm-form-field-paragraph"
+        data-field-name="textField"
+      >
+        <div
+          class="liferay-ddm-form-field-paragraph-text"
+        />
+      </div>
+    </fieldset>
     <input
       name="textField_edited"
       type="hidden"
@@ -270,12 +268,6 @@ exports[`Field Paragraph renders Label if showLabel is true 1`] = `
         class="form-feedback-item"
       />
     </div>
-    <span
-      class="sr-only"
-      id="textField_fieldDetails"
-    >
-      text
-    </span>
   </div>
 </div>
 `;

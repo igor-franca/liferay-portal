@@ -3,7 +3,9 @@
 exports[`ReactFieldBase does not render the add button when repeatable is true and the maximum limit of repetions is reached 1`] = `
 <div>
   <div
+    aria-labelledby="undefined_fieldLabel"
     class="form-group hide"
+    role="group"
   >
     <div
       class="lfr-ddm-form-field-repeatable-toolbar"
@@ -25,8 +27,8 @@ exports[`ReactFieldBase does not render the add button when repeatable is true a
       </button>
     </div>
     <label
-      aria-labelledby="undefined_fieldDetails"
       class="ddm-empty ddm-repeatable"
+      id="undefined_fieldLabel"
     />
     <input
       name="undefined_edited"
@@ -42,12 +44,6 @@ exports[`ReactFieldBase does not render the add button when repeatable is true a
         class="form-feedback-item"
       />
     </div>
-    <span
-      class="sr-only"
-      id="undefined_fieldDetails"
-    >
-      Text
-    </span>
   </div>
 </div>
 `;
@@ -55,7 +51,6 @@ exports[`ReactFieldBase does not render the add button when repeatable is true a
 exports[`ReactFieldBase does not render the label if showLabel is false 1`] = `
 <div>
   <div
-    aria-labelledby="undefined_fieldDetails"
     class="form-group hide"
   >
     <input
@@ -72,12 +67,6 @@ exports[`ReactFieldBase does not render the label if showLabel is false 1`] = `
         class="form-feedback-item"
       />
     </div>
-    <span
-      class="sr-only"
-      id="undefined_fieldDetails"
-    >
-      Text
-    </span>
   </div>
 </div>
 `;
@@ -113,7 +102,6 @@ exports[`ReactFieldBase renders the FieldBase with contentRenderer 1`] = `
 exports[`ReactFieldBase renders the FieldBase with help text 1`] = `
 <div>
   <div
-    aria-labelledby="undefined_fieldDetails"
     class="form-group hide"
   >
     <input
@@ -133,12 +121,6 @@ exports[`ReactFieldBase renders the FieldBase with help text 1`] = `
         Type something!
       </div>
     </div>
-    <span
-      class="sr-only"
-      id="undefined_fieldDetails"
-    >
-      Type something!
-    </span>
   </div>
 </div>
 `;
@@ -155,7 +137,7 @@ exports[`ReactFieldBase renders the FieldBase with id 1`] = `
     />
     <div
       class="form-feedback-group field-feedback"
-      id="Id_fieldFeedback"
+      id="undefined_fieldFeedback"
     >
       <div
         aria-live="assertive"
@@ -172,8 +154,8 @@ exports[`ReactFieldBase renders the FieldBase with label 1`] = `
     class="form-group hide"
   >
     <label
-      aria-labelledby="undefined_fieldDetails"
       class="ddm-label"
+      id="undefined_fieldLabel"
     >
       Text
     </label>
@@ -191,12 +173,6 @@ exports[`ReactFieldBase renders the FieldBase with label 1`] = `
         class="form-feedback-item"
       />
     </div>
-    <span
-      class="sr-only"
-      id="undefined_fieldDetails"
-    >
-      Text
-    </span>
   </div>
 </div>
 `;
@@ -207,8 +183,8 @@ exports[`ReactFieldBase renders the FieldBase with required 1`] = `
     class="form-group hide"
   >
     <label
-      aria-labelledby="undefined_fieldDetails"
       class="ddm-label"
+      id="undefined_fieldLabel"
     >
       <span
         class="ddm-label-required reference-mark"
@@ -237,12 +213,6 @@ exports[`ReactFieldBase renders the FieldBase with required 1`] = `
         class="form-feedback-item"
       />
     </div>
-    <span
-      class="sr-only"
-      id="undefined_fieldDetails"
-    >
-      required
-    </span>
   </div>
 </div>
 `;
@@ -250,7 +220,9 @@ exports[`ReactFieldBase renders the FieldBase with required 1`] = `
 exports[`ReactFieldBase renders the add button when repeatable is true 1`] = `
 <div>
   <div
+    aria-labelledby="undefined_fieldLabel"
     class="form-group hide"
+    role="group"
   >
     <div
       class="lfr-ddm-form-field-repeatable-toolbar"
@@ -272,8 +244,8 @@ exports[`ReactFieldBase renders the add button when repeatable is true 1`] = `
       </button>
     </div>
     <label
-      aria-labelledby="undefined_fieldDetails"
       class="ddm-empty ddm-repeatable"
+      id="undefined_fieldLabel"
     />
     <input
       name="undefined_edited"
@@ -289,12 +261,6 @@ exports[`ReactFieldBase renders the add button when repeatable is true 1`] = `
         class="form-feedback-item"
       />
     </div>
-    <span
-      class="sr-only"
-      id="undefined_fieldDetails"
-    >
-      Text
-    </span>
   </div>
 </div>
 `;

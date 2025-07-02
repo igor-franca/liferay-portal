@@ -3,7 +3,6 @@
 exports[`Field Text has a helptext 1`] = `
 <div>
   <div
-    aria-labelledby="textField_fieldDetails"
     class="form-group hide"
     data-field-name="textField"
   >
@@ -37,12 +36,6 @@ exports[`Field Text has a helptext 1`] = `
         Type something
       </div>
     </div>
-    <span
-      class="sr-only"
-      id="textField_fieldDetails"
-    >
-      Type something
-    </span>
   </div>
 </div>
 `;
@@ -54,8 +47,9 @@ exports[`Field Text has a label 1`] = `
     data-field-name="textField"
   >
     <label
-      aria-labelledby="textField_fieldDetails"
       class="ddm-label"
+      for="textField"
+      id="textField_fieldLabel"
     >
       label
     </label>
@@ -85,12 +79,6 @@ exports[`Field Text has a label 1`] = `
         class="form-feedback-item"
       />
     </div>
-    <span
-      class="sr-only"
-      id="textField_fieldDetails"
-    >
-      label
-    </span>
   </div>
 </div>
 `;
@@ -182,7 +170,7 @@ exports[`Field Text has an id 1`] = `
       <input
         aria-invalid="true"
         class="form-control ddm-field-text"
-        id="Id"
+        id="textField"
         name="textField"
         type="text"
         value=""
@@ -195,7 +183,7 @@ exports[`Field Text has an id 1`] = `
     />
     <div
       class="form-feedback-group field-feedback"
-      id="Id_fieldFeedback"
+      id="textField_fieldFeedback"
     >
       <div
         aria-live="assertive"
@@ -323,8 +311,9 @@ exports[`Field Text renders Label if showLabel is true 1`] = `
     data-field-name="textField"
   >
     <label
-      aria-labelledby="textField_fieldDetails"
       class="ddm-label"
+      for="textField"
+      id="textField_fieldLabel"
     >
       text
     </label>
@@ -354,12 +343,6 @@ exports[`Field Text renders Label if showLabel is true 1`] = `
         class="form-feedback-item"
       />
     </div>
-    <span
-      class="sr-only"
-      id="textField_fieldDetails"
-    >
-      text
-    </span>
   </div>
 </div>
 `;

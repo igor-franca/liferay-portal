@@ -3,7 +3,6 @@
 exports[`Field Checkbox has a helptext 1`] = `
 <div>
   <div
-    aria-labelledby="ID_fieldDetails"
     class="form-group hide"
   >
     <div
@@ -22,7 +21,7 @@ exports[`Field Checkbox has a helptext 1`] = `
               class="toggle-switch-check-bar"
             >
               <input
-                aria-describedby="ID_fieldFeedback"
+                aria-describedby="undefined_fieldFeedback"
                 aria-required="false"
                 class="toggle-switch-check"
                 role="switch"
@@ -54,7 +53,7 @@ exports[`Field Checkbox has a helptext 1`] = `
     />
     <div
       class="form-feedback-group field-feedback"
-      id="ID_fieldFeedback"
+      id="undefined_fieldFeedback"
     >
       <div
         aria-live="assertive"
@@ -64,12 +63,6 @@ exports[`Field Checkbox has a helptext 1`] = `
         Type something
       </div>
     </div>
-    <span
-      class="sr-only"
-      id="ID_fieldDetails"
-    >
-      Type something
-    </span>
   </div>
 </div>
 `;
@@ -381,7 +374,7 @@ exports[`Field Checkbox has an id 1`] = `
     />
     <div
       class="form-feedback-group field-feedback"
-      id="ID_fieldFeedback"
+      id="undefined_fieldFeedback"
     >
       <div
         aria-live="assertive"
