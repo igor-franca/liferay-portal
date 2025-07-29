@@ -252,7 +252,7 @@ public class DataLayoutBuilderTag extends BaseDataLayoutBuilderTag {
 		return dataLayoutResource.getDataLayout(dataLayoutId);
 	}
 
-	private DataLayoutBuilderDefinition _getDataLayoutBuilderDefinition(
+	private static DataLayoutBuilderDefinition _getDataLayoutBuilderDefinition(
 		String contentType) {
 
 		DataLayoutBuilderDefinition dataLayoutBuilderDefinition =
@@ -609,7 +609,7 @@ public class DataLayoutBuilderTag extends BaseDataLayoutBuilderTag {
 				bundleContext, DataDefinitionContentType.class, "content.type");
 	}
 
-	private class DataLayoutDDMFormAdapter {
+	protected static class DataLayoutDDMFormAdapter {
 
 		public DataLayoutDDMFormAdapter(
 			Set<Locale> availableLocales, String contentType,
@@ -756,7 +756,7 @@ public class DataLayoutBuilderTag extends BaseDataLayoutBuilderTag {
 						{
 							setName(ddmFormFieldTypeSetting.getName());
 							setValue(
-								_createDDMFormFieldValue(
+								createDDMFormFieldValue(
 									ddmForm.getAvailableLocales(),
 									ddmFormFieldTypeSetting,
 									ddmFormFieldProperties.get(
@@ -801,7 +801,7 @@ public class DataLayoutBuilderTag extends BaseDataLayoutBuilderTag {
 				).toString());
 		}
 
-		private Value _createDDMFormFieldValue(
+		protected Value createDDMFormFieldValue(
 				Set<Locale> availableLocales,
 				DDMFormField ddmFormFieldTypeSetting, Object propertyValue)
 			throws Exception {
