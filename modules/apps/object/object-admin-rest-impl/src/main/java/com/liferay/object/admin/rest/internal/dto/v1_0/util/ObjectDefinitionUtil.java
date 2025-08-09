@@ -221,7 +221,8 @@ public class ObjectDefinitionUtil {
 						serviceBuilderObjectDefinition.
 							getObjectDefinitionSettings(),
 						objectDefinitionSetting -> _toObjectDefinitionSetting(
-							groupLocalService, objectDefinitionSetting),
+							groupLocalService, objectDefinitionLocalService,
+							objectDefinitionSetting),
 						ObjectDefinitionSetting.class));
 				setObjectFields(
 					() -> TransformUtil.transformToArray(
@@ -351,6 +352,7 @@ public class ObjectDefinitionUtil {
 
 	private static ObjectDefinitionSetting _toObjectDefinitionSetting(
 		GroupLocalService groupLocalService,
+		ObjectDefinitionLocalService objectDefinitionLocalService,
 		com.liferay.object.model.ObjectDefinitionSetting
 			serviceBuilderObjectDefinitionSetting) {
 
@@ -370,6 +372,16 @@ public class ObjectDefinitionUtil {
 
 							return ObjectDefinitionSettingConstants.
 								NAME_ACCEPTED_GROUP_EXTERNAL_REFERENCE_CODES;
+						}
+
+						if (StringUtil.equals(
+								ObjectDefinitionSettingConstants.
+									NAME_ROOT_OBJECT_DEFINITION_IDS,
+								serviceBuilderObjectDefinitionSetting.
+									getName())) {
+
+							return ObjectDefinitionSettingConstants.
+								NAME_ROOT_OBJECT_DEFINITION_ERCS;
 						}
 
 						return serviceBuilderObjectDefinitionSetting.getName();
@@ -395,6 +407,34 @@ public class ObjectDefinitionUtil {
 												GetterUtil.getLong(groupId));
 
 										return group.getExternalReferenceCode();
+									},
+									String.class));
+						}
+
+						if (StringUtil.equals(
+								ObjectDefinitionSettingConstants.
+									NAME_ROOT_OBJECT_DEFINITION_IDS,
+								serviceBuilderObjectDefinitionSetting.
+									getName())) {
+
+							String rootObjectDefinitionsIds = String.valueOf(
+								serviceBuilderObjectDefinitionSetting.
+									getValue());
+
+							return StringUtil.merge(
+								TransformUtil.transform(
+									rootObjectDefinitionsIds.split("\\s*,\\s*"),
+									rootObjectDefinitionId -> {
+										com.liferay.object.model.
+											ObjectDefinition
+												rootObjectDefinition =
+													objectDefinitionLocalService.
+														getObjectDefinition(
+															GetterUtil.getLong(
+																rootObjectDefinitionId));
+
+										return rootObjectDefinition.
+											getExternalReferenceCode();
 									},
 									String.class));
 						}
