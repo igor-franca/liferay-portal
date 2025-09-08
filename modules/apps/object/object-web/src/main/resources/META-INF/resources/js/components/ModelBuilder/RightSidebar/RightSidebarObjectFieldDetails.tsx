@@ -60,6 +60,7 @@ export function RightSidebarObjectFieldDetails() {
 			forbiddenLastChars,
 			forbiddenNames,
 			initialValues: objectFieldInitialValues,
+			objectFields: objectDefinitionNodeData.objectFields,
 			onSubmit: () => {},
 		});
 
