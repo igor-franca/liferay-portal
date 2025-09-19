@@ -47,7 +47,6 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -912,9 +911,7 @@ public class DDMFormEvaluatorHelper {
 					continue;
 				}
 
-				String requiredErrorMessage = LanguageUtil.get(
-					_ddmFormEvaluatorEvaluateRequest.getLocale(),
-					"this-field-is-required");
+				String requiredErrorMessage = "this-field-is-required";
 
 				DDMFormField ddmFormField = _ddmFormFieldsMap.get(
 					ddmFormEvaluatorFieldContextKey.getName());
@@ -1090,9 +1087,7 @@ public class DDMFormEvaluatorHelper {
 			}
 
 			if (Validator.isNull(errorMessage)) {
-				errorMessage = LanguageUtil.get(
-					_ddmFormEvaluatorEvaluateRequest.getLocale(),
-					"this-field-is-invalid");
+				errorMessage = "this-field-is-invalid";
 			}
 
 			builder.withParameter("errorMessage", errorMessage);
@@ -1126,9 +1121,7 @@ public class DDMFormEvaluatorHelper {
 
 				_setFieldAsInvalid(
 					ddmFormEvaluatorFieldContextKey,
-					LanguageUtil.get(
-						_ddmFormEvaluatorEvaluateRequest.getLocale(),
-						"input-format-is-not-satisfied"));
+					"input-format-is-not-satisfied");
 			}
 		}
 	}
@@ -1154,9 +1147,7 @@ public class DDMFormEvaluatorHelper {
 
 				_setFieldAsInvalid(
 					ddmFormEvaluatorFieldContextKey,
-					LanguageUtil.get(
-						_ddmFormEvaluatorEvaluateRequest.getLocale(),
-						"the-field-value-is-invalid"));
+					"the-field-value-is-invalid");
 			}
 		}
 	}

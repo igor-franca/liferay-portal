@@ -698,7 +698,9 @@ export default function FieldBase({
 			)}
 
 			<FieldFeedback
-				errorMessage={hasError ? errorMessage : undefined}
+				errorMessage={
+					hasError ? Liferay.Language.get(errorMessage) : undefined
+				}
 				helpMessage={typeof tip === 'string' ? tip : undefined}
 				id={`${id ?? name}_fieldFeedback`}
 				warningMessage={warningMessage}
