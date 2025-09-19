@@ -51,8 +51,6 @@ import com.liferay.dynamic.data.mapping.test.util.DDMFormValuesTestUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.language.Language;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
@@ -103,7 +101,6 @@ public class DDMFormEvaluatorHelperTest {
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		_setUpJSONFactoryUtil();
-		_setUpLanguageUtil();
 		_setUpPortalUtil();
 
 		_ddmExpressionFactory = new DDMExpressionFactoryImpl();
@@ -265,7 +262,7 @@ public class DDMFormEvaluatorHelperTest {
 					"field0", "field0_instanceId"));
 
 		Assert.assertEquals(
-			"This field is required.",
+			"this-field-is-required",
 			ddmFormFieldPropertyChanges.get("errorMessage"));
 		Assert.assertFalse(
 			(boolean)ddmFormFieldPropertyChanges.get("showLabel"));
@@ -478,7 +475,7 @@ public class DDMFormEvaluatorHelperTest {
 					"field0", "field0_instanceId"));
 
 		Assert.assertEquals(
-			"Input format is not satisfied.",
+			"input-format-is-not-satisfied",
 			ddmFormFieldPropertyChanges.get("errorMessage"));
 		Assert.assertFalse((boolean)ddmFormFieldPropertyChanges.get("valid"));
 	}
@@ -722,7 +719,7 @@ public class DDMFormEvaluatorHelperTest {
 					"field0", "field0_instanceId"));
 
 		Assert.assertEquals(
-			"This field is required.",
+			"this-field-is-required",
 			ddmFormFieldsPropertyChanges.get("errorMessage"));
 	}
 
@@ -762,7 +759,7 @@ public class DDMFormEvaluatorHelperTest {
 					"field0", "field0_instanceId"));
 
 		Assert.assertEquals(
-			"This field is required.",
+			"this-field-is-required",
 			ddmFormFieldPropertyChanges.get("errorMessage"));
 		Assert.assertFalse((boolean)ddmFormFieldPropertyChanges.get("valid"));
 	}
@@ -858,7 +855,7 @@ public class DDMFormEvaluatorHelperTest {
 					"field1", "field1_instanceId"));
 
 		Assert.assertEquals(
-			"This field is required.",
+			"this-field-is-required",
 			ddmFormFieldPropertyChanges.get("errorMessage"));
 		Assert.assertFalse((boolean)ddmFormFieldPropertyChanges.get("valid"));
 	}
@@ -899,7 +896,7 @@ public class DDMFormEvaluatorHelperTest {
 					"field0", "field0_instanceId"));
 
 		Assert.assertEquals(
-			"This field is required.",
+			"this-field-is-required",
 			ddmFormFieldPropertyChanges.get("errorMessage"));
 		Assert.assertFalse((boolean)ddmFormFieldPropertyChanges.get("valid"));
 	}
@@ -1316,7 +1313,7 @@ public class DDMFormEvaluatorHelperTest {
 					"field0", "field0_instanceId"));
 
 		Assert.assertEquals(
-			"This field is invalid.",
+			"this-field-is-invalid",
 			ddmFormFieldPropertyChanges.get("errorMessage"));
 		Assert.assertFalse((boolean)ddmFormFieldPropertyChanges.get("valid"));
 	}
@@ -1451,7 +1448,7 @@ public class DDMFormEvaluatorHelperTest {
 					"field0", "field0_instanceId"));
 
 		Assert.assertEquals(
-			"This field is invalid.",
+			"this-field-is-invalid",
 			ddmFormFieldPropertyChanges.get("errorMessage"));
 		Assert.assertFalse((boolean)ddmFormFieldPropertyChanges.get("valid"));
 	}
@@ -1812,36 +1809,6 @@ public class DDMFormEvaluatorHelperTest {
 		jsonFactoryUtil.setJSONFactory(new JSONFactoryImpl());
 	}
 
-	private static void _setUpLanguageUtil() {
-		LanguageUtil languageUtil = new LanguageUtil();
-
-		_language = Mockito.mock(Language.class);
-
-		Mockito.when(
-			_language.get(
-				Mockito.any(Locale.class),
-				Mockito.eq("input-format-is-not-satisfied"))
-		).thenReturn(
-			"Input format is not satisfied."
-		);
-
-		Mockito.when(
-			_language.get(
-				Mockito.any(Locale.class), Mockito.eq("this-field-is-invalid"))
-		).thenReturn(
-			"This field is invalid."
-		);
-
-		Mockito.when(
-			_language.get(
-				Mockito.any(Locale.class), Mockito.eq("this-field-is-required"))
-		).thenReturn(
-			"This field is required."
-		);
-
-		languageUtil.setLanguage(_language);
-	}
-
 	private static void _setUpPortalUtil() throws Exception {
 		PortalUtil portalUtil = new PortalUtil();
 
@@ -2118,7 +2085,6 @@ public class DDMFormEvaluatorHelperTest {
 	private static DDMExpressionFactory _ddmExpressionFactory;
 	private static final HttpServletRequest _httpServletRequest = Mockito.mock(
 		HttpServletRequest.class);
-	private static Language _language;
 	private static final User _user = Mockito.mock(User.class);
 
 	private final Role _role = Mockito.mock(Role.class);
