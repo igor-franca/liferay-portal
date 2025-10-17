@@ -81,10 +81,6 @@ public class ObjectDefinitionImpl extends ObjectDefinitionBaseImpl {
 
 	@Override
 	public String getLocalizationDBTableName() {
-		if (!isEnableLocalization()) {
-			return null;
-		}
-
 		return getDBTableName() + "_l";
 	}
 
