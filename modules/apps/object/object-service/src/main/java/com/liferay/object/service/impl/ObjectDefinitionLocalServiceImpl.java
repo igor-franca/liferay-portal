@@ -35,7 +35,6 @@ import com.liferay.object.exception.ObjectDefinitionEnableCategorizationExceptio
 import com.liferay.object.exception.ObjectDefinitionEnableCommentsException;
 import com.liferay.object.exception.ObjectDefinitionEnableFormContainerException;
 import com.liferay.object.exception.ObjectDefinitionEnableFriendlyURLCustomizationException;
-import com.liferay.object.exception.ObjectDefinitionEnableLocalizationException;
 import com.liferay.object.exception.ObjectDefinitionEnableObjectEntryHistoryException;
 import com.liferay.object.exception.ObjectDefinitionEnableObjectEntryScheduleException;
 import com.liferay.object.exception.ObjectDefinitionEnableObjectEntrySubscriptionException;
@@ -1455,7 +1454,6 @@ public class ObjectDefinitionLocalServiceImpl
 		_validateEnableFriendlyURLCustomization(
 			enableFriendlyURLCustomization, friendlyURLSeparator, modifiable,
 			storageType, system);
-		_validateEnableLocalization(enableLocalization, modifiable);
 		_validateEnableObjectEntrySchedule(
 			enableObjectEntrySchedule, modifiable, null, system);
 		_validateEnableObjectEntrySubscription(
@@ -2517,8 +2515,6 @@ public class ObjectDefinitionLocalServiceImpl
 			enableFriendlyURLCustomization, friendlyURLSeparator,
 			objectDefinition.isModifiable(), objectDefinition.getStorageType(),
 			objectDefinition.isSystem());
-		_validateEnableLocalization(
-			enableLocalization, objectDefinition.isModifiable());
 		_validateEnableObjectEntryHistory(
 			objectDefinition.isEnableObjectEntryHistory() !=
 				enableObjectEntryHistory,
@@ -2920,21 +2916,6 @@ public class ObjectDefinitionLocalServiceImpl
 			throw new ObjectDefinitionEnableFriendlyURLCustomizationException(
 				"Enable friendly URL customization is only allowed for " +
 					"object definitions with the default storage type");
-		}
-	}
-
-	private void _validateEnableLocalization(
-			boolean enableLocalization, boolean modifiable)
-		throws PortalException {
-
-		if (enableLocalization && !modifiable) {
-			return;
-		}
-
-		if (!enableLocalization && modifiable) {
-			throw new ObjectDefinitionEnableLocalizationException(
-				"Enable localization must be true for modifiable object " +
-					"definitions");
 		}
 	}
 
