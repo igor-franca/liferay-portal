@@ -397,10 +397,7 @@ export default function EditObjectDetails({
 						displayType="unstyled"
 					>
 						<ClayPanel.Body>
-							<TranslationsContainer
-								setValues={setValues}
-								values={values}
-							/>
+							<TranslationsContainer />
 						</ClayPanel.Body>
 					</ClayPanel>
 
