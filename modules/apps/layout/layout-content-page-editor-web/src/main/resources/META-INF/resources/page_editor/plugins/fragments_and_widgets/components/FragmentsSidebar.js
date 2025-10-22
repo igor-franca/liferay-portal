@@ -11,6 +11,10 @@ import {
 	SearchResultsMessage,
 	isNullOrUndefined,
 } from '@liferay/layout-js-components-web';
+import {
+	ExpressionBuilder,
+	ExpressionBuilderModal,
+} from '@liferay/object-js-components-web';
 import {useSessionState} from 'frontend-js-components-web';
 import {sub} from 'frontend-js-web';
 import React, {useEffect, useMemo, useState} from 'react';
@@ -227,6 +231,7 @@ export default function FragmentsSidebar() {
 
 	return (
 		<>
+			<ExpressionBuilderModal sidebarElements={[]} />
 			<SidebarPanelHeader>
 				{Liferay.Language.get('components')}
 			</SidebarPanelHeader>
@@ -235,12 +240,47 @@ export default function FragmentsSidebar() {
 
 			<div className="d-flex flex-column page-editor__sidebar__fragments-widgets-panel">
 				<div className="align-items-center d-flex flex-shrink-0 justify-content-between mb-3 px-3">
-					<SearchForm
+
+					{/* <SearchForm
 						className="flex-grow-1 mb-0"
 						label={Liferay.Language.get(
 							'search-fragments-and-widgets'
 						)}
 						onChange={setSearchValue}
+					/> */}
+
+					<ExpressionBuilder
+						error=""
+						feedbackMessage={Liferay.Language.get(
+							'use-expressions-to-create-a-condition'
+						)}
+						label={Liferay.Language.get('formula-builder')}
+						onBlur={() => {}}
+						onChange={() => {}}
+						onOpenModal={() => {
+							const parentWindow = Liferay.Util.getOpener();
+
+							parentWindow.Liferay.fire(
+								'openExpressionBuilderModal',
+								{
+									eventSidebarElements: [],
+									header: Liferay.Language.get(
+										'formula-builder'
+									),
+									onSave: () => {},
+									placeholder: `<#-- ${Liferay.Language.get(
+										'add-formulas-to-calculate-values-based-on-other-fields'
+									)} -->`,
+									required: false,
+									source: '',
+									validateExpressionURL: '',
+								}
+							);
+						}}
+						placeholder={Liferay.Language.get(
+							'create-an-expression'
+						)}
+						value=""
 					/>
 
 					<div className="d-flex flex-shrink-0">
