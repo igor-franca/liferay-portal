@@ -13,6 +13,8 @@ public class FDSTimeZoneBehaviorConstants {
 	public static final String APPLY_THEME_DISPLAY_TIME_ZONE =
 		"applyThemeDisplayTimeZone";
 
+	public static final String APPLY_UTC_TIME_ZONE = "applyUTCTimeZone";
+
 	public static final String DO_NOT_MODIFY_DATE_VALUE =
 		"doNotModifyDateValue";
 
