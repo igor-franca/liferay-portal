@@ -22,8 +22,6 @@ export class SimpleActionPlugin extends Plugin {
 			});
 
 			button.on('execute', () => {
-                this._showBalloon();
-
 				const selection = editor.model.document.selection;
 
                 let text = '';
@@ -36,7 +34,7 @@ export class SimpleActionPlugin extends Plugin {
                     }
                 }
 
-				alert(text);
+				this._showBalloon();
 			});
 
 			return button;
@@ -45,7 +43,30 @@ export class SimpleActionPlugin extends Plugin {
 
 	_createView() {
 		const view = new View();
-		view.setTemplate( {
+
+		const actionButton = new ButtonView();
+
+		actionButton.set({
+			label: 'Action',
+			withText: true
+		});
+
+		actionButton.on('execute', () => {
+			console.log('Action button clicked!');
+		});
+
+		const cancelButton = new ButtonView();
+
+		cancelButton.set({
+			label: 'Cancel',
+			withText: true
+		});
+
+		cancelButton.on('execute', () => {
+			console.log('Cancel button clicked!');
+		});
+
+		view.setTemplate({
 			tag: 'div',
 			attributes: {
 				class: [ 'ck', 'ck-simple-balloon' ]
@@ -54,9 +75,12 @@ export class SimpleActionPlugin extends Plugin {
 				{
 					tag: 'p',
 					children: [ 'This is a custom balloon!' ]
-				}
+				},
+				actionButton,
+				cancelButton
 			]
-		} );
+		});
+
 		return view;
 	}
 
