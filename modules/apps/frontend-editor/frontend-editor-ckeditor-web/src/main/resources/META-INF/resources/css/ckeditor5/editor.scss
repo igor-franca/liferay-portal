@@ -5,6 +5,29 @@
 	--ck-icon-font-size: 0.67em;
 }
 
+.ck-my-styled-balloon {
+	padding: var(--ck-spacing-large);
+	background: #f9f9f9;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+	display: grid;
+	grid-template-rows: auto 1fr 1fr;
+	row-gap: var(--ck-spacing-standard);
+	width: 220px;
+}
+
+.ck-my-styled-balloon p {
+	font-size: 18px;
+	font-weight: 600;
+	padding: 1rem;
+	margin: 0 0 var(--ck-spacing-standard) 0;
+	color: #333;
+}
+
+.ck-my-styled-balloon .ck-button {
+	width: 100%;
+}
+
 .lfr-ck .ck {
 	&.ck-balloon-panel.ck-tooltip {
 		background-color: $dark-d2;

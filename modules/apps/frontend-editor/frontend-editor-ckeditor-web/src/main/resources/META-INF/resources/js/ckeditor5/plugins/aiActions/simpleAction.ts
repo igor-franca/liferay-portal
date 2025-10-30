@@ -44,40 +44,64 @@ export class SimpleActionPlugin extends Plugin {
 	_createView() {
 		const view = new View();
 
-		const actionButton = new ButtonView();
+		const improveWrittingButton = new ButtonView();
 
-		actionButton.set({
-			label: 'Action',
+		improveWrittingButton.set({
+			label: 'Improve writting',
 			withText: true
 		});
 
-		actionButton.on('execute', () => {
-			console.log('Action button clicked!');
+		improveWrittingButton.on('execute', () => {
+			const selection = this.editor.model.document.selection;
+
+			let text = '';
+
+			for (const range of selection.getRanges()) {
+				for (const item of range.getItems()) {
+					if (item.is && item.is('model:$textProxy')) {
+						text += (item as any).data;
+					}
+				}
+			}
+
+			const editorContent = this.editor.getData();
+
+			this.editor.setData(editorContent.replaceAll(text, 'Improve writting'));
 		});
 
-		const cancelButton = new ButtonView();
+		const fixSpellingButton = new ButtonView();
 
-		cancelButton.set({
-			label: 'Cancel',
-			withText: true
+		fixSpellingButton.set({
+			label: 'Fix spelling & grammar',
+			withText: true,
 		});
 
-		cancelButton.on('execute', () => {
-			console.log('Cancel button clicked!');
+		fixSpellingButton.on('execute', () => {
+			const selection = this.editor.model.document.selection;
+
+			let text = '';
+
+			for (const range of selection.getRanges()) {
+				for (const item of range.getItems()) {
+					if (item.is && item.is('model:$textProxy')) {
+						text += (item as any).data;
+					}
+				}
+			}
+
+			const editorContent = this.editor.getData();
+
+			this.editor.setData(editorContent.replaceAll(text, 'Fix spelling & grammar'));
 		});
 
 		view.setTemplate({
 			tag: 'div',
 			attributes: {
-				class: [ 'ck', 'ck-simple-balloon' ]
+				class: [ 'ck', 'ck-my-styled-balloon' ]
 			},
 			children: [
-				{
-					tag: 'p',
-					children: [ 'This is a custom balloon!' ]
-				},
-				actionButton,
-				cancelButton
+				improveWrittingButton,
+				fixSpellingButton
 			]
 		});
 
