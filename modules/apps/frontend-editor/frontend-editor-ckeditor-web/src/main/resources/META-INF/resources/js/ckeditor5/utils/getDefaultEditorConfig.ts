@@ -51,6 +51,7 @@ import AICreator from '../plugins/AICreator';
 import HeadlessItemSelector from '../plugins/HeadlessItemSelector';
 import ItemSelector from '../plugins/ItemSelector';
 import {EEditorConfigPreset, EEditorVariant} from './types';
+import {SimpleActionPlugin} from '../plugins/aiActions/simpleAction';
 
 const getDefaultEditorConfig = ({
 	editorVariant,
@@ -142,6 +143,7 @@ const getDefaultEditorConfig = ({
 		ItemSelector,
 		MediaEmbed,
 		RemoveFormat,
+		SimpleActionPlugin,
 		Strikethrough,
 		Style,
 		Table,
@@ -192,6 +194,8 @@ const getDefaultEditorConfig = ({
 		'alignment',
 		'|',
 		'aiCreator',
+		'|',
+		'simpleAction'
 	];
 
 	if (editorVariant === EEditorVariant.CLASSIC) {

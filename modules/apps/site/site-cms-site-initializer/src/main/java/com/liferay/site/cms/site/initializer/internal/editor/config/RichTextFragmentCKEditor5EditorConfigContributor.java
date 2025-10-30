@@ -50,7 +50,7 @@ public class RichTextFragmentCKEditor5EditorConfigContributor
 					"numberedList", "bulletedList", "|", "indent", "outdent",
 					"|", "blockQuote", "|", "link", "insertTable",
 					"headlessImageSelector", "headlessVideoSelector", "|",
-					"alignment", "|", "aiCreator", "|", "sourceEditing"
+					"alignment", "|", "aiCreator", "|", "sourceEditing", "|" , "simpleAction"
 				}
 			).put(
 				"shouldNotGroupWhenFull", true
