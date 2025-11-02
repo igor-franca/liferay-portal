@@ -7,10 +7,9 @@ import {Command, Editor, Plugin} from '@ckeditor/ckeditor5-core/dist/index.js';
 import {EditingView, Model} from '@ckeditor/ckeditor5-engine/dist/index.js';
 import {ContextualBalloon, View} from '@ckeditor/ckeditor5-ui/dist/index.js';
 import {EventSource} from 'eventsource';
+import {fetch} from 'frontend-js-web';
 import React from 'react';
 import {Root, createRoot} from 'react-dom/client';
-
-import {fetch} from 'frontend-js-web';
 
 import WriteAssistentActions from './components/WriteAssistentActions';
 
@@ -93,7 +92,7 @@ export default class WriteAssistent extends Plugin {
 		const event = new EventSource('/o/ai-hub/v1.0/tasks/subscribe', {
 			withCredentials: true,
 			fetch: (input, init) =>
-				fetch((input as RequestInfo), {
+				fetch(input as RequestInfo, {
 					...init,
 					headers: new Headers({
 						'Accept': 'text/event-stream',
