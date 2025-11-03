@@ -4,31 +4,23 @@
  */
 
 import ClayDropDown from '@clayui/drop-down';
-import {fetch} from 'frontend-js-web';
+import ClayLoaddingIndicator from '@clayui/loading-indicator';
 import React, {useEffect, useRef, useState} from 'react';
-
-interface ActionItem {
-	disabled?: boolean;
-	name: string;
-	symbolLeft?: string;
-	symbolRight?: string;
-	type:
-		| 'Improve Writing'
-		| 'Fix Spelling Grammar'
-		| 'Translate To'
-		| 'Make Shorter'
-		| 'Make Longer'
-		| 'Generate Based On Title';
-}
+import {Action} from '../types';
 
 export default function WriteAssistentActions({
+	connection,
 	containerRef,
-	content,
+	handleActionClick
 }: {
-	content: string;
+	connection: EventSource | null;
 	containerRef: HTMLElement;
+	handleActionClick: (type: any) => Promise<void>;
 }) {
 	const [active, setActive] = useState(true);
+	const [isLoading, setIsLoading] = useState<{type: Action['type'] | ''}>(
+		{type: ''}
+	);
 
 	const actionsGroup = [
 		{
@@ -95,30 +87,22 @@ export default function WriteAssistentActions({
 	const alignRef = useRef<HTMLElement | null>(null);
 	const menuElementRef = useRef<HTMLDivElement | null>(null);
 
-	const handleChange = async (type: ActionItem['type']) => {
-		await fetch(`/o/ai-hub/v1.0/tasks`, {
-			body: JSON.stringify({
-				context: {
-					text: content,
-				},
-				type,
-			}),
-			headers: new Headers({
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-			}),
-			method: 'POST',
-		});
-	};
-
 	useEffect(() => {
 		alignRef.current = containerRef ?? null;
+
+		if (connection) {
+			connection.addEventListener('Improve Writing', (event) => {
+				setIsLoading({type: 'Improve Writing'});
+				setActive(false);
+			});
+		}
 	}, [containerRef]);
 
 	return (
 		<ClayDropDown.Menu
 			active={active}
 			alignElementRef={alignRef}
+			alignmentByViewport
 			onActiveChange={() => {
 				setActive(!active);
 			}}
@@ -126,27 +110,37 @@ export default function WriteAssistentActions({
 		>
 			<ClayDropDown.ItemList items={actionsGroup}>
 				{(group: any) => (
-					<ClayDropDown.Group<ActionItem>
+					<ClayDropDown.Group<Action>
 						header={group.name}
 						items={group.children}
 						key={group.name}
 					>
-						{(child: ActionItem) => (
+						{(child: Action) => (
 							<ClayDropDown.Item
 								disabled={child.disabled}
 								key={child.name}
 								onClick={() => {
-									handleChange(child.type);
-									setActive(false);
+									handleActionClick(child.type);
+									setIsLoading({type: child.type});
 								}}
 								spritemap={
 									Liferay.ThemeDisplay.getPathThemeImages() +
 									'/clay/icons.svg'
 								}
+								style={{
+									opacity:
+										isLoading.type === child.type ? 0.5 : 1,
+								}}
 								symbolLeft={child.symbolLeft}
 								symbolRight={child.symbolRight}
 							>
-								<span className="ml-4">{child.name}</span>
+								<div className="flex items-center justify-between">
+									<span className="ml-4">{child.name}</span>
+
+									{isLoading.type === child.type && (
+										<ClayLoaddingIndicator className="ai-dropdown-item-loading-indicator" />
+									)}
+								</div>
 							</ClayDropDown.Item>
 						)}
 					</ClayDropDown.Group>
