@@ -88,7 +88,7 @@ export default class WriteAssistent extends Plugin {
 		}
 	}
 
-	async _onConnect() {
+	_onConnect() {
 		const event = new EventSource('/o/ai-hub/v1.0/tasks/subscribe', {
 			withCredentials: true,
 			fetch: (input, init) =>
