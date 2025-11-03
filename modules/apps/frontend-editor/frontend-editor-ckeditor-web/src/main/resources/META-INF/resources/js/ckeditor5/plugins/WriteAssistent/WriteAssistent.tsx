@@ -12,11 +12,12 @@ import React from 'react';
 import {Root, createRoot} from 'react-dom/client';
 
 import WriteAssistentActions from './components/WriteAssistentActions';
+import WriteAssistentConfirmatinoAction from './components/WriteAssistentConfimationAction';
 
 export default class WriteAssistent extends Plugin {
 	private _balloonView: View | null = null;
+	private _contentSelection = '';
 	private _reactRoot: Root | null = null;
-	private _textSelection = '';
 
 	static get requires() {
 		return [ContextualBalloon];
@@ -31,15 +32,26 @@ export default class WriteAssistent extends Plugin {
 		const model = editor.model;
 		const view = editor.editing.view;
 
-		await this._onConnect();
-		this._selectionChange(balloon, editor, model, view);
+		editor.conversion.for('editingDowncast').markerToHighlight({
+			model: 'aiHighlight',
+			view: {
+				classes: 'ai-highlight',
+				priority: 10,
+			},
+		});
+
+		this._onConnect();
+		this._selectionChange2(balloon, editor, model);
 	}
 
 	_changeContent(content: string) {
 		const editor = this.editor;
-
+		
+		const balloon = editor.plugins.get(ContextualBalloon);
 		const model = editor.model;
 		const view = editor.editing.view;
+
+		const oldContent = this._contentSelection;
 
 		model.change((writer: any) => {
 			const selection = model.document.selection;
@@ -64,6 +76,20 @@ export default class WriteAssistent extends Plugin {
 			const newRange = writer.createRange(insertPosition, endPosition);
 
 			writer.setSelection(newRange);
+
+			writer.addMarker('aiHighlight', {
+				affectsData: false,
+				range: newRange,
+				usingOperation: false,
+			});
+
+			view.focus();
+
+			view.scrollToTheSelection();
+
+			this._hideBalloon(balloon);
+
+			this._showConfimationBalloon(balloon, content, editor);
 		});
 
 		view.focus();
@@ -88,6 +114,12 @@ export default class WriteAssistent extends Plugin {
 		}
 	}
 
+	_hideConfirmationBalloon (balloon: ContextualBalloon) {
+		if (this._balloonView && balloon.hasView(this._balloonView)) {
+			balloon.remove(this._balloonView);
+		}
+	}
+
 	_onConnect() {
 		const event = new EventSource('/o/ai-hub/v1.0/tasks/subscribe', {
 			withCredentials: true,
@@ -106,29 +138,56 @@ export default class WriteAssistent extends Plugin {
 		});
 	}
 
+	_removeMarker(model: Model) {
+		model.change((writer: any) => {
+			const marker = model.markers.get('aiHighlight');
+			if (marker) {
+				writer.removeMarker('aiHighlight');
+			}
+		});
+	}
+
 	_selectedContent(model: any) {
 		const selection = model.document.selection;
-		this._textSelection = '';
+		this._contentSelection = '';
 
 		for (const range of selection.getRanges()) {
 			for (const item of range.getItems()) {
 				if (item.is && item.is('model:$textProxy')) {
-					this._textSelection += (item as any).data;
+					this._contentSelection += (item as any).data;
 				}
 			}
 		}
 	}
 
-	_selectionChange(
+	// _selectionChange1(
+	// 	balloon: ContextualBalloon,
+	// 	editor: Editor,
+	// 	model: Model,
+	// 	view: EditingView
+	// ) {
+	// 	view.document.on('mouseup', () => {
+	// 		this._selectedContent(model);
+
+	// 		if (this._contentSelection.trim().length) {
+	// 			this._showBalloon(balloon, editor);
+	// 		}
+	// 		else {
+	// 			this._hideBalloon(balloon);
+	// 		}
+	// 	});
+	// }
+
+	_selectionChange2(
 		balloon: ContextualBalloon,
 		editor: Editor,
 		model: Model,
-		view: EditingView
 	) {
-		view.document.on('mouseup', () => {
+		model.document.selection.on('change:range', () => {
 			this._selectedContent(model);
 
-			if (this._textSelection.trim().length) {
+
+			if (this._contentSelection.trim().length) {
 				this._showBalloon(balloon, editor);
 			}
 			else {
@@ -161,9 +220,57 @@ export default class WriteAssistent extends Plugin {
 			root.render(
 				<WriteAssistentActions
 					containerRef={reactView.element}
-					content={this._textSelection}
+					content={this._contentSelection}
 				/>
 			);
+			this._reactRoot = root;
+		});
+
+		this._balloonView = reactView;
+
+		balloon.add({
+			position: this._getBalloonPosition(editor),
+			view: this._balloonView,
+		});
+	}
+
+	_showConfimationBalloon(
+		balloon: ContextualBalloon,
+		content: string,
+		editor: any,
+	) {
+		if (this._balloonView && balloon.hasView(this._balloonView)) {
+			return;
+		}
+
+		const reactView = new View();
+
+		reactView.setTemplate({
+			attributes: {
+				class: 'custom-react-balloon',
+			},
+			tag: 'div',
+		});
+
+		reactView.once('render', () => {
+			if (!reactView.element) {return;}
+
+			const root = createRoot(reactView.element);
+			root.render(
+				<WriteAssistentConfirmatinoAction
+					containerRef={reactView.element}
+					content={content}
+					handleAccept={() => {
+						this._removeMarker(editor.model);
+						this._hideConfirmationBalloon(balloon);
+					}} 
+					handleDiscard={() => {
+						this._removeMarker(editor.model);
+						editor.execute('undo');
+						this._hideBalloon(balloon);
+					}} 
+				/>
+			)
 			this._reactRoot = root;
 		});
 

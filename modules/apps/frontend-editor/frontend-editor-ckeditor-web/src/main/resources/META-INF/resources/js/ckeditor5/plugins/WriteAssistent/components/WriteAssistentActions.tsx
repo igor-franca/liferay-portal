@@ -135,7 +135,10 @@ export default function WriteAssistentActions({
 							<ClayDropDown.Item
 								disabled={child.disabled}
 								key={child.name}
-								onClick={() => handleChange(child.type)}
+								onClick={() => {
+									handleChange(child.type);
+									setActive(false);
+								}}
 								spritemap={
 									Liferay.ThemeDisplay.getPathThemeImages() +
 									'/clay/icons.svg'
