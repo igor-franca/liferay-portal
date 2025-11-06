@@ -21,6 +21,7 @@ export default class WritingAssistant extends Plugin {
 	public contentSelection: string = '';
 	public connection: EventSource | null = null;
 	public reactRoot: Root | null = null;
+	public selectionTimeout: NodeJS.Timeout | null = null;
 
 	static get requires() {
 		return [ContextualBalloon];
@@ -39,6 +40,7 @@ export default class WritingAssistant extends Plugin {
 		this._createMarker(editor);
 		this._onConnect();
 		this._selectionChange(balloon, editor, model);
+		this._destroy(editor, balloon);
 	}
 
 	_changeContent(content: string) {
@@ -90,6 +92,8 @@ export default class WritingAssistant extends Plugin {
 	}
 
 	_createMarker(editor: Editor) {
+		this._removeMarker(editor.model);
+
 		editor.conversion.for('editingDowncast').markerToHighlight({
 			model: 'writingAssistantHighlight',
 			view: {
@@ -99,17 +103,42 @@ export default class WritingAssistant extends Plugin {
 		});
 	}
 
+	_destroy(editor: Editor, balloon: ContextualBalloon) {
+		this.editor.on('destroy', () => {
+			this.stopListening(editor.model.document.selection, 'change:range');
+
+			this._hideBalloon(balloon);
+
+			if (this.selectionTimeout) {
+				clearTimeout(this.selectionTimeout);
+			}
+
+			if (this.connection) {
+				this.connection.close();
+			}
+		});
+	}
+
 	_getBalloonPosition(editor: Editor) {
 		const view = editor.editing.view;
-
 		const domConverter = view.domConverter;
-
 		const firstRange = view.document.selection.getFirstRange();
 
 		if (firstRange) {
 			const domRange = domConverter.viewRangeToDom(firstRange);
+			const targetRect = domRange.getBoundingClientRect();
+			const viewportHeight = window.innerHeight;
+			
+			const spaceAbove = targetRect.top;
+			const spaceBelow = viewportHeight - targetRect.bottom;
+			const preferredPosition = spaceBelow >= spaceAbove ? 'bottom' : 'top';
 
-			return {target: domRange};
+			return {
+				target: domRange,
+				positions: preferredPosition === 'bottom' 
+					? ['arrow_n', 'arrow_s']
+					: ['arrow_s', 'arrow_n']
+			};
 		}
 	}
 
@@ -117,6 +146,11 @@ export default class WritingAssistant extends Plugin {
 		if (this.balloonView && balloon.hasView(this.balloonView)) {
 			balloon.remove(this.balloonView);
 			this.balloonView = null;
+		}
+
+		if (this.reactRoot) {
+			this.reactRoot.unmount();
+			this.reactRoot = null;
 		}
 	}
 
@@ -143,14 +177,12 @@ export default class WritingAssistant extends Plugin {
 	}
 
 	_selectionChange(balloon: ContextualBalloon, editor: Editor, model: Model) {
-		let selectionTimeout: NodeJS.Timeout;
-
 		model.document.selection.on('change:range', () => {
-			if (selectionTimeout) {
-				clearTimeout(selectionTimeout);
+			if (this.selectionTimeout) {
+				clearTimeout(this.selectionTimeout);
 			}
 
-			selectionTimeout = setTimeout(() => {
+			this.selectionTimeout = setTimeout(() => {
 				this._selectedContent(model);
 
 				if (
@@ -163,14 +195,6 @@ export default class WritingAssistant extends Plugin {
 					this._hideBalloon(balloon);
 				}
 			}, 300);
-		});
-
-		this.editor.on('destroy', () => {
-			this.stopListening(model.document.selection, 'change:range');
-
-			if (selectionTimeout) {
-				clearTimeout(selectionTimeout);
-			}
 		});
 	}
 
@@ -204,8 +228,13 @@ export default class WritingAssistant extends Plugin {
 		const reactView = new View();
 
 		reactView.setTemplate({
-			tag: 'span',
+			attributes: {
+				class: 'custom-react-balloon',
+			},
+			tag: 'div',
 		});
+
+		const {target, positions} : {target: Range, positions: string[]} = this._getBalloonPosition(editor)!;
 
 		reactView.once('render', () => {
 			if (!reactView.element) {
@@ -220,6 +249,7 @@ export default class WritingAssistant extends Plugin {
 					handleActionClick={async (type: Action['type']) => {
 						await postTasks(this.contentSelection, type);
 					}}
+					positions={positions}
 				/>
 			);
 
@@ -229,7 +259,7 @@ export default class WritingAssistant extends Plugin {
 		this.balloonView = reactView;
 
 		balloon.add({
-			position: this._getBalloonPosition(editor),
+			position: {target},
 			view: this.balloonView,
 			withArrow: false,
 		});
@@ -248,6 +278,8 @@ export default class WritingAssistant extends Plugin {
 			},
 			tag: 'div',
 		});
+
+		const {target, positions} : {target: Range, positions: string[]} = this._getBalloonPosition(editor)!;
 
 		reactView.once('render', () => {
 			if (!reactView.element) {
@@ -272,6 +304,7 @@ export default class WritingAssistant extends Plugin {
 						this._hideBalloon(balloon);
 						this._removeMarker(editor.model);
 					}}
+					positions={positions}
 				/>
 			);
 
@@ -281,7 +314,7 @@ export default class WritingAssistant extends Plugin {
 		this.balloonView = reactView;
 
 		balloon.add({
-			position: this._getBalloonPosition(editor),
+			position: {target},
 			view: this.balloonView,
 			withArrow: false,
 		});
