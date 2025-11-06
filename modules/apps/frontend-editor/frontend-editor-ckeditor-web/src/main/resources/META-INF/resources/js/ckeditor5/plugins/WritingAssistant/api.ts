@@ -6,7 +6,7 @@
 import {EventSource} from 'eventsource';
 import {fetch} from 'frontend-js-web';
 
-import {Action} from './types';
+import {EActionType, EChangeToneType} from './types';
 
 export function createEventSourceConnection() {
 	const eventSource = new EventSource('/o/ai-hub/v1.0/tasks/subscribe', {
@@ -24,12 +24,19 @@ export function createEventSourceConnection() {
 	return eventSource;
 }
 
-export async function postTasks(content: string, type: Action['type']) {
+export interface IpostTasks {
+	context: {
+		language?: Liferay.Language.Locale;
+		text: string;
+		tone?: EChangeToneType;
+	};
+	type: EActionType;
+}
+
+export async function postTasks({context, type}: IpostTasks) {
 	await fetch(`/o/ai-hub/v1.0/tasks`, {
 		body: JSON.stringify({
-			context: {
-				text: content,
-			},
+			context,
 			type,
 		}),
 		headers: new Headers({

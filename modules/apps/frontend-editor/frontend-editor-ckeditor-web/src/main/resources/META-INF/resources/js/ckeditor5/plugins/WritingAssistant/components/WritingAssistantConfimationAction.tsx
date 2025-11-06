@@ -3,17 +3,19 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import ClayDropDown from '@clayui/drop-down';
+import ClayDropDown, {Align} from '@clayui/drop-down';
 import React, {useEffect, useRef, useState} from 'react';
 
 export default function WritingAssistantConfirmationAction({
 	containerRef,
 	handleAccept,
 	handleDiscard,
+	positions,
 }: {
 	containerRef: HTMLElement;
 	handleAccept: () => void;
 	handleDiscard: () => void;
+	positions: string[];
 }) {
 	const [active, setActive] = useState(true);
 
@@ -52,7 +54,10 @@ export default function WritingAssistantConfirmationAction({
 		<ClayDropDown.Menu
 			active={active}
 			alignElementRef={alignRef}
-			onActiveChange={setActive}
+			alignmentPosition={
+				positions[0] === 'arrow_n' ? Align.BottomLeft : Align.TopLeft
+			}
+			onActiveChange={() => {}}
 		>
 			<ClayDropDown.ItemList items={actions}>
 				{(item: any) => (

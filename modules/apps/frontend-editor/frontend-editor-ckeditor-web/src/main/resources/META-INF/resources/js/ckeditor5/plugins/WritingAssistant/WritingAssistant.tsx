@@ -6,7 +6,7 @@
 import {Command, Editor, Plugin} from '@ckeditor/ckeditor5-core/dist/index.js';
 import {Model} from '@ckeditor/ckeditor5-engine/dist/index.js';
 import {ContextualBalloon, View} from '@ckeditor/ckeditor5-ui/dist/index.js';
-import {ModelText, ModelTextProxy, ModelWriter} from 'ckeditor5';
+import {clickOutsideHandler, ModelText, ModelTextProxy, ModelWriter} from 'ckeditor5';
 import {EventSource} from 'eventsource';
 import React from 'react';
 import {Root, createRoot} from 'react-dom/client';
@@ -14,7 +14,7 @@ import {Root, createRoot} from 'react-dom/client';
 import {createEventSourceConnection, postTasks} from './api';
 import WritingAssistantActions from './components/WritingAssistantActions';
 import WritingAssistantConfirmationAction from './components/WritingAssistantConfimationAction';
-import {ACTION_TYPES_LIST, Action} from './types';
+import {EActionType, EChangeToneType} from './types';
 
 export default class WritingAssistant extends Plugin {
 	public balloonView: View | null = null;
@@ -92,8 +92,6 @@ export default class WritingAssistant extends Plugin {
 	}
 
 	_createMarker(editor: Editor) {
-		this._removeMarker(editor.model);
-
 		editor.conversion.for('editingDowncast').markerToHighlight({
 			model: 'writingAssistantHighlight',
 			view: {
@@ -128,16 +126,18 @@ export default class WritingAssistant extends Plugin {
 			const domRange = domConverter.viewRangeToDom(firstRange);
 			const targetRect = domRange.getBoundingClientRect();
 			const viewportHeight = window.innerHeight;
-			
+
 			const spaceAbove = targetRect.top;
 			const spaceBelow = viewportHeight - targetRect.bottom;
-			const preferredPosition = spaceBelow >= spaceAbove ? 'bottom' : 'top';
+			const preferredPosition =
+				spaceBelow >= spaceAbove ? 'bottom' : 'top';
 
 			return {
 				target: domRange,
-				positions: preferredPosition === 'bottom' 
-					? ['arrow_n', 'arrow_s']
-					: ['arrow_s', 'arrow_n']
+				positions:
+					preferredPosition === 'bottom'
+						? ['arrow_n', 'arrow_s']
+						: ['arrow_s', 'arrow_n'],
 			};
 		}
 	}
@@ -159,8 +159,8 @@ export default class WritingAssistant extends Plugin {
 
 		this.connection = connection;
 
-		ACTION_TYPES_LIST.forEach((eventType) => {
-			connection.addEventListener(eventType, (event) => {
+		Object.values(EActionType).forEach((type) => {
+			connection.addEventListener(type, (event) => {
 				this._changeContent(event.data);
 			});
 		});
@@ -190,9 +190,6 @@ export default class WritingAssistant extends Plugin {
 					!!this.contentSelection.trim().length
 				) {
 					this._showBalloon(balloon, editor);
-				}
-				else {
-					this._hideBalloon(balloon);
 				}
 			}, 300);
 		});
@@ -234,7 +231,8 @@ export default class WritingAssistant extends Plugin {
 			tag: 'div',
 		});
 
-		const {target, positions} : {target: Range, positions: string[]} = this._getBalloonPosition(editor)!;
+		const {positions, target}: {target: Range; positions: string[]} =
+			this._getBalloonPosition(editor)!;
 
 		reactView.once('render', () => {
 			if (!reactView.element) {
@@ -246,14 +244,43 @@ export default class WritingAssistant extends Plugin {
 			root.render(
 				<WritingAssistantActions
 					containerRef={reactView.element}
-					handleActionClick={async (type: Action['type']) => {
-						await postTasks(this.contentSelection, type);
+					handleActionClick={async ({
+						language,
+						tone,
+						type,
+					}: {
+						language?: Liferay.Language.Locale;
+						tone?: EChangeToneType;
+						type: EActionType;
+					}) => {
+						await postTasks({
+							context: {
+								language,
+								text: this.contentSelection,
+								tone,
+							},
+							type,
+						});
 					}}
 					positions={positions}
 				/>
 			);
 
 			this.reactRoot = root;
+
+			clickOutsideHandler({
+				emitter: editor.ui.view, // or editor.editing.view.document — both are DomEmitters
+				activator: () =>
+					this.balloonView !== null && balloon.hasView(this.balloonView),
+				contextElements: [
+					reactView.element,
+					editor.editing.view.getDomRoot()!,
+				],
+				callback: () => {
+					this._hideBalloon(balloon);
+					this._removeMarker(editor.model);
+				},
+			});
 		});
 
 		this.balloonView = reactView;
@@ -279,7 +306,8 @@ export default class WritingAssistant extends Plugin {
 			tag: 'div',
 		});
 
-		const {target, positions} : {target: Range, positions: string[]} = this._getBalloonPosition(editor)!;
+		const {positions, target}: {target: Range; positions: string[]} =
+			this._getBalloonPosition(editor)!;
 
 		reactView.once('render', () => {
 			if (!reactView.element) {

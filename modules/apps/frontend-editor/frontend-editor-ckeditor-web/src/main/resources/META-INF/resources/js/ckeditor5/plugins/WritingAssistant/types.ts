@@ -3,21 +3,28 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-export const ACTION_TYPES_LIST = [
-	'Improve Writing',
-	'Fix Spelling and Grammar',
-	'Translate To',
-	'Make Shorter',
-	'Make Longer',
-	'Generate Based On Title',
-] as const;
+export enum EActionType {
+	CHANGE_TONE = 'Change Tone',
+	FIX_SPELLING_AND_GRAMMAR = 'Fix Spelling and Grammar',
+	GENERATE_BASED_ON_TITLE = 'Generate Based On Title',
+	IMPROVE_WRITING = 'Improve Writing',
+	MAKE_LONGER = 'Make Longer',
+	MAKE_SHORTER = 'Make Shorter',
+	TRANSLATE_TO = 'Translate To',
+}
 
-export type ActionType = (typeof ACTION_TYPES_LIST)[number];
+export enum EChangeToneType {
+	CASUAL = 'Casual',
+	INFORMAL = 'Informal',
+	FORMAL = 'Formal',
+	FRIENDLY = 'Friendly',
+	PERSUASIVE = 'Persuasive',
+}
 
-export interface Action {
+export interface IAction {
 	disabled?: boolean;
 	name: string;
 	symbolLeft?: string;
 	symbolRight?: string;
-	type: ActionType;
+	type: EActionType;
 }
