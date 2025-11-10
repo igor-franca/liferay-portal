@@ -1,0 +1,13 @@
+liferay-reimbursement-site-initializer:
+    name: Liferay Reimbursement Site Initializer
+    oAuthApplicationHeadlessServer: liferay-reimbursement-site-initializer-oahs
+    siteExternalReferenceCode: LIFERAY_REIMBURSEMENT
+    siteName: Liferay Reimbursement
+    type: siteInitializer
+liferay-reimbursement-site-initializer-oahs:
+    .serviceAddress: localhost:8080
+    .serviceScheme: http
+    name: Liferay Reimbursement Site Initializer OAuth Application Headless Server
+    scopes:
+        -   Liferay.Headless.Site.everything
+    type: oAuthApplicationHeadlessServer

@@ -1,0 +1,15 @@
+assemble:
+    -   from: batch
+        into: batch
+liferay-reimbursement-batch:
+    name: Liferay Reimbursement Batch
+    oAuthApplicationHeadlessServer: liferay-reimbursement-batch-oahs
+    type: batch
+liferay-reimbursement-batch-oahs:
+    .serviceAddress: localhost:8080
+    .serviceScheme: http
+    name: Liferay Reimbursement Batch OAuth Application Headless Server
+    scopes:
+        -   Liferay.Headless.Batch.Engine.everything
+        -   Liferay.Object.Admin.REST.everything
+    type: oAuthApplicationHeadlessServer
