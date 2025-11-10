@@ -1,0 +1,426 @@
+{
+	"configuration": {
+		"className": "com.liferay.object.admin.rest.dto.v1_0.ObjectDefinition",
+		"parameters": {
+			"containsHeaders": "true",
+			"createStrategy": "UPSERT",
+			"onErrorFail": "false",
+			"updateStrategy": "UPDATE"
+		},
+		"taskItemDelegateName": "DEFAULT"
+	},
+	"items": [
+		{
+			"accountEntryRestricted": false,
+			"accountEntryRestrictedObjectFieldName": "",
+			"actions": {
+				"delete": {
+				},
+				"exportObjectDefinition": {
+				},
+				"get": {
+				},
+				"permissions": {
+				},
+				"update": {
+				}
+			},
+			"active": true,
+			"className": "com.liferay.object.model.ObjectDefinition#B7O6",
+			"creator": {
+				"additionalName": "",
+				"contentType": "UserAccount",
+				"familyName": "Test",
+				"givenName": "Test",
+				"name": "Test Test"
+			},
+			"enableCategorization": true,
+			"enableComments": false,
+			"enableFriendlyURLCustomization": false,
+			"enableIndexSearch": true,
+			"enableLocalization": false,
+			"enableObjectEntryDraft": false,
+			"enableObjectEntryHistory": false,
+			"externalReferenceCode": "df341f29-2061-a1b2-97b0-8a7ff3807a98",
+			"friendlyURLSeparator": "c_expenserequest",
+			"label": {
+				"en_US": "Expense Request"
+			},
+			"modifiable": true,
+			"name": "ExpenseRequest",
+			"objectActions": [
+				{
+					"active": true,
+					"conditionExpression": "",
+					"description": "",
+					"errorMessage": {
+					},
+					"externalReferenceCode": "ed649d9c-d19f-d5e0-fbe1-f7cadee32f01",
+					"label": {
+						"en_US": "Expensive Action"
+					},
+					"name": "expensiveAction",
+					"objectActionExecutorKey": "notification",
+					"objectActionTriggerKey": "onAfterAdd",
+					"parameters": {
+						"notificationTemplateExternalReferenceCode": "L_COMMERCE_ORDER_TEMPLATE",
+						"notificationTemplateId": 32404,
+						"type": "email",
+						"usePreferredLanguageForGuests": false
+					},
+					"status": {
+						"code": 2,
+						"label": "failed",
+						"label_i18n": "Failed"
+					},
+					"system": false
+				}
+			],
+			"objectDefinitionSettings": [
+			],
+			"objectFields": [
+				{
+					"DBType": "String",
+					"businessType": "Text",
+					"defaultValue": "null",
+					"externalReferenceCode": "6eedc322-e5c8-52c4-dc8e-fa52ddb1b0a1",
+					"indexed": false,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "",
+					"label": {
+						"en_US": "Author"
+					},
+					"localized": false,
+					"name": "creator",
+					"objectFieldSettings": [
+					],
+					"readOnly": "true",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": true,
+					"type": "String",
+					"unique": false
+				},
+				{
+					"DBType": "Date",
+					"businessType": "Date",
+					"defaultValue": "null",
+					"externalReferenceCode": "698214c3-3d82-33b1-aa40-c9f20fd9d843",
+					"indexed": false,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "",
+					"label": {
+						"en_US": "Create Date"
+					},
+					"localized": false,
+					"name": "createDate",
+					"objectFieldSettings": [
+					],
+					"readOnly": "true",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": true,
+					"type": "Date",
+					"unique": false
+				},
+				{
+					"DBType": "String",
+					"businessType": "Text",
+					"defaultValue": "null",
+					"externalReferenceCode": "ec270fd1-78c1-8d1c-2cd0-1341424a0b62",
+					"indexed": false,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "",
+					"label": {
+						"en_US": "External Reference Code"
+					},
+					"localized": false,
+					"name": "externalReferenceCode",
+					"objectFieldSettings": [
+					],
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": true,
+					"type": "String",
+					"unique": false
+				},
+				{
+					"DBType": "Long",
+					"businessType": "LongInteger",
+					"defaultValue": "null",
+					"externalReferenceCode": "35c0d424-fbef-fdb6-06f7-5a81bf06e553",
+					"indexed": true,
+					"indexedAsKeyword": true,
+					"indexedLanguageId": "",
+					"label": {
+						"en_US": "ID"
+					},
+					"localized": false,
+					"name": "id",
+					"objectFieldSettings": [
+					],
+					"readOnly": "true",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": true,
+					"type": "Long",
+					"unique": false
+				},
+				{
+					"DBType": "Date",
+					"businessType": "Date",
+					"defaultValue": "null",
+					"externalReferenceCode": "29844f8a-c31e-c6c7-e643-c14fcdc2b858",
+					"indexed": false,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "",
+					"label": {
+						"en_US": "Modified Date"
+					},
+					"localized": false,
+					"name": "modifiedDate",
+					"objectFieldSettings": [
+					],
+					"readOnly": "true",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": true,
+					"type": "Date",
+					"unique": false
+				},
+				{
+					"DBType": "Integer",
+					"businessType": "Text",
+					"defaultValue": "null",
+					"externalReferenceCode": "fbe0b714-644f-8f73-640d-072bbfe0ea30",
+					"indexed": false,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "",
+					"label": {
+						"en_US": "Status"
+					},
+					"localized": false,
+					"name": "status",
+					"objectFieldSettings": [
+					],
+					"readOnly": "true",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": true,
+					"type": "Integer",
+					"unique": false
+				},
+				{
+					"DBType": "String",
+					"businessType": "Text",
+					"defaultValue": "null",
+					"externalReferenceCode": "22de3e96-d317-955a-3f3d-1ae4760ffd1e",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Title"
+					},
+					"localized": false,
+					"name": "title",
+					"objectFieldSettings": [
+						{
+							"name": "showCounter",
+							"value": false
+						}
+					],
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": true,
+					"state": false,
+					"system": false,
+					"type": "String",
+					"unique": false
+				},
+				{
+					"DBType": "Double",
+					"businessType": "Decimal",
+					"defaultValue": "null",
+					"externalReferenceCode": "14886608-1ffa-bd1b-66f1-4de566eac654",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "",
+					"label": {
+						"en_US": "Amount"
+					},
+					"localized": false,
+					"name": "amount",
+					"objectFieldSettings": [
+					],
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": true,
+					"state": false,
+					"system": false,
+					"type": "Double",
+					"unique": false
+				},
+				{
+					"DBType": "Date",
+					"businessType": "Date",
+					"defaultValue": "null",
+					"externalReferenceCode": "0d7949f8-1207-0475-e2b7-185ccc3170fc",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "",
+					"label": {
+						"en_US": "Expense Date"
+					},
+					"localized": false,
+					"name": "expenseDate",
+					"objectFieldSettings": [
+					],
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": true,
+					"state": false,
+					"system": false,
+					"type": "Date",
+					"unique": false
+				},
+				{
+					"DBType": "Clob",
+					"businessType": "LongText",
+					"defaultValue": "null",
+					"externalReferenceCode": "18663cea-15fc-1529-d5a9-b8c97126f98a",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Description"
+					},
+					"localized": false,
+					"name": "description",
+					"objectFieldSettings": [
+						{
+							"name": "showCounter",
+							"value": false
+						}
+					],
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": true,
+					"state": false,
+					"system": false,
+					"type": "Clob",
+					"unique": false
+				},
+				{
+					"DBType": "Long",
+					"businessType": "Attachment",
+					"defaultValue": "null",
+					"externalReferenceCode": "dc13368a-6c97-1846-a549-e48ac6754f52",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Tax Receipt"
+					},
+					"localized": false,
+					"name": "taxReceipt",
+					"objectFieldSettings": [
+						{
+							"name": "acceptedFileExtensions",
+							"value": "jpeg, jpg, pdf, png"
+						},
+						{
+							"name": "maximumFileSize",
+							"value": 0
+						},
+						{
+							"name": "fileSource",
+							"value": "userComputer"
+						},
+						{
+							"name": "showFilesInDocumentsAndMedia",
+							"value": false
+						}
+					],
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": false,
+					"state": false,
+					"system": false,
+					"type": "Long",
+					"unique": false
+				}
+			],
+			"objectFolderExternalReferenceCode": "EXPENSE_REQUESTS",
+			"objectLayouts": [
+			],
+			"objectRelationships": [
+			],
+			"objectValidationRules": [
+				{
+					"active": true,
+					"engine": "ddm",
+					"engineLabel": "Expression Builder",
+					"errorLabel": {
+						"en_US": "The value should be positive."
+					},
+					"externalReferenceCode": "8387935c-2205-96a8-6812-11201d5ce186",
+					"name": {
+						"en_US": "Expense Request Amount"
+					},
+					"objectDefinitionExternalReferenceCode": "df341f29-2061-a1b2-97b0-8a7ff3807a98",
+					"objectValidationRuleSettings": [
+						{
+							"name": "outputObjectFieldExternalReferenceCode",
+							"value": "14886608-1ffa-bd1b-66f1-4de566eac654"
+						}
+					],
+					"outputType": "partialValidation",
+					"script": "amount > 0",
+					"system": false
+				},
+				{
+					"active": true,
+					"engine": "ddm",
+					"engineLabel": "Expression Builder",
+					"errorLabel": {
+						"en_US": "The date should be a past date."
+					},
+					"externalReferenceCode": "dbb93cfc-86cc-994b-d6bd-84c644158f63",
+					"name": {
+						"en_US": "Expense Request Date"
+					},
+					"objectDefinitionExternalReferenceCode": "df341f29-2061-a1b2-97b0-8a7ff3807a98",
+					"objectValidationRuleSettings": [
+					],
+					"outputType": "fullValidation",
+					"script": "pastDates(expenseDate, currentDate)",
+					"system": false
+				}
+			],
+			"objectViews": [
+			],
+			"panelCategoryKey": "control_panel.object",
+			"parameterRequired": false,
+			"pluralLabel": {
+				"en_US": "Expense Requests"
+			},
+			"portlet": true,
+			"restContextPath": "/o/c/expenserequests",
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": false,
+			"titleObjectFieldName": "title"
+		}
+	]
+}
