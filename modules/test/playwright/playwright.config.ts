@@ -7,6 +7,7 @@ import {ReporterDescription, defineConfig, devices} from '@playwright/test';
 
 import 'dotenv/config';
 
+import {config as reimbursementConfig} from "./tests/workspaces/liferay-reimbursement-workspace/main/config";
 import {config as accessibilityMenuWeb} from './tests/accessibility-menu-web/main/config';
 import {config as accountAdminWebConfig} from './tests/account-admin-web/main/config';
 import {config as addressWebConfig} from './tests/address-web/main/config';
@@ -181,6 +182,7 @@ export default defineConfig({
 	forbidOnly: !!process.env.CI,
 	globalTimeout: 60 * 60 * 1000,
 	projects: [
+		reimbursementConfig,
 		accessibilityMenuWeb,
 		accountAdminWebConfig,
 		addressWebConfig,
