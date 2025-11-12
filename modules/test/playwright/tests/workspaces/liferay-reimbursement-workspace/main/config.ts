@@ -4,6 +4,6 @@
  */
 
 export const config = {
-	name: 'liferay-reimbursement-workspace.main',
+	name: 'reimbursement-site-initializer.main',
 	testDir: 'tests/workspaces/liferay-reimbursement-workspace/main',
 };
