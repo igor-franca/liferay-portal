@@ -1,0 +1,94 @@
+{
+	"configuration": {
+		"className": "com.liferay.headless.admin.user.dto.v1_0.Role",
+		"parameters": {
+			"containsHeaders": "true",
+			"createStrategy": "UPSERT",
+			"onErrorFail": "false",
+			"taskItemDelegateName": "DEFAULT",
+			"updateStrategy": "UPDATE"
+		}
+	},
+	"items": [
+		{
+			"description": "Expense Approvers are responsible for the final review and approval of employees expensses",
+			"externalReferenceCode": "EXPENSE_APPROVER",
+			"name": "Expense Approver",
+			"rolePermissions": [
+				{
+					"actionIds": [
+						"VIEW"
+					],
+					"primaryKey": "[$COMPANY_ID$]",
+					"resourceName": "com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet_B7O6",
+					"scope": 1
+				},
+				{
+					"actionIds": [
+						"VIEW"
+					],
+					"primaryKey": "[$COMPANY_ID$]",
+					"resourceName": "com.liferay.object.model.ObjectDefinition#B7O6",
+					"scope": 1
+				},
+				{
+					"actionIds": [
+						"VIEW"
+					],
+					"primaryKey": "[$COMPANY_ID$]",
+					"resourceName": "com_liferay_portal_workflow_task_web_portlet_MyWorkflowTaskPortlet",
+					"scope": 1
+				}
+			],
+			"roleType": "regular"
+		},
+		{
+			"description": "Employees are able to submit expense requests",
+			"externalReferenceCode": "EMPLOYEE",
+			"name": "Employee",
+			"rolePermissions": [
+				{
+					"actionIds": [
+						"VIEW"
+					],
+					"primaryKey": "[$COMPANY_ID$]",
+					"resourceName": "com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet_B7O6",
+					"scope": 1
+				},
+				{
+					"actionIds": [
+						"ACCESS_IN_CONTROL_PANEL"
+					],
+					"primaryKey": "[$COMPANY_ID$]",
+					"resourceName": "com_liferay_object_web_internal_object_definitions_portlet_ObjectDefinitionsPortlet_B7O6",
+					"scope": 1
+				},
+				{
+					"actionIds": [
+						"VIEW"
+					],
+					"primaryKey": "[$COMPANY_ID$]",
+					"resourceName": "com.liferay.object.model.ObjectDefinition#B7O6",
+					"scope": 1
+				},
+				{
+					"actionIds": [
+						"VIEW"
+					],
+					"primaryKey": "[$COMPANY_ID$]",
+					"resourceName": "com.liferay.object.model.ObjectDefinition#B7O6",
+					"scope": 1
+				},
+				{
+					"actionIds": [
+						"UPDATE"
+					],
+					"primaryKey": "[$COMPANY_ID$]",
+					"resourceName": "com.liferay.object.model.ObjectDefinition#B7O6",
+					"scope": 1
+				}
+			],
+			"roleType": "regular"
+		}
+	]
+}
