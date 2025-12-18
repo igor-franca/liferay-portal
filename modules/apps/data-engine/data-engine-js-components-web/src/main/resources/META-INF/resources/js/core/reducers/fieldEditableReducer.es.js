@@ -12,6 +12,7 @@ import {
 	removeField,
 	updatePagesOnFieldChange,
 } from '../../utils/fieldSupport';
+import {normalizeFieldName} from '../../utils/fields.es';
 import {formatRules} from '../../utils/rulesSupport';
 import {
 	setFieldErrorMessage,
@@ -661,6 +662,8 @@ export default function fieldEditableReducer(state, action, config) {
 				settingsContextPages
 			);
 
+			let updatedPages;
+
 			settingsContextVisitor.mapFields(({fieldName, value}) => {
 				newFocusedField = updateFieldProperty({
 					defaultLanguageId,
@@ -672,11 +675,38 @@ export default function fieldEditableReducer(state, action, config) {
 					propertyName: fieldName,
 					propertyValue: value,
 				});
+
+				if (
+					fieldName === 'name' &&
+					normalizeFieldName(value) !== focusedField.fieldName
+				) {
+					updatedPages = updatePagesOnFieldChange(pages, {
+						fieldUpdateContext: {
+							defaultLanguageId,
+							editingLanguageId,
+							fieldNameGenerator,
+							generateFieldNameUsingFieldLabel,
+						},
+						focusedField,
+						newFocusedField,
+						propertyName: fieldName,
+						propertyValue: value,
+						repeatableHandler: (field) =>
+							updateFieldAffectedByActivatingRepeatable({
+								defaultLanguageId,
+								editingLanguageId,
+								field,
+								fieldNameGenerator,
+								generateFieldNameUsingFieldLabel,
+								repeatableFieldName: newFocusedField.fieldName,
+							}),
+					});
+				}
 			});
 
-			const visitor = new PagesVisitor(pages);
+			const visitor = new PagesVisitor(updatedPages || pages);
 
-			const newPages = visitor.mapFields(
+			updatedPages = visitor.mapFields(
 				(field) => {
 					if (field.fieldName !== fieldName.value) {
 						return field;
@@ -692,7 +722,7 @@ export default function fieldEditableReducer(state, action, config) {
 
 			return {
 				focusedField: newFocusedField,
-				pages: newPages,
+				pages: updatedPages,
 				rules: updateRulesReferences(
 					rules || [],
 					focusedField,

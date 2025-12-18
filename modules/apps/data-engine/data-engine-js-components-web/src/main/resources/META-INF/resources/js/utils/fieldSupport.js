@@ -621,7 +621,9 @@ export function updatePagesOnFieldChange(
 							if (nestedFieldName === focusedField.fieldName) {
 								updateColumn = true;
 
-								return newFocusedField.fieldName;
+								return normalizeFieldName(
+									newFocusedField.fieldName
+								);
 							}
 
 							return nestedFieldName;
