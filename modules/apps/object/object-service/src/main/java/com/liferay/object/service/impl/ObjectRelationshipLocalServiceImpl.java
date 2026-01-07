@@ -6,7 +6,6 @@
 package com.liferay.object.service.impl;
 
 import com.liferay.info.collection.provider.RelatedInfoItemCollectionProvider;
-import com.liferay.object.constants.ObjectDefinitionConstants;
 import com.liferay.object.constants.ObjectFieldConstants;
 import com.liferay.object.constants.ObjectFieldSettingConstants;
 import com.liferay.object.constants.ObjectRelationshipConstants;
@@ -15,7 +14,6 @@ import com.liferay.object.definition.util.ObjectDefinitionUtil;
 import com.liferay.object.exception.DuplicateObjectRelationshipException;
 import com.liferay.object.exception.DuplicateObjectRelationshipExternalReferenceCodeException;
 import com.liferay.object.exception.NoSuchObjectRelationshipException;
-import com.liferay.object.exception.ObjectDefinitionScopeException;
 import com.liferay.object.exception.ObjectEntryGroupIdException;
 import com.liferay.object.exception.ObjectRelationshipDeletionTypeException;
 import com.liferay.object.exception.ObjectRelationshipEdgeException;
@@ -2105,25 +2103,25 @@ public class ObjectRelationshipLocalServiceImpl
 		}
 	}
 
-	private void _validateScope(
-			ObjectDefinition objectDefinition1,
-			ObjectDefinition objectDefinition2)
-		throws PortalException {
+	// private void _validateScope(
+	// 		ObjectDefinition objectDefinition1,
+	// 		ObjectDefinition objectDefinition2)
+	// 	throws PortalException {
 
-		if ((StringUtil.equals(
-				objectDefinition1.getScope(),
-				ObjectDefinitionConstants.SCOPE_DEPOT) ||
-			 StringUtil.equals(
-				 objectDefinition2.getScope(),
-				 ObjectDefinitionConstants.SCOPE_DEPOT)) &&
-			!StringUtil.equals(
-				objectDefinition1.getScope(), objectDefinition2.getScope())) {
+	// 	if ((StringUtil.equals(
+	// 			objectDefinition1.getScope(),
+	// 			ObjectDefinitionConstants.SCOPE_DEPOT) ||
+	// 		 StringUtil.equals(
+	// 			 objectDefinition2.getScope(),
+	// 			 ObjectDefinitionConstants.SCOPE_DEPOT)) &&
+	// 		!StringUtil.equals(
+	// 			objectDefinition1.getScope(), objectDefinition2.getScope())) {
 
-			throw new ObjectDefinitionScopeException(
-				"An object definition scoped by depot can only be related to " +
-					"object definitions of the same scope");
-		}
-	}
+	// 		throw new ObjectDefinitionScopeException(
+	// 			"An object definition scoped by depot can only be related to " +
+	// 				"object definitions of the same scope");
+	// 	}
+	// }
 
 	private void _validateType(
 			ObjectDefinition objectDefinition1,
