@@ -76,8 +76,7 @@ public class ViewProjectInfoSummarySectionDisplayContext {
 				AssetTagLocalServiceUtil.getTags(
 					_objectEntry.getModelClassName(),
 					_objectEntry.getObjectEntryId()),
-				AssetTag.NAME_ACCESSOR
-			)
+				AssetTag.NAME_ACCESSOR)
 		).build();
 	}
 
