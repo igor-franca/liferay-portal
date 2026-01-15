@@ -10,6 +10,7 @@ import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.layout.display.page.LayoutDisplayPageObjectProvider;
 import com.liferay.layout.display.page.constants.LayoutDisplayPageWebKeys;
 import com.liferay.object.model.ObjectEntry;
+import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.model.ClassName;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
@@ -34,7 +35,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Igor Franca
  */
 @Component(service = FragmentRenderer.class)
-public class ViewAssigneeFieldComponentFragmentRenderer
+public class ViewAssigneeFieldComponentSectionFragmentRenderer
 	extends BaseComponentSectionFragmentRenderer {
 
 	@Override
@@ -68,7 +69,7 @@ public class ViewAssigneeFieldComponentFragmentRenderer
 				WebKeys.THEME_DISPLAY);
 
 		return HashMapBuilder.<String, Object>put(
-			"label", "Assignee"
+			"label", _language.get(themeDisplay.getLocale(), "assignee")
 		).put(
 			"name", "ObjectField_assignTo"
 		).put(
@@ -102,8 +103,12 @@ public class ViewAssigneeFieldComponentFragmentRenderer
 				Map<String, Long> assignTo = (Map<String, Long>)values.get(
 					"assignTo");
 
-				ClassName className = _classNameLocalService.getClassName(
+				ClassName className = _classNameLocalService.fetchClassName(
 					assignTo.get("classNameId"));
+
+				if(className == null) {
+					return null;
+				}
 
 				if (StringUtil.equals(
 						className.getClassName(), Role.class.getName())) {
@@ -146,5 +151,8 @@ public class ViewAssigneeFieldComponentFragmentRenderer
 
 	@Reference
 	private UserLocalService _userLocalService;
+
+	@Reference
+	private Language _language;
 
 }
