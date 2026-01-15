@@ -11,6 +11,10 @@ import com.liferay.list.type.service.ListTypeEntryLocalService;
 import com.liferay.object.model.ObjectEntry;
 import com.liferay.object.service.ObjectFieldLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.Language;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
+import com.liferay.portal.kernel.service.RoleLocalService;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.site.cmp.site.initializer.internal.display.context.ViewTaskInfoSummarySectionDisplayContext;
@@ -44,8 +48,11 @@ public class ViewTaskInfoSummaryJSPSectionFragmentRenderer
 		}
 
 		return new ViewTaskInfoSummarySectionDisplayContext(
+			_classNameLocalService,
+			_language,
 			_listTypeEntryLocalService, (ObjectEntry)object,
 			_objectFieldLocalService,
+			_roleLocalService, _userLocalService,
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY));
 	}
@@ -65,5 +72,17 @@ public class ViewTaskInfoSummaryJSPSectionFragmentRenderer
 
 	@Reference
 	private ObjectFieldLocalService _objectFieldLocalService;
+
+	@Reference
+	private ClassNameLocalService _classNameLocalService;
+
+	@Reference
+	private RoleLocalService _roleLocalService;
+
+	@Reference
+	private UserLocalService _userLocalService;
+
+	@Reference
+	private Language _language;
 
 }
