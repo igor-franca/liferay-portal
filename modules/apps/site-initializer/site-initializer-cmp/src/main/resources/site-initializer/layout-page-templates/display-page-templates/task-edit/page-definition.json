@@ -231,7 +231,7 @@
 													{
 														"definition": {
 															"fragment": {
-																"key": "com.liferay.site.cmp.site.initializer.internal.fragment.renderer.ViewAssigneeFieldComponentFragmentRenderer"
+																"key": "com.liferay.site.cmp.site.initializer.internal.fragment.renderer.ViewAssigneeFieldComponentSectionFragmentRenderer"
 															},
 															"fragmentFields": [
 															],
