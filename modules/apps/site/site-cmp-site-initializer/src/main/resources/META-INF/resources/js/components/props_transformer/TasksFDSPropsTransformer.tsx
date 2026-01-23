@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {IInternalRenderer} from '@liferay/frontend-data-set-web';
+import {IInternalRenderer, IView} from '@liferay/frontend-data-set-web';
 import {AssigneeValue} from '@liferay/object-dynamic-data-mapping-form-field-type';
 import {
 	ACTIONS,
@@ -18,6 +18,7 @@ import {openCMPModal} from '../../utils/openCMPModal';
 import StateLabel from '../StateLabel';
 import EditAssigneeModalContent from '../modal/EditAssigneeModalContent';
 import {cmpTasksFDSAtom} from './atoms';
+import KanbanView from './views/kanban_view/KanbanView';
 
 type action = {
 	data: {
@@ -66,13 +67,41 @@ interface ItemData {
 export default function TasksFDSPropsTransformer({
 	additionalProps,
 	creationMenu,
+	id,
 	itemsActions = [],
+	views,
 	...otherProps
 }: {
 	additionalProps: AdditionalProps;
 	creationMenu: any;
+	id: string;
 	itemsActions?: any[];
+	views: IView[];
 }) {
+	const nonDefaultViews = views.map((view) => {
+		return {
+			...view,
+			default: false,
+		};
+	});
+
+	const kanbanView: IView = {
+		component: (props: any) => KanbanView({...props, additionalProps}),
+		dataSetId: id,
+		default: false,
+		label: Liferay.Language.get('kanban'),
+		name: 'kanban',
+		schema: {
+			description: 'description',
+			image: 'imageURL',
+			link: '',
+			sticker: '',
+			symbol: '',
+			title: 'embedded.title',
+		},
+		thumbnail: 'columns',
+	};
+
 	return {
 		...otherProps,
 		atom: cmpTasksFDSAtom,
@@ -104,6 +133,7 @@ export default function TasksFDSPropsTransformer({
 				} as IInternalRenderer,
 			],
 		},
+		id,
 		itemsActions: itemsActions.map((action) => {
 			if (action?.data?.id === 'delete') {
 				return {
@@ -146,5 +176,6 @@ export default function TasksFDSPropsTransformer({
 				});
 			}
 		},
+		views: [...nonDefaultViews, kanbanView],
 	};
 }

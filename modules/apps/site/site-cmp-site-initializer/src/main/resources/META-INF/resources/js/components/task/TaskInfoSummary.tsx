@@ -5,6 +5,7 @@
 
 import Label from '@clayui/label';
 import {AssigneeValue} from '@liferay/object-dynamic-data-mapping-form-field-type';
+import {displayErrorToast} from '@liferay/site-cms-site-initializer';
 import React from 'react';
 
 import {patchTaskById} from '../../utils/api';
@@ -52,15 +53,19 @@ export default function TaskInfoSummary({
 						<StateSelector
 							initialSelectedKey={initialState}
 							onChange={async (key: string) => {
-								const response = await patchTaskById({
+								const {error} = await patchTaskById({
 									body: {state: key},
 									taskId,
 								});
 
-								if (response.ok) {
+								if (!error) {
 									displayStateSuccessToast();
 								}
+								else {
+									displayErrorToast(error);
+								}
 							}}
+							small
 							states={states}
 						/>
 					),
@@ -70,16 +75,19 @@ export default function TaskInfoSummary({
 					value: (
 						<CustomAssignee
 							onChange={async (value: AssigneeValue | {}) => {
-								const response = await patchTaskById({
+								const {error} = await patchTaskById({
 									body: {assignTo: value},
 									taskId,
 								});
 
-								if (response.ok) {
+								if (!error) {
 									displayAssignSuccessToast(
 										title,
 										(value as AssigneeValue).name
 									);
+								}
+								else {
+									displayErrorToast(error);
 								}
 							}}
 							showLabel={false}
