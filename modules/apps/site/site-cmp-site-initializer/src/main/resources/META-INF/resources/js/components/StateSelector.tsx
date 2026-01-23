@@ -10,27 +10,12 @@ import React, {LegacyRef, useState} from 'react';
 import './StateSelector.scss';
 
 import Label from '@clayui/label';
+import {mapLabelToLabelDisplayType} from '../utils/constants';
 
 export interface State {
 	key: string;
 	name: string;
 }
-
-declare type LabelDisplayType =
-	| 'secondary'
-	| 'info'
-	| 'warning'
-	| 'danger'
-	| 'success'
-	| 'unstyled';
-
-const mapLabelToLabelDisplayType: {[key: string]: LabelDisplayType} = {
-	'Blocked': 'danger',
-	'Done': 'success',
-	'In Progress': 'info',
-	'Not Started': 'secondary',
-	'Overdue': 'warning',
-};
 
 const Trigger = React.forwardRef(
 	(
