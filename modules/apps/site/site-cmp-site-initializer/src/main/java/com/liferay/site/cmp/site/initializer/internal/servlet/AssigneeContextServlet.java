@@ -121,7 +121,9 @@ public class AssigneeContextServlet extends HttpServlet {
 					"externalReferenceCode",
 					document.getString("externalReferenceCode")
 				).put(
-					"image",
+					"name", name
+				).put(
+					"portrait",
 					() -> {
 						if (!StringUtil.equals(type, "User")) {
 							return null;
@@ -136,8 +138,6 @@ public class AssigneeContextServlet extends HttpServlet {
 
 						return user.getPortraitURL(themeDisplay);
 					}
-				).put(
-					"name", name
 				).put(
 					"type", type
 				));
