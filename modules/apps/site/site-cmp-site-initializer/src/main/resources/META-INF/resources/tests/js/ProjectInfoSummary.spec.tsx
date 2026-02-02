@@ -36,6 +36,6 @@ describe('ProjectInfoSummary', () => {
 		expect(getByText('2023-12-31')).toBeInTheDocument();
 		expect(getByText('tag1')).toBeInTheDocument();
 		expect(getByText('tag2')).toBeInTheDocument();
-		expect(getByText('Not Started')).toBeInTheDocument();
+		expect(getByText('not-started')).toBeInTheDocument();
 	});
 });
