@@ -3,18 +3,14 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect} from 'react';
 
-import {
-	KANBAN_COLUMN_ORDER,
-	mapStateKeyToDisplayType,
-	mapStateKeyToIcon,
-	mapStateKeyToLabel,
-} from '../../../../utils/constants';
-import {IColumn, IItemsActions, ITask} from '../../../../utils/types';
+import {patchTaskById} from '../../../../utils/api';
+import {IItemsActions, ITask} from '../../../../utils/types';
 import {UPDATE_TASKS_QUICK_FILTER_VISIBILITY} from '../../../task/TasksQuickFilters';
 import Board from './components/Board';
 import {KanbanViewContext} from './context';
+import {useOptimisticBoard} from './hooks/useOptimisticBoard';
 
 interface KanbanViewProps {
 	dataSetId: string;
@@ -22,36 +18,28 @@ interface KanbanViewProps {
 	itemsActions: IItemsActions[];
 }
 
-function mapByStateCode(items: ITask[]): {[key: string]: IColumn} {
-	const boardData: {[name: string]: IColumn} = {};
-
-	KANBAN_COLUMN_ORDER.forEach((stateKey) => {
-		boardData[stateKey] = {
-			displayType: mapStateKeyToDisplayType[stateKey],
-			icon: mapStateKeyToIcon[stateKey],
-			key: stateKey,
-			name: mapStateKeyToLabel[stateKey],
-			tasks: [],
-		};
-	});
-
-	items.forEach((item: ITask) => {
-		const {
-			state: {key},
-		} = item.embedded;
-
-		if (boardData[key]) {
-			boardData[key].tasks.push(item);
-		}
-	});
-
-	return boardData;
-}
-
 function KanbanView(props: KanbanViewProps) {
-	const [boardData] = useState(mapByStateCode(props.items));
+	const handleApiCall = useCallback(
+		async (task: ITask, newStatus: {key: string; name: string}) => {
+			return await patchTaskById({
+				body: {state: newStatus.key},
+				taskId: String(task.embedded.id),
+			});
+		},
+		[]
+	);
 
-	const changeTaskStatus = useCallback(() => {}, []);
+	const {boardData, moveTask} = useOptimisticBoard(
+		props.items,
+		handleApiCall
+	);
+
+	const changeTaskStatus = useCallback(
+		(task: ITask, newStatus: {key: string; name: string}) => {
+			moveTask(task, newStatus);
+		},
+		[moveTask]
+	);
 
 	useEffect(() => {
 		Liferay.fire(UPDATE_TASKS_QUICK_FILTER_VISIBILITY, {visible: false});
