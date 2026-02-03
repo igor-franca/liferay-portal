@@ -11,6 +11,7 @@ export {default as FieldText} from './common/components/forms/FieldText';
 export {default as FieldWrapper} from './common/components/forms/FieldWrapper';
 export {required, validate} from './common/components/forms/validations';
 export {default as ApiHelper} from './common/services/ApiHelper';
+export {IAssetObjectEntry} from './common/types/AssetType';
 export {
 	displayCreateSuccessToast,
 	displayCreateTaskErrorToast,
@@ -22,7 +23,6 @@ export {
 	displaySystemErrorToast,
 	displayNameInUseErrorToast,
 } from './common/utils/toastUtil';
-export {IAssetObjectEntry} from './common/types/AssetType';
 
 export {default as ContentEditorSidePanel} from './content_editor/components/ContentEditorSidePanel';
 
