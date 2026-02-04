@@ -1623,7 +1623,10 @@ const FrontendDataSetContent = ({
 		);
 
 	const paginationComponent =
-		(activeView.showPagination ?? showPagination) && pagination && items?.length && total ? (
+		(activeView.showPagination ?? showPagination) &&
+		pagination &&
+		items?.length &&
+		total ? (
 			<div className="data-set-pagination-wrapper">
 				<ClayPaginationBarWithBasicItems
 					active={pageNumber}
