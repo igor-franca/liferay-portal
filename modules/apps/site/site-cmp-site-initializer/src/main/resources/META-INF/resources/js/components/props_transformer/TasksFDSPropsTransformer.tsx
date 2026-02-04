@@ -118,6 +118,7 @@ export default function TasksFDSPropsTransformer({
 		default: false,
 		label: Liferay.Language.get('kanban'),
 		name: 'kanban',
+		paginationDelta: -1,
 		schema: {
 			description: 'description',
 			image: 'imageURL',
@@ -126,6 +127,7 @@ export default function TasksFDSPropsTransformer({
 			symbol: '',
 			title: 'embedded.title',
 		},
+		showPagination: false,
 		thumbnail: 'columns',
 	};
 
