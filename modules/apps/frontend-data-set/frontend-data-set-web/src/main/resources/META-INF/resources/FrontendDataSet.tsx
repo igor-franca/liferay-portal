@@ -761,13 +761,14 @@ const FrontendDataSetContent = ({
 			additionalAPIURLParameters,
 			apiURL,
 			currentURL,
-			delta: paginationDelta,
+			delta: activeView.paginationDelta ?? paginationDelta,
 			odataFiltersStrings: activeFiltersOdataStrings,
 			page: pageNumber,
 			searchParam: unfrozenGlobalFDSState.search.query,
 			sorts: activeSorts,
 		});
 	}, [
+		activeView.name,
 		additionalAPIURLParameters,
 		apiURL,
 		currentURL,
@@ -1597,7 +1598,7 @@ const FrontendDataSetContent = ({
 		);
 
 	const paginationComponent =
-		showPagination && pagination && items?.length && total ? (
+		(activeView.showPagination ?? showPagination) && pagination && items?.length && total ? (
 			<div className="data-set-pagination-wrapper">
 				<ClayPaginationBarWithBasicItems
 					active={pageNumber}
