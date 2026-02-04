@@ -276,8 +276,10 @@ export interface IView {
 	default?: boolean;
 	label?: string;
 	name?: string;
+	paginationDelta?: number;
 	schema?: ISchema;
 	setItemComponentProps?: ({item, props}: {item: any; props: any}) => any;
+	showPagination?: boolean;
 	thumbnail?: string;
 	views?: Array<any>;
 }
