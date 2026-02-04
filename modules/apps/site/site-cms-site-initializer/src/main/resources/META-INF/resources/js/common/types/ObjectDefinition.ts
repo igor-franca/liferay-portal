@@ -28,7 +28,7 @@ export type ObjectField = {
 	listTypeDefinitionId?: number;
 	localized: boolean;
 	name: string;
-	objectFieldSettings?: {name: string; value: boolean | string | number}[];
+	objectFieldSettings?: {name: string; value: boolean | string | number | StateFlowValue}[];
 	required: boolean;
 	system: boolean;
 };
@@ -85,3 +85,14 @@ export type ObjectDefinitions = Record<
 	ObjectDefinition['externalReferenceCode'],
 	ObjectDefinition
 >;
+
+export type StateFlowValue = {
+	id: number;
+	objectStates:{
+		id: number;
+		key: string;
+		objectStateTransitions: {
+			key: string;
+		}[];
+	}[]
+}
