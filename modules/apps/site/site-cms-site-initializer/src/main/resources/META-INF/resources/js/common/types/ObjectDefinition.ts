@@ -28,7 +28,10 @@ export type ObjectField = {
 	listTypeDefinitionId?: number;
 	localized: boolean;
 	name: string;
-	objectFieldSettings?: {name: string; value: boolean | string | number | StateFlowValue}[];
+	objectFieldSettings?: {
+		name: string;
+		value: boolean | string | number | StateFlowValue;
+	}[];
 	required: boolean;
 	system: boolean;
 };
@@ -88,11 +91,11 @@ export type ObjectDefinitions = Record<
 
 export type StateFlowValue = {
 	id: number;
-	objectStates:{
+	objectStates: {
 		id: number;
 		key: string;
 		objectStateTransitions: {
 			key: string;
 		}[];
-	}[]
-}
+	}[];
+};

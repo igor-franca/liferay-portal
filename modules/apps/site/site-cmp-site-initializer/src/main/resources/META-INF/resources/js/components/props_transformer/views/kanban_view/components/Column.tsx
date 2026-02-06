@@ -6,9 +6,12 @@
 import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
 import {Col} from '@clayui/layout';
+import {
+	ObjectField,
+	StateFlowValue,
+} from '@liferay/site-cms-site-initializer/src/main/resources/META-INF/resources/js/common/types/ObjectDefinition';
 import React, {useContext, useEffect, useState} from 'react';
 import {useDrop} from 'react-dnd';
-import {ObjectField, StateFlowValue} from '@liferay/site-cms-site-initializer/src/main/resources/META-INF/resources/js/common/types/ObjectDefinition';
 
 import {getStateObjectField} from '../../../../../utils/api';
 import {openCMPModal} from '../../../../../utils/openCMPModal';
@@ -42,10 +45,14 @@ export default function Column({
 	const [stateFlow, setStateFlow] = useState<StateFlowValue>();
 
 	const canTransition = (taskStateKey: string) => {
-		const {objectStateTransitions} = stateFlow?.objectStates.find(({key}) => key === taskStateKey)!;
+		const {objectStateTransitions} = stateFlow?.objectStates.find(
+			({key}) => key === taskStateKey
+		)!;
 
-		return objectStateTransitions.some(({key: transitionsKey}) => transitionsKey === key);
-	}
+		return objectStateTransitions.some(
+			({key: transitionsKey}) => transitionsKey === key
+		);
+	};
 
 	const [{canDrop, isOver}, drop] = useDrop({
 		accept: ItemTypes.TASK,
@@ -67,20 +74,23 @@ export default function Column({
 
 	useEffect(() => {
 		const makeFetch = async () => {
-			const {data} = await getStateObjectField() as {data: {items: ObjectField[]}};
+			const {data} = (await getStateObjectField()) as {
+				data: {items: ObjectField[]};
+			};
 
 			const objectFieldSettings = data.items[0].objectFieldSettings;
-			
-			const setting = objectFieldSettings!.find(({name}) => name === "stateFlow")!;
+
+			const setting = objectFieldSettings!.find(
+				({name}) => name === 'stateFlow'
+			)!;
 
 			const value = setting.value as StateFlowValue;
 
-			//@ts-ignore
 			setStateFlow(value);
-		}
+		};
 
 		makeFetch();
-	}, [])
+	}, []);
 
 	return (
 		<div className="lfr__kaban-view-column" ref={drop}>
