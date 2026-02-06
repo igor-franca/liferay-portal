@@ -49,7 +49,11 @@ export default function Column({
 
 	const [{canDrop, isOver}, drop] = useDrop({
 		accept: ItemTypes.TASK,
-		canDrop: ({task: {embedded}}: DragItem) => {
+		canDrop: ({task: {actions, embedded}}: DragItem) => {
+			if (!actions.update) {
+				return false;
+			}
+
 			const taskStateKey = embedded.state.key;
 
 			return taskStateKey !== key && canTransition(taskStateKey);
