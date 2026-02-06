@@ -13,6 +13,7 @@ import {
 	mapStateKeyToLabel,
 } from '../../../../../utils/constants';
 import {IColumn, ITask} from '../../../../../utils/types';
+import {displayStateSuccessToast} from '../../../../../utils/toastUtil';
 
 function mapByStateCode(items: ITask[]): {[key: string]: IColumn} {
 	const boardData: {[name: string]: IColumn} = {};
@@ -125,6 +126,8 @@ export function useOptimisticBoard(
 						return serverTask;
 					})
 				);
+
+				displayStateSuccessToast();
 			}
 			catch (error) {
 
