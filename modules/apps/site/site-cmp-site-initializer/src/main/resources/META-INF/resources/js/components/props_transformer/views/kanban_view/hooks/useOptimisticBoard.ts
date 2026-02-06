@@ -12,8 +12,8 @@ import {
 	mapStateKeyToIcon,
 	mapStateKeyToLabel,
 } from '../../../../../utils/constants';
-import {IColumn, ITask} from '../../../../../utils/types';
 import {displayStateSuccessToast} from '../../../../../utils/toastUtil';
+import {IColumn, ITask} from '../../../../../utils/types';
 
 function mapByStateCode(items: ITask[]): {[key: string]: IColumn} {
 	const boardData: {[name: string]: IColumn} = {};
