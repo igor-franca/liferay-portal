@@ -13,6 +13,7 @@ import {KanbanViewContext} from './context';
 import {useOptimisticBoard} from './hooks/useOptimisticBoard';
 
 interface KanbanViewProps {
+	currentURL: string;
 	dataSetId: string;
 	items: ITask[];
 	itemsActions: IItemsActions[];
@@ -54,6 +55,7 @@ function KanbanView(props: KanbanViewProps) {
 			value={{
 				boardData,
 				changeTaskStatus,
+				currentURL: props.currentURL,
 				dataSetId: props.dataSetId,
 				itemsActions: props.itemsActions,
 			}}

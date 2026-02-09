@@ -16,6 +16,7 @@ interface IKanbanContext {
 			name: string;
 		}
 	) => void;
+	currentURL: string;
 	dataSetId: string;
 	itemsActions: IItemsActions[];
 }
