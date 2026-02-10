@@ -39,11 +39,17 @@ jest.mock('@liferay/frontend-data-set-web', () => ({
 const mockGetUserAccount = jest.fn();
 const mockPatchTaskById = jest.fn();
 const mockDeleteTaskById = jest.fn();
+const mockPostSubscribeTaskByExternalReferenceCode = jest.fn();
+const mockPostUnsubscribeTaskByExternalReferenceCode = jest.fn();
 
 jest.mock('../../js/utils/api', () => ({
 	deleteTaskById: (...args: any[]) => mockDeleteTaskById(...args),
 	getUserAccount: (...args: any[]) => mockGetUserAccount(...args),
 	patchTaskById: (...args: any[]) => mockPatchTaskById(...args),
+	postSubscribeTaskByExternalReferenceCode: (...args: any[]) =>
+		mockPostSubscribeTaskByExternalReferenceCode(...args),
+	postUnsubscribeTaskByExternalReferenceCode: (...args: any[]) =>
+		mockPostUnsubscribeTaskByExternalReferenceCode(...args),
 }));
 
 const mockOpenCMPModal = jest.fn();
@@ -63,9 +69,12 @@ jest.mock('../../js/utils/toastUtil', () => ({
 }));
 
 const mockDisplayErrorToast = jest.fn();
+const mockDisplayRequestSuccessToast = jest.fn();
 
 jest.mock('@liferay/site-cms-site-initializer', () => ({
 	displayErrorToast: (...args: any[]) => mockDisplayErrorToast(...args),
+	displayRequestSuccessToast: (...args: any[]) =>
+		mockDisplayRequestSuccessToast(...args),
 }));
 
 afterEach(() => {
@@ -74,10 +83,15 @@ afterEach(() => {
 
 describe('Kanban Task', () => {
 	const task = {
+		actions: {
+			subscribe: true,
+		},
 		embedded: {
 			assignTo: {name: 'Alice', portrait: 'p.jpg'},
 			cmpProjectToCMPTasks: {title: 'Project A'},
+			externalReferenceCode: 'erc-1',
 			id: 42,
+			scopeId: 1,
 			state: {key: 'in-progress', name: 'In Progress'},
 			title: 'Task title',
 		},
@@ -203,6 +217,111 @@ describe('Kanban Task', () => {
 
 		await waitFor(() => {
 			expect(mockDisplayErrorToast).toHaveBeenCalledWith('error');
+		});
+	});
+
+	describe('watch-task', () => {
+		it('watches a task successfully', async () => {
+			mockPostSubscribeTaskByExternalReferenceCode.mockResolvedValue({
+				error: null,
+			});
+
+			const {getByText} = renderTask();
+
+			fireEvent.click(getByText('watch-task'));
+
+			await waitFor(() => {
+				expect(
+					mockPostSubscribeTaskByExternalReferenceCode
+				).toHaveBeenCalledWith({
+					externalReferenceCode: 'erc-1',
+					scopeId: 1,
+				});
+				expect((global as any).Liferay.fire).toHaveBeenCalled();
+				expect(mockDisplayRequestSuccessToast).toHaveBeenCalled();
+			});
+		});
+
+		it('shows an error toast when watch task fails', async () => {
+			mockPostSubscribeTaskByExternalReferenceCode.mockResolvedValue({
+				error: 'error',
+			});
+
+			const {getByText} = renderTask();
+
+			fireEvent.click(getByText('watch-task'));
+
+			await waitFor(() => {
+				expect(mockDisplayErrorToast).toHaveBeenCalledWith('error');
+			});
+		});
+	});
+
+	describe('stop-watching-task', () => {
+		const taskWithSubscription = {
+			...task,
+			actions: {
+				subscribe: false,
+			},
+		};
+
+		it('stops watching a task successfully', async () => {
+			mockPostUnsubscribeTaskByExternalReferenceCode.mockResolvedValue({
+				error: null,
+			});
+
+			const {getByText} = render(
+				<KanbanViewContext.Provider
+					value={{
+						boardData: {},
+						changeTaskStatus: jest.fn(),
+						currentURL: '',
+						dataSetId: '',
+						itemsActions: [],
+					}}
+				>
+					<Task {...taskWithSubscription} />
+				</KanbanViewContext.Provider>
+			);
+
+			fireEvent.click(getByText('stop-watching-task'));
+
+			await waitFor(() => {
+				expect(
+					mockPostUnsubscribeTaskByExternalReferenceCode
+				).toHaveBeenCalledWith({
+					externalReferenceCode: 'erc-1',
+					scopeId: 1,
+				});
+				expect((global as any).Liferay.fire).toHaveBeenCalled();
+				expect(mockDisplayRequestSuccessToast).toHaveBeenCalled();
+			});
+		});
+
+		it('shows an error toast when stop watching task fails', async () => {
+			mockPostUnsubscribeTaskByExternalReferenceCode.mockResolvedValue({
+				error: 'error',
+			});
+
+			const {getByText} = render(
+				<KanbanViewContext.Provider
+					value={{
+						boardData: {},
+						changeTaskStatus: jest.fn(),
+						currentURL: '',
+						dataSetId: '',
+						itemsActions: [],
+					}}
+				>
+					<Task {...taskWithSubscription} />
+				</KanbanViewContext.Provider>
+			);
+
+			fireEvent.click(getByText('stop-watching-task'));
+
+			await waitFor(() => {
+				expect(mockDisplayErrorToast).toHaveBeenCalledWith('error');
+			});
 		});
 	});
 });
