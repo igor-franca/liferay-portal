@@ -29,6 +29,13 @@ jest.mock('@clayui/drop-down', () => ({
 	),
 }));
 
+jest.mock('@liferay/frontend-data-set-web', () => ({
+	...((jest.requireActual('@liferay/frontend-data-set-web') ?? {}) as any),
+	DateRenderer: ({value}: {value: string}) => (
+		<span>Formatted Date: {value}</span>
+	),
+}));
+
 const mockGetUserAccount = jest.fn();
 const mockPatchTaskById = jest.fn();
 const mockDeleteTaskById = jest.fn();
@@ -76,12 +83,16 @@ describe('Kanban Task', () => {
 		},
 	} as any;
 
-	const renderTask = (itemsActions: any[] = []) =>
+	const renderTask = (
+		itemsActions: any[] = [],
+		currentURL = 'http://localhost/tasks'
+	) =>
 		render(
 			<KanbanViewContext.Provider
 				value={{
 					boardData: {},
 					changeTaskStatus: jest.fn(),
+					currentURL,
 					dataSetId: 'dataSetId',
 					itemsActions,
 				}}
@@ -142,7 +153,36 @@ describe('Kanban Task', () => {
 		expect(mockOpenCMPModal).toHaveBeenCalledTimes(1);
 	});
 
-	it('renders task content', () => {
+	it('renders due date when currentURL contains "project"', () => {
+		const taskWithDueDate = {
+			...task,
+			embedded: {
+				...task.embedded,
+				dueDate: '2023-12-25T14:00:00Z',
+			},
+		};
+
+		const {getByText, queryByText} = render(
+			<KanbanViewContext.Provider
+				value={{
+					boardData: {},
+					changeTaskStatus: jest.fn(),
+					currentURL: 'http://localhost/project/123',
+					dataSetId: 'dataSetId',
+					itemsActions: [],
+				}}
+			>
+				<Task {...taskWithDueDate} />
+			</KanbanViewContext.Provider>
+		);
+
+		expect(
+			getByText('Formatted Date: 2023-12-25T14:00:00Z')
+		).toBeInTheDocument();
+		expect(queryByText('Project A')).not.toBeInTheDocument();
+	});
+
+	it('renders project title when the currentURL does not contain "project"', () => {
 		const {getByText} = renderTask();
 
 		expect(getByText('Task title')).toBeInTheDocument();
