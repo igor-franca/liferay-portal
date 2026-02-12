@@ -122,7 +122,8 @@ export default function TasksFDSPropsTransformer({
 	});
 
 	const kanbanView: IView = {
-		component: (props: any) => KanbanView({...props}),
+		component: (props: any) =>
+			KanbanView({...props, projectId: additionalProps.projectId}),
 		default: false,
 		label: Liferay.Language.get('kanban'),
 		name: 'kanban',
