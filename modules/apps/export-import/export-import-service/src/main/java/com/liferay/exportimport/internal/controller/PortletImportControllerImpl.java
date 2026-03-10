@@ -339,7 +339,10 @@ public class PortletImportControllerImpl implements PortletImportController {
 		PortletPreferencesIds portletPreferencesIds = null;
 		jakarta.portlet.PortletPreferences jxPortletPreferences = null;
 
-		if (!portletDataHandler.isBatch()) {
+		if (!portletDataHandler.isBatch() &&
+			(!portlet.isPreferencesUniquePerLayout() ||
+			 (portletDataContext.getPlid() != PortletKeys.PREFS_PLID_SHARED))) {
+
 			portletPreferencesIds =
 				_portletPreferencesFactory.getPortletPreferencesIds(
 					portletDataContext.getCompanyId(),
