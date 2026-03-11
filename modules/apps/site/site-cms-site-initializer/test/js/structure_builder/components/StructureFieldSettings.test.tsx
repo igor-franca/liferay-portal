@@ -399,7 +399,7 @@ describe('StructureFieldSettings', () => {
 		).not.toBeInTheDocument();
 
 		await userEvent.click(
-			screen.getByLabelText('show-files-in-documents-and-media')
+			screen.getByLabelText('show-files-in-cms-library')
 		);
 
 		expect(MOCK_DISPATCH).toHaveBeenCalledWith({
