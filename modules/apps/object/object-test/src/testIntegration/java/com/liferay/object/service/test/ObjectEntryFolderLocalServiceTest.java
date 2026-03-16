@@ -202,7 +202,6 @@ public class ObjectEntryFolderLocalServiceTest {
 		Assert.assertTrue(
 			_hasResourcePermission(
 				ActionKeys.ADD_ENTRY, objectEntryFolder, role));
-
 		Assert.assertTrue(
 			_hasResourcePermission(
 				ObjectActionKeys.ADD_OBJECT_ENTRY_FOLDER, objectEntryFolder,
@@ -215,7 +214,6 @@ public class ObjectEntryFolderLocalServiceTest {
 		Assert.assertTrue(
 			_hasResourcePermission(
 				ActionKeys.ADD_ENTRY, objectEntryFolder, role));
-
 		Assert.assertTrue(
 			_hasResourcePermission(
 				ObjectActionKeys.ADD_OBJECT_ENTRY_FOLDER, objectEntryFolder,
@@ -234,7 +232,6 @@ public class ObjectEntryFolderLocalServiceTest {
 		Assert.assertFalse(
 			_hasResourcePermission(
 				ActionKeys.ADD_ENTRY, objectEntryFolder, role));
-
 		Assert.assertFalse(
 			_hasResourcePermission(
 				ObjectActionKeys.ADD_OBJECT_ENTRY_FOLDER, objectEntryFolder,
@@ -251,7 +248,6 @@ public class ObjectEntryFolderLocalServiceTest {
 		Assert.assertTrue(
 			_hasResourcePermission(
 				ActionKeys.ADD_ENTRY, objectEntryFolder, role));
-
 		Assert.assertTrue(
 			_hasResourcePermission(
 				ObjectActionKeys.ADD_OBJECT_ENTRY_FOLDER, objectEntryFolder,
