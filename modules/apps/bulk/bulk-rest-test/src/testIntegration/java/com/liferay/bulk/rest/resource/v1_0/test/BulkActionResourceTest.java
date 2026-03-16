@@ -282,10 +282,10 @@ public class BulkActionResourceTest extends BaseBulkActionResourceTestCase {
 	}
 
 	private void _assertHasActionIds(
-		List<String> actionIds, ResourcePermission resourcePermission) {
+		ResourcePermission resourcePermission, String... actionIds) {
 
 		for (String actionId : _ACTION_IDS) {
-			if (actionIds.contains(actionId)) {
+			if (ArrayUtil.contains(actionIds, actionId)) {
 				Assert.assertTrue(
 					"Action " + actionId + " should be granted.",
 					resourcePermission.hasActionId(actionId));
@@ -1428,7 +1428,7 @@ public class BulkActionResourceTest extends BaseBulkActionResourceTestCase {
 				String.valueOf(objectEntry1.getObjectEntryId()),
 				role.getRoleId());
 
-		_assertHasActionIds(List.of(ActionKeys.VIEW), resourcePermission);
+		_assertHasActionIds(resourcePermission, ActionKeys.VIEW);
 
 		resourcePermission =
 			_resourcePermissionLocalService.getResourcePermission(
@@ -1437,7 +1437,7 @@ public class BulkActionResourceTest extends BaseBulkActionResourceTestCase {
 				String.valueOf(objectEntry2.getObjectEntryId()),
 				role.getRoleId());
 
-		_assertHasActionIds(List.of(ActionKeys.VIEW), resourcePermission);
+		_assertHasActionIds(resourcePermission, ActionKeys.VIEW);
 	}
 
 	private void _testPostBulkActionWithTypePermissionSingleRole()
@@ -1542,8 +1542,8 @@ public class BulkActionResourceTest extends BaseBulkActionResourceTestCase {
 				role1.getRoleId());
 
 		_assertHasActionIds(
-			List.of(ActionKeys.DELETE, ActionKeys.UPDATE, ActionKeys.VIEW),
-			resourcePermission);
+			resourcePermission, ActionKeys.DELETE, ActionKeys.UPDATE,
+			ActionKeys.VIEW);
 
 		resourcePermission =
 			_resourcePermissionLocalService.getResourcePermission(
@@ -1552,7 +1552,7 @@ public class BulkActionResourceTest extends BaseBulkActionResourceTestCase {
 				String.valueOf(objectEntry1.getObjectEntryId()),
 				role2.getRoleId());
 
-		_assertHasActionIds(List.of(ActionKeys.VIEW), resourcePermission);
+		_assertHasActionIds(resourcePermission, ActionKeys.VIEW);
 
 		resourcePermission =
 			_resourcePermissionLocalService.getResourcePermission(
@@ -1563,10 +1563,9 @@ public class BulkActionResourceTest extends BaseBulkActionResourceTestCase {
 				role1.getRoleId());
 
 		_assertHasActionIds(
-			List.of(
-				ActionKeys.ADD_ENTRY, ObjectActionKeys.ADD_OBJECT_ENTRY_FOLDER,
-				ActionKeys.PERMISSIONS, ActionKeys.SUBSCRIBE),
-			resourcePermission);
+			resourcePermission, ActionKeys.ADD_ENTRY,
+			ObjectActionKeys.ADD_OBJECT_ENTRY_FOLDER, ActionKeys.PERMISSIONS,
+			ActionKeys.SUBSCRIBE);
 
 		resourcePermission =
 			_resourcePermissionLocalService.getResourcePermission(
@@ -1576,7 +1575,7 @@ public class BulkActionResourceTest extends BaseBulkActionResourceTestCase {
 				String.valueOf(objectEntryFolder2.getObjectEntryFolderId()),
 				role2.getRoleId());
 
-		_assertHasActionIds(List.of(ActionKeys.VIEW), resourcePermission);
+		_assertHasActionIds(resourcePermission, ActionKeys.VIEW);
 	}
 
 	private void _testPostBulkActionWithTypeResetPermission() throws Exception {
@@ -1717,7 +1716,7 @@ public class BulkActionResourceTest extends BaseBulkActionResourceTestCase {
 				_cmsAdministratorRole.getRoleId());
 
 		_assertHasActionIds(
-			List.of(ActionKeys.UPDATE, ActionKeys.VIEW), resourcePermission);
+			resourcePermission, ActionKeys.UPDATE, ActionKeys.VIEW);
 
 		resourcePermission =
 			_resourcePermissionLocalService.getResourcePermission(
@@ -1728,10 +1727,8 @@ public class BulkActionResourceTest extends BaseBulkActionResourceTestCase {
 				_cmsAdministratorRole.getRoleId());
 
 		_assertHasActionIds(
-			List.of(
-				ActionKeys.ADD_ENTRY, ObjectActionKeys.ADD_OBJECT_ENTRY_FOLDER,
-				ActionKeys.SUBSCRIBE),
-			resourcePermission);
+			resourcePermission, ActionKeys.ADD_ENTRY,
+			ObjectActionKeys.ADD_OBJECT_ENTRY_FOLDER, ActionKeys.SUBSCRIBE);
 
 		ObjectDefinition objectDefinition2 =
 			_objectDefinitionLocalService.
@@ -1830,8 +1827,7 @@ public class BulkActionResourceTest extends BaseBulkActionResourceTestCase {
 				_cmsAdministratorRole.getRoleId());
 
 		_assertHasActionIds(
-			List.of(ActionKeys.DELETE, ActionKeys.PERMISSIONS),
-			resourcePermission);
+			resourcePermission, ActionKeys.DELETE, ActionKeys.PERMISSIONS);
 
 		resourcePermission =
 			_resourcePermissionLocalService.getResourcePermission(
@@ -1842,10 +1838,8 @@ public class BulkActionResourceTest extends BaseBulkActionResourceTestCase {
 				_cmsAdministratorRole.getRoleId());
 
 		_assertHasActionIds(
-			List.of(
-				ActionKeys.ADD_ENTRY, ObjectActionKeys.ADD_OBJECT_ENTRY_FOLDER,
-				ActionKeys.SUBSCRIBE),
-			resourcePermission);
+			resourcePermission, ActionKeys.ADD_ENTRY,
+			ObjectActionKeys.ADD_OBJECT_ENTRY_FOLDER, ActionKeys.SUBSCRIBE);
 	}
 
 	private void _testPostBulkActionWithTypeTaxonomyCategory()
