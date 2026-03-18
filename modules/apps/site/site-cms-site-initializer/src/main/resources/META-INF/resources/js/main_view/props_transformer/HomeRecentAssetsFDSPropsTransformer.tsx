@@ -123,7 +123,7 @@ export default function HomeRecentAssetsFDSPropsTransformer({
 					additionalProps.assetLibraries,
 					itemData,
 					loadData,
-					additionalProps.objectEntryFolderExternalReferenceCode,
+					'',
 					additionalProps.rootObjectEntryFolderExternalReferenceCode ||
 						additionalProps.parentObjectEntryFolderExternalReferenceCode
 				);
