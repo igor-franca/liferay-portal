@@ -117,11 +117,6 @@ public abstract class BaseSectionDisplayContext {
 
 	public Map<String, Object> getAdditionalProps() {
 		return HashMapBuilder.<String, Object>put(
-			"assetLibraries",
-			_sectionDisplayContextHelper.getDepotEntriesJSONArray(
-				httpServletRequest,
-				getRootObjectEntryFolderExternalReferenceCode())
-		).put(
 			"autocompleteURL",
 			() -> StringBundler.concat(
 				"/o/search/v1.0/search?emptySearch=",
@@ -147,6 +142,11 @@ public abstract class BaseSectionDisplayContext {
 			"brokenLinksCheckerEnabled",
 			GetterUtil.getBoolean(
 				PropsUtil.get(PropsKeys.CMS_BROKEN_LINKS_CHECKER_ENABLED))
+		).put(
+			"candidateAssetLibraries",
+			_sectionDisplayContextHelper.getDepotEntriesJSONArray(
+				httpServletRequest,
+				getRootObjectEntryFolderExternalReferenceCode())
 		).put(
 			"cmsGroupId",
 			() -> {
