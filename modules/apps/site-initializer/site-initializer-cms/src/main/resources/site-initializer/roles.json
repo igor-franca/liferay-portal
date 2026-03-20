@@ -193,11 +193,16 @@
 			},
 			{
 				"actionId": "VIEW",
-				"resource": "com.liferay.portal.kernel.model.Role",
+				"resource": "com.liferay.portal.kernel.model.Group",
 				"scope": 1
 			},
 			{
 				"actionId": "VIEW",
+				"resource": "com.liferay.portal.kernel.model.Role",
+				"scope": 1
+			},
+			{
+				"actionId": "UPDATE",
 				"resource": "com.liferay.portal.kernel.model.User",
 				"scope": 1
 			},
