@@ -10,7 +10,7 @@
  */
 
 module.exports = {
-	hash: 'fb71c1d0fa8aa201fc6e49a8daaac91acea6f99def7e979bb3cb9dadce86028f',
+	hash: '2f0eb48c11a7d20a08d9715fa7514a6a82f108b1ced5b1f852d0c57b23344a48',
 	imports: {
 		'@liferay/accessibility-menu-web': [],
 		'@liferay/accessibility-settings-state-web': [],
@@ -176,6 +176,7 @@ module.exports = {
 			'numeral',
 			'object-hash',
 			'qs',
+			'react-router',
 			'react-text-mask',
 			'text-mask-addons',
 			'text-mask-core',
