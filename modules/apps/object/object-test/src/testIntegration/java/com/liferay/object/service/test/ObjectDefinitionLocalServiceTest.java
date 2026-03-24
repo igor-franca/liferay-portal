@@ -315,6 +315,27 @@ public class ObjectDefinitionLocalServiceTest {
 						getName()));
 		}
 
+		// Depot scoped object definitions cannot have a panel category key
+
+		AssertUtils.assertFailure(
+			ObjectDefinitionScopeException.class,
+			"Scope \"depot\" cannot be associated with a panel category key",
+			() -> _objectDefinitionLocalService.addCustomObjectDefinition(
+				null, TestPropsValues.getUserId(), 0, null, false, true, false,
+				true, false, false, false, false, null,
+				LocalizedMapUtil.getLocalizedMap(RandomTestUtil.randomString()),
+				"Test", null, "site_administration.content",
+				LocalizedMapUtil.getLocalizedMap(RandomTestUtil.randomString()),
+				true, ObjectDefinitionConstants.SCOPE_DEPOT,
+				ObjectDefinitionConstants.STORAGE_TYPE_DEFAULT,
+				Collections.emptyList(),
+				Arrays.asList(
+					ObjectFieldUtil.createObjectField(
+						ObjectFieldConstants.BUSINESS_TYPE_TEXT,
+						ObjectFieldConstants.DB_TYPE_STRING,
+						RandomTestUtil.randomString(), StringUtil.randomId())),
+				Collections.emptyList(), new ServiceContext()));
+
 		// Enable form container
 
 		objectDefinition =
