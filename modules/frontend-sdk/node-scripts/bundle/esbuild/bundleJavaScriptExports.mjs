@@ -76,6 +76,9 @@ async function bundle(
 		entryNames: '[dir]/[name].([hash])',
 		entryPoints: [entryPoint],
 		format: 'esm',
+		loader: {
+			'.ttf': 'file',
+		},
 		outdir: BUILD_MAIN_EXPORTS_PATH,
 		plugins: [
 			getLinkerPlugin(
