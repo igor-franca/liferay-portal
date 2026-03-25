@@ -221,19 +221,23 @@ public class CMSObjectEntryFolderDepotEntryLocalServiceWrapper
 			DepotRolesConstants.ASSET_LIBRARY_ADMINISTRATOR,
 			new String[] {
 				ActionKeys.ADD_DISCUSSION, ActionKeys.DELETE,
-				ActionKeys.DELETE_DISCUSSION, ActionKeys.PERMISSIONS,
-				ActionKeys.UPDATE, ActionKeys.UPDATE_DISCUSSION, ActionKeys.VIEW
+				ActionKeys.DELETE_DISCUSSION, ActionKeys.DOWNLOAD,
+				ActionKeys.PERMISSIONS, ActionKeys.UPDATE,
+				ActionKeys.UPDATE_DISCUSSION, ActionKeys.VIEW
 			}
 		).put(
 			DepotRolesConstants.ASSET_LIBRARY_CONTENT_REVIEWER,
 			new String[] {
 				ActionKeys.ADD_DISCUSSION, ActionKeys.DELETE,
-				ActionKeys.DELETE_DISCUSSION, ActionKeys.PERMISSIONS,
-				ActionKeys.UPDATE, ActionKeys.UPDATE_DISCUSSION, ActionKeys.VIEW
+				ActionKeys.DELETE_DISCUSSION, ActionKeys.DOWNLOAD,
+				ActionKeys.PERMISSIONS, ActionKeys.UPDATE,
+				ActionKeys.UPDATE_DISCUSSION, ActionKeys.VIEW
 			}
 		).put(
 			DepotRolesConstants.ASSET_LIBRARY_MEMBER,
-			new String[] {ActionKeys.ADD_DISCUSSION, ActionKeys.VIEW}
+			new String[] {
+				ActionKeys.ADD_DISCUSSION, ActionKeys.DOWNLOAD, ActionKeys.VIEW
+			}
 		).put(
 			RoleConstants.CMS_ADMINISTRATOR, actionIds
 		).put(
