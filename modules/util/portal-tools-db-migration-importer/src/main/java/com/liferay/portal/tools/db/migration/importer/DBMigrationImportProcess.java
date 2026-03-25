@@ -172,7 +172,8 @@ public class DBMigrationImportProcess {
 									_targetUser, partitionName);
 
 							new DBCopyTablesProcess(
-								sourceDataSource, targetDataSource
+								partitionName, sourceDataSource,
+								targetDataSource
 							).run();
 
 							_dataSourceInfos.add(
