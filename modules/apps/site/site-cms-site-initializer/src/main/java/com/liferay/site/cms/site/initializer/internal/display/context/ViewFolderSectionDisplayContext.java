@@ -267,6 +267,7 @@ public class ViewFolderSectionDisplayContext extends BaseSectionDisplayContext {
 			super.getFDSActionDropdownItems();
 
 		fdsActionDropdownItems.add(
+			6,
 			new FDSActionDropdownItem(
 				"{embedded.file.link.href}", "download", "download",
 				LanguageUtil.get(httpServletRequest, "download"), "get", null,
@@ -277,6 +278,7 @@ public class ViewFolderSectionDisplayContext extends BaseSectionDisplayContext {
 				ObjectEntryFolderConstants.EXTERNAL_REFERENCE_CODE_CONTENTS)) {
 
 			fdsActionDropdownItems.add(
+				7,
 				new FDSActionDropdownItem(
 					StringBundler.concat(
 						"/o", GroupConstants.CMS_FRIENDLY_URL,
@@ -292,6 +294,7 @@ public class ViewFolderSectionDisplayContext extends BaseSectionDisplayContext {
 		}
 
 		fdsActionDropdownItems.add(
+			9,
 			new FDSActionDropdownItem(
 				StringPool.BLANK, "info-circle-open", "show-details",
 				LanguageUtil.get(httpServletRequest, "show-details"), null,
