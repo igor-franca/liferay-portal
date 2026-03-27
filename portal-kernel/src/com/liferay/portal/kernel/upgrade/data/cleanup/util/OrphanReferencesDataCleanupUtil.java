@@ -195,27 +195,28 @@ public class OrphanReferencesDataCleanupUtil {
 				sourceColumnName, " != ''");
 		}
 
+		String additionalWhereClause = StringBundler.concat(
+			_SOURCE_TABLE_ALIAS + StringPool.PERIOD + sourceColumnName,
+			" is not null", additionalNullCheck,
+			(sourceAdditionalWhereClause != null) ?
+				" and " + sourceAdditionalWhereClause : "");
+
 		String whereClause = null;
 
 		if ((db.getDBType() == DBType.MARIADB) ||
 			(db.getDBType() == DBType.MYSQL)) {
 
 			whereClause = _getMySQLWhereClause(
-				customJoinClauses, dbInspector, sourceColumnName,
-				sourceTableName, targetColumnNames, targetTableName);
+				additionalWhereClause, customJoinClauses, dbInspector,
+				sourceColumnName, sourceTableName, targetColumnNames,
+				targetTableName);
 		}
 		else {
 			whereClause = _getOtherDBsWhereClause(
-				customJoinClauses, dbInspector, sourceColumnName,
-				sourceTableName, targetColumnNames, targetTableName);
+				additionalWhereClause, customJoinClauses, dbInspector,
+				sourceColumnName, sourceTableName, targetColumnNames,
+				targetTableName);
 		}
-
-		whereClause = StringBundler.concat(
-			whereClause, " and ",
-			_SOURCE_TABLE_ALIAS + StringPool.PERIOD + sourceColumnName,
-			" is not null", additionalNullCheck,
-			(sourceAdditionalWhereClause != null) ?
-				" and " + sourceAdditionalWhereClause : "");
 
 		return StringUtil.replace(
 			whereClause, "[$SOURCE_TABLE_ALIAS$]", _SOURCE_TABLE_ALIAS);
@@ -277,13 +278,14 @@ public class OrphanReferencesDataCleanupUtil {
 	}
 
 	private static String _getMySQLWhereClause(
-		String[] customJoinClauses, DBInspector dbInspector,
-		String sourceColumnName, String sourceTableName,
-		String[] targetColumnNames, String targetTableName) {
+		String additionalWhereClause, String[] customJoinClauses,
+		DBInspector dbInspector, String sourceColumnName,
+		String sourceTableName, String[] targetColumnNames,
+		String targetTableName) {
 
 		int index = 0;
 		StringBundler sb = new StringBundler(
-			(17 * targetColumnNames.length) + 1);
+			(17 * targetColumnNames.length) + 3);
 
 		for (String targetColumnName : targetColumnNames) {
 			String aliasTableName =
@@ -334,6 +336,8 @@ public class OrphanReferencesDataCleanupUtil {
 		}
 
 		sb.append(" where ");
+		sb.append(additionalWhereClause);
+		sb.append(" and ");
 
 		for (String targetColumnName : targetColumnNames) {
 			String aliasTableName =
@@ -353,14 +357,17 @@ public class OrphanReferencesDataCleanupUtil {
 	}
 
 	private static String _getOtherDBsWhereClause(
-		String[] customJoinClauses, DBInspector dbInspector,
-		String sourceColumnName, String sourceTableName,
-		String[] targetColumnNames, String targetTableName) {
+		String additionalWhereClause, String[] customJoinClauses,
+		DBInspector dbInspector, String sourceColumnName,
+		String sourceTableName, String[] targetColumnNames,
+		String targetTableName) {
 
 		StringBundler sb = new StringBundler(
-			(8 * targetColumnNames.length) + 5);
+			(8 * targetColumnNames.length) + 10);
 
-		sb.append(" where not exists (select 1 from ");
+		sb.append(" where ");
+		sb.append(additionalWhereClause);
+		sb.append(" and not exists (select 1 from ");
 		sb.append(targetTableName);
 		sb.append(" where (");
 
