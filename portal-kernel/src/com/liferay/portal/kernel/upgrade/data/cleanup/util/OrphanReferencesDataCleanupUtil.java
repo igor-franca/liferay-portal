@@ -179,6 +179,8 @@ public class OrphanReferencesDataCleanupUtil {
 			String targetTableName)
 		throws Exception {
 
+		String whereClause = null;
+
 		String additionalNullCheck = "";
 
 		DB db = DBManagerUtil.getDB();
@@ -200,8 +202,6 @@ public class OrphanReferencesDataCleanupUtil {
 			" is not null", additionalNullCheck,
 			(sourceAdditionalWhereClause != null) ?
 				" and " + sourceAdditionalWhereClause : "");
-
-		String whereClause = null;
 
 		if ((db.getDBType() == DBType.MARIADB) ||
 			(db.getDBType() == DBType.MYSQL)) {
