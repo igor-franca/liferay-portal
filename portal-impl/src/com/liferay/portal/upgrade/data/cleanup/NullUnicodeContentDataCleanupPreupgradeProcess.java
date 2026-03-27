@@ -45,6 +45,7 @@ public class NullUnicodeContentDataCleanupPreupgradeProcess
 		String likeClause = "%\\\\u0000%";
 
 		if ((db.getDBType() == DBType.DB2) ||
+			(db.getDBType() == DBType.HYPERSONIC) ||
 			(db.getDBType() == DBType.ORACLE) ||
 			(db.getDBType() == DBType.SQLSERVER)) {
 
