@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import java.io.File;
 import java.io.IOException;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -186,7 +185,7 @@ public class AutoDeployDir {
 				 fileName.endsWith(".war") || fileName.endsWith(".xml") ||
 				 fileName.endsWith(".zip"))) {
 
-				processFile(file);
+				_processFile(file);
 			}
 		}
 	}
@@ -236,7 +235,38 @@ public class AutoDeployDir {
 		return autoDeploymentContext;
 	}
 
-	protected void processFile(File file) {
+	private static boolean _isModule(File file) throws AutoDeployException {
+		Manifest manifest = null;
+
+		try (JarFile jarFile = new JarFile(file)) {
+			manifest = jarFile.getManifest();
+		}
+		catch (IOException ioException) {
+			throw new AutoDeployException(ioException);
+		}
+
+		if (manifest == null) {
+			return false;
+		}
+
+		Attributes attributes = manifest.getMainAttributes();
+
+		String bundleSymbolicName = attributes.getValue("Bundle-SymbolicName");
+
+		if (bundleSymbolicName == null) {
+			return false;
+		}
+
+		int index = bundleSymbolicName.indexOf(CharPool.SEMICOLON);
+
+		if (index != -1) {
+			bundleSymbolicName = bundleSymbolicName.substring(0, index);
+		}
+
+		return !bundleSymbolicName.isEmpty();
+	}
+
+	private void _processFile(File file) {
 		String fileName = file.getName();
 
 		if (!file.canRead()) {
@@ -287,37 +317,6 @@ public class AutoDeployDir {
 		_blacklistFileTimestamps.put(fileName, file.lastModified());
 	}
 
-	private static boolean _isModule(File file) throws AutoDeployException {
-		Manifest manifest = null;
-
-		try (JarFile jarFile = new JarFile(file)) {
-			manifest = jarFile.getManifest();
-		}
-		catch (IOException ioException) {
-			throw new AutoDeployException(ioException);
-		}
-
-		if (manifest == null) {
-			return false;
-		}
-
-		Attributes attributes = manifest.getMainAttributes();
-
-		String bundleSymbolicName = attributes.getValue("Bundle-SymbolicName");
-
-		if (bundleSymbolicName == null) {
-			return false;
-		}
-
-		int index = bundleSymbolicName.indexOf(CharPool.SEMICOLON);
-
-		if (index != -1) {
-			bundleSymbolicName = bundleSymbolicName.substring(0, index);
-		}
-
-		return !bundleSymbolicName.isEmpty();
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(AutoDeployDir.class);
 
 	private static AutoDeployScanner _autoDeployScanner;
@@ -328,7 +327,8 @@ public class AutoDeployDir {
 	private static final Pattern _versionPattern = Pattern.compile(
 		"-[\\d]+((\\.[\\d]+)+(-.+)*)\\.war$");
 
-	private final Map<String, Long> _blacklistFileTimestamps = new ConcurrentHashMap<>();
+	private final Map<String, Long> _blacklistFileTimestamps =
+		new ConcurrentHashMap<>();
 	private final File _deployDir;
 	private final long _interval;
 	private final String _name;
