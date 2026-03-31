@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {expect, mergeTests} from '@playwright/test';
+import {Locator, expect, mergeTests} from '@playwright/test';
 
 import {featureFlagsTest} from '../../../../../fixtures/featureFlagsTest';
 import {loginTest} from '../../../../../fixtures/loginTest';
@@ -112,54 +112,58 @@ test(
 	'Editor can be disabled/enabled',
 	{tag: '@LPD-80293'},
 	async ({classicPage, page}) => {
-		const editorContainer = page.locator('.lfr-ck');
-		const externalDisableButton = page.getByRole('button', {
-			name: 'Toggle disabled prop',
+		let imageButton: Locator;
+		let toggleDisableEditorButton: Locator;
+		let videoButton: Locator;
+
+		await test.step('Initial data is set', async () => {
+			await expect(
+				classicPage.editable.getByText('Lorem ipsum dolor sit amet')
+			).toBeVisible();
 		});
-		const imageToolbarButton = classicPage.toolbar.container.getByRole(
-			'button',
-			{
+
+		await test.step('"Toggle editor ReadOnly mode" button is present', async () => {
+			toggleDisableEditorButton = page.getByRole('button', {
+				name: 'Toggle editor ReadOnly mode',
+			});
+
+			await expect(toggleDisableEditorButton).toBeVisible();
+		});
+
+		await test.step('Editor toolbar buttons are enabled', async () => {
+			imageButton = classicPage.toolbar.container.getByRole('button', {
 				name: 'Image',
-			}
-		);
-		const internalDisableButton = page.getByRole('button', {
-			name: 'Toggle internal read-only mode',
+			});
+
+			await expect(imageButton).toBeEnabled();
+
+			videoButton = classicPage.toolbar.container.getByRole('button', {
+				name: 'Video',
+			});
+
+			await expect(videoButton).toBeEnabled();
 		});
 
-		async function assertEditorDisabled() {
-			await expect(imageToolbarButton).not.toBeEnabled();
+		await test.step('Click in the "Toggle editor ReadOnly mode" disables the editor: toolbar and content', async () => {
+			await toggleDisableEditorButton.click();
 
-			await expect(editorContainer).toHaveClass(/lfr-ck-disabled/);
-		}
+			await classicPage.toolbar.container.waitFor();
 
-		async function assertEditorEnabled() {
-			await expect(imageToolbarButton).toBeEnabled();
+			await expect(imageButton).toBeDisabled();
+			await expect(videoButton).toBeDisabled();
 
-			await expect(editorContainer).not.toHaveClass(/lfr-ck-disabled/);
-		}
-
-		await test.step('Initially, editor is enabled', async () => {
-			await assertEditorEnabled();
+			await expect(page.locator('.lfr-ck-disabled')).toBeInViewport();
 		});
 
-		await test.step('Disable editor through prop', async () => {
-			await externalDisableButton.click();
+		await test.step('Click in the "Toggle editor ReadOnly mode" enables the editor: toolbar and content', async () => {
+			await toggleDisableEditorButton.click();
 
-			await assertEditorDisabled();
+			await classicPage.toolbar.container.waitFor();
 
-			await externalDisableButton.click();
+			await expect(imageButton).toBeEnabled();
+			await expect(videoButton).toBeEnabled();
 
-			await assertEditorEnabled();
-		});
-
-		await test.step('Disable editor by changing internal read-only mode', async () => {
-			await internalDisableButton.click();
-
-			await assertEditorDisabled();
-
-			await internalDisableButton.click();
-
-			await assertEditorEnabled();
+			await expect(page.locator('.lfr-ck-disabled')).not.toBeInViewport();
 		});
 	}
 );
