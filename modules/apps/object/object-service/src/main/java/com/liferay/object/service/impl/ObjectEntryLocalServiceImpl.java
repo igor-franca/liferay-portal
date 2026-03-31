@@ -234,6 +234,7 @@ import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.BigDecimalUtil;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.FileUtil;
@@ -460,7 +461,11 @@ public class ObjectEntryLocalServiceImpl
 		_setRootObjectEntryId(objectDefinition, objectEntry, values);
 		_setDisplayDate(objectDefinition.getCompanyId(), objectEntry, values);
 
-		if (ExportImportThreadLocal.isImportInProcess()) {
+		boolean copy = StringUtil.equals(
+			GetterUtil.getString(serviceContext.getAttribute(Constants.ACTION)),
+			Constants.COPY);
+
+		if (ExportImportThreadLocal.isImportInProcess() || copy) {
 			if (status == WorkflowConstants.STATUS_EXPIRED) {
 				objectEntry.setExpirationDate(
 					(Date)values.get("expirationDate"));
@@ -531,7 +536,9 @@ public class ObjectEntryLocalServiceImpl
 			objectDefinition.getClassName(), objectEntry.getObjectEntryId(),
 			serviceContext);
 
-		_deleteTempFileEntries(dlFileEntriesMap);
+		if (!copy) {
+			_deleteTempFileEntries(dlFileEntriesMap);
+		}
 
 		objectEntry = _addObjectEntryVersion(objectDefinition, objectEntry);
 
@@ -724,23 +731,32 @@ public class ObjectEntryLocalServiceImpl
 
 		ObjectEntry objectEntry = getObjectEntry(objectEntryId);
 
-		ObjectEntryFolder objectEntryFolder =
-			_objectEntryFolderPersistence.findByPrimaryKey(objectEntryFolderId);
+		long groupId = objectEntry.getGroupId();
+
+		if (objectEntryFolderId !=
+				ObjectEntryFolderConstants.
+					PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT) {
+
+			ObjectEntryFolder objectEntryFolder =
+				_objectEntryFolderPersistence.findByPrimaryKey(
+					objectEntryFolderId);
+
+			groupId = objectEntryFolder.getGroupId();
+		}
 
 		_checkObjectDefinitionScope(
-			objectEntry.getObjectDefinitionId(),
-			objectEntryFolder.getGroupId());
+			objectEntry.getObjectDefinitionId(), groupId);
 
 		ObjectDefinition objectDefinition =
 			_objectDefinitionPersistence.findByPrimaryKey(
 				objectEntry.getObjectDefinitionId());
 
 		_removeInvalidAssetCategories(
-			objectEntryFolder.getGroupId(), objectDefinition.getClassName(),
-			objectEntryId, serviceContext);
+			groupId, objectDefinition.getClassName(), objectEntryId,
+			serviceContext);
 		_removeInvalidAssetTags(
-			objectEntryFolder.getGroupId(), objectDefinition.getClassName(),
-			objectEntryId, serviceContext);
+			groupId, objectDefinition.getClassName(), objectEntryId,
+			serviceContext);
 
 		List<ObjectField> objectFields =
 			_objectFieldLocalService.getCustomObjectFields(
@@ -761,10 +777,12 @@ public class ObjectEntryLocalServiceImpl
 
 		values.put("externalReferenceCode", null);
 
+		serviceContext.setAttribute(Constants.ACTION, Constants.COPY);
+
 		return addObjectEntry(
-			objectEntryFolder.getGroupId(), userId,
-			objectDefinition.getObjectDefinitionId(), objectEntryFolderId,
-			objectEntry.getDefaultLanguageId(), values, serviceContext);
+			groupId, userId, objectDefinition.getObjectDefinitionId(),
+			objectEntryFolderId, objectEntry.getDefaultLanguageId(), values,
+			serviceContext);
 	}
 
 	@Override
@@ -2579,16 +2597,6 @@ public class ObjectEntryLocalServiceImpl
 		if (Objects.equals(
 				dlFileEntryFolder.getFolderId(), dlFolder.getFolderId())) {
 
-			if (Validator.isNull(dlFileEntry.getClassName()) ||
-				(dlFileEntry.getClassPK() <= 0)) {
-
-				dlFileEntry.setClassName(objectDefinition.getClassName());
-				dlFileEntry.setClassPK(objectEntryId);
-
-				dlFileEntry = _dlFileEntryLocalService.updateDLFileEntry(
-					dlFileEntry);
-			}
-
 			return;
 		}
 
@@ -3255,7 +3263,7 @@ public class ObjectEntryLocalServiceImpl
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(
 				StringBundler.concat(
-					"select count(*) from ",
+					"select count(*) as count from ",
 					dynamicObjectDefinitionTable.getTableName(), " where ",
 					dynamicObjectDefinitionTable.getPrimaryKeyColumnName(),
 					" = ?"))) {
@@ -3265,7 +3273,7 @@ public class ObjectEntryLocalServiceImpl
 			try (ResultSet resultSet = preparedStatement.executeQuery()) {
 				resultSet.next();
 
-				return resultSet.getInt(1);
+				return resultSet.getInt("count");
 			}
 		}
 		catch (SQLException sqlException) {
@@ -5398,8 +5406,8 @@ public class ObjectEntryLocalServiceImpl
 		Connection connection = _currentConnection.getConnection(
 			objectEntryPersistence.getDataSource());
 
-		try (PreparedStatement preparedStatement = connection.prepareStatement(
-				sql)) {
+		try (PreparedStatement preparedStatement =
+				AutoBatchPreparedStatementUtil.autoBatch(connection, sql)) {
 
 			for (Locale locale : locales) {
 				String languageId = LocaleUtil.toLanguageId(locale);
@@ -5811,7 +5819,6 @@ public class ObjectEntryLocalServiceImpl
 				dynamicQuery.add(
 					objectDefinitionIdProperty.eq(objectDefinitionId));
 			});
-		actionableDynamicQuery.setParallel(true);
 		actionableDynamicQuery.setPerformActionMethod(performActionMethod);
 
 		actionableDynamicQuery.performActions();
@@ -7308,7 +7315,7 @@ public class ObjectEntryLocalServiceImpl
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(
 				StringBundler.concat(
-					"select count(*) from ",
+					"select count(*) as count from ",
 					dynamicObjectDefinitionTable.getTableName(), " where ",
 					dbColumnName, " = ?"))) {
 
@@ -7317,7 +7324,7 @@ public class ObjectEntryLocalServiceImpl
 			try (ResultSet resultSet = preparedStatement.executeQuery()) {
 				resultSet.next();
 
-				count = resultSet.getInt(1);
+				count = resultSet.getInt("count");
 			}
 		}
 		catch (SQLException sqlException) {
@@ -7348,7 +7355,7 @@ public class ObjectEntryLocalServiceImpl
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(
 				StringBundler.concat(
-					"select count(*) from ",
+					"select count(*) as count from ",
 					dynamicObjectDefinitionTable.getTableName(), " where ",
 					dynamicObjectDefinitionTable.getPrimaryKeyColumnName(),
 					" != ? and ", dbColumnName, " = ?"))) {
@@ -7359,7 +7366,7 @@ public class ObjectEntryLocalServiceImpl
 			try (ResultSet resultSet = preparedStatement.executeQuery()) {
 				resultSet.next();
 
-				count = resultSet.getInt(1);
+				count = resultSet.getInt("count");
 			}
 		}
 		catch (SQLException sqlException) {
