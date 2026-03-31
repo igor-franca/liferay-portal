@@ -235,6 +235,14 @@ public class AutoDeployDir {
 		return autoDeploymentContext;
 	}
 
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link #_processFile(File)}
+	 */
+	@Deprecated
+	protected void processFile(File file) {
+		throw new UnsupportedOperationException();
+	}
+
 	private static boolean _isModule(File file) throws AutoDeployException {
 		Manifest manifest = null;
 
