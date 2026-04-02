@@ -183,18 +183,6 @@ public class DepotEntryLocalServiceTest {
 			return;
 		}
 
-		String[] assetLibraryMemberObjectEntryActionIds = {
-			ActionKeys.ADD_DISCUSSION, ActionKeys.DOWNLOAD,
-			ActionKeys.VIEW
-		};
-
-		String[] objectEntryActionIds = {
-			ActionKeys.ADD_DISCUSSION, ActionKeys.DELETE,
-			ActionKeys.DELETE_DISCUSSION, ActionKeys.DOWNLOAD,
-			ActionKeys.PERMISSIONS, ActionKeys.UPDATE,
-			ActionKeys.UPDATE_DISCUSSION, ActionKeys.VIEW
-		};
-
 		JSONObject jsonObject2 = jsonObject1.getJSONObject(
 			ObjectEntryFolderConstants.EXTERNAL_REFERENCE_CODE_CONTENTS);
 
@@ -202,6 +190,13 @@ public class DepotEntryLocalServiceTest {
 			_objectDefinitionLocalService.
 				getObjectDefinitionByExternalReferenceCode(
 					"L_CMS_BASIC_WEB_CONTENT", TestPropsValues.getCompanyId());
+
+		String[] objectEntryActionIds = {
+			ActionKeys.ADD_DISCUSSION, ActionKeys.DELETE,
+			ActionKeys.DELETE_DISCUSSION, ActionKeys.DOWNLOAD,
+			ActionKeys.PERMISSIONS, ActionKeys.UPDATE,
+			ActionKeys.UPDATE_DISCUSSION, ActionKeys.VIEW
+		};
 
 		Assert.assertArrayEquals(
 			objectEntryActionIds,
@@ -213,11 +208,18 @@ public class DepotEntryLocalServiceTest {
 			JSONUtil.toStringArray(
 				jsonObject2.getJSONArray(
 					DepotRolesConstants.ASSET_LIBRARY_CONTENT_REVIEWER)));
+
+		String[] assetLibraryMemberObjectEntryActionIds = {
+			ActionKeys.ADD_DISCUSSION, ActionKeys.DOWNLOAD,
+			ActionKeys.VIEW
+		};
+
 		Assert.assertArrayEquals(
 			assetLibraryMemberObjectEntryActionIds,
 			JSONUtil.toStringArray(
 				jsonObject2.getJSONArray(
 					DepotRolesConstants.ASSET_LIBRARY_MEMBER)));
+
 		Assert.assertArrayEquals(
 			TransformUtil.transformToArray(
 				_resourceActionLocalService.getResourceActions(
