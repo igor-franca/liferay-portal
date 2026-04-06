@@ -25,6 +25,9 @@ import com.liferay.layout.util.structure.LayoutStructureItemUtil;
 import com.liferay.layout.util.structure.exception.NoSuchLayoutStructureItemException;
 import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.vulcan.dto.converter.DTOConverter;
@@ -75,6 +78,10 @@ public class PageElementResourceImpl extends BasePageElementResourceImpl {
 			_segmentsExperienceLocalService.
 				getSegmentsExperienceByExternalReferenceCode(
 					pageExperienceExternalReferenceCode, groupId);
+
+		_segmentsExperienceResourcePermission.check(
+			PermissionThreadLocal.getPermissionChecker(), segmentsExperience,
+			ActionKeys.UPDATE);
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			_layoutPageTemplateStructureLocalService.
@@ -281,6 +288,10 @@ public class PageElementResourceImpl extends BasePageElementResourceImpl {
 				getSegmentsExperienceByExternalReferenceCode(
 					pageExperienceExternalReferenceCode, groupId);
 
+		_segmentsExperienceResourcePermission.check(
+			PermissionThreadLocal.getPermissionChecker(), segmentsExperience,
+			ActionKeys.UPDATE);
+
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			_layoutPageTemplateStructureLocalService.
 				fetchLayoutPageTemplateStructure(
@@ -327,6 +338,10 @@ public class PageElementResourceImpl extends BasePageElementResourceImpl {
 			_segmentsExperienceLocalService.
 				getSegmentsExperienceByExternalReferenceCode(
 					pageExperienceExternalReferenceCode, groupId);
+
+		_segmentsExperienceResourcePermission.check(
+			PermissionThreadLocal.getPermissionChecker(), segmentsExperience,
+			ActionKeys.UPDATE);
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			_layoutPageTemplateStructureLocalService.
@@ -463,5 +478,11 @@ public class PageElementResourceImpl extends BasePageElementResourceImpl {
 
 	@Reference
 	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
+
+	@Reference(
+		target = "(model.class.name=com.liferay.segments.model.SegmentsExperience)"
+	)
+	private ModelResourcePermission<SegmentsExperience>
+		_segmentsExperienceResourcePermission;
 
 }
