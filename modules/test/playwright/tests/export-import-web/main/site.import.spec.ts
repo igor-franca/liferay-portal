@@ -49,6 +49,7 @@ export const test = mergeTests(
 	exportImportPagesTest,
 	featureFlagsTest({
 		'LPD-17564': {enabled: true},
+		'LPD-35013': {enabled: true},
 		'LPD-35443': {enabled: false},
 		'LPD-44307': {enabled: true},
 		'LPD-44771': {enabled: true},
