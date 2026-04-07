@@ -19705,7 +19705,7 @@ public class ObjectEntryResourceTest {
 			fileEntry -> JSONUtil.put(
 				"status", "BAD_REQUEST"
 			).put(
-				"title", "File content cannot be empty"
+				"title", "File content is empty"
 			),
 			_toFileEntry(
 				Base64::encode, StringPool.BLANK,
