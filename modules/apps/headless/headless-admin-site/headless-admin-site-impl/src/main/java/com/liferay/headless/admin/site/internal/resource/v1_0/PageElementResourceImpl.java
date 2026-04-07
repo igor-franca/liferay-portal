@@ -35,7 +35,7 @@ import com.liferay.portal.vulcan.dto.converter.DTOConverterContext;
 import com.liferay.portal.vulcan.dto.converter.DTOConverterRegistry;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.segments.model.SegmentsExperience;
-import com.liferay.segments.service.SegmentsExperienceLocalService;
+import com.liferay.segments.service.SegmentsExperienceService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
@@ -75,7 +75,7 @@ public class PageElementResourceImpl extends BasePageElementResourceImpl {
 			pageSpecificationExternalReferenceCode, groupId);
 
 		SegmentsExperience segmentsExperience =
-			_segmentsExperienceLocalService.
+			_segmentsExperienceService.
 				getSegmentsExperienceByExternalReferenceCode(
 					pageExperienceExternalReferenceCode, groupId);
 
@@ -130,7 +130,7 @@ public class PageElementResourceImpl extends BasePageElementResourceImpl {
 			pageSpecificationExternalReferenceCode, groupId);
 
 		SegmentsExperience segmentsExperience =
-			_segmentsExperienceLocalService.
+			_segmentsExperienceService.
 				getSegmentsExperienceByExternalReferenceCode(
 					pageExperienceExternalReferenceCode, groupId);
 
@@ -187,7 +187,7 @@ public class PageElementResourceImpl extends BasePageElementResourceImpl {
 			pageSpecificationExternalReferenceCode, groupId);
 
 		SegmentsExperience segmentsExperience =
-			_segmentsExperienceLocalService.
+			_segmentsExperienceService.
 				getSegmentsExperienceByExternalReferenceCode(
 					pageExperienceExternalReferenceCode, groupId);
 
@@ -238,7 +238,7 @@ public class PageElementResourceImpl extends BasePageElementResourceImpl {
 			pageSpecificationExternalReferenceCode, groupId);
 
 		SegmentsExperience segmentsExperience =
-			_segmentsExperienceLocalService.
+			_segmentsExperienceService.
 				getSegmentsExperienceByExternalReferenceCode(
 					pageExperienceExternalReferenceCode, groupId);
 
@@ -284,7 +284,7 @@ public class PageElementResourceImpl extends BasePageElementResourceImpl {
 			pageSpecificationExternalReferenceCode, groupId);
 
 		SegmentsExperience segmentsExperience =
-			_segmentsExperienceLocalService.
+			_segmentsExperienceService.
 				getSegmentsExperienceByExternalReferenceCode(
 					pageExperienceExternalReferenceCode, groupId);
 
@@ -335,7 +335,7 @@ public class PageElementResourceImpl extends BasePageElementResourceImpl {
 			pageSpecificationExternalReferenceCode, groupId);
 
 		SegmentsExperience segmentsExperience =
-			_segmentsExperienceLocalService.
+			_segmentsExperienceService.
 				getSegmentsExperienceByExternalReferenceCode(
 					pageExperienceExternalReferenceCode, groupId);
 
@@ -476,13 +476,13 @@ public class PageElementResourceImpl extends BasePageElementResourceImpl {
 	private DTOConverter<LayoutStructureItem, PageElement>
 		_pageElementDTOConverter;
 
-	@Reference
-	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
-
 	@Reference(
 		target = "(model.class.name=com.liferay.segments.model.SegmentsExperience)"
 	)
 	private ModelResourcePermission<SegmentsExperience>
 		_segmentsExperienceResourcePermission;
+
+	@Reference
+	private SegmentsExperienceService _segmentsExperienceService;
 
 }
