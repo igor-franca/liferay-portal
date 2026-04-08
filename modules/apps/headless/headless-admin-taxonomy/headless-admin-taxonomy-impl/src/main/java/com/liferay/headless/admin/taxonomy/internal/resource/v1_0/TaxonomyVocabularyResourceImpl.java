@@ -731,7 +731,9 @@ public class TaxonomyVocabularyResourceImpl
 		for (AssetRendererFactory<?> assetRendererFactory :
 				categorizableAssetRenderFactories) {
 
-			if (assetTypeType.equals(_getModelResource(assetRendererFactory))) {
+			if (Objects.equals(
+					assetTypeType, _getModelResource(assetRendererFactory))) {
+
 				className = assetRendererFactory.getClassName();
 
 				break;
