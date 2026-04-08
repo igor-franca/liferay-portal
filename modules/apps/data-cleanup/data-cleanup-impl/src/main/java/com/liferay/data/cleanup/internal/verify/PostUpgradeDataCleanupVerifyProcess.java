@@ -7,6 +7,8 @@ package com.liferay.data.cleanup.internal.verify;
 
 import com.liferay.object.service.ObjectDefinitionLocalService;
 import com.liferay.portal.kernel.dependency.manager.DependencyManagerSyncUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.CompanyLocalService;
@@ -59,6 +61,9 @@ public class PostUpgradeDataCleanupVerifyProcess extends VerifyProcess {
 
 				postUpgradeDataCleanupProcess.cleanUp();
 			}
+			catch (Exception exception) {
+				_log.error(exception);
+			}
 		}
 	}
 
@@ -76,6 +81,9 @@ public class PostUpgradeDataCleanupVerifyProcess extends VerifyProcess {
 			new ServiceComponentPostUpgradeDataCleanupProcess(
 				connection, _serviceComponentLocalService));
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		PostUpgradeDataCleanupVerifyProcess.class);
 
 	@Reference
 	private ClassNameLocalService _classNameLocalService;
