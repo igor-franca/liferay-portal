@@ -3,18 +3,18 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {
-	AssigneeAvatar,
-	AssigneeTriggerProps,
-	AssigneeValue,
-} from '@liferay/object-dynamic-data-mapping-form-field-type';
+// import {
+// 	AssigneeAvatar,
+// 	AssigneeTriggerProps,
+// 	AssigneeValue,
+// } from '@liferay/object-dynamic-data-mapping-form-field-type';
 import classNames from 'classnames';
 import React, {Ref, forwardRef} from 'react';
 
-import './AssigneeTrigger.scss';
+// import './AssigneeTrigger.scss';
 
 function AssigneeTrigger(
-	{className, selectedItem, value, ...props}: AssigneeTriggerProps,
+	{className, selectedItem, value, ...props}: any,
 	ref: Ref<HTMLInputElement>
 ) {
 	const hasItem = selectedItem && 'name' in selectedItem;
@@ -26,12 +26,12 @@ function AssigneeTrigger(
 				className
 			)}
 		>
-			{hasItem && (
+			{/* {hasItem && (
 				<AssigneeAvatar
 					name={(selectedItem as AssigneeValue).name || ''}
 					portrait={(selectedItem as AssigneeValue).portrait}
 				/>
-			)}
+			)} */}
 
 			<input
 				{...props}

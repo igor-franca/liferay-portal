@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {AssigneeValue} from '@liferay/object-dynamic-data-mapping-form-field-type';
+// import {AssigneeValue} from '@liferay/object-dynamic-data-mapping-form-field-type';
 
 import {DISPLAY_TYPES} from './constants';
 
@@ -81,7 +81,7 @@ export interface IItems {
 }
 
 export interface ITaskObjectEntry {
-	assignTo: AssigneeValue;
+	assignTo: any;
 	cmpProjectToCMPTasks: IProjectObjectEntry;
 	creator: ICreator;
 	dateCreated: string;

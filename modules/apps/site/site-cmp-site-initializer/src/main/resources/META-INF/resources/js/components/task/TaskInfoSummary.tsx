@@ -5,7 +5,7 @@
 
 import Label from '@clayui/label';
 import {DateRenderer} from '@liferay/frontend-data-set-web';
-import {AssigneeValue} from '@liferay/object-dynamic-data-mapping-form-field-type';
+// import {AssigneeValue} from '@liferay/object-dynamic-data-mapping-form-field-type';
 import {displayErrorToast} from '@liferay/site-cms-site-initializer';
 import React, {useState} from 'react';
 
@@ -22,7 +22,7 @@ import StateSelector, {State} from '../StateSelector';
 import '../AssigneeTrigger.scss';
 
 interface TaskInfoSummaryProps {
-	assignTo: AssigneeValue;
+	assignTo: any;
 	dueDate: string;
 	initialState: string;
 	states: State[];
@@ -83,7 +83,7 @@ export default function TaskInfoSummary({
 					label: 'Assignee',
 					value: (
 						<CustomAssignee
-							onChange={async (value: AssigneeValue | {}) => {
+							onChange={async (value: any | {}) => {
 								const {error} = await patchTaskById({
 									body: {assignTo: value},
 									taskId,
@@ -92,7 +92,7 @@ export default function TaskInfoSummary({
 								if (!error) {
 									displayAssignSuccessToast(
 										title,
-										(value as AssigneeValue).name
+										(value as any).name
 									);
 
 									Liferay.fire(UPDATE_HISTORY);

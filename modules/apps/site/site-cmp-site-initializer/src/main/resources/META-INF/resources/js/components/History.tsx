@@ -7,7 +7,7 @@ import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
 import List from '@clayui/list';
 import ClayLoadingIndicator from '@clayui/loading-indicator';
-import {AssigneeAvatar} from '@liferay/object-dynamic-data-mapping-form-field-type';
+// import {AssigneeAvatar} from '@liferay/object-dynamic-data-mapping-form-field-type';
 import {fetch} from 'frontend-js-web';
 import React, {
 	useCallback,
@@ -203,10 +203,10 @@ function HistoryItem<T>({
 	return (
 		<List.Item className="border-0 c-mb-2 c-py-2" flex>
 			<List.ItemField>
-				<AssigneeAvatar
+				{/* <AssigneeAvatar
 					name={auditEvent.creator?.name || ''}
 					portrait={auditEvent.creator?.image}
-				/>
+				/> */}
 			</List.ItemField>
 
 			<List.ItemField expand>

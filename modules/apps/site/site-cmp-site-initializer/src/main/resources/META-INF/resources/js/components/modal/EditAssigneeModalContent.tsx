@@ -5,7 +5,7 @@
 
 import ClayButton from '@clayui/button';
 import ClayModal from '@clayui/modal';
-import {AssigneeValue} from '@liferay/object-dynamic-data-mapping-form-field-type';
+// import {AssigneeValue} from '@liferay/object-dynamic-data-mapping-form-field-type';
 import {displayErrorToast} from '@liferay/site-cms-site-initializer';
 import React, {useState} from 'react';
 
@@ -13,14 +13,14 @@ import {patchTaskById} from '../../utils/api';
 import {displayAssignSuccessToast} from '../../utils/toastUtil';
 import CustomAssignee from '../CustomAssignee';
 
-import './../AssigneeTrigger.scss';
+// import './../AssigneeTrigger.scss';
 
 type Props = {
 	closeModal: () => void;
 	loadData: Function;
 	taskId: string;
 	taskTitle: string;
-	value: AssigneeValue | {} | null;
+	value: any | {} | null;
 };
 
 export default function EditAssigneeModalContent({
@@ -30,7 +30,7 @@ export default function EditAssigneeModalContent({
 	taskTitle,
 	value: initialValue,
 }: Props) {
-	const [value, setValue] = useState<AssigneeValue | null | {}>(initialValue);
+	const [value, setValue] = useState<any | null | {}>(initialValue);
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -45,7 +45,7 @@ export default function EditAssigneeModalContent({
 
 			loadData();
 
-			displayAssignSuccessToast(taskTitle, (value as AssigneeValue).name);
+			displayAssignSuccessToast(taskTitle, (value as any).name);
 		}
 		else {
 			displayErrorToast(error);
@@ -60,7 +60,7 @@ export default function EditAssigneeModalContent({
 
 			<ClayModal.Body>
 				<CustomAssignee
-					onChange={(value: AssigneeValue | {}) => {
+					onChange={(value: any | {}) => {
 						setValue(value);
 					}}
 					triggerClassName="form-control"

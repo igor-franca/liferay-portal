@@ -5,7 +5,7 @@
 
 import ClayButton from '@clayui/button';
 import ClayModal from '@clayui/modal';
-import {AssigneeValue} from '@liferay/object-dynamic-data-mapping-form-field-type';
+// import {AssigneeValue} from '@liferay/object-dynamic-data-mapping-form-field-type';
 import {
 	IBulkActionFDSData,
 	IBulkActionTaskStarterDTO,
@@ -16,7 +16,7 @@ import React, {useState} from 'react';
 import {displayAssignSuccessToast} from '../../utils/toastUtil';
 import CustomAssignee from '../CustomAssignee';
 
-import './../AssigneeTrigger.scss';
+// import './../AssigneeTrigger.scss';
 
 import {openToast} from 'frontend-js-components-web';
 
@@ -25,7 +25,7 @@ type Props = {
 	closeModal: () => void;
 	dataSetId: string;
 	selectedData: IBulkActionFDSData;
-	value: AssigneeValue | {} | null;
+	value: any | {} | null;
 };
 const displayErrorToast = (errorMessage?: string) => {
 	openToast({
@@ -43,7 +43,7 @@ export default function BulkEditAssigneeModalContent({
 	selectedData,
 	value: initialValue,
 }: Props) {
-	const [value, setValue] = useState<AssigneeValue | null | {}>(initialValue);
+	const [value, setValue] = useState<any | null | {}>(initialValue);
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -51,10 +51,10 @@ export default function BulkEditAssigneeModalContent({
 			apiURL,
 			dataSetId,
 			keyValues: {
-				className: (value as AssigneeValue)?.type,
-				externalReferenceCode: (value as AssigneeValue)
+				className: (value as any)?.type,
+				externalReferenceCode: (value as any)
 					?.externalReferenceCode,
-				name: (value as AssigneeValue)?.name,
+				name: (value as any)?.name,
 			},
 			onCreateError: ({error}) => {
 				displayErrorToast(error as string);
@@ -67,7 +67,7 @@ export default function BulkEditAssigneeModalContent({
 				}
 				displayAssignSuccessToast(
 					'Task',
-					(value as AssigneeValue).name
+					(value as any).name
 				);
 				closeModal();
 			},
@@ -85,7 +85,7 @@ export default function BulkEditAssigneeModalContent({
 
 			<ClayModal.Body>
 				<CustomAssignee
-					onChange={(value: AssigneeValue | {}) => {
+					onChange={(value: any | {}) => {
 						setValue(value);
 					}}
 					triggerClassName="form-control"

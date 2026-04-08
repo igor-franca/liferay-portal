@@ -6,7 +6,7 @@
 import ClayButton from '@clayui/button';
 import ClayForm from '@clayui/form';
 import ClayModal from '@clayui/modal';
-import {AssigneeValue} from '@liferay/object-dynamic-data-mapping-form-field-type';
+// import {AssigneeValue} from '@liferay/object-dynamic-data-mapping-form-field-type';
 import {DatePicker} from '@liferay/object-js-components-web';
 import {
 	FieldPicker,
@@ -25,7 +25,7 @@ import {IProjectObjectEntry} from '../../utils/types';
 import CustomAssignee from '../CustomAssignee';
 import StateSelector from '../StateSelector';
 
-import './../AssigneeTrigger.scss';
+// import './../AssigneeTrigger.scss';
 
 type CreateTaskModalProps = {
 	closeModal: () => void;
@@ -214,7 +214,7 @@ export default function CreateTaskModal({
 
 				<CustomAssignee
 					name="assignTo"
-					onChange={(assigneeValue: AssigneeValue | {}) => {
+					onChange={(assigneeValue: any | {}) => {
 						setFieldValue('assignTo', assigneeValue);
 					}}
 					triggerClassName="form-control"

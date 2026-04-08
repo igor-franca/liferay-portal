@@ -8,7 +8,7 @@ import Card from '@clayui/card/src/Card';
 import {ClayDropDownWithItems} from '@clayui/drop-down';
 import ClayIcon from '@clayui/icon';
 import {DateRenderer} from '@liferay/frontend-data-set-web';
-import {AssigneeAvatar} from '@liferay/object-dynamic-data-mapping-form-field-type';
+// import {AssigneeAvatar} from '@liferay/object-dynamic-data-mapping-form-field-type';
 import {
 	displayErrorToast,
 	displayRequestSuccessToast,
@@ -319,12 +319,12 @@ const TaskCard = React.memo(
 									/>
 
 									<div className="lfr__kaban-task-card-assignee">
-										<AssigneeAvatar
+										{/* <AssigneeAvatar
 											name={task.embedded.assignTo.name}
 											portrait={
 												task.embedded.assignTo.portrait
 											}
-										/>
+										/> */}
 									</div>
 								</div>
 							</Card.Row>

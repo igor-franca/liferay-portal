@@ -9,7 +9,7 @@ import {
 	IInternalRenderer,
 	IView,
 } from '@liferay/frontend-data-set-web';
-import {AssigneeValue} from '@liferay/object-dynamic-data-mapping-form-field-type';
+// import {AssigneeValue} from '@liferay/object-dynamic-data-mapping-form-field-type';
 import {
 	AssignToModalContent,
 	SimpleActionLinkRenderer,
@@ -53,7 +53,7 @@ interface ItemData {
 		update: Action;
 	};
 	embedded: {
-		assignTo: AssigneeValue | null | {};
+		assignTo: any | null | {};
 		content: string;
 		content_i18n: {[locale: string]: string};
 		creator: {
