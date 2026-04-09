@@ -78,7 +78,6 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import java.io.Serializable;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -716,27 +715,6 @@ public class TaxonomyVocabularyResourceImpl
 		return assetTypes;
 	}
 
-	private String _getAvailableAssetTypes(
-		List<AssetRendererFactory<?>> categorizableAssetRenderFactories) {
-
-		List<String> assetTypes = ListUtil.concat(
-			transform(
-				categorizableAssetRenderFactories,
-				assetRenderedFactory -> {
-					String assetTypeType = _classNameToAssetTypeTypes.get(
-						assetRenderedFactory.getClassName());
-
-					if (assetTypeType != null) {
-						return assetTypeType;
-					}
-
-					return _getModelResource(assetRenderedFactory);
-				}),
-			Collections.singletonList("AllAssetTypes"));
-
-		return Arrays.toString(assetTypes.toArray());
-	}
-
 	private Long _getClassNameId(String assetTypeType) {
 		if (Objects.equals(assetTypeType, "AllAssetTypes")) {
 			return AssetCategoryConstants.ALL_CLASS_NAME_ID;
@@ -766,12 +744,7 @@ public class TaxonomyVocabularyResourceImpl
 
 		if (className == null) {
 			if (_log.isDebugEnabled()) {
-				_log.debug(
-					StringBundler.concat(
-						"Asset type ", assetTypeType,
-						" not available, the supported asset types are: ",
-						_getAvailableAssetTypes(
-							categorizableAssetRenderFactories)));
+				_log.debug("Invalid asset type type " + assetTypeType);
 			}
 
 			return null;
@@ -812,7 +785,7 @@ public class TaxonomyVocabularyResourceImpl
 		}
 
 		if (_log.isDebugEnabled()) {
-			_log.debug("Invalid subtype " + subtype);
+			_log.debug("Invalid asset type subtype " + subtype);
 		}
 
 		return null;
