@@ -1515,13 +1515,15 @@ public class ObjectEntryLocalServiceTest {
 			ServiceContextTestUtil.getServiceContext(),
 			TestPropsValues.getUserId());
 
+		String randomTextFile = StringUtil.randomId(8);
+
 		FileEntry fileEntry = _dlAppLocalService.addFileEntry(
 			null, TestPropsValues.getUserId(), dlFolder.getRepositoryId(),
 			dlFolder.getFolderId(), "test.txt", ContentTypes.TEXT_PLAIN,
 			StringUtil.randomString(), StringPool.BLANK, StringPool.BLANK,
 			StringPool.BLANK,
-			new ByteArrayInputStream(DLTestUtil.randomTextFileBytes()), 0, null,
-			null, null, ServiceContextTestUtil.getServiceContext());
+			new ByteArrayInputStream(randomTextFile.getBytes()), 0, null, null,
+			null, ServiceContextTestUtil.getServiceContext());
 
 		objectEntry = _addObjectEntry(fileEntry.getFileEntryId(), "upload");
 
