@@ -164,6 +164,14 @@ describe('CMS Asset Type Info Panel', () => {
 
 		expect(screen.queryByText('url')).toBeInTheDocument();
 
+		expect(screen.getByText('jpeg')).toBeInTheDocument();
+
+		expect(screen.getByText('1.2 MB')).toBeInTheDocument();
+
+		expect(screen.getByText('1920x1080')).toBeInTheDocument();
+
+		expect(screen.getByText('tall')).toBeInTheDocument();
+
 		expect(
 			screen.getByPlaceholderText(
 				DOCUMENT_OBJECT_ENTRY.embedded.file.link.href
