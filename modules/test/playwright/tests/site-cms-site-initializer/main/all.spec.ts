@@ -688,45 +688,46 @@ test(
 		let tagLabel;
 		let user;
 		const vocabularyName = getRandomString();
-
-		const siteId = await apiHelpers.headlessAdminUser
-			.getSiteByFriendlyUrlPath('cms')
-			.then((response) => response.id);
-
-		const vocabularyId = await apiHelpers.headlessAdminTaxonomy
-			.postSiteTaxonomyVocabulary({
-				assetLibraries: [{id: -1}],
-				assetTypes: [
-					{
-						required: true,
-						subtype: 'AllAssetSubtypes',
-						type: 'AllAssetTypes',
-					},
-				],
-				name: vocabularyName,
-				siteId,
-				visibilityType: 'PUBLIC',
-			})
-			.then((response) => response.id);
-
-		const categoryId = await apiHelpers.headlessAdminTaxonomy
-			.postTaxonomyVocabularyTaxonomyCategory({
-				name: categoryName,
-				vocabularyId,
-			})
-			.then((response) => response.id);
-
-		await apiHelpers.headlessAdminTaxonomy.putTaxonomyVocabulariesTaxonomyVocabularyPermissions(
-			vocabularyId,
-			{actionIds: ['VIEW'], roleName: 'Site Member'}
-		);
-
-		await apiHelpers.headlessAdminTaxonomy.putTaxonomyCategoriesTaxonomyCategoryPermissions(
-			categoryId,
-			{actionIds: ['VIEW'], roleName: 'Site Member'}
-		);
+		let vocabularyId;
 
 		try {
+			const siteId = await apiHelpers.headlessAdminUser
+				.getSiteByFriendlyUrlPath('cms')
+				.then((response) => response.id);
+
+			vocabularyId = await apiHelpers.headlessAdminTaxonomy
+				.postSiteTaxonomyVocabulary({
+					assetLibraries: [{id: -1}],
+					assetTypes: [
+						{
+							required: false,
+							subtype: 'AllAssetSubtypes',
+							type: 'AllAssetTypes',
+						},
+					],
+					name: vocabularyName,
+					siteId,
+					visibilityType: 'PUBLIC',
+				})
+				.then((response) => response.id);
+
+			const categoryId = await apiHelpers.headlessAdminTaxonomy
+				.postTaxonomyVocabularyTaxonomyCategory({
+					name: categoryName,
+					vocabularyId,
+				})
+				.then((response) => response.id);
+
+			await apiHelpers.headlessAdminTaxonomy.putTaxonomyVocabulariesTaxonomyVocabularyPermissions(
+				vocabularyId,
+				{actionIds: ['VIEW'], roleName: 'Site Member'}
+			);
+
+			await apiHelpers.headlessAdminTaxonomy.putTaxonomyCategoriesTaxonomyCategoryPermissions(
+				categoryId,
+				{actionIds: ['VIEW'], roleName: 'Site Member'}
+			);
+
 			objectEntry = await apiHelpers.objectEntry.postObjectEntry(
 				{
 					objectEntryFolderExternalReferenceCode: 'L_CONTENTS',
@@ -860,14 +861,18 @@ test(
 
 			await performLogin(page, 'test');
 
-			await apiHelpers.objectEntry.deleteObjectEntry(
-				applicationName,
-				String(objectEntry.id)
-			);
+			if (objectEntry) {
+				await apiHelpers.objectEntry.deleteObjectEntry(
+					applicationName,
+					String(objectEntry.id)
+				);
+			}
 
-			await apiHelpers.headlessAdminTaxonomy.deleteTaxonomyVocabulary(
-				vocabularyId
-			);
+			if (vocabularyId) {
+				await apiHelpers.headlessAdminTaxonomy.deleteTaxonomyVocabulary(
+					vocabularyId
+				);
+			}
 		}
 	}
 );
@@ -3443,5 +3448,78 @@ test(
 
 			await expect(assetsPage.getItem(webContentNames[2])).toBeVisible();
 		});
+	}
+);
+
+test(
+	'Versions tab should not be visible for Space Member role',
+	{tag: '@LPD-86002'},
+	async ({apiHelpers, assetsPage, infoPanelPage, page, spaceSummaryPage}) => {
+		const contentApplicationName = 'cms/basic-web-contents';
+		let objectEntryContent;
+		const spaceName = 'Default';
+		let user;
+
+		const content = `title ${getRandomString()}`;
+
+		try {
+			objectEntryContent = await apiHelpers.objectEntry.postObjectEntry(
+				{
+					objectEntryFolderExternalReferenceCode: 'L_CONTENTS',
+					title: content,
+				},
+				contentApplicationName,
+				spaceName
+			);
+
+			await test.step('Create an user and add to the Space', async () => {
+				user = await apiHelpers.headlessAdminUser.postUserAccount();
+
+				userData[user.alternateName] = {
+					name: user.givenName,
+					password: 'test',
+					surname: user.familyName,
+				};
+
+				await spaceSummaryPage.goto(spaceName);
+				await spaceSummaryPage.addUserOrUserGroup(user.name, 'users');
+			});
+
+			await test.step('Login as a space member and open Info Panel', async () => {
+				await performLogout(page);
+
+				await performLogin(page, user.alternateName);
+
+				await assetsPage.gotoAll();
+				await assetsPage.execItemAction({
+					action: 'Show Details',
+					filter: content,
+				});
+
+				await expect(
+					page.getByRole('heading', {name: content})
+				).toBeVisible();
+			});
+
+			await test.step('Check versions tab is not visible', async () => {
+				await expect(infoPanelPage.selectTab('More')).not.toBeVisible();
+				await expect(
+					infoPanelPage.selectTab('Versions')
+				).not.toBeVisible();
+				await expect(infoPanelPage.selectTab('Comments')).toBeVisible();
+			});
+		}
+		finally {
+			await performLogout(page);
+
+			await performLogin(page, 'test');
+
+			if (objectEntryContent) {
+				await apiHelpers.objectEntry.deleteObjectEntry(
+					contentApplicationName,
+					String(objectEntryContent.id)
+				);
+			}
+		}
 	}
 );

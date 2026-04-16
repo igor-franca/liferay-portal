@@ -69,8 +69,7 @@ export class DataSetPage {
 	}) {
 		const item = this.getRow(filter);
 		const button = item.getByRole('button', {
-			exact: true,
-			name: 'Actions',
+			name: filter,
 		});
 
 		await button.click({timeout});
