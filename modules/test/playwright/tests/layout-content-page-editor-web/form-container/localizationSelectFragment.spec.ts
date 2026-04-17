@@ -89,7 +89,7 @@ test(
 		).toBeVisible();
 
 		await expect(
-			page.locator('.dropdown-item').filter({visible: true})
+			page.locator('.dropdown-menu.show .dropdown-item')
 		).toHaveCount(2);
 
 		await localizationSelectPage.trigger.click();
