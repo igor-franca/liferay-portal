@@ -18948,7 +18948,7 @@ public class ObjectEntryResourceTest {
 			).put(
 				objectFieldName,
 				_toFileEntryJSONObject(
-					RandomTestUtil.randomString(),
+					DLTestUtil.randomTextFileBytes(),
 					RandomTestUtil.randomString() + ".txt",
 					fileEntry.getFolder(), ContentTypes.TEXT_PLAIN,
 					objectFieldName)
@@ -21359,14 +21359,14 @@ public class ObjectEntryResourceTest {
 	}
 
 	private JSONObject _toFileEntryJSONObject(
-			String fileContent, String fileName, Folder folder, String mimeType,
+			byte[] fileContent, String fileName, Folder folder, String mimeType,
 			String objectFieldName)
 		throws Exception {
 
 		com.liferay.object.rest.dto.v1_0.FileEntry fileEntry =
 			new com.liferay.object.rest.dto.v1_0.FileEntry();
 
-		fileEntry.setFileBase64(Base64.encode(fileContent.getBytes()));
+		fileEntry.setFileBase64(Base64.encode(fileContent));
 		fileEntry.setMimeType(mimeType);
 
 		if (StringUtil.equals(
