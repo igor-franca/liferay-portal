@@ -2349,53 +2349,57 @@ test.describe('Manage object entries through View Object Entries', () => {
 		).toBeVisible();
 	});
 
-	test('can add entry for site scoped definition with versioning enabled', async ({
+	test('can add entry for site scoped definition', async ({
 		apiHelpers,
 		page,
 		viewObjectEntriesPage,
 	}) => {
-		const objectDefinition =
-			await apiHelpers.objectAdmin.postRandomObjectDefinition({
-				scope: 'site',
-				status: {code: 0},
+		for (const enableObjectEntryVersioning of [false, true]) {
+			const objectDefinition =
+				await apiHelpers.objectAdmin.postRandomObjectDefinition({
+					scope: 'site',
+					status: {code: 0},
+				});
+
+			apiHelpers.data.push({
+				id: objectDefinition.id,
+				type: 'objectDefinition',
 			});
 
-		apiHelpers.data.push({
-			id: objectDefinition.id,
-			type: 'objectDefinition',
-		});
+			if (enableObjectEntryVersioning) {
+				const objectDefinitionAPIClient =
+					await apiHelpers.buildRestClient(ObjectDefinitionAPI);
 
-		const objectDefinitionAPIClient =
-			await apiHelpers.buildRestClient(ObjectDefinitionAPI);
-
-		await objectDefinitionAPIClient.patchObjectDefinition(
-			objectDefinition.id,
-			{
-				enableObjectEntryVersioning: true,
+				await objectDefinitionAPIClient.patchObjectDefinition(
+					objectDefinition.id,
+					{
+						enableObjectEntryVersioning: true,
+					}
+				);
 			}
-		);
 
-		await viewObjectEntriesPage.goto(objectDefinition.className);
+			await viewObjectEntriesPage.goto(objectDefinition.className);
 
-		await viewObjectEntriesPage.clickAddObjectEntry(
-			objectDefinition.label['en_US']
-		);
+			await viewObjectEntriesPage.clickAddObjectEntry(
+				objectDefinition.label['en_US']
+			);
 
-		await viewObjectEntriesPage.fillObjectEntry({
-			objectFieldBusinessType: 'Text',
-			objectFieldLabel: 'textField',
-			objectFieldValue: 'test',
-		});
+			await viewObjectEntriesPage.fillObjectEntry({
+				objectFieldBusinessType: 'Text',
+				objectFieldLabel: 'textField',
+				objectFieldValue: 'test',
+			});
 
-		await viewObjectEntriesPage.saveObjectEntryButton.click();
+			await viewObjectEntriesPage.saveObjectEntryButton.click();
 
-		await expect(viewObjectEntriesPage.successMessage).toBeVisible();
+			await expect(viewObjectEntriesPage.successMessage).toBeVisible();
 
-		await viewObjectEntriesPage.backButton.click();
+			await viewObjectEntriesPage.backButton.click();
 
-		await expect(
-			page.locator('td').getByText('test', {exact: true})
-		).toBeVisible();
+			await expect(
+				page.locator('td').getByText('test', {exact: true})
+			).toBeVisible();
+		}
 	});
 
 	test(
