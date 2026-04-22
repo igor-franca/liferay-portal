@@ -28,8 +28,13 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -223,6 +228,21 @@ public class IndexUpdaterUtil {
 		_processedServletContextNames.clear();
 	}
 
+	private static long _countRows(Connection connection, String tableName)
+		throws Exception {
+
+		try (PreparedStatement preparedStatement = connection.prepareStatement(
+				"select count(*) from " + tableName);
+			ResultSet resultSet = preparedStatement.executeQuery()) {
+
+			if (resultSet.next()) {
+				return resultSet.getLong(1);
+			}
+		}
+
+		return 0;
+	}
+
 	private static boolean _deleteDuplicates(
 			Connection connection, DB db, String tableName, String indexesSQL)
 		throws Exception {
@@ -239,21 +259,30 @@ public class IndexUpdaterUtil {
 			}
 
 			String indexColumns = matcher.group(2);
+
+			String[] columnNames = StringUtil.split(
+				indexColumns.replaceAll(
+					"\\[\\$COLUMN_LENGTH:(\\d+)\\$\\]", StringPool.BLANK),
+				StringPool.COMMA_AND_SPACE);
+
+			if (_hasUnpopulatedColumn(connection, tableName, columnNames)) {
+				continue;
+			}
+
 			String orderByColumns = StringUtil.merge(
 				db.getPrimaryKeyColumnNames(connection, tableName),
 				StringPool.COMMA_AND_SPACE);
 
 			DuplicateUniqueFinderRowsCleaner duplicateUniqueFinderRowsCleaner =
 				new DuplicateUniqueFinderRowsCleaner(
-					connection, tableName,
-					StringUtil.split(
-						indexColumns.replaceAll(
-							"\\[\\$COLUMN_LENGTH:(\\d+)\\$\\]",
-							StringPool.BLANK),
-						StringPool.COMMA_AND_SPACE),
+					connection, tableName, columnNames,
 					orderByColumns + " asc");
 
-			if (duplicateUniqueFinderRowsCleaner.deleteDuplicates()) {
+			long rowCountBefore = _countRows(connection, tableName);
+
+			duplicateUniqueFinderRowsCleaner.deleteDuplicates();
+
+			if (_countRows(connection, tableName) < rowCountBefore) {
 				duplicatesDeleted = true;
 			}
 		}
@@ -299,6 +328,82 @@ public class IndexUpdaterUtil {
 		return indexesSQLMap;
 	}
 
+	private static boolean _hasUnpopulatedColumn(
+			Connection connection, String tableName, String[] columnNames)
+		throws Exception {
+
+		Map<String, Integer> columnDataTypes = new HashMap<>();
+
+		DatabaseMetaData databaseMetaData = connection.getMetaData();
+
+		DBInspector dbInspector = new DBInspector(connection);
+
+		try (ResultSet resultSet = databaseMetaData.getColumns(
+				dbInspector.getCatalog(), dbInspector.getSchema(),
+				dbInspector.normalizeName(tableName, databaseMetaData), null)) {
+
+			while (resultSet.next()) {
+				columnDataTypes.put(
+					StringUtil.toLowerCase(resultSet.getString("COLUMN_NAME")),
+					resultSet.getInt("DATA_TYPE"));
+			}
+		}
+
+		StringBundler sb = new StringBundler();
+
+		sb.append("select count(*) as count");
+
+		for (String columnName : columnNames) {
+			Integer dataType = columnDataTypes.get(
+				StringUtil.toLowerCase(columnName));
+
+			if ((dataType != null) && _isStringType(dataType)) {
+				sb.append(", count(nullif(");
+				sb.append(columnName);
+				sb.append(", '')) as count_");
+			}
+			else {
+				sb.append(", count(");
+				sb.append(columnName);
+				sb.append(") as count_");
+			}
+
+			sb.append(columnName);
+		}
+
+		sb.append(" from ");
+		sb.append(tableName);
+
+		try (PreparedStatement preparedStatement = connection.prepareStatement(
+				sb.toString());
+			ResultSet resultSet = preparedStatement.executeQuery()) {
+
+			if (!resultSet.next()) {
+				return false;
+			}
+
+			long totalCount = resultSet.getLong("count");
+
+			if (totalCount == 0) {
+				return false;
+			}
+
+			for (String columnName : columnNames) {
+				if (resultSet.getLong("count_" + columnName) == 0) {
+					_log.error(
+						StringBundler.concat(
+							"Unable to delete duplicate records in table ",
+							tableName, " because all values in column ",
+							columnName, " are null or empty"));
+
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	private static boolean _isSkipUpdateIndexes(String bundleSymbolicName) {
 		Release release = ReleaseLocalServiceUtil.fetchRelease(
 			bundleSymbolicName);
@@ -316,6 +421,17 @@ public class IndexUpdaterUtil {
 		}
 
 		return true;
+	}
+
+	private static boolean _isStringType(int dataType) {
+		if ((dataType == Types.CHAR) || (dataType == Types.LONGNVARCHAR) ||
+			(dataType == Types.LONGVARCHAR) || (dataType == Types.NCHAR) ||
+			(dataType == Types.NVARCHAR) || (dataType == Types.VARCHAR)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private static void _updateIndexes(String tableName, String indexesSQL)

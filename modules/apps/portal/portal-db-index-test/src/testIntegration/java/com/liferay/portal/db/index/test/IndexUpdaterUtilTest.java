@@ -267,14 +267,8 @@ public class IndexUpdaterUtilTest {
 
 			try (AutoCloseable autoCloseable =
 					() -> StartupHelperUtil.setUpgrading(upgrading);
-				LogCapture duplicateUniqueFinderRowsCleanerLogCapture =
-					LoggerTestUtil.configureLog4JLogger(
-						DuplicateUniqueFinderRowsCleaner.class.getName(),
-						LoggerTestUtil.ERROR);
-				LogCapture indexUpdaterUtilLogCapture =
-					LoggerTestUtil.configureLog4JLogger(
-						IndexUpdaterUtil.class.getName(),
-						LoggerTestUtil.ERROR)) {
+				LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
+					IndexUpdaterUtil.class.getName(), LoggerTestUtil.ERROR)) {
 
 				ReflectionTestUtil.invoke(
 					IndexUpdaterUtil.class, "_updateIndexes",
@@ -282,20 +276,13 @@ public class IndexUpdaterUtilTest {
 					"create unique index IX_TestTable on TestTable(column3" +
 						"[$COLUMN_LENGTH:255$], column4[$COLUMN_LENGTH:255$])");
 
-				List<LogEntry> logEntries =
-					duplicateUniqueFinderRowsCleanerLogCapture.getLogEntries();
+				List<LogEntry> logEntries = logCapture.getLogEntries();
 
 				Assert.assertEquals(
-					logEntries.toString(), 1, logEntries.size());
-
-				logEntries = indexUpdaterUtilLogCapture.getLogEntries();
-
-				Assert.assertEquals(
-					logEntries.toString(), 1, logEntries.size());
+					logEntries.toString(), 2, logEntries.size());
 			}
 
 			try (Connection connection = DataAccess.getConnection();
-
 				PreparedStatement preparedStatement =
 					connection.prepareStatement(
 						"select count(*) as count from TestTable")) {
