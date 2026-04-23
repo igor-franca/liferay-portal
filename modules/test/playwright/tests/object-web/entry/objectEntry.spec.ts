@@ -2402,10 +2402,7 @@ test.describe('Manage object entries through View Object Entries', () => {
 		}
 	});
 
-	test(
-		'can add entry with empty value for date field',
-		{tag: '@LPS-147658'},
-		async ({apiHelpers, page, viewObjectEntriesPage}) => {
+	test('can add entry with empty value for date field',async ({apiHelpers, page, viewObjectEntriesPage}) => {
 			const objectDefinition =
 				await apiHelpers.objectAdmin.postRandomObjectDefinition({
 					objectFields: generateObjectFields({
@@ -2433,6 +2430,64 @@ test.describe('Manage object entries through View Object Entries', () => {
 
 			await expect(
 				page.getByText('Showing 1 to 1 of 1 entries.')
+			).toBeVisible();
+		}
+	);
+
+	test(
+		'can add entry with empty value for picklist field',
+		async ({apiHelpers, page, viewObjectEntriesPage}) => {
+			const {listTypeDefinition} =
+				await postListTypeDefinitionListTypeEntries({
+					apiHelpers,
+					listTypeEntriesLength: 2,
+				});
+
+			const objectFields = generateObjectFields({
+				listTypeDefinitionExternalReferenceCode:
+					listTypeDefinition.externalReferenceCode,
+				objectFieldBusinessTypes: [
+					{
+						businessType: 'Picklist',
+					},
+					{
+						businessType: 'Text',
+						label: {en_US: 'Text Field'},
+					},
+				],
+			});
+
+			const objectDefinition =
+				await apiHelpers.objectAdmin.postRandomObjectDefinition({
+					objectFields,
+					status: {code: 0},
+				});
+
+			apiHelpers.data.push({
+				id: objectDefinition.id,
+				type: 'objectDefinition',
+			});
+
+			await viewObjectEntriesPage.goto(objectDefinition.className);
+
+			await viewObjectEntriesPage.clickAddObjectEntry(
+				objectDefinition.label['en_US']
+			);
+
+			await viewObjectEntriesPage.fillObjectEntry({
+				objectFieldBusinessType: 'Text',
+				objectFieldLabel: 'Text Field',
+				objectFieldValue: 'test',
+			});
+
+			await viewObjectEntriesPage.saveObjectEntryButton.click();
+
+			await expect(viewObjectEntriesPage.successMessage).toBeVisible();
+
+			await viewObjectEntriesPage.backButton.click();
+
+			await expect(
+				page.locator('td').getByText('test', {exact: true})
 			).toBeVisible();
 		}
 	);
