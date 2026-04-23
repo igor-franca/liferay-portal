@@ -206,7 +206,7 @@ test(
 );
 
 const content = '<script>alert("Hello! I am an alert box!");</script>';
-const sanitizedContent = '<p>alert("Hello! I am an alert box!");</p>';
+const sanitizedContent = '';
 
 const assertRichTextContent = async (content, expected, newTabPage) => {
 	const sourceButton = newTabPage.getByRole('button', {
