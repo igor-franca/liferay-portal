@@ -636,7 +636,7 @@ cmsTest.describe('Manage attachment ObjectField storage locations', () => {
 
 				await viewObjectEntriesPage.selectFileFromUserComputer(
 					__dirname,
-					'astronaut.png'
+					'../dependencies/astronaut.png'
 				);
 
 				await page
