@@ -101,7 +101,7 @@ export class ApplicationsMenuPage {
 			exact: true,
 			name: 'API Builder',
 		});
-		this.applicationsMenuTabButton = page.getByRole('tab', {
+		this.applicationsMenuTabButton = page.getByRole('menuitem', {
 			name: 'Applications',
 		});
 		this.appManagerMenuItem = page.getByRole('menuitem', {
@@ -274,7 +274,7 @@ export class ApplicationsMenuPage {
 			exact: true,
 			name: 'Picklists',
 		});
-		this.processBuilderItem = page.getByRole('menuitem', {
+		this.processBuilderItem = page.getByRole('link', {
 			exact: true,
 			name: 'Process Builder',
 		});
