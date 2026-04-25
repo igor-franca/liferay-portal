@@ -2349,12 +2349,12 @@ test.describe('Manage object entries through View Object Entries', () => {
 		).toBeVisible();
 	});
 
-	test('can add entry for site scoped definition', async ({
-		apiHelpers,
-		page,
-		viewObjectEntriesPage,
-	}) => {
-		for (const enableObjectEntryVersioning of [false, true]) {
+	for (const enableObjectEntryVersioning of [false, true]) {
+		test(`can add entry for site scoped definition${enableObjectEntryVersioning ? ' with versioning enabled' : ''}`, async ({
+			apiHelpers,
+			page,
+			viewObjectEntriesPage,
+		}) => {
 			const objectDefinition =
 				await apiHelpers.objectAdmin.postRandomObjectDefinition({
 					scope: 'site',
@@ -2399,10 +2399,13 @@ test.describe('Manage object entries through View Object Entries', () => {
 			await expect(
 				page.locator('td').getByText('test', {exact: true})
 			).toBeVisible();
-		}
-	});
+		});
+	}
 
-	test('can add entry with empty value for date field',async ({apiHelpers, page, viewObjectEntriesPage}) => {
+	test(
+		'can add entry with empty value for date field',
+		{tag: '@LPS-147658'},
+		async ({apiHelpers, page, viewObjectEntriesPage}) => {
 			const objectDefinition =
 				await apiHelpers.objectAdmin.postRandomObjectDefinition({
 					objectFields: generateObjectFields({
@@ -2513,8 +2516,8 @@ test.describe('Manage object entries through View Object Entries', () => {
 		});
 
 		const companyId = await page.evaluate(() => {
-				return Liferay.ThemeDisplay.getCompanyId();
-			});
+			return Liferay.ThemeDisplay.getCompanyId();
+		});
 
 		const user = await createUserWithPermissions({
 			apiHelpers,
@@ -2532,7 +2535,7 @@ test.describe('Manage object entries through View Object Entries', () => {
 					scope: 1,
 				},
 				{
-					actionIds: ['ADD_OBJECT_ENTRY'] as any[],
+					actionIds: ['ADD_OBJECT_ENTRY'],
 					primaryKey: companyId,
 					resourceName: `com.liferay.object#${objectDefinition.id}`,
 					scope: 1,
