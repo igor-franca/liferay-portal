@@ -44,8 +44,7 @@
 			"apps/frontend-js/frontend-js-clay-web/clay/clay-*",
 			"dxp/apps/*/*",
 			"dxp/apps/osb/osb-patcher/*",
-			"frontend-sdk/*",
-			"util/portal-tools-rest-builder-test-client-js"
+			"frontend-sdk/*"
 		]
 	}
 }
