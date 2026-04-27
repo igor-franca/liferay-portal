@@ -8117,12 +8117,12 @@ public class ObjectEntryResourceTest {
 			Http.Method.GET);
 
 		Assert.assertEquals(
-			jsonObject.get("externalReferenceCode"),
+			jsonObject.getString("externalReferenceCode"),
 			jsonObject.getString("friendlyUrlPath"));
 
 		jsonObject = HTTPTestUtil.invokeToJSONObject(
 			JSONUtil.put(
-				"friendlyUrlPath", "Test URL"
+				"friendlyUrlPath", StringPool.SLASH
 			).toString(),
 			_objectDefinition1.getRESTContextPath(), Http.Method.POST);
 
@@ -8133,7 +8133,12 @@ public class ObjectEntryResourceTest {
 			Http.Method.GET);
 
 		Assert.assertEquals(
-			"test-url", jsonObject.getString("friendlyUrlPath"));
+			jsonObject.getString("externalReferenceCode"),
+			jsonObject.getString("friendlyUrlPath"));
+
+		_assertGetObjectEntryWithFriendlyURL("hello-world", "/hello-world");
+		_assertGetObjectEntryWithFriendlyURL("parent/child", "parent//child");
+		_assertGetObjectEntryWithFriendlyURL("test-url", "Test URL");
 	}
 
 	@Test
@@ -15873,6 +15878,26 @@ public class ObjectEntryResourceTest {
 		Assert.assertEquals(
 			String.valueOf(expectedObjectFieldValue),
 			String.valueOf(itemJSONObject.get(expectedObjectFieldName)));
+	}
+
+	private void _assertGetObjectEntryWithFriendlyURL(
+			String expectedFriendlyUrlPath, String friendlyUrlPath)
+		throws Exception {
+
+		JSONObject jsonObject = HTTPTestUtil.invokeToJSONObject(
+			JSONUtil.put(
+				"friendlyUrlPath", friendlyUrlPath
+			).toString(),
+			_objectDefinition1.getRESTContextPath(), Http.Method.POST);
+
+		jsonObject = HTTPTestUtil.invokeToJSONObject(
+			null,
+			_objectDefinition1.getRESTContextPath() + StringPool.SLASH +
+				jsonObject.getString("id"),
+			Http.Method.GET);
+
+		Assert.assertEquals(
+			expectedFriendlyUrlPath, jsonObject.getString("friendlyUrlPath"));
 	}
 
 	private void _assertInvocations(
