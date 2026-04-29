@@ -73,7 +73,7 @@ const FDS_PROPS: Omit<
 > = {
 	filters: [
 		{
-			apiURL: '/o/headless-asset-library/v1.0/asset-libraries',
+			apiURL: "/o/headless-asset-library/v1.0/asset-libraries?filter=type eq 'Space'",
 			entityFieldType: 'collection',
 			id: 'groupIds',
 			itemKey: 'siteId',
