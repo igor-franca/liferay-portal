@@ -142,7 +142,7 @@ public class OfflineOpenIdConnectSessionManagerTest {
 
 		Mockito.when(
 			authorizationServerMetadataResolver.resolveOIDCProviderMetadata(
-				Mockito.anyString(), Mockito.anyLong(), Mockito.anyInt(),
+				Mockito.anyString(), Mockito.anyInt(),
 				Mockito.anyLong())
 		).thenReturn(
 			oidcProviderMetadata
