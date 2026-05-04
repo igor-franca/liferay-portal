@@ -356,6 +356,10 @@ public class AssetVocabularyGroupRelLocalServiceUtil {
 		return getService().getAssetVocabularyGroupRelsCount();
 	}
 
+	public static int getAssetVocabularyGroupRelsCount(long vocabularyId) {
+		return getService().getAssetVocabularyGroupRelsCount(vocabularyId);
+	}
+
 	public static
 		com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery
 			getIndexableActionableDynamicQuery() {
