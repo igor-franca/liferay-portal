@@ -30,7 +30,7 @@ public class DepotEntryModelListener extends BaseModelListener<DepotEntry> {
 		throws ModelListenerException {
 
 		try {
-			if (!(depotEntry.getType() == DepotConstants.TYPE_SPACE)) {
+			if (depotEntry.getType() != DepotConstants.TYPE_SPACE) {
 				return;
 			}
 
