@@ -286,10 +286,10 @@ const Main = ({
 	const [displayErrors, setDisplayErrors] = useState(initialDisplayErrors);
 	const [valid, setValid] = useState(initialValid);
 	const [progress, setProgress] = useState(0);
-	const [submitButtonClicked, setSubmitButtonClicked] = useState(false);
 
 	const originalFileEntryIdRef = useRef(null);
 	const pendingDeletionsRef = useRef([]);
+	const submitButtonClickedRef = useRef(false);
 
 	const isSignedIn = Liferay.ThemeDisplay.isSignedIn();
 
@@ -497,7 +497,7 @@ const Main = ({
 
 	const deleteFileEntry = useCallback(
 		(fileEntryId) => {
-			if (!fileEntryId) {
+			if (!fileEntryId || !fileEntryDeleteURL) {
 				return;
 			}
 
@@ -626,7 +626,7 @@ const Main = ({
 
 	useEffect(() => {
 		const handleBeforeUnload = () => {
-			if (readOnly || submitButtonClicked) {
+			if (readOnly || submitButtonClickedRef.current) {
 				return;
 			}
 
@@ -652,7 +652,7 @@ const Main = ({
 		return () => {
 			window.removeEventListener('beforeunload', handleBeforeUnload);
 		};
-	}, [currentValue, deleteFileEntry, readOnly, submitButtonClicked]);
+	}, [currentValue, deleteFileEntry, readOnly]);
 
 	useEffect(() => {
 		const onSubmit = () => {
@@ -662,7 +662,7 @@ const Main = ({
 
 			pendingDeletionsRef.current = [];
 
-			setSubmitButtonClicked(true);
+			submitButtonClickedRef.current = true;
 		};
 
 		Liferay.on('paginationControlsSubmitButtonClicked', onSubmit);
