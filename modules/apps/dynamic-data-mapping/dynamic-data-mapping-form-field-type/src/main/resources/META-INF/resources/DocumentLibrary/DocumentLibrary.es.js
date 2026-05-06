@@ -15,7 +15,7 @@ import {
 	useFormState,
 } from 'data-engine-js-components-web';
 import {formatStorage, openSelectionModal, sub} from 'frontend-js-web';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import FieldBase from '../FieldBase/ReactFieldBase.es';
 
@@ -288,6 +288,9 @@ const Main = ({
 	const [progress, setProgress] = useState(0);
 	const [submitButtonClicked, setSubmitButtonClicked] = useState(false);
 
+	const originalFileEntryIdRef = useRef(null);
+	const pendingDeletionsRef = useRef([]);
+
 	const isSignedIn = Liferay.ThemeDisplay.isSignedIn();
 
 	const getErrorMessages = (
@@ -475,32 +478,56 @@ const Main = ({
 		return true;
 	};
 
-	const deleteFileEntry = useCallback(() => {
-		const request = new XMLHttpRequest();
-
-		let oldFileEntryId = 0;
+	const getFileEntryId = (fileEntryValue) => {
+		if (!fileEntryValue) {
+			return null;
+		}
 
 		try {
-			const fileEntry = JSON.parse(value);
+			const fileEntry = JSON.parse(fileEntryValue);
 
-			oldFileEntryId = fileEntry.fileEntryId;
+			return fileEntry.fileEntryId || null;
 		}
 		catch (error) {
-			console.error('Unable to parse JSON', value);
+			console.error('Unable to parse JSON', fileEntryValue);
+
+			return null;
+		}
+	};
+
+	const deleteFileEntry = useCallback(
+		(fileEntryId) => {
+			if (!fileEntryId) {
+				return;
+			}
+
+			const request = new XMLHttpRequest();
+
+			request.open('POST', fileEntryDeleteURL);
+			request.send(
+				convertToFormData({
+					[`${portletNamespace}oldFileEntryId`]: fileEntryId,
+				})
+			);
+		},
+		[fileEntryDeleteURL, portletNamespace]
+	);
+
+	const stagePendingDeletion = (fileEntryId) => {
+		if (!fileEntryId || pendingDeletionsRef.current.includes(fileEntryId)) {
+			return;
 		}
 
-		request.open('POST', fileEntryDeleteURL);
-		request.send(
-			convertToFormData({
-				[`${portletNamespace}oldFileEntryId`]: oldFileEntryId,
-			})
-		);
-	}, [fileEntryDeleteURL, portletNamespace, value]);
+		pendingDeletionsRef.current = [
+			...pendingDeletionsRef.current,
+			fileEntryId,
+		];
+	};
 
 	const handleOnClearButtonClicked = (event, isSignedIn) => {
 		onFocus(event);
 
-		deleteFileEntry();
+		stagePendingDeletion(getFileEntryId(currentValue));
 
 		setCurrentValue(null);
 
@@ -522,26 +549,12 @@ const Main = ({
 	const handleUploadSelectButtonClicked = (event, currentValue) => {
 		onFocus(event);
 
-		let oldFileEntryId = 0;
+		stagePendingDeletion(getFileEntryId(currentValue));
 
-		if (currentValue) {
-			try {
-				const fileEntry = JSON.parse(currentValue);
-
-				oldFileEntryId = fileEntry.fileEntryId;
-
-				uploadFileEntry(event, oldFileEntryId);
-			}
-			catch (error) {
-				console.error('Unable to parse JSON', currentValue);
-			}
-		}
-		else {
-			uploadFileEntry(event, oldFileEntryId);
-		}
+		uploadFileEntry(event);
 	};
 
-	const uploadFileEntry = (event, oldFileEntryId) => {
+	const uploadFileEntry = (event) => {
 		const file = event.target.files[0];
 
 		if (isExceededUploadRequestSizeLimit(file.size)) {
@@ -595,7 +608,7 @@ const Main = ({
 		request.send(
 			convertToFormData({
 				[`${portletNamespace}file`]: file,
-				[`${portletNamespace}oldFileEntryId`]: oldFileEntryId,
+				[`${portletNamespace}oldFileEntryId`]: 0,
 			})
 		);
 	};
@@ -606,28 +619,66 @@ const Main = ({
 		showUploadPermissionMessage;
 
 	useEffect(() => {
+		originalFileEntryIdRef.current = getFileEntryId(value);
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
 		window.onbeforeunload = function () {
-			if (!submitButtonClicked) {
-				deleteFileEntry();
+			if (readOnly || submitButtonClicked) {
+				return;
+			}
+
+			const currentFileEntryId = getFileEntryId(currentValue);
+			const originalFileEntryId = originalFileEntryIdRef.current;
+
+			if (
+				currentFileEntryId &&
+				currentFileEntryId !== originalFileEntryId
+			) {
+				deleteFileEntry(currentFileEntryId);
+			}
+
+			if (!originalFileEntryId) {
+				pendingDeletionsRef.current.forEach((fileEntryId) =>
+					deleteFileEntry(fileEntryId)
+				);
 			}
 		};
 
 		return () => {
 			window.onbeforeunload = null;
 		};
-	}, [deleteFileEntry, submitButtonClicked]);
+	}, [currentValue, deleteFileEntry, readOnly, submitButtonClicked]);
 
 	useEffect(() => {
-		Liferay.on(
-			'paginationControlsSubmitButtonClicked',
+		const onSubmit = () => {
+			pendingDeletionsRef.current.forEach((fileEntryId) =>
+				deleteFileEntry(fileEntryId)
+			);
 
-			() => {
-				setSubmitButtonClicked(true);
-			}
-		);
+			pendingDeletionsRef.current = [];
+
+			setSubmitButtonClicked(true);
+		};
+
+		Liferay.on('paginationControlsSubmitButtonClicked', onSubmit);
 
 		return () => {
 			Liferay.detach('paginationControlsSubmitButtonClicked');
+		};
+	}, [deleteFileEntry]);
+
+	useEffect(() => {
+		const onCancel = () => {
+			pendingDeletionsRef.current = [];
+		};
+
+		Liferay.on('paginationControlsCancelButtonClicked', onCancel);
+
+		return () => {
+			Liferay.detach('paginationControlsCancelButtonClicked');
 		};
 	}, []);
 
