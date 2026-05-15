@@ -8,15 +8,20 @@ import React from 'react';
 import DecimalDataRenderer from './FDSDataRenderers/DecimalDataRenderer';
 import MultiselectPicklistDataRenderer from './FDSDataRenderers/MultiselectPicklistDataRenderer';
 import ObjectEntryStatusDataRenderer from './FDSDataRenderers/ObjectEntryStatusDataRenderer';
+import transformFDSBulkActions from './utils/transformFDSBulkActions';
 
 type ObjectEntryStatusDataRendererProps = {
 	itemData: ObjectEntry;
 	restContextPath: string;
 };
 
-export default function ViewObjectEntriesFDSPropsTransformer({...otherProps}) {
+export default function ViewObjectEntriesFDSPropsTransformer({
+	bulkActions,
+	...otherProps
+}: any) {
 	return {
 		...otherProps,
+		bulkActions: bulkActions && transformFDSBulkActions(bulkActions),
 		customDataRenderers: {
 			decimalDataRenderer: DecimalDataRenderer,
 			multiselectPicklistDataRenderer: MultiselectPicklistDataRenderer,
