@@ -7,7 +7,10 @@ import {IBulkActionItem} from '@liferay/frontend-data-set-web';
 
 import transformFDSBulkActions from '../../../components/FDSPropsTransformer/utils/transformFDSBulkActions';
 
-const findBulkAction = (bulkActions: Array<IBulkActionItem>, id: string): any =>
+const findBulkAction = (
+	bulkActions: Array<IBulkActionItem>,
+	id: string
+): IBulkActionItem | undefined =>
 	bulkActions.find((action) => action?.data?.id === id);
 
 const transformBulkAction = (id: string): Array<IBulkActionItem> =>
@@ -21,12 +24,12 @@ const deleteBulkAction = findBulkAction(
 describe('transformFDSBulkActions', () => {
 	describe('bulk action isVisible', () => {
 		it('attaches an isVisible callback to a mapped bulk action', () => {
-			expect(typeof deleteBulkAction.isVisible).toBe('function');
+			expect(typeof deleteBulkAction?.isVisible).toBe('function');
 		});
 
 		it('hides the action when allItemsSelectedActive is true and selected items lack the permission', () => {
 			expect(
-				deleteBulkAction.isVisible({
+				deleteBulkAction?.isVisible?.({
 					allItemsSelectedActive: true,
 					selectedItems: [
 						{actions: {get: {}}, id: 1},
@@ -38,7 +41,7 @@ describe('transformFDSBulkActions', () => {
 
 		it('hides the action when any selected item lacks the permission', () => {
 			expect(
-				deleteBulkAction.isVisible({
+				deleteBulkAction?.isVisible?.({
 					allItemsSelectedActive: false,
 					selectedItems: [
 						{actions: {delete: {}}, id: 1},
@@ -48,9 +51,18 @@ describe('transformFDSBulkActions', () => {
 			).toBe(false);
 		});
 
+		it('hides the action when no items are selected', () => {
+			expect(
+				deleteBulkAction?.isVisible?.({
+					allItemsSelectedActive: false,
+					selectedItems: [],
+				})
+			).toBe(false);
+		});
+
 		it('hides the action when no selected item has the permission', () => {
 			expect(
-				deleteBulkAction.isVisible({
+				deleteBulkAction?.isVisible?.({
 					allItemsSelectedActive: false,
 					selectedItems: [
 						{actions: {get: {}}, id: 1},
@@ -62,7 +74,7 @@ describe('transformFDSBulkActions', () => {
 
 		it('shows the action when every selected item has the permission', () => {
 			expect(
-				deleteBulkAction.isVisible({
+				deleteBulkAction?.isVisible?.({
 					allItemsSelectedActive: false,
 					selectedItems: [
 						{actions: {delete: {}}, id: 1},
@@ -70,6 +82,14 @@ describe('transformFDSBulkActions', () => {
 					],
 				})
 			).toBe(true);
+		});
+	});
+
+	describe('unmapped action id', () => {
+		it('returns the action unchanged when the id is not in the permission map', () => {
+			const [action] = transformBulkAction('unmapped-action');
+
+			expect(action?.isVisible).toBeUndefined();
 		});
 	});
 });
