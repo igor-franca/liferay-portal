@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {IBulkActionItem} from '@liferay/frontend-data-set-web';
 import React from 'react';
 
 import DecimalDataRenderer from './FDSDataRenderers/DecimalDataRenderer';
@@ -18,10 +19,14 @@ type ObjectEntryStatusDataRendererProps = {
 export default function ViewObjectEntriesFDSPropsTransformer({
 	bulkActions,
 	...otherProps
-}: any) {
+}: {
+	bulkActions?: Array<IBulkActionItem>;
+	[key: string]: any;
+}) {
 	return {
 		...otherProps,
-		bulkActions: bulkActions && transformFDSBulkActions(bulkActions),
+		bulkActions:
+			bulkActions && transformFDSBulkActions<ObjectEntry>(bulkActions),
 		customDataRenderers: {
 			decimalDataRenderer: DecimalDataRenderer,
 			multiselectPicklistDataRenderer: MultiselectPicklistDataRenderer,
