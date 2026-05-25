@@ -1,0 +1,42 @@
+/**
+ * SPDX-FileCopyrightText: (c) 2026 Liferay, Inc. https://liferay.com
+ * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
+ */
+
+.ai-hub-metric-card {
+	background-color: #ffffff;
+	border: 1px solid #cdcfd4;
+	border-radius: 4px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 20px;
+}
+
+.ai-hub-metric-card-header {
+	align-items: flex-start;
+	display: flex;
+	justify-content: space-between;
+}
+
+.ai-hub-metric-card-title {
+	color: #272833;
+	font-size: 14px;
+	font-weight: 600;
+	margin: 0;
+}
+
+.ai-hub-metric-card-icon {
+	flex-shrink: 0;
+}
+
+.ai-hub-metric-card-value {
+	color: #272833;
+	font-size: 32px;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.ai-hub-metric-card-footer {
+	margin-top: auto;
+}
