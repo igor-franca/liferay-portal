@@ -300,6 +300,23 @@
 													{
 														"definition": {
 															"fragment": {
+																"key": "INPUTS-select-from-list"
+															},
+															"fragmentConfig": {
+																"inputFieldId": "ObjectField_expenseType"
+															},
+															"fragmentFields": [
+															],
+															"fragmentStyle": {
+																"paddingBottom": "3"
+															},
+															"indexed": true
+														},
+														"type": "Fragment"
+													},
+													{
+														"definition": {
+															"fragment": {
 																"key": "INPUTS-numeric-input"
 															},
 															"fragmentConfig": {

@@ -245,6 +245,30 @@
 					"unique": false
 				},
 				{
+					"DBType": "String",
+					"businessType": "Picklist",
+					"defaultValue": "null",
+					"externalReferenceCode": "f0a31c84-3b1a-4cf9-9d10-9c7c4ac8e1d7",
+					"indexed": true,
+					"indexedAsKeyword": true,
+					"indexedLanguageId": "",
+					"label": {
+						"en_US": "Expense Type"
+					},
+					"listTypeDefinitionExternalReferenceCode": "EXPENSE_TYPE",
+					"localized": false,
+					"name": "expenseType",
+					"objectFieldSettings": [
+					],
+					"readOnly": "false",
+					"readOnlyConditionExpression": "",
+					"required": true,
+					"state": false,
+					"system": false,
+					"type": "String",
+					"unique": false
+				},
+				{
 					"DBType": "Double",
 					"businessType": "Decimal",
 					"defaultValue": "null",
