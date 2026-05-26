@@ -1,0 +1,21 @@
+{
+	"configuration": {
+		"className": "com.liferay.object.admin.rest.dto.v1_0.ObjectFolder",
+		"parameters": {
+			"containsHeaders": "true",
+			"createStrategy": "UPSERT",
+			"onErrorFail": "false",
+			"updateStrategy": "UPDATE"
+		},
+		"taskItemDelegateName": "DEFAULT"
+	},
+	"items": [
+		{
+			"externalReferenceCode": "EXPENSE_REQUESTS",
+			"label": {
+				"en_US": "Expense Requests"
+			},
+			"name": "ExpenseRequests"
+		}
+	]
+}
