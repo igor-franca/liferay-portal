@@ -16,7 +16,9 @@ export class HomePage {
     readonly expenseSubmitButton: Locator;
     readonly expenseSucessMessage: Locator;
     readonly expenseTitle: Locator;
-    
+    readonly expenseType: Locator;
+    readonly expenseTypeRequiredErrorMessage: Locator;
+
     constructor(page: Page) {
         this.page = page;
         this.expenseAmount = page.getByLabel('Amount');
@@ -28,6 +30,8 @@ export class HomePage {
         this.expenseSubmitButton = page.getByRole('button', {name: 'Submit'});
         this.expenseSucessMessage = page.getByText('Thank you. Your information was successfully received.');
         this.expenseTitle = page.getByRole('textbox', {name: 'Title'});
+        this.expenseType = page.getByLabel('Expense Type');
+        this.expenseTypeRequiredErrorMessage = page.getByText('This field is required.');
     }
 
     async goto() {

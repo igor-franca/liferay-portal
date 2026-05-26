@@ -24,12 +24,13 @@ test.beforeEach(async ({page}) => {
 	await customerPerformLogin(page, 'test@liferay.com');
 });
 
-test('can submit a reimbursement request', async ({homePage}) => {
+test('can submit a reimbursement request', {tag: '@LPS-003'}, async ({homePage}) => {
 	await homePage.goto();
 
 	await expect(homePage.expenseRequestsHeading).toBeVisible();
 
 	await homePage.expenseTitle.fill('Dinner');
+	await homePage.expenseType.selectOption('Travel Expenses');
 	await homePage.expenseAmount.fill('16.50');
 	await homePage.expenseDescription.fill('Dinner in Madrid');
 	await homePage.expenseDate.pressSequentially('11/17/2025');
@@ -45,6 +46,7 @@ test('can not submit a reimbursement request using a negative amount value', asy
 	await expect(homePage.expenseRequestsHeading).toBeVisible();
 
 	await homePage.expenseTitle.fill('Dinner');
+	await homePage.expenseType.selectOption('Travel Expenses');
 	await homePage.expenseAmount.fill('-1');
 	await homePage.expenseDescription.fill('Dinner in Madrid');
 	await homePage.expenseDate.pressSequentially('11/17/2025');
@@ -52,6 +54,21 @@ test('can not submit a reimbursement request using a negative amount value', asy
 	await homePage.expenseSubmitButton.click();
 
 	await expect(homePage.expenseAmountErrorMessage).toBeVisible();
+});
+
+test('can not submit a reimbursement request without an expense type', {tag: '@LPS-003'}, async ({homePage}) => {
+	await homePage.goto();
+
+	await expect(homePage.expenseRequestsHeading).toBeVisible();
+
+	await homePage.expenseTitle.fill('Dinner');
+	await homePage.expenseAmount.fill('16.50');
+	await homePage.expenseDescription.fill('Dinner in Madrid');
+	await homePage.expenseDate.pressSequentially('11/17/2025');
+
+	await homePage.expenseSubmitButton.click();
+
+	await expect(homePage.expenseTypeRequiredErrorMessage).toBeVisible();
 });
 
 test('can configure the workflow for a reimbursement request', async ({applicationsMenuPage, configurationTabPage}) => {
