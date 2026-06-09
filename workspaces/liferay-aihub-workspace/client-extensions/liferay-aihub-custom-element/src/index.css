@@ -3,6 +3,50 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+.aihub-shadow-portal {
+	all: initial;
+	color: #272833;
+	font-family:
+		-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans,
+		Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+	font-size: 16px;
+	line-height: 1.5;
+}
+
+.aihub-feedback-actions {
+	display: flex;
+	gap: 0.25rem;
+	margin-top: 0.25rem;
+}
+
+.aihub-toast {
+	align-items: center;
+	background: #fff;
+	border: 1px solid var(--aihub-border);
+	border-radius: 0.25rem;
+	bottom: 1.25rem;
+	box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15);
+	color: var(--aihub-text-main);
+	display: flex;
+	gap: 0.5rem;
+	left: 1.25rem;
+	max-width: calc(100vw - 2.5rem);
+	padding: 0.75rem 1rem;
+	position: fixed;
+	z-index: 2147483647;
+}
+
+.aihub-toast-icon {
+	align-items: center;
+	color: #287d3c;
+	display: flex;
+}
+
+.aihub-toast-icon svg {
+	height: 1.25rem;
+	width: 1.25rem;
+}
+
 #aihub-chatbot-widget {
 	--aihub-accent: #0b5fff;
 	--aihub-bg-light: #f7f8f9;

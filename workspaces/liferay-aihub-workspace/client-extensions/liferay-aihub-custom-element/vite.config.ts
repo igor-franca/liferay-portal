@@ -8,6 +8,9 @@ import {defineConfig} from 'vite';
 
 export default defineConfig({
 	build: {
+		// Atlas CSS is inlined into the bundle (injected into the shadow root),
+		// which exceeds the default 500 kB chunk warning.
+		chunkSizeWarningLimit: 2000,
 		outDir: 'build/vite',
 		rollupOptions: {
 			output: {
@@ -24,7 +27,7 @@ export default defineConfig({
 	},
 	experimental: {
 		renderBuiltUrl(filename: string) {
-			return `/o/liferay-ai-hub-custom-element/${filename}`;
+			return `/o/liferay-aihub-custom-element/${filename}`;
 		},
 	},
 	plugins: [react()],
