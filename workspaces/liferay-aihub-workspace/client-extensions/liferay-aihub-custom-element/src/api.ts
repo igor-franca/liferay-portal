@@ -150,3 +150,63 @@ export async function postChatMessage(
 		}
 	);
 }
+
+export type ReportFeedbackReason =
+	| 'agentError'
+	| 'harmfulContent'
+	| 'incorrect'
+	| 'other'
+	| 'piiExposure';
+
+export type ReportFeedbackType = 'negative' | 'positive';
+
+export interface ReportFeedbackPayload {
+	agentDefinitionExternalReferenceCodes: string[];
+	chatbotExternalReferenceCode: string;
+	feedback: ReportFeedbackType;
+	reason?: ReportFeedbackReason;
+	surface: 'clickToChat';
+	userMessage?: string;
+}
+
+export async function postAIIssueReport(
+	payload: ReportFeedbackPayload
+): Promise<{id: string}> {
+	const headers = new Headers({
+		'Accept': 'application/json',
+		'Content-Type': 'application/json',
+	});
+
+	if ((window as any).Liferay) {
+		const authorizationToken = await postAuthorizationToken();
+
+		if (!authorizationToken) {
+			throw new Error(
+				'Unable to obtain authorization token for feedback report.'
+			);
+		}
+
+		headers.set(
+			'Authorization',
+			`Bearer ${authorizationToken.accessToken}`
+		);
+		headers.set(
+			'Liferay-AI-Hub-Cell-On-Behalf-Of',
+			authorizationToken.userToken
+		);
+	}
+
+	const response = await fetch(`${aiHubURL}${AI_HUB_ENDPOINT}/reports`, {
+		body: JSON.stringify(payload),
+		headers,
+		method: 'POST',
+	});
+
+	if (!response.ok) {
+		throw new Error(
+			`Unable to send feedback (${response.status} ${response.statusText})`
+		);
+	}
+
+	return (await response.json()) as {id: string};
+}

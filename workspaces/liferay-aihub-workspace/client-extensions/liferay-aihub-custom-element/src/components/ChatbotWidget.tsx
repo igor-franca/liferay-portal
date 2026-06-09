@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import ClayIcon from '@clayui/icon';
 import {EventSource} from 'eventsource';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
@@ -11,6 +12,7 @@ import {
 	getChatbotConfiguration,
 	postChatMessage,
 } from '../api';
+import {submitPositiveFeedback} from '../feedback';
 import {getLanguageId, getLocalizedValue} from '../locale';
 import AssistantMessage from './AssistantMessage';
 import ChatbotFooter from './ChatbotFooter';
@@ -18,8 +20,9 @@ import ChatbotHeader from './ChatbotHeader';
 import ChatbotInput from './ChatbotInput';
 import ChatbotIntro from './ChatbotIntro';
 import ErrorMessage from './ErrorMessage';
-import {ChatIcon, CloseIcon} from './Icons';
 import LoadingIndicator from './LoadingIndicator';
+import SendFeedbackModal from './SendFeedbackModal';
+import Toast from './Toast';
 import UserMessage from './UserMessage';
 
 import type {
@@ -27,6 +30,13 @@ import type {
 	ChatbotConfiguration,
 	WidgetConfiguration,
 } from '../types';
+
+const FEEDBACK_TOAST_MESSAGE = 'Thanks for your feedback!';
+
+interface ReportTarget {
+	agentDefinitionExternalReferenceCodes: string[];
+	index: number;
+}
 
 interface ChatbotWidgetProps {
 	widgetConfiguration: WidgetConfiguration;
@@ -42,6 +52,11 @@ export default function ChatbotWidget({
 	const [notificationDismissed, setNotificationDismissed] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [subscribed, setSubscribed] = useState(false);
+	const [feedbackGiven, setFeedbackGiven] = useState<Record<number, boolean>>(
+		{}
+	);
+	const [reportTarget, setReportTarget] = useState<ReportTarget | null>(null);
+	const [toastMessage, setToastMessage] = useState<string | null>(null);
 
 	const eventSourceRef = useRef<EventSource | null>(null);
 	const eventSourceReference = useRef<string | null>(null);
@@ -99,7 +114,13 @@ export default function ChatbotWidget({
 
 						setMessages((prev) => [
 							...prev,
-							{sender: 'assistant', text: data.data},
+							{
+								agentDefinitionExternalReferenceCodes:
+									data.agentDefinitionExternalReferenceCodes ??
+									[],
+								sender: 'assistant',
+								text: data.data,
+							},
 						]);
 					}
 					catch (error) {
@@ -228,6 +249,34 @@ export default function ChatbotWidget({
 		};
 	}, [chatbotConfiguration]);
 
+	const handleThumbsUp = (index: number, message: ChatMessage) => {
+		if (feedbackGiven[index]) {
+			return;
+		}
+
+		submitPositiveFeedback(
+			{
+				agentDefinitionExternalReferenceCodes:
+					message.agentDefinitionExternalReferenceCodes ?? [],
+				chatbotExternalReferenceCode:
+					widgetConfiguration.chatbotExternalReferenceCode,
+				surface: 'clickToChat',
+			},
+			() => {
+				setFeedbackGiven((prev) => ({...prev, [index]: true}));
+				setToastMessage(FEEDBACK_TOAST_MESSAGE);
+			}
+		);
+	};
+
+	const handleThumbsDown = (index: number, message: ChatMessage) => {
+		setReportTarget({
+			agentDefinitionExternalReferenceCodes:
+				message.agentDefinitionExternalReferenceCodes ?? [],
+			index,
+		});
+	};
+
 	if (!chatbotConfiguration?.active || !localized) {
 		return null;
 	}
@@ -259,7 +308,12 @@ export default function ChatbotWidget({
 							return (
 								<AssistantMessage
 									avatar={avatarURL}
+									feedbackGiven={Boolean(feedbackGiven[index])}
 									key={index}
+									onThumbsDown={() =>
+										handleThumbsDown(index, msg)
+									}
+									onThumbsUp={() => handleThumbsUp(index, msg)}
 									text={msg.text}
 									title={localized.title}
 								/>
@@ -302,7 +356,7 @@ export default function ChatbotWidget({
 							className="aihub-notification-close"
 							onClick={() => setNotificationDismissed(true)}
 						>
-							<CloseIcon />
+							<ClayIcon symbol="times" />
 						</button>
 					</div>
 				)}
@@ -312,8 +366,35 @@ export default function ChatbotWidget({
 				className="aihub-toggle"
 				onClick={handleToggle}
 			>
-				{open ? <CloseIcon /> : <ChatIcon />}
+				{open ? <ClayIcon symbol="times" /> : <ClayIcon symbol="comments" />}
 			</button>
+
+			{reportTarget !== null && (
+				<SendFeedbackModal
+					agentDefinitionExternalReferenceCodes={
+						reportTarget.agentDefinitionExternalReferenceCodes
+					}
+					chatbotExternalReferenceCode={
+						widgetConfiguration.chatbotExternalReferenceCode
+					}
+					onClose={() => setReportTarget(null)}
+					onSubmitted={() => {
+						setFeedbackGiven((prev) => ({
+							...prev,
+							[reportTarget.index]: true,
+						}));
+						setReportTarget(null);
+						setToastMessage(FEEDBACK_TOAST_MESSAGE);
+					}}
+				/>
+			)}
+
+			{toastMessage && (
+				<Toast
+					message={toastMessage}
+					onDismiss={() => setToastMessage(null)}
+				/>
+			)}
 		</>
 	);
 }
