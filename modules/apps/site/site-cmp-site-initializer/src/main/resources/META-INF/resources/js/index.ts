@@ -8,6 +8,7 @@ export {default as EditorToolbar} from './components/EditorToolbar';
 export {default as ProjectSelector} from './components/ProjectSelector';
 export {default as StateSelector} from './components/StateSelector';
 export {default as Tags} from './components/Tags';
+export {default as ContentGapMatrixCard} from './components/content_gap_matrix/ContentGapMatrixCard';
 export {default as ProjectHistory} from './components/project/ProjectHistory';
 export {default as ProjectInfoSummary} from './components/project/ProjectInfoSummary';
 export {default as AllTasksFDSPropsTransformer} from './components/props_transformer/AllTasksFDSPropsTransformer';
