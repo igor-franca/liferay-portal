@@ -20,15 +20,18 @@ export class TasksPage {
 	readonly assignTaskToDialog: Locator;
 	readonly calendarView: {
 		datePickerMenu: Locator;
+		dayViewButton: Locator;
+		monthViewButton: Locator;
 		moreLinkButton: Locator;
 		moreLinkPopover: Locator;
-		nextMonthButton: Locator;
-		previousMonthButton: Locator;
+		nextButton: Locator;
+		previousButton: Locator;
 		title: Locator;
 		todayButton: Locator;
 		unscheduledTasksButton: Locator;
 		unscheduledTasksPanel: Locator;
 		viewOption: Locator;
+		weekViewButton: Locator;
 	};
 	readonly dataSetFragmentPage: DataSetPage;
 	readonly dialogDeleteButton: Locator;
@@ -64,11 +67,20 @@ export class TasksPage {
 		});
 		this.calendarView = {
 			datePickerMenu: page.getByRole('dialog', {name: 'Select Date'}),
+			dayViewButton: page.getByRole('button', {
+				exact: true,
+				name: 'Day',
+			}),
+			monthViewButton: page.getByRole('button', {
+				exact: true,
+				name: 'Month',
+			}),
 			moreLinkButton: page.getByText(/\d+ More/),
 			moreLinkPopover: page.getByTestId('calendarMoreLinkPopover'),
-			nextMonthButton: page.getByRole('button', {name: 'Next Month'}),
-			previousMonthButton: page.getByRole('button', {
-				name: 'Previous Month',
+			nextButton: page.getByRole('button', {exact: true, name: 'Next'}),
+			previousButton: page.getByRole('button', {
+				exact: true,
+				name: 'Previous',
 			}),
 			title: page.getByTestId('calendarTitle'),
 			todayButton: page.getByRole('button', {name: 'Today'}),
@@ -77,6 +89,10 @@ export class TasksPage {
 				'calendarUnscheduledTasksPanel'
 			),
 			viewOption: page.getByRole('option', {name: 'Calendar'}),
+			weekViewButton: page.getByRole('button', {
+				exact: true,
+				name: 'Week',
+			}),
 		};
 		this.dataSetFragmentPage = new DataSetPage(page);
 		this.dialogDeleteButton = page
