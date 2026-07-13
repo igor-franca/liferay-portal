@@ -10,40 +10,17 @@ import ClayIcon from '@clayui/icon';
 import ClayLayout from '@clayui/layout';
 import ClayLoadingIndicator from '@clayui/loading-indicator';
 import classNames from 'classnames';
-import {EventSource} from 'eventsource';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 
-import {
-	CATEGORIZE_EVENT,
-	CategorizeEventPayload,
-} from '../Categorization/events';
-import {ECategorizationAgent} from '../Categorization/types';
 import ReportFeedbackModal from '../ReportFeedback/ReportFeedbackModal';
-import submitPositiveReportFeedback from '../ReportFeedback/submitPositiveReportFeedback';
-import {
-	ChatContext,
-	createEventSource,
-	postChatByExternalReferenceCodeMessage,
-} from './api';
+import {ChatContext} from './api';
 import AIAssistantFooterDisclaimer from './components/AIAssistantFooterDisclaimer';
 import AIAssistantMessageBalloon from './components/AIAssistantMessageBalloon';
 import CategorizationMessageBalloon from './components/CategorizationMessageBalloon';
 import UserMessageBalloon from './components/UserMessageBalloon';
+import useAIChat from './useAIChat';
 
 import './chat.scss';
-
-interface message {
-	agentDefinitionExternalReferenceCodes?: string[];
-	categorization?: CategorizeEventPayload;
-	error?: boolean;
-	sender: string;
-	text: string;
-}
-
-interface ReportContext {
-	agentDefinitionExternalReferenceCodes: string[];
-	index: number;
-}
 
 type AIState = 'focused' | 'result' | 'result-readonly' | 'working';
 
@@ -75,81 +52,29 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 	triggerLabel = Liferay.Language.get('ai-assistant'),
 }) => {
 	const [active, setActive] = useState<boolean>(false);
-	const [feedbackGiven, setFeedbackGiven] = useState<Record<number, boolean>>(
-		{}
-	);
-	const [isGenerating, setIsGenerating] = useState<boolean>(false);
-	const [messages, setMessages] = useState<message[]>([]);
-	const [message, setMessage] = useState<string>('');
-	const [reportContext, setReportContext] = useState<ReportContext | null>(
-		null
-	);
 
-	const handleThumbsUp = (index: number, item: message) => {
-		if (feedbackGiven[index]) {
-			return;
-		}
+	const {
+		feedbackGiven,
+		giveThumbsUp,
+		isGenerating,
+		markFeedbackGiven,
+		message,
+		messages,
+		messagesEndRef,
+		reportContext,
+		sendMessage,
+		setMessage,
+		setReportContext,
+	} = useAIChat({
+		context,
+		getContext,
+		initialMessage,
+		instructionDefinitionScope,
+		onOpenRequested: () => setActive(true),
+	});
 
-		setFeedbackGiven((previousFeedbackGiven) => ({
-			...previousFeedbackGiven,
-			[index]: true,
-		}));
-
-		submitPositiveReportFeedback({
-			agentDefinitionExternalReferenceCodes:
-				item.agentDefinitionExternalReferenceCodes ?? [],
-			surface: 'aiAssistant',
-		});
-	};
-	const eventSourceRef = useRef<EventSource | null>(null);
-	const eventSourceReference = useRef<string | null>(null);
-	const contextRef = useRef<ChatContext | undefined>(context);
-	const getContextRef = useRef<(() => ChatContext) | undefined>(getContext);
-	const initialMessageRef = useRef<string | undefined>(initialMessage);
-	const initialMessageSentRef = useRef<boolean>(false);
-	const instructionDefinitionScopeRef = useRef<string>(
-		instructionDefinitionScope
-	);
-	const messagesEndRef = useRef<HTMLDivElement | null>(null);
 	const triggerRef = useRef<HTMLButtonElement | null>(null);
 	const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-
-	useEffect(() => {
-		contextRef.current = context;
-		getContextRef.current = getContext;
-		instructionDefinitionScopeRef.current = instructionDefinitionScope;
-	}, [context, getContext, instructionDefinitionScope]);
-
-	const sendMessage = useCallback((text: string) => {
-		if (!text.trim()) {
-			return;
-		}
-
-		setMessages((previousMessages) => {
-			setTimeout(() => {
-				messagesEndRef.current?.scrollIntoView({behavior: 'smooth'});
-			}, 0);
-
-			return [...previousMessages, {sender: 'user', text}];
-		});
-
-		setMessage('');
-
-		if (eventSourceReference.current) {
-			setIsGenerating(true);
-
-			const getCurrentContext =
-				getContextRef.current ?? (() => contextRef.current ?? {});
-
-			postChatByExternalReferenceCodeMessage({
-				chatContext: getCurrentContext(),
-				eventSourceReference: eventSourceReference.current,
-				instructionDefinitionScope:
-					instructionDefinitionScopeRef.current,
-				message: text,
-			}).catch(() => setIsGenerating(false));
-		}
-	}, []);
 
 	function onSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -213,148 +138,6 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 		}
 	}
 
-	const openAIAssistantChatConnection = useCallback(() => {
-		createEventSource().then((eventSource) => {
-			if (!eventSource) {
-				return;
-			}
-
-			eventSourceRef.current = eventSource;
-
-			eventSourceRef.current.addEventListener(
-				'Chat Message Sent',
-				(event) => {
-					try {
-						const dataJSON = JSON.parse(event.data);
-
-						setMessages((previousMessages) => {
-							setTimeout(() => {
-								messagesEndRef.current?.scrollIntoView({
-									behavior: 'smooth',
-								});
-							}, 0);
-
-							return [
-								...previousMessages,
-								{
-									agentDefinitionExternalReferenceCodes:
-										dataJSON[
-											'agentDefinitionExternalReferenceCodes'
-										] ?? [],
-									sender: 'assistant',
-									text: dataJSON['data'],
-								},
-							];
-						});
-
-						setMessage('');
-					}
-					catch {
-						setMessages((previousMessages) => [
-							...previousMessages,
-							{error: true, sender: 'assistant', text: ''},
-						]);
-					}
-
-					setIsGenerating(false);
-				}
-			);
-
-			eventSourceRef.current.addEventListener('Subscribe', (event) => {
-				eventSourceReference.current = event.data;
-
-				if (
-					initialMessageRef.current &&
-					!initialMessageSentRef.current
-				) {
-					initialMessageSentRef.current = true;
-
-					sendMessage(initialMessageRef.current);
-				}
-			});
-
-			eventSourceRef.current.addEventListener(
-				'Agent Invocation Failed',
-				(event) => {
-					let text = '';
-
-					try {
-						text = JSON.parse(event.data)['data'];
-					}
-					catch {
-						text = '';
-					}
-
-					setMessages((previousMessages) => {
-						setTimeout(() => {
-							messagesEndRef.current?.scrollIntoView({
-								behavior: 'smooth',
-							});
-						}, 0);
-
-						return [
-							...previousMessages,
-							{
-								error: true,
-								sender: 'assistant',
-								text,
-							},
-						];
-					});
-
-					setIsGenerating(false);
-				}
-			);
-		});
-	}, [sendMessage]);
-
-	const closeAIAssistantChatConnection = useCallback(() => {
-		eventSourceRef.current?.close();
-
-		eventSourceRef.current = null;
-	}, []);
-
-	useEffect(() => {
-		openAIAssistantChatConnection();
-
-		return () => {
-			closeAIAssistantChatConnection();
-		};
-	}, [closeAIAssistantChatConnection, openAIAssistantChatConnection]);
-
-	useEffect(() => {
-		const handleCategorize = (payload: CategorizeEventPayload) => {
-			setActive(true);
-
-			setMessages((previousMessages) => {
-				setTimeout(() => {
-					messagesEndRef.current?.scrollIntoView({
-						behavior: 'smooth',
-					});
-				}, 0);
-
-				return [
-					...previousMessages,
-					{
-						sender: 'user',
-						text:
-							payload.agent ===
-							ECategorizationAgent.AUTO_CATEGORIZE
-								? Liferay.Language.get('add-categories')
-								: Liferay.Language.get('generate-tags'),
-					},
-					{categorization: payload, sender: 'assistant', text: ''},
-				];
-			});
-		};
-
-		Liferay.on(CATEGORIZE_EVENT, handleCategorize);
-
-		return () => {
-			Liferay.detach(CATEGORIZE_EVENT, handleCategorize);
-		};
-	}, []);
-
 	const chatSurface = (
 		<>
 			<div className="ai-assistant-chat__messages-container">
@@ -404,7 +187,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 							}
 							onThumbsUp={
 								!item.error
-									? () => handleThumbsUp(index, item)
+									? () => giveThumbsUp(index, item)
 									: undefined
 							}
 						/>
@@ -589,12 +372,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 						reportContext.agentDefinitionExternalReferenceCodes
 					}
 					onClose={() => setReportContext(null)}
-					onSubmitted={() =>
-						setFeedbackGiven((previousFeedbackGiven) => ({
-							...previousFeedbackGiven,
-							[reportContext.index]: true,
-						}))
-					}
+					onSubmitted={() => markFeedbackGiven(reportContext.index)}
 					surface="aiAssistant"
 				/>
 			)}
