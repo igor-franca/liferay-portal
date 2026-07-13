@@ -65,11 +65,28 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 		/>
 	);
 
+	const reportFeedbackModal = chat.reportContext !== null && (
+		<ReportFeedbackModal
+			agentDefinitionExternalReferenceCodes={
+				chat.reportContext.agentDefinitionExternalReferenceCodes
+			}
+			onClose={() => chat.setReportContext(null)}
+			onSubmitted={() =>
+				chat.markFeedbackGiven(chat.reportContext!.index)
+			}
+			surface="aiAssistant"
+		/>
+	);
+
 	if (embedded) {
 		return (
-			<div className="ai-assistant ai-assistant-chat__embedded">
-				{chatSurface}
-			</div>
+			<>
+				<div className="ai-assistant ai-assistant-chat__embedded">
+					{chatSurface}
+				</div>
+
+				{reportFeedbackModal}
+			</>
 		);
 	}
 
@@ -106,18 +123,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 				{chatSurface}
 			</div>
 
-			{chat.reportContext !== null && (
-				<ReportFeedbackModal
-					agentDefinitionExternalReferenceCodes={
-						chat.reportContext.agentDefinitionExternalReferenceCodes
-					}
-					onClose={() => chat.setReportContext(null)}
-					onSubmitted={() =>
-						chat.markFeedbackGiven(chat.reportContext!.index)
-					}
-					surface="aiAssistant"
-				/>
-			)}
+			{reportFeedbackModal}
 		</ClayDropDown>
 	);
 };
