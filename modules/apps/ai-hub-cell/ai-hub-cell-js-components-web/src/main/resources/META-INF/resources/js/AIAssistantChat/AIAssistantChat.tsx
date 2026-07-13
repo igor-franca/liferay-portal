@@ -3,14 +3,13 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import ClayDropDown from '@clayui/drop-down';
 import React, {useRef, useState} from 'react';
 
 import ReportFeedbackModal from '../ReportFeedback/ReportFeedbackModal';
 import AIAssistantChatSurface from './AIAssistantChatSurface';
 import {ChatContext} from './api';
-import AIAssistantPanelHeader from './components/AIAssistantPanelHeader';
 import AIAssistantTrigger from './components/AIAssistantTrigger';
+import AIAssistantDropdown from './shells/AIAssistantDropdown';
 import useAIChat from './useAIChat';
 
 import './chat.scss';
@@ -91,40 +90,25 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 	}
 
 	return (
-		<ClayDropDown
-			active={active}
-			alignmentPosition={4}
-			className="ai-assistant-chat__dropdown"
-			hasRightSymbols={false}
-			menuElementAttrs={{
-				className: 'cadmin',
-				style: {
-					height: 552,
-					maxHeight: 'none',
-					maxWidth: 'none',
-					overflow: 'hidden',
-					width: 448,
-				},
-			}}
-			onActiveChange={setActive}
-			trigger={
-				<AIAssistantTrigger
-					className={triggerClassName}
-					hideLabel={hideTriggerLabel}
-					label={triggerLabel}
-					ref={triggerRef}
-					round={triggerRound}
-				/>
-			}
-		>
-			<div className="ai-assistant ai-assistant-chat__dropdown-container">
-				<AIAssistantPanelHeader onClose={() => setActive(false)} />
-
+		<>
+			<AIAssistantDropdown
+				active={active}
+				onActiveChange={setActive}
+				trigger={
+					<AIAssistantTrigger
+						className={triggerClassName}
+						hideLabel={hideTriggerLabel}
+						label={triggerLabel}
+						ref={triggerRef}
+						round={triggerRound}
+					/>
+				}
+			>
 				{chatSurface}
-			</div>
+			</AIAssistantDropdown>
 
 			{reportFeedbackModal}
-		</ClayDropDown>
+		</>
 	);
 };
 
