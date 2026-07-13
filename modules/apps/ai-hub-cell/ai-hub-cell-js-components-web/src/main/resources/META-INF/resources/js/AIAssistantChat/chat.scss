@@ -71,11 +71,11 @@ html#{$cadmin-selector} .cadmin {
 		height: 100%;
 		width: 100%;
 
-		.ai-assistant-chat__dropdown-close-button {
+		.ai-assistant-chat__panel-close-button {
 			color: $cadmin-gray-600;
 		}
 
-		.ai-assistant-chat__dropdown-header {
+		.ai-assistant-chat__panel-header {
 			flex-shrink: 0;
 			margin-bottom: 1rem;
 			padding-left: 1.5rem;
@@ -90,7 +90,7 @@ html#{$cadmin-selector} .cadmin {
 			}
 		}
 
-		.ai-assistant-chat__dropdown-title {
+		.ai-assistant-chat__panel-title {
 			color: $cadmin-gray-900;
 			font-weight: 600;
 		}
