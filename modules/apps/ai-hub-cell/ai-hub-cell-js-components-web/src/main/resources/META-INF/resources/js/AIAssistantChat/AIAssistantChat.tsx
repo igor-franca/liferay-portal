@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {localStorage} from 'frontend-js-web';
 import React, {useId, useRef, useState} from 'react';
 
 import ReportFeedbackModal from '../ReportFeedback/ReportFeedbackModal';
@@ -14,6 +15,8 @@ import AIAssistantSidebar from './shells/AIAssistantSidebar';
 import useAIChat from './useAIChat';
 
 import './chat.scss';
+
+const EXPANDED_STORAGE_KEY = 'com.liferay.ai.hub.cell.assistant.expanded';
 
 type AIState = 'focused' | 'result' | 'result-readonly' | 'working';
 
@@ -52,8 +55,25 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 	triggerLabel,
 	triggerRound = true,
 }) => {
-	const [expanded, setExpanded] = useState<boolean>(false);
+	const [expanded, setExpanded] = useState<boolean>(
+		() =>
+			displayMode === 'toggle' &&
+			localStorage.getItem(
+				EXPANDED_STORAGE_KEY,
+				localStorage.TYPES.FUNCTIONAL
+			) === 'true'
+	);
 	const [open, setOpen] = useState<boolean>(false);
+
+	const setExpandedAndPersist = (nextExpanded: boolean) => {
+		setExpanded(nextExpanded);
+
+		localStorage.setItem(
+			EXPANDED_STORAGE_KEY,
+			String(nextExpanded),
+			localStorage.TYPES.FUNCTIONAL
+		);
+	};
 
 	const chat = useAIChat({
 		context,
@@ -127,7 +147,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 					onActiveChange={setOpen}
 					onExpand={
 						displayMode === 'toggle'
-							? () => setExpanded(true)
+							? () => setExpandedAndPersist(true)
 							: undefined
 					}
 					trigger={trigger}
@@ -149,7 +169,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 					onCollapse={
 						displayMode === 'toggle'
 							? () => {
-									setExpanded(false);
+									setExpandedAndPersist(false);
 
 									requestAnimationFrame(() =>
 										triggerRef.current?.focus()
