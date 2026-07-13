@@ -16,6 +16,8 @@ const SIDEBAR_WIDTH = 448;
 interface AIAssistantSidebarProps {
 	behavior?: 'overlay' | 'push';
 	children: React.ReactNode;
+	id?: string;
+	onCollapse?: () => void;
 	onOpenChange: (open: boolean) => void;
 	open: boolean;
 	pushContainer?: string;
@@ -25,6 +27,8 @@ interface AIAssistantSidebarProps {
 const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({
 	behavior = 'push',
 	children,
+	id,
+	onCollapse,
 	onOpenChange,
 	open,
 	pushContainer = '#wrapper',
@@ -61,13 +65,18 @@ const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({
 				as="aside"
 				className="ai-assistant-sidebar"
 				containerRef={containerRef}
+				id={id}
 				onOpenChange={onOpenChange}
 				open={open}
 				panelWidth={SIDEBAR_WIDTH}
 				position="fixed"
 				triggerRef={triggerRef}
 			>
-				<AIAssistantPanelHeader onClose={() => onOpenChange(false)} />
+				<AIAssistantPanelHeader
+					expanded
+					onClose={() => onOpenChange(false)}
+					onToggleExpanded={onCollapse}
+				/>
 
 				<div className="ai-assistant ai-assistant-chat__sidebar-container">
 					{children}

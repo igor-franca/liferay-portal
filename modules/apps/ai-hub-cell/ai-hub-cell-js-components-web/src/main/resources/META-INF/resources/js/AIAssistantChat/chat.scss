@@ -114,7 +114,22 @@ html#{$cadmin-selector} .cadmin {
 		height: 100%;
 		width: 100%;
 
-		.ai-assistant-chat__panel-close-button {
+		.ai-assistant-chat__panel-actions {
+			align-items: center;
+			display: flex;
+		}
+
+		.ai-assistant-chat__panel-actions-separator {
+			align-self: center;
+			background-color: $cadmin-gray-500;
+			height: 16px;
+			margin-left: 0.5rem;
+			margin-right: 0.5rem;
+			width: 1px;
+		}
+
+		.ai-assistant-chat__panel-close-button,
+		.ai-assistant-chat__panel-expand-button {
 			color: $cadmin-gray-600;
 		}
 

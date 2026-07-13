@@ -4,6 +4,7 @@
  */
 
 export {default as AIAssistantChat} from './AIAssistantChat/AIAssistantChat';
+export type {AIAssistantDisplayMode} from './AIAssistantChat/AIAssistantChat';
 export type {ChatContext} from './AIAssistantChat/api';
 export {default as CategorizationSuggestions} from './Categorization/components/CategorizationSuggestions';
 export {CATEGORIZE_EVENT, COMMIT_EVENT} from './Categorization/events';

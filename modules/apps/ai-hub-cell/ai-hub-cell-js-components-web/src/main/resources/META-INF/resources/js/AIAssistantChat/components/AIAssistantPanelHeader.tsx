@@ -9,11 +9,15 @@ import ClayLayout from '@clayui/layout';
 import React from 'react';
 
 interface AIAssistantPanelHeaderProps {
+	expanded?: boolean;
 	onClose: () => void;
+	onToggleExpanded?: () => void;
 }
 
 const AIAssistantPanelHeader: React.FC<AIAssistantPanelHeaderProps> = ({
+	expanded = false,
 	onClose,
+	onToggleExpanded,
 }) => {
 	return (
 		<div className="ai-assistant-chat__panel-header">
@@ -23,18 +27,45 @@ const AIAssistantPanelHeader: React.FC<AIAssistantPanelHeaderProps> = ({
 				</ClayLayout.ContentCol>
 
 				<ClayLayout.ContentCol>
-					<ClayButton
-						aria-label={Liferay.Language.get('close')}
-						borderless
-						displayType="unstyled"
-						onClick={onClose}
-					>
-						<ClayIcon
-							className="ai-assistant-chat__panel-close-button"
-							spritemap={Liferay.Icons.spritemap}
-							symbol="times"
-						/>
-					</ClayButton>
+					<div className="ai-assistant-chat__panel-actions">
+						{onToggleExpanded && (
+							<>
+								<ClayButton
+									aria-label={
+										expanded
+											? Liferay.Language.get('minimize')
+											: Liferay.Language.get('maximize')
+									}
+									borderless
+									displayType="unstyled"
+									onClick={onToggleExpanded}
+								>
+									<ClayIcon
+										className="ai-assistant-chat__panel-expand-button"
+										spritemap={Liferay.Icons.spritemap}
+										symbol={
+											expanded ? 'compress' : 'full-size'
+										}
+									/>
+								</ClayButton>
+
+								<div className="ai-assistant-chat__panel-actions-separator" />
+							</>
+						)}
+
+						<ClayButton
+							aria-label={Liferay.Language.get('close')}
+							borderless
+							displayType="unstyled"
+							onClick={onClose}
+						>
+							<ClayIcon
+								className="ai-assistant-chat__panel-close-button"
+								spritemap={Liferay.Icons.spritemap}
+								symbol="times"
+							/>
+						</ClayButton>
+					</div>
 				</ClayLayout.ContentCol>
 			</ClayLayout.ContentRow>
 		</div>

@@ -12,6 +12,7 @@ interface AIAssistantDropdownProps {
 	active: boolean;
 	children: React.ReactNode;
 	onActiveChange: (active: boolean) => void;
+	onExpand?: () => void;
 	trigger: React.ReactElement;
 }
 
@@ -19,6 +20,7 @@ const AIAssistantDropdown: React.FC<AIAssistantDropdownProps> = ({
 	active,
 	children,
 	onActiveChange,
+	onExpand,
 	trigger,
 }) => {
 	return (
@@ -34,7 +36,10 @@ const AIAssistantDropdown: React.FC<AIAssistantDropdownProps> = ({
 			trigger={trigger}
 		>
 			<div className="ai-assistant ai-assistant-chat__dropdown-container">
-				<AIAssistantPanelHeader onClose={() => onActiveChange(false)} />
+				<AIAssistantPanelHeader
+					onClose={() => onActiveChange(false)}
+					onToggleExpanded={onExpand}
+				/>
 
 				{children}
 			</div>
