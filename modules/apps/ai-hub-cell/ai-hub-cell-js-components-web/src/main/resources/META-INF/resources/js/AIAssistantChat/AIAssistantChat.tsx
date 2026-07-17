@@ -28,7 +28,13 @@ import {
 import AIAssistantFooterDisclaimer from './components/AIAssistantFooterDisclaimer';
 import AIAssistantMessageBalloon from './components/AIAssistantMessageBalloon';
 import CategorizationMessageBalloon from './components/CategorizationMessageBalloon';
+import FieldValueMessageBalloon from './components/FieldValueMessageBalloon';
 import UserMessageBalloon from './components/UserMessageBalloon';
+import {
+	APPLY_OBJECT_FIELD_VALUES_EVENT,
+	GENERATE_FIELD_VALUE_AGENT_EXTERNAL_REFERENCE_CODE,
+} from './events';
+import getGeneratedFieldValues from './utils/getGeneratedFieldValues';
 
 import './chat.scss';
 
@@ -381,6 +387,38 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 							<CategorizationMessageBalloon
 								key={index}
 								{...item.categorization}
+							/>
+						);
+					}
+
+					const fieldValues =
+						!item.error &&
+						item.agentDefinitionExternalReferenceCodes?.includes(
+							GENERATE_FIELD_VALUE_AGENT_EXTERNAL_REFERENCE_CODE
+						)
+							? getGeneratedFieldValues(item.text)
+							: {};
+
+					if (Object.keys(fieldValues).length) {
+						const previousMessage = messages[index - 1];
+
+						return (
+							<FieldValueMessageBalloon
+								key={index}
+								onApply={() =>
+									Liferay.fire(
+										APPLY_OBJECT_FIELD_VALUES_EVENT,
+										{
+											values: fieldValues,
+										}
+									)
+								}
+								onRegenerate={() => {
+									if (previousMessage?.sender === 'user') {
+										sendMessage(previousMessage.text);
+									}
+								}}
+								values={fieldValues}
 							/>
 						);
 					}
