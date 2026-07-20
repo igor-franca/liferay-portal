@@ -1,0 +1,55 @@
+[     225ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://localhost:8080/o/frontend-js-react-web/__liferay__/exports/react-dom.js:21647
+[     262ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:8080/sign-in?p_p_state=normal&p_p_mode=view&_com_liferay_login_web_portlet_LoginPortlet_mvcRenderCommandName=%2Flogin%2Flogin&saveLastPath=false&p_p_id=com_liferay_login_web_portlet_LoginPortlet&p_p_lifecycle=0&_com_liferay_login_web_portlet_LoginPortlet_redirect=http%3A%2F%2Flocalhost%3A8080%2Fhome:0
+[   34754ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://localhost:8080/o/frontend-js-react-web/__liferay__/exports/react-dom.js:21647
+[  141464ms] [ERROR] Warning: Received `%s` for a non-boolean attribute `%s`.
+
+If you want to write it to the DOM, pass a string instead: %s="%s" or %s={value.toString()}.%s true current current true current 
+    at a
+    at http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$link.js:84:5
+    at li
+    at http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$drop-down.js:337:5
+    at DynamicCollection (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$core.js:2014:3)
+    at Collection (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$core.js:2044:3)
+    at ul
+    at li
+    at Group (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$drop-down.js:270:18)
+    at DynamicCollection (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$core.js:2014:3)
+    at Collection (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$core.js:2044:3)
+    at ul
+    at http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$drop-down.js:407:6
+    at FocusMenu (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$drop-down.js:255:3)
+    at div
+    at div
+    at ClayPortal (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$shared.js:484:3)
+    at Overlay (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$shared.js:833:3)
+    at http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$drop-down.js:454:5
+    at div
+    at DropDown (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$drop-down.js:642:3)
+    at GlobalMenu (http://localhost:8080/o/product-navigation-applications-menu-web/__liferay__/index.js:109:3)
+    at Provider (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$provider.js:207:3)
+    at LiferayProvider (http://localhost:8080/o/frontend-js-react-web/__liferay__/index.js:531:28) @ http://localhost:8080/o/frontend-js-react-web/__liferay__/exports/react-dom.js:632
+[  141465ms] [ERROR] Warning: React does not recognize the `%s` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `%s` instead. If you accidentally passed it from a parent component, remove it from the DOM element.%s logoURL logourl 
+    at a
+    at http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$link.js:84:5
+    at li
+    at http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$drop-down.js:337:5
+    at DynamicCollection (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$core.js:2014:3)
+    at Collection (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$core.js:2044:3)
+    at ul
+    at li
+    at Group (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$drop-down.js:270:18)
+    at DynamicCollection (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$core.js:2014:3)
+    at Collection (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$core.js:2044:3)
+    at ul
+    at http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$drop-down.js:407:6
+    at FocusMenu (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$drop-down.js:255:3)
+    at div
+    at div
+    at ClayPortal (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$shared.js:484:3)
+    at Overlay (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$shared.js:833:3)
+    at http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$drop-down.js:454:5
+    at div
+    at DropDown (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$drop-down.js:642:3)
+    at GlobalMenu (http://localhost:8080/o/product-navigation-applications-menu-web/__liferay__/index.js:109:3)
+    at Provider (http://localhost:8080/o/frontend-js-clay-web/__liferay__/exports/@clayui$provider.js:207:3)
+    at LiferayProvider (http://localhost:8080/o/frontend-js-react-web/__liferay__/index.js:531:28) @ http://localhost:8080/o/frontend-js-react-web/__liferay__/exports/react-dom.js:632

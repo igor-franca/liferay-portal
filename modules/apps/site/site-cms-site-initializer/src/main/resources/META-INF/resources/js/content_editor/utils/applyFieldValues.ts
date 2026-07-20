@@ -24,6 +24,7 @@ function setControlValue(control: FieldControl, value: string) {
 	valueSetter?.call(control, value);
 
 	control.dispatchEvent(new Event('input', {bubbles: true}));
+	control.dispatchEvent(new Event('change', {bubbles: true}));
 }
 
 export default function applyFieldValues(

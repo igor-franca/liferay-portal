@@ -14,19 +14,22 @@ function createForm(html: string): HTMLFormElement {
 }
 
 describe('applyFieldValues', () => {
-	it('writes a plain field value and fires an input event', () => {
+	it('writes a plain field value and fires input and change events', () => {
 		const form = createForm('<input name="ObjectField_title" value="" />');
 
 		const input = form.querySelector('input') as HTMLInputElement;
 
-		const listener = jest.fn();
+		const inputListener = jest.fn();
+		const changeListener = jest.fn();
 
-		input.addEventListener('input', listener);
+		input.addEventListener('input', inputListener);
+		input.addEventListener('change', changeListener);
 
 		applyFieldValues(form, {title: 'Generated'});
 
 		expect(input.value).toBe('Generated');
-		expect(listener).toHaveBeenCalledTimes(1);
+		expect(inputListener).toHaveBeenCalledTimes(1);
+		expect(changeListener).toHaveBeenCalledTimes(1);
 	});
 
 	it('writes through the native setter when a control ignores direct assignment', () => {

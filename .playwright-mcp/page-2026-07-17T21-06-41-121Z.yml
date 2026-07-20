@@ -1,0 +1,29 @@
+- generic [ref=e2]:
+  - navigation "Quick Links":
+    - link "Skip to Main Content" [ref=e3] [cursor=pointer]:
+      - /url: "#main-content"
+  - generic [ref=e5]:
+    - banner [ref=e6]:
+      - generic [ref=e9]:
+        - link [ref=e10] [cursor=pointer]:
+          - /url: http://localhost:8080
+          - heading "Liferay DXP Site" [level=1] [ref=e11]
+        - search [ref=e13]:
+          - generic [ref=e22]:
+            - status [ref=e23]
+            - generic [ref=e24]:
+              - textbox "Search" [ref=e25]:
+                - /placeholder: Search...
+              - button "Search" [ref=e27] [cursor=pointer]
+        - button [ref=e32] [cursor=pointer]
+      - menubar "Site Pages" [ref=e44]:
+        - menuitem "Home" [ref=e45] [cursor=pointer]
+    - main [ref=e48]:
+      - generic [ref=e53]:
+        - generic [ref=e54]: Welcome to Liferay
+        - generic [ref=e57]: Enjoy using the best DXP on Earth!
+    - contentinfo [ref=e65]:
+      - generic [ref=e68]:
+        - text: Powered by
+        - link "Liferay" [ref=e69] [cursor=pointer]:
+          - /url: http://www.liferay.com
