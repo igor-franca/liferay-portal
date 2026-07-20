@@ -11,7 +11,17 @@ function setControlValue(control: FieldControl, value: string) {
 		return;
 	}
 
-	control.value = value;
+	const prototype =
+		control instanceof HTMLTextAreaElement
+			? HTMLTextAreaElement.prototype
+			: HTMLInputElement.prototype;
+
+	const valueSetter = Object.getOwnPropertyDescriptor(
+		prototype,
+		'value'
+	)?.set;
+
+	valueSetter?.call(control, value);
 
 	control.dispatchEvent(new Event('input', {bubbles: true}));
 }
