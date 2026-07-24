@@ -7,7 +7,7 @@ import ClayButton from '@clayui/button';
 import ClayForm from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import ClayLoadingIndicator from '@clayui/loading-indicator';
-import {autoSize as AutoSize} from 'frontend-js-web';
+import {AutoSize} from 'frontend-js-web';
 import React, {useEffect, useRef} from 'react';
 
 import AIAssistantFooterDisclaimer from './components/AIAssistantFooterDisclaimer';
