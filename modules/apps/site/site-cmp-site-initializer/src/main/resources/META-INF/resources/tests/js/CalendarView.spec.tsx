@@ -16,7 +16,9 @@ jest.mock('@fullcalendar/daygrid', () => ({}));
 jest.mock('@fullcalendar/interaction', () => ({}));
 
 // FullCalendar cannot run under jsdom, so render only the day cell and
-// event content to test what CalendarView feeds it.
+// event content to test what CalendarView feeds it, expose the initial
+// navigation props, and let tests report a view change through a button
+// the way the real calendar reports it through datesSet.
 
 jest.mock('@fullcalendar/react', () => {
 	const React = require('react');
@@ -24,7 +26,26 @@ jest.mock('@fullcalendar/react', () => {
 	return {
 		__esModule: true,
 		default: React.forwardRef((props: any, _ref: unknown) => (
-			<div>
+			<div
+				data-initial-date={props.initialDate?.toISOString() ?? ''}
+				data-initial-view={props.initialView}
+				data-testid="fullCalendar"
+			>
+				<button
+					onClick={() =>
+						props.datesSet?.({
+							view: {
+								currentStart: new Date(2026, 6, 13),
+								title: 'Jul 13 – 19, 2026',
+								type: 'dayGridWeek',
+							},
+						})
+					}
+					type="button"
+				>
+					Switch to week
+				</button>
+
 				{props.dayCellContent?.({
 					date: new Date(2026, 6, 15),
 					dayNumberText: '15',
@@ -69,14 +90,20 @@ jest.mock(
 const renderCalendarView = (
 	hasAddTaskPermission: boolean,
 	{
+		id,
 		items = [],
 		loadData = jest.fn(),
 		onItemsChange = jest.fn(),
-	}: {items?: ITask[]; loadData?: Function; onItemsChange?: Function} = {}
+	}: {
+		id?: string;
+		items?: ITask[];
+		loadData?: Function;
+		onItemsChange?: Function;
+	} = {}
 ) =>
 	render(
 		<FrontendDataSetContext.Provider
-			value={{loadData, onItemsChange} as any}
+			value={{id, loadData, onItemsChange} as any}
 		>
 			<CalendarView
 				cmpProjectObjectDefinitionId={456}
@@ -153,9 +180,42 @@ describe('CalendarView', () => {
 		expect(loadData).not.toHaveBeenCalled();
 	});
 
+	it('restores the calendar view and date when it remounts', () => {
+		const {unmount} = renderCalendarView(false, {id: 'remount-fds'});
+
+		fireEvent.click(screen.getByText('Switch to week'));
+
+		unmount();
+
+		renderCalendarView(false, {id: 'remount-fds'});
+
+		const fullCalendar = screen.getByTestId('fullCalendar');
+
+		expect(fullCalendar).toHaveAttribute(
+			'data-initial-date',
+			new Date(2026, 6, 13).toISOString()
+		);
+		expect(fullCalendar).toHaveAttribute(
+			'data-initial-view',
+			'dayGridWeek'
+		);
+	});
+
 	it('shows the add task button with add task permission', () => {
 		renderCalendarView(true);
 
 		expect(screen.getByLabelText('add-task')).toBeInTheDocument();
+	});
+
+	it('starts on the month view when the data set has no stored state', () => {
+		renderCalendarView(false, {id: 'fresh-fds'});
+
+		const fullCalendar = screen.getByTestId('fullCalendar');
+
+		expect(fullCalendar).toHaveAttribute('data-initial-date', '');
+		expect(fullCalendar).toHaveAttribute(
+			'data-initial-view',
+			'dayGridMonth'
+		);
 	});
 });
