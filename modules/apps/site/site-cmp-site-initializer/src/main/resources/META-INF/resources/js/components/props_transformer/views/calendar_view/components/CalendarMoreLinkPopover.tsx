@@ -15,7 +15,10 @@ import React, {useMemo} from 'react';
 import getTaskItemsActions from '../../../../../utils/getTaskItemsActions';
 import isActionsMenuEvent from '../../../../../utils/isActionsMenuEvent';
 import isOverdue from '../../../../../utils/isOverdue';
-import {ITaskObjectEntry} from '../../../../../utils/types';
+import {
+	ITaskItemsActionsTask,
+	ITaskObjectEntry,
+} from '../../../../../utils/types';
 import StateLabel from '../../../../StateLabel';
 import sortTasksByPriority from '../utils/sortTasksByPriority';
 
@@ -34,6 +37,7 @@ interface CalendarMoreLinkPopoverProps {
 	itemsActions: IItemsActions[];
 	loadData: Function;
 	onClose: () => void;
+	onTaskChanged?: (task: ITaskItemsActionsTask) => void;
 	tasks: ITaskObjectEntry[];
 }
 
@@ -42,6 +46,7 @@ export default function CalendarMoreLinkPopover({
 	itemsActions,
 	loadData,
 	onClose,
+	onTaskChanged,
 	tasks,
 }: CalendarMoreLinkPopoverProps) {
 	const sortedTasks = useMemo(() => sortTasksByPriority(tasks), [tasks]);
@@ -74,7 +79,8 @@ export default function CalendarMoreLinkPopover({
 						{
 							actions: task.actions,
 							embedded: task,
-						}
+						},
+						onTaskChanged
 					);
 
 					return (
