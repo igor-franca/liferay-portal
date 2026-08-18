@@ -19,6 +19,7 @@ import {sub} from 'frontend-js-web';
 import React from 'react';
 
 import {styleActions, styleBulkActions} from '../../utils/actionStyles';
+import {addPermissionCheckToBulkActions} from '../../utils/addPermissionCheckToBulkActions';
 import {
 	installCMPTabPersistence,
 	registerTabFDS,
@@ -58,6 +59,11 @@ type BulkModalProps = {
 	selectedData: any;
 };
 
+const WORKFLOW_BULK_ACTION_PERMISSION_KEYS: Record<string, string> = {
+	'assign-to': 'assignToUser',
+	'update-due-date': 'updateDueDate',
+};
+
 const WORKFLOW_BULK_ACTION_MODALS: Record<
 	string,
 	React.ComponentType<BulkModalProps>
@@ -95,7 +101,20 @@ export default function AllTasksFDSPropsTransformer({
 
 	return {
 		...otherProps,
-		bulkActions: styleBulkActions(bulkActions).map((action) => ({
+		bulkActions: addPermissionCheckToBulkActions(
+			styleBulkActions(bulkActions),
+			(action, item) => {
+				if (isWorkflowTask(item)) {
+					return (
+						WORKFLOW_BULK_ACTION_PERMISSION_KEYS[
+							action?.data?.id
+						] ?? action?.data?.permissionKey
+					);
+				}
+
+				return action?.data?.permissionKey;
+			}
+		).map((action) => ({
 			...action,
 			isDisabled: ({
 				allItemsSelectedActive,

@@ -19,6 +19,7 @@ import {sub} from 'frontend-js-web';
 import React from 'react';
 
 import {styleActions, styleBulkActions} from '../../utils/actionStyles';
+import {addPermissionCheckToBulkActions} from '../../utils/addPermissionCheckToBulkActions';
 import {
 	installCMPTabPersistence,
 	registerTabFDS,
@@ -122,7 +123,9 @@ export default function ProjectTasksFDSPropsTransformer({
 	return {
 		...otherProps,
 		atom: cmpTasksFDSAtom,
-		bulkActions: styleBulkActions(bulkActions),
+		bulkActions: addPermissionCheckToBulkActions(
+			styleBulkActions(bulkActions)
+		),
 		creationMenu: {
 			...creationMenu,
 			primaryItems: addOnClickToCreationMenuItems(
