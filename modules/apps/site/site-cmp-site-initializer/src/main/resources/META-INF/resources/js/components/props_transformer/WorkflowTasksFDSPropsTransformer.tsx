@@ -13,6 +13,7 @@ import {addOnClickToCreationMenuItems} from '@liferay/site-cms-site-initializer'
 import React from 'react';
 
 import {styleActions} from '../../utils/actionStyles';
+import {addPermissionCheckToBulkActions} from '../../utils/addPermissionCheckToBulkActions';
 import {
 	installCMPTabPersistence,
 	registerTabFDS,
@@ -72,14 +73,16 @@ export default function WorkflowTasksFDSPropsTransformer({
 	return {
 		...otherProps,
 		atom: cmpWorkflowTasksFDSAtom,
-		bulkActions: bulkActions.map((action) => ({
-			...action,
-			isDisabled: ({
-				allItemsSelectedActive,
-			}: {
-				allItemsSelectedActive: boolean;
-			}) => allItemsSelectedActive,
-		})),
+		bulkActions: addPermissionCheckToBulkActions(bulkActions).map(
+			(action) => ({
+				...action,
+				isDisabled: ({
+					allItemsSelectedActive,
+				}: {
+					allItemsSelectedActive: boolean;
+				}) => allItemsSelectedActive,
+			})
+		),
 		creationMenu: creationMenu && {
 			...creationMenu,
 			primaryItems: addOnClickToCreationMenuItems(
