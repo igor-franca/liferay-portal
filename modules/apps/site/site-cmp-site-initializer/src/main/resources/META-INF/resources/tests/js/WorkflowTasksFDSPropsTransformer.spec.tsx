@@ -16,8 +16,14 @@ jest.mock('../../js/utils/openCMPModal', () => ({
 const baseProps = {
 	apiURL: '/o/search/v1.0/search',
 	bulkActions: [
-		{data: {id: 'update-due-date'}, label: 'Update Due Date'},
-		{data: {id: 'assign-to'}, label: 'Assign To'},
+		{
+			data: {id: 'update-due-date', permissionKey: 'updateDueDate'},
+			label: 'Update Due Date',
+		},
+		{
+			data: {id: 'assign-to', permissionKey: 'assignToUser'},
+			label: 'Assign To',
+		},
 	],
 	creationMenu: {
 		primaryItems: [],
@@ -78,6 +84,26 @@ describe('WorkflowTasksFDSPropsTransformer', () => {
 				false
 			);
 		});
+	});
+
+	it('hides a bulk action when a selected workflow task lacks its permission', () => {
+		const result = WorkflowTasksFDSPropsTransformer(baseProps as any);
+
+		const bulkActions = result.bulkActions as any[];
+
+		const assignToAction = bulkActions.find(
+			(action) => action.data.id === 'assign-to'
+		);
+
+		const selectedItems = [{actions: {get: {}, updateDueDate: {}}}];
+
+		expect(assignToAction.isVisible({selectedItems})).toBe(false);
+
+		const updateDueDateAction = bulkActions.find(
+			(action) => action.data.id === 'update-due-date'
+		);
+
+		expect(updateDueDateAction.isVisible({selectedItems})).toBe(true);
 	});
 
 	it('filters out the kanban view', () => {
