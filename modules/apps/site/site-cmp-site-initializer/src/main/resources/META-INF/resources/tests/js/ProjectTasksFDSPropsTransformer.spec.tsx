@@ -34,10 +34,25 @@ Liferay.Language.get = (key: string) =>
 const baseProps = {
 	additionalProps: {states: []},
 	apiURL: '/o/c/cmptasks',
+	bulkActions: [
+		{data: {id: 'delete', permissionKey: 'delete'}, label: 'Delete'},
+		{
+			data: {id: 'update-state', permissionKey: 'update'},
+			label: 'Update State',
+		},
+	],
 	creationMenu: {primaryItems: []},
 	id: 'test-fds',
 	itemsActions: [],
 	views: [{default: true, initialPaginationDelta: 20, name: 'table'}],
+};
+
+const getBulkAction = (id: string) => {
+	const result = ProjectTasksFDSPropsTransformer(baseProps as any);
+
+	return (result.bulkActions as any[]).find(
+		(action) => action.data.id === id
+	);
 };
 
 describe('ProjectTasksFDSPropsTransformer', () => {
@@ -63,5 +78,24 @@ describe('ProjectTasksFDSPropsTransformer', () => {
 			'&lt;script&gt;alert(1)&lt;&#047;script&gt;'
 		);
 		expect(confirmationMessage).not.toContain('<script>');
+	});
+
+	it('hides a bulk action when a selected task lacks its permission', () => {
+		expect(
+			getBulkAction('delete').isVisible({
+				selectedItems: [{actions: {get: {}, update: {}}}],
+			})
+		).toBe(false);
+	});
+
+	it('keeps a bulk action visible when every selected task has its permission', () => {
+		expect(
+			getBulkAction('update-state').isVisible({
+				selectedItems: [
+					{actions: {get: {}, update: {}}},
+					{actions: {delete: {}, get: {}, update: {}}},
+				],
+			})
+		).toBe(true);
 	});
 });

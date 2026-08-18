@@ -45,10 +45,19 @@ const baseProps = {
 	additionalProps: {states: []},
 	apiURL: '/o/search/v1.0/search',
 	bulkActions: [
-		{data: {id: 'assign-to'}, label: 'Assign To'},
-		{data: {id: 'delete'}, label: 'Delete'},
-		{data: {id: 'update-due-date'}, label: 'Update Due Date'},
-		{data: {id: 'update-state'}, label: 'Update State'},
+		{
+			data: {id: 'assign-to', permissionKey: 'update'},
+			label: 'Assign To',
+		},
+		{data: {id: 'delete', permissionKey: 'delete'}, label: 'Delete'},
+		{
+			data: {id: 'update-due-date', permissionKey: 'update'},
+			label: 'Update Due Date',
+		},
+		{
+			data: {id: 'update-state', permissionKey: 'update'},
+			label: 'Update State',
+		},
 	],
 	creationMenu: {primaryItems: []},
 	id: 'test-fds',
@@ -172,6 +181,39 @@ describe('AllTasksFDSPropsTransformer', () => {
 			'&lt;script&gt;alert(1)&lt;&#047;script&gt;'
 		);
 		expect(confirmationMessage).not.toContain('<script>');
+	});
+
+	it('hides a bulk action when a selected project task lacks its permission', () => {
+		const selectedItems = [
+			{...projectItem, actions: {get: {}, update: {}}},
+		];
+
+		expect(getBulkAction('delete').isVisible({selectedItems})).toBe(false);
+
+		expect(getBulkAction('update-state').isVisible({selectedItems})).toBe(
+			true
+		);
+	});
+
+	it('keeps assign-to and update-due-date bulk actions visible for a workflow task with workflow permissions', () => {
+		const selectedItems = [
+			{
+				...workflowItem,
+				actions: {assignToUser: {}, get: {}, updateDueDate: {}},
+			},
+		];
+
+		expect(getBulkAction('assign-to').isVisible({selectedItems})).toBe(
+			true
+		);
+		expect(
+			getBulkAction('update-due-date').isVisible({selectedItems})
+		).toBe(true);
+
+		expect(getBulkAction('delete').isVisible({selectedItems})).toBe(false);
+		expect(getBulkAction('update-state').isVisible({selectedItems})).toBe(
+			false
+		);
 	});
 
 	it('keeps update-state and delete bulk actions enabled when a project task is selected', () => {
