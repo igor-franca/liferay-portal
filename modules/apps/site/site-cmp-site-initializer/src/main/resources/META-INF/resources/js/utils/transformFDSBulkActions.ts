@@ -31,13 +31,15 @@ export function transformFDSBulkActions(
 ): any[] {
 	return bulkActions.map((action) => ({
 		...action,
-		isVisible: (context: {selectedItems: any[]}) => {
+		isVisible: (context: {selectedItems?: any[]} = {}) => {
 			if (action.isVisible && !action.isVisible(context)) {
 				return false;
 			}
 
-			return context.selectedItems.every((selectedItem) =>
-				hasPermission(action, selectedItem, getPermissionKey)
+			return (
+				context.selectedItems?.every((selectedItem) =>
+					hasPermission(action, selectedItem, getPermissionKey)
+				) ?? false
 			);
 		},
 	}));
