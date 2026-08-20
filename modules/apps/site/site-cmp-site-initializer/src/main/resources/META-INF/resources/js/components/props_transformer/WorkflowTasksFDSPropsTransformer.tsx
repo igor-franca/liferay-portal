@@ -13,13 +13,13 @@ import {addOnClickToCreationMenuItems} from '@liferay/site-cms-site-initializer'
 import React from 'react';
 
 import {styleActions} from '../../utils/actionStyles';
-import {addPermissionCheckToBulkActions} from '../../utils/addPermissionCheckToBulkActions';
 import {
 	installCMPTabPersistence,
 	registerTabFDS,
 } from '../../utils/cmpTabPersistence';
 import {WORKFLOW_TASK_ACTION_LINK_ID} from '../../utils/constants';
 import {openCMPModal} from '../../utils/openCMPModal';
+import {transformFDSBulkActions} from '../../utils/transformFDSBulkActions';
 import {TaskAction, WorkflowTaskItemData} from '../../utils/types';
 import WORKFLOW_TASK_MODALS from '../../utils/workflowTaskModals';
 import BulkEditWorkflowAssigneeModalContent from '../modal/BulkEditWorkflowAssigneeModalContent';
@@ -73,7 +73,7 @@ export default function WorkflowTasksFDSPropsTransformer({
 	return {
 		...otherProps,
 		atom: cmpWorkflowTasksFDSAtom,
-		bulkActions: addPermissionCheckToBulkActions(bulkActions).map(
+		bulkActions: transformFDSBulkActions(bulkActions).map(
 			(action) => ({
 				...action,
 				isDisabled: ({

@@ -19,7 +19,6 @@ import {sub} from 'frontend-js-web';
 import React from 'react';
 
 import {styleActions, styleBulkActions} from '../../utils/actionStyles';
-import {addPermissionCheckToBulkActions} from '../../utils/addPermissionCheckToBulkActions';
 import {
 	installCMPTabPersistence,
 	registerTabFDS,
@@ -27,6 +26,7 @@ import {
 import {WORKFLOW_TASK_ACTION_LINK_ID} from '../../utils/constants';
 import {getFormattedLabel} from '../../utils/getFormattedText';
 import {openCMPModal} from '../../utils/openCMPModal';
+import {transformFDSBulkActions} from '../../utils/transformFDSBulkActions';
 import {
 	ProjectTaskItemData,
 	TaskAction,
@@ -101,7 +101,7 @@ export default function AllTasksFDSPropsTransformer({
 
 	return {
 		...otherProps,
-		bulkActions: addPermissionCheckToBulkActions(
+		bulkActions: transformFDSBulkActions(
 			styleBulkActions(bulkActions),
 			(action, item) => {
 				if (isWorkflowTask(item)) {

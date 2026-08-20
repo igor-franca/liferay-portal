@@ -23,7 +23,7 @@ function hasPermission(
 	);
 }
 
-export function addPermissionCheckToBulkActions(
+export function transformFDSBulkActions(
 	bulkActions: any[],
 	getPermissionKey: (action: any, item: any) => string | undefined = (
 		action

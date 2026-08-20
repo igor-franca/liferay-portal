@@ -19,13 +19,13 @@ import {sub} from 'frontend-js-web';
 import React from 'react';
 
 import {styleActions, styleBulkActions} from '../../utils/actionStyles';
-import {addPermissionCheckToBulkActions} from '../../utils/addPermissionCheckToBulkActions';
 import {
 	installCMPTabPersistence,
 	registerTabFDS,
 } from '../../utils/cmpTabPersistence';
 import {getFormattedLabel} from '../../utils/getFormattedText';
 import {openCMPModal} from '../../utils/openCMPModal';
+import {transformFDSBulkActions} from '../../utils/transformFDSBulkActions';
 import {ProjectTaskItemData, TaskAction} from '../../utils/types';
 import StateLabel from '../StateLabel';
 import BulkEditAssigneeModalContent from '../modal/BulkEditAssigneeModalContent';
@@ -123,7 +123,7 @@ export default function ProjectTasksFDSPropsTransformer({
 	return {
 		...otherProps,
 		atom: cmpTasksFDSAtom,
-		bulkActions: addPermissionCheckToBulkActions(
+		bulkActions: transformFDSBulkActions(
 			styleBulkActions(bulkActions)
 		),
 		creationMenu: {

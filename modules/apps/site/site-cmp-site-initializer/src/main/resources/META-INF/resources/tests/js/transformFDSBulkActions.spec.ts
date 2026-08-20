@@ -3,13 +3,13 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {addPermissionCheckToBulkActions} from '../../js/utils/addPermissionCheckToBulkActions';
+import {transformFDSBulkActions} from '../../js/utils/transformFDSBulkActions';
 
 const deleteAction = {data: {id: 'delete', permissionKey: 'delete'}};
 
-describe('addPermissionCheckToBulkActions', () => {
+describe('transformFDSBulkActions', () => {
 	it('hides an action when a selected item has no actions map', () => {
-		const [action] = addPermissionCheckToBulkActions([deleteAction]);
+		const [action] = transformFDSBulkActions([deleteAction]);
 
 		expect(
 			action.isVisible({
@@ -19,7 +19,7 @@ describe('addPermissionCheckToBulkActions', () => {
 	});
 
 	it('hides an action when any selected item lacks the permission', () => {
-		const [action] = addPermissionCheckToBulkActions([deleteAction]);
+		const [action] = transformFDSBulkActions([deleteAction]);
 
 		expect(
 			action.isVisible({
@@ -29,7 +29,7 @@ describe('addPermissionCheckToBulkActions', () => {
 	});
 
 	it('keeps an action without a permission key visible', () => {
-		const [action] = addPermissionCheckToBulkActions([
+		const [action] = transformFDSBulkActions([
 			{data: {id: 'assign-to'}},
 		]);
 
@@ -41,7 +41,7 @@ describe('addPermissionCheckToBulkActions', () => {
 	});
 
 	it('matches permission keys case-insensitively', () => {
-		const [action] = addPermissionCheckToBulkActions([
+		const [action] = transformFDSBulkActions([
 			{data: {id: 'delete', permissionKey: 'DELETE'}},
 		]);
 
@@ -53,7 +53,7 @@ describe('addPermissionCheckToBulkActions', () => {
 	});
 
 	it('preserves a preexisting visibility check', () => {
-		const [action] = addPermissionCheckToBulkActions([
+		const [action] = transformFDSBulkActions([
 			{...deleteAction, isVisible: () => false},
 		]);
 
@@ -65,7 +65,7 @@ describe('addPermissionCheckToBulkActions', () => {
 	});
 
 	it('resolves the permission key per item with a custom resolver', () => {
-		const [action] = addPermissionCheckToBulkActions(
+		const [action] = transformFDSBulkActions(
 			[{data: {id: 'assign-to', permissionKey: 'update'}}],
 			(action, item) =>
 				item.workflow ? 'assignToUser' : action.data.permissionKey
@@ -87,7 +87,7 @@ describe('addPermissionCheckToBulkActions', () => {
 	});
 
 	it('shows an action when every selected item has the permission', () => {
-		const [action] = addPermissionCheckToBulkActions([deleteAction]);
+		const [action] = transformFDSBulkActions([deleteAction]);
 
 		expect(
 			action.isVisible({
