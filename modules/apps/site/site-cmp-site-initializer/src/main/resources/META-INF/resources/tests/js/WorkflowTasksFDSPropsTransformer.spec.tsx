@@ -36,6 +36,14 @@ const baseProps = {
 	],
 };
 
+const getBulkAction = (id: string) => {
+	const result = WorkflowTasksFDSPropsTransformer(baseProps as any);
+
+	return (result.bulkActions as any[]).find(
+		(action) => action.data.id === id
+	);
+};
+
 describe('WorkflowTasksFDSPropsTransformer', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
@@ -86,26 +94,6 @@ describe('WorkflowTasksFDSPropsTransformer', () => {
 		});
 	});
 
-	it('hides a bulk action when a selected workflow task lacks its permission', () => {
-		const result = WorkflowTasksFDSPropsTransformer(baseProps as any);
-
-		const bulkActions = result.bulkActions as any[];
-
-		const assignToAction = bulkActions.find(
-			(action) => action.data.id === 'assign-to'
-		);
-
-		const selectedItems = [{actions: {get: {}, updateDueDate: {}}}];
-
-		expect(assignToAction.isVisible({selectedItems})).toBe(false);
-
-		const updateDueDateAction = bulkActions.find(
-			(action) => action.data.id === 'update-due-date'
-		);
-
-		expect(updateDueDateAction.isVisible({selectedItems})).toBe(true);
-	});
-
 	it('filters out the kanban view', () => {
 		const result = WorkflowTasksFDSPropsTransformer(baseProps as any);
 
@@ -113,6 +101,18 @@ describe('WorkflowTasksFDSPropsTransformer', () => {
 			(result.views as any[]).every((v: any) => v.name !== 'kanban')
 		).toBe(true);
 		expect((result.views as any[]).length).toBe(1);
+	});
+
+	it('hides a bulk action when a selected workflow task lacks its permission', () => {
+		const selectedItems = [{actions: {get: {}, updateDueDate: {}}}];
+
+		expect(getBulkAction('assign-to').isVisible({selectedItems})).toBe(
+			false
+		);
+
+		expect(
+			getBulkAction('update-due-date').isVisible({selectedItems})
+		).toBe(true);
 	});
 
 	it('marks all views as non-default', () => {

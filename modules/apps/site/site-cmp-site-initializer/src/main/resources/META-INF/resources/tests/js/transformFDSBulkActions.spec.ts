@@ -28,6 +28,13 @@ describe('transformFDSBulkActions', () => {
 		).toBe(false);
 	});
 
+	it('hides an action when no selection context is given', () => {
+		const [action] = transformFDSBulkActions([deleteAction]);
+
+		expect(action.isVisible()).toBe(false);
+		expect(action.isVisible({})).toBe(false);
+	});
+
 	it('keeps an action without a permission key visible', () => {
 		const [action] = transformFDSBulkActions([
 			{data: {id: 'assign-to'}},
@@ -67,8 +74,8 @@ describe('transformFDSBulkActions', () => {
 	it('resolves the permission key per item with a custom resolver', () => {
 		const [action] = transformFDSBulkActions(
 			[{data: {id: 'assign-to', permissionKey: 'update'}}],
-			(action, item) =>
-				item.workflow ? 'assignToUser' : action.data.permissionKey
+			(bulkAction, item) =>
+				item.workflow ? 'assignToUser' : bulkAction.data.permissionKey
 		);
 
 		expect(
