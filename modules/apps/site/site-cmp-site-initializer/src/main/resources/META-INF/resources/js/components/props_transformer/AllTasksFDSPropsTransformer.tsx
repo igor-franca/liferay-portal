@@ -59,17 +59,17 @@ type BulkModalProps = {
 	selectedData: any;
 };
 
-const WORKFLOW_BULK_ACTION_PERMISSION_KEYS: Record<string, string> = {
-	'assign-to': 'assignToUser',
-	'update-due-date': 'updateDueDate',
-};
-
 const WORKFLOW_BULK_ACTION_MODALS: Record<
 	string,
 	React.ComponentType<BulkModalProps>
 > = {
 	'assign-to': BulkEditWorkflowAssigneeModalContent,
 	'update-due-date': BulkEditWorkflowDueDateModalContent,
+};
+
+const WORKFLOW_BULK_ACTION_PERMISSION_KEYS: Record<string, string> = {
+	'assign-to': 'assignToUser',
+	'update-due-date': 'updateDueDate',
 };
 
 export default function AllTasksFDSPropsTransformer({
@@ -105,11 +105,9 @@ export default function AllTasksFDSPropsTransformer({
 			styleBulkActions(bulkActions),
 			(action, item) => {
 				if (isWorkflowTask(item)) {
-					return (
-						WORKFLOW_BULK_ACTION_PERMISSION_KEYS[
-							action?.data?.id
-						] ?? action?.data?.permissionKey
-					);
+					return WORKFLOW_BULK_ACTION_PERMISSION_KEYS[
+						action?.data?.id
+					];
 				}
 
 				return action?.data?.permissionKey;

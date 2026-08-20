@@ -195,7 +195,7 @@ describe('AllTasksFDSPropsTransformer', () => {
 		);
 	});
 
-	it('keeps assign-to and update-due-date bulk actions visible for a workflow task with workflow permissions', () => {
+	it('keeps bulk actions visible for a workflow task selection, deferring update-state and delete to the disabled state', () => {
 		const selectedItems = [
 			{
 				...workflowItem,
@@ -210,9 +210,9 @@ describe('AllTasksFDSPropsTransformer', () => {
 			getBulkAction('update-due-date').isVisible({selectedItems})
 		).toBe(true);
 
-		expect(getBulkAction('delete').isVisible({selectedItems})).toBe(false);
+		expect(getBulkAction('delete').isVisible({selectedItems})).toBe(true);
 		expect(getBulkAction('update-state').isVisible({selectedItems})).toBe(
-			false
+			true
 		);
 	});
 
