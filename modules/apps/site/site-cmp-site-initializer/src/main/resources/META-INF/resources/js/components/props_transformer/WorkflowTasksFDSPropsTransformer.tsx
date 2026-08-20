@@ -73,16 +73,14 @@ export default function WorkflowTasksFDSPropsTransformer({
 	return {
 		...otherProps,
 		atom: cmpWorkflowTasksFDSAtom,
-		bulkActions: transformFDSBulkActions(bulkActions).map(
-			(action) => ({
-				...action,
-				isDisabled: ({
-					allItemsSelectedActive,
-				}: {
-					allItemsSelectedActive: boolean;
-				}) => allItemsSelectedActive,
-			})
-		),
+		bulkActions: transformFDSBulkActions(bulkActions).map((action) => ({
+			...action,
+			isDisabled: ({
+				allItemsSelectedActive,
+			}: {
+				allItemsSelectedActive: boolean;
+			}) => allItemsSelectedActive,
+		})),
 		creationMenu: creationMenu && {
 			...creationMenu,
 			primaryItems: addOnClickToCreationMenuItems(

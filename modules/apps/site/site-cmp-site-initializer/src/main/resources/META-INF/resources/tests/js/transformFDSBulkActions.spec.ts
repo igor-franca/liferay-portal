@@ -36,9 +36,7 @@ describe('transformFDSBulkActions', () => {
 	});
 
 	it('keeps an action without a permission key visible', () => {
-		const [action] = transformFDSBulkActions([
-			{data: {id: 'assign-to'}},
-		]);
+		const [action] = transformFDSBulkActions([{data: {id: 'assign-to'}}]);
 
 		expect(
 			action.isVisible({

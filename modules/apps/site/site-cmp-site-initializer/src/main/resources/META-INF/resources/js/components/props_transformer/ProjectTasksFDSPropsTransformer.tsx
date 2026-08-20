@@ -123,9 +123,7 @@ export default function ProjectTasksFDSPropsTransformer({
 	return {
 		...otherProps,
 		atom: cmpTasksFDSAtom,
-		bulkActions: transformFDSBulkActions(
-			styleBulkActions(bulkActions)
-		),
+		bulkActions: transformFDSBulkActions(styleBulkActions(bulkActions)),
 		creationMenu: {
 			...creationMenu,
 			primaryItems: addOnClickToCreationMenuItems(
