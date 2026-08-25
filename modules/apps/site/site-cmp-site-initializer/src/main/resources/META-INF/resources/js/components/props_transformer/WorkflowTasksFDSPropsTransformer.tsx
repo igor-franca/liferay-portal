@@ -76,9 +76,23 @@ export default function WorkflowTasksFDSPropsTransformer({
 			...action,
 			isDisabled: ({
 				allItemsSelectedActive,
+				selectedItems = [],
 			}: {
 				allItemsSelectedActive: boolean;
-			}) => allItemsSelectedActive,
+				selectedItems?: WorkflowTaskItemData[];
+			}) => {
+				if (allItemsSelectedActive) {
+					return true;
+				}
+
+				if (action?.data?.id !== 'update-state') {
+					return false;
+				}
+
+				return !selectedItems.every(
+					({embedded}) => embedded?.assignedToMe
+				);
+			},
 		})),
 		creationMenu: creationMenu && {
 			...creationMenu,
