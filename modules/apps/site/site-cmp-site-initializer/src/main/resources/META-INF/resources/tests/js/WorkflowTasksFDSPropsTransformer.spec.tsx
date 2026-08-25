@@ -18,6 +18,7 @@ const baseProps = {
 	bulkActions: [
 		{data: {id: 'update-due-date'}, label: 'Update Due Date'},
 		{data: {id: 'assign-to'}, label: 'Assign To'},
+		{data: {id: 'update-state'}, label: 'Update State'},
 	],
 	creationMenu: {
 		primaryItems: [],
@@ -30,6 +31,18 @@ const baseProps = {
 	],
 };
 
+function getBulkAction(id: string) {
+	const result = WorkflowTasksFDSPropsTransformer(baseProps as any);
+
+	return (result.bulkActions as any[]).find(
+		(action) => action.data.id === id
+	);
+}
+
+function selectedTask(assignedToMe: boolean) {
+	return {embedded: {assignedToMe, id: 1}};
+}
+
 describe('WorkflowTasksFDSPropsTransformer', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
@@ -40,13 +53,31 @@ describe('WorkflowTasksFDSPropsTransformer', () => {
 
 		const bulkActions = result.bulkActions as any[];
 
-		expect(bulkActions).toHaveLength(2);
+		expect(bulkActions).toHaveLength(3);
 
 		bulkActions.forEach((action) => {
 			expect(action.isDisabled({allItemsSelectedActive: true})).toBe(
 				true
 			);
 		});
+	});
+
+	it('disables update-state under Select All, which sends no items to act on', () => {
+		expect(
+			getBulkAction('update-state').isDisabled({
+				allItemsSelectedActive: true,
+				selectedItems: [],
+			})
+		).toBe(true);
+	});
+
+	it('disables update-state when a selected task is not assigned to the user', () => {
+		expect(
+			getBulkAction('update-state').isDisabled({
+				allItemsSelectedActive: false,
+				selectedItems: [selectedTask(true), selectedTask(false)],
+			})
+		).toBe(true);
 	});
 
 	it('does not crash when creationMenu is null', () => {
@@ -80,6 +111,15 @@ describe('WorkflowTasksFDSPropsTransformer', () => {
 		});
 	});
 
+	it('enables update-state when every selected task is assigned to the user', () => {
+		expect(
+			getBulkAction('update-state').isDisabled({
+				allItemsSelectedActive: false,
+				selectedItems: [selectedTask(true), selectedTask(true)],
+			})
+		).toBe(false);
+	});
+
 	it('filters out the kanban view', () => {
 		const result = WorkflowTasksFDSPropsTransformer(baseProps as any);
 
@@ -87,6 +127,17 @@ describe('WorkflowTasksFDSPropsTransformer', () => {
 			(result.views as any[]).every((v: any) => v.name !== 'kanban')
 		).toBe(true);
 		expect((result.views as any[]).length).toBe(1);
+	});
+
+	it('leaves the other bulk actions out of the assignee rule', () => {
+		['assign-to', 'update-due-date'].forEach((id) => {
+			expect(
+				getBulkAction(id).isDisabled({
+					allItemsSelectedActive: false,
+					selectedItems: [selectedTask(false)],
+				})
+			).toBe(false);
+		});
 	});
 
 	it('marks all views as non-default', () => {
