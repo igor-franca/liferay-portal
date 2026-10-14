@@ -362,14 +362,121 @@ test.describe('Manage fields through Form Preview page', () => {
 			})
 		);
 
-		await formViewPage.unselectFile.click();
+		await formViewPage.unselectFile.click({timeout: 5000});
 
-		expect(await getDocumentUnauthenticated(thirdFileEntryId)).toEqual({
-			status: 'NOT_FOUND',
-		});
+		await expect(async () => {
+			expect(await getDocumentUnauthenticated(thirdFileEntryId)).toEqual({
+				status: 'NOT_FOUND',
+			});
+		}).toPass({timeout: 10000});
 
 		await performLoginViaApi(page, 'test');
 	});
+
+	test(
+		'Verify if the replaced file keeps its name',
+		{tag: ['@LPD-109990']},
+		async ({
+			apiHelpers,
+			formBuilderPage,
+			formBuilderSidePanelPage,
+			formViewPage,
+			page,
+		}) => {
+			await formBuilderPage.goToNew();
+
+			await formBuilderPage.fillFormTitle('Form' + getRandomInt());
+
+			await formBuilderSidePanelPage.addFieldByDoubleClick('Upload');
+
+			await formBuilderSidePanelPage.allowGuestUsersToggle.click();
+
+			await formBuilderPage.clickPublishFormButton();
+
+			const formSubmissionURL =
+				await formBuilderPage.getFormSubmissionURL();
+
+			await performLogout(page);
+
+			try {
+				await page.goto(formSubmissionURL, {waitUntil: 'networkidle'});
+
+				await page.waitForLoadState('domcontentloaded');
+
+				// Uploaded files share one folder per site, so a random name keeps the
+				// test independent from files left by other entries
+
+				const uploadedFileName = `file${getRandomInt()}.txt`;
+
+				await formViewPage.uploadTextFile(
+					page,
+					uploadedFileName,
+					'first'
+				);
+
+				await expect(formViewPage.uploadInput).toHaveValue(
+					uploadedFileName
+				);
+
+				const firstFileEntryId =
+					await formViewPage.getFileEntryId(page);
+
+				// Uploading the same name again without reloading replaces the first
+				// file instead of storing a second one with a "(1)" suffix
+
+				await formViewPage.uploadTextFile(
+					page,
+					uploadedFileName,
+					'second'
+				);
+
+				await expect(async () => {
+					expect(
+						await formViewPage.getFileEntryId(page, {timeout: 1000})
+					).not.toEqual(firstFileEntryId);
+				}).toPass({timeout: 10000});
+
+				await expect(formViewPage.uploadInput).toHaveValue(
+					uploadedFileName
+				);
+
+				const secondFileEntryId =
+					await formViewPage.getFileEntryId(page);
+
+				const {Authorization} =
+					await apiHelpers.getJSONWebServicesHeaders();
+
+				const getDocument = (documentId: string) =>
+					apiHelpers.get(
+						`${apiHelpers.baseUrl}headless-delivery/v1.0/documents/${documentId}`,
+						false,
+						{Authorization}
+					);
+
+				expect(await getDocument(secondFileEntryId)).toEqual(
+					expect.objectContaining({
+						fileName: uploadedFileName,
+						id: Number(secondFileEntryId),
+					})
+				);
+
+				expect(await getDocument(firstFileEntryId)).toEqual({
+					status: 'NOT_FOUND',
+				});
+
+				await formViewPage.unselectFile.click({timeout: 5000});
+
+				await expect(async () => {
+					expect(await getDocument(secondFileEntryId)).toEqual({
+						status: 'NOT_FOUND',
+					});
+				}).toPass({timeout: 10000});
+			}
+			finally {
+				await performLoginViaApi(page, 'test');
+			}
+		}
+	);
 });
 
 test.describe('Manage fields through Form Builder page', () => {

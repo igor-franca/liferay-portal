@@ -30,13 +30,17 @@ export class FormViewPage {
 	 * @returns The extracted fileEntryId
 	 */
 
-	async getFileEntryId(page: Page): Promise<string> {
+	async getFileEntryId(
+		page: Page,
+		options: {timeout?: number} = {}
+	): Promise<string> {
 		const DDM_FORM_PORTLET_PREFIX =
 			'_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormPortlet_';
 
 		const fileEntryIdValue = await page.getAttribute(
 			`input[name^="${DDM_FORM_PORTLET_PREFIX}ddm$$"][type="hidden"]`,
-			'value'
+			'value',
+			options
 		);
 
 		let parsedFileEntryId = JSON.parse(fileEntryIdValue);
@@ -58,5 +62,19 @@ export class FormViewPage {
 		await fileChooser.setFiles(
 			path.join(dirName, '/dependencies', filePath)
 		);
+	}
+
+	async uploadTextFile(page: Page, name: string, content: string) {
+		const fileChooserPromise = page.waitForEvent('filechooser');
+
+		await page.getByText('Select').click();
+
+		const fileChooser = await fileChooserPromise;
+
+		await fileChooser.setFiles({
+			buffer: Buffer.from(content),
+			mimeType: 'text/plain',
+			name,
+		});
 	}
 }
