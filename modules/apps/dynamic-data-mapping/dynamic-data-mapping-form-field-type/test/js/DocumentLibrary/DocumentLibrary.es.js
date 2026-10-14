@@ -414,6 +414,7 @@ describe('Field DocumentLibrary', () => {
 	});
 
 	describe('file deletion lifecycle', () => {
+		const originalPropsValues = Liferay.PropsValues;
 		const originalSendBeacon = navigator.sendBeacon;
 		const originalXMLHttpRequest = global.XMLHttpRequest;
 
@@ -455,9 +456,9 @@ describe('Field DocumentLibrary', () => {
 		};
 
 		const completeUpload = (newFileEntryId) => {
-			const uploadXhr = xhrInstances.find(
-				(instance) => instance.url === guestUploadURL
-			);
+			const uploadXhr = xhrInstances
+				.filter((instance) => instance.url === guestUploadURL)
+				.pop();
 
 			expect(uploadXhr).toBeDefined();
 
@@ -474,6 +475,40 @@ describe('Field DocumentLibrary', () => {
 				)[1];
 
 			act(() => readyStateChangeHandler({}));
+		};
+
+		const failUpload = () => {
+			const uploadXhr = xhrInstances
+				.filter((instance) => instance.url === guestUploadURL)
+				.pop();
+
+			expect(uploadXhr).toBeDefined();
+
+			uploadXhr.responseText = '';
+
+			uploadXhr.readyState = 4;
+
+			const readyStateChangeHandler =
+				uploadXhr.addEventListener.mock.calls.find(
+					([name]) => name === 'readystatechange'
+				)[1];
+
+			act(() => readyStateChangeHandler({}));
+		};
+
+		const progressUpload = () => {
+			const uploadXhr = xhrInstances
+				.filter((instance) => instance.url === guestUploadURL)
+				.pop();
+
+			expect(uploadXhr).toBeDefined();
+
+			const progressHandler =
+				uploadXhr.upload.addEventListener.mock.calls.find(
+					([name]) => name === 'progress'
+				)[1];
+
+			act(() => progressHandler({loaded: 1, total: 2}));
 		};
 
 		const valueParsed = (id) => JSON.parse(valueWithFileEntry(id));
@@ -503,6 +538,22 @@ describe('Field DocumentLibrary', () => {
 			expect(deleteCalls().sort()).toEqual([...ids].sort());
 
 		const expectNoDeletes = () => expect(deleteCalls()).toEqual([]);
+
+		const replacedOnUpload = () =>
+			xhrInstances
+				.filter((instance) => instance.url === guestUploadURL)
+				.map((instance) =>
+					Number(
+						formDataValue(
+							instance.send.mock.calls[0]?.[0],
+							'oldFileEntryId'
+						)
+					)
+				)
+				.filter(Boolean);
+
+		const expectReplacedOnUpload = (...ids) =>
+			expect(replacedOnUpload()).toEqual(ids);
 
 		const clickClear = () => {
 			const clearButton = document.querySelector(
@@ -617,10 +668,11 @@ describe('Field DocumentLibrary', () => {
 
 		afterEach(() => {
 			global.XMLHttpRequest = originalXMLHttpRequest;
+			Liferay.PropsValues = originalPropsValues;
 			navigator.sendBeacon = originalSendBeacon;
 		});
 
-		it('cleans up intermediate replacements on unload after multiple replaces in edit mode', () => {
+		it('cleans up intermediate replacements on upload and the last one on unload in edit mode', () => {
 			Liferay.ThemeDisplay.isSignedIn = jest.fn(() => false);
 
 			renderField({
@@ -634,7 +686,24 @@ describe('Field DocumentLibrary', () => {
 			completeUpload(99);
 			triggerBeforeUnload();
 
-			expectDeleted(88, 99);
+			expectReplacedOnUpload(88);
+			expectDeleted(99);
+		});
+
+		it('deletes a session upload at once on Clear', () => {
+			Liferay.ThemeDisplay.isSignedIn = jest.fn(() => false);
+
+			renderField({allowGuestUsers: true, value: '{}'});
+
+			triggerGuestUpload();
+			completeUpload(99);
+			clickClear();
+
+			expectDeleted(99);
+
+			triggerBeforeUnload();
+
+			expectDeleted(99);
 		});
 
 		it('deletes the original on Save after Clear when the value is an object (LPD-100999)', () => {
@@ -646,7 +715,7 @@ describe('Field DocumentLibrary', () => {
 			expectDeleted(42);
 		});
 
-		it('deletes both the previous and current upload on new-entry abandon after replace', () => {
+		it('deletes the previous upload in the upload request and the current one on new-entry abandon after replace', () => {
 			Liferay.ThemeDisplay.isSignedIn = jest.fn(() => false);
 
 			renderField({allowGuestUsers: true, value: '{}'});
@@ -657,7 +726,22 @@ describe('Field DocumentLibrary', () => {
 			completeUpload(99);
 			triggerBeforeUnload();
 
-			expectDeleted(88, 99);
+			expectReplacedOnUpload(88);
+			expectDeleted(99);
+		});
+
+		it('deletes the previous upload on unload while the replacement is in flight', () => {
+			Liferay.ThemeDisplay.isSignedIn = jest.fn(() => false);
+
+			renderField({allowGuestUsers: true, value: '{}'});
+
+			triggerGuestUpload();
+			completeUpload(88);
+			triggerGuestUpload();
+			progressUpload();
+			triggerBeforeUnload();
+
+			expectDeleted(88);
 		});
 
 		it('deletes only the replacement on unload when replacing in edit mode', () => {
@@ -708,6 +792,24 @@ describe('Field DocumentLibrary', () => {
 			completeUpload(99);
 			fireGlobal('paginationControlsSubmitButtonClicked');
 
+			expectDeleted(42);
+		});
+
+		it('deletes the stored file on Save after replacing it twice in edit mode', () => {
+			Liferay.ThemeDisplay.isSignedIn = jest.fn(() => false);
+
+			renderField({
+				allowGuestUsers: true,
+				value: valueWithFileEntry(42),
+			});
+
+			triggerGuestUpload();
+			completeUpload(88);
+			triggerGuestUpload();
+			completeUpload(99);
+			fireGlobal('paginationControlsSubmitButtonClicked');
+
+			expectReplacedOnUpload(88);
 			expectDeleted(42);
 		});
 
@@ -778,6 +880,22 @@ describe('Field DocumentLibrary', () => {
 			expectNoDeletes();
 		});
 
+		it('keeps the stored file on Cancel after clearing its replacement', () => {
+			Liferay.ThemeDisplay.isSignedIn = jest.fn(() => false);
+
+			renderField({
+				allowGuestUsers: true,
+				value: valueWithFileEntry(42),
+			});
+
+			triggerGuestUpload();
+			completeUpload(99);
+			clickClear();
+			triggerBeforeUnload();
+
+			expectDeleted(99);
+		});
+
 		it('preserves the original on Cancel after Replace and cleans the orphan on unload', () => {
 			Liferay.ThemeDisplay.isSignedIn = jest.fn(() => false);
 
@@ -791,6 +909,62 @@ describe('Field DocumentLibrary', () => {
 			triggerBeforeUnload();
 
 			expectDeleted(99);
+		});
+
+		it('stages the previous upload when the replacement exceeds the request size limit', () => {
+			Liferay.ThemeDisplay.isSignedIn = jest.fn(() => false);
+
+			renderField({allowGuestUsers: true, value: '{}'});
+
+			triggerGuestUpload();
+			completeUpload(99);
+
+			Liferay.PropsValues = {
+				...Liferay.PropsValues,
+				UPLOAD_SERVLET_REQUEST_IMPL_MAX_SIZE: 1,
+			};
+
+			triggerGuestUpload();
+
+			expectReplacedOnUpload();
+			expectNoDeletes();
+
+			triggerBeforeUnload();
+
+			expectDeleted(99);
+		});
+
+		it('stages the previous upload when the replacement request fails', () => {
+			Liferay.ThemeDisplay.isSignedIn = jest.fn(() => false);
+
+			renderField({allowGuestUsers: true, value: '{}'});
+
+			triggerGuestUpload();
+			completeUpload(88);
+			triggerGuestUpload();
+			failUpload();
+
+			expectReplacedOnUpload(88);
+			expectNoDeletes();
+
+			triggerBeforeUnload();
+
+			expectDeleted(88);
+		});
+
+		it('stages the stored file instead of replacing it in the upload request', () => {
+			Liferay.ThemeDisplay.isSignedIn = jest.fn(() => false);
+
+			renderField({
+				allowGuestUsers: true,
+				value: valueWithFileEntry(42),
+			});
+
+			triggerGuestUpload();
+			completeUpload(99);
+
+			expectReplacedOnUpload();
+			expectNoDeletes();
 		});
 	});
 });
