@@ -350,6 +350,7 @@ function useFileLifecycle({
 }) {
 	const originalFileEntryIdRef = useRef(null);
 	const pendingDeletionsRef = useRef([]);
+	const sessionUploadsRef = useRef([]);
 	const submitButtonClickedRef = useRef(false);
 
 	const deleteFileEntry = useCallback(
@@ -389,6 +390,41 @@ function useFileLifecycle({
 			...pendingDeletionsRef.current,
 			fileEntryId,
 		];
+	};
+
+	const settlePendingDeletion = (fileEntryId) => {
+		pendingDeletionsRef.current = pendingDeletionsRef.current.filter(
+			(pendingFileEntryId) => pendingFileEntryId !== fileEntryId
+		);
+	};
+
+	const isSessionUpload = (fileEntryId) =>
+		sessionUploadsRef.current.includes(fileEntryId);
+
+	const trackSessionUpload = (fileEntryId) => {
+		if (!fileEntryId) {
+			return;
+		}
+
+		sessionUploadsRef.current = [...sessionUploadsRef.current, fileEntryId];
+	};
+
+	// A file uploaded in this session is disposable, so it is removed at once.
+	// A file that came with the page belongs to the stored entry and waits for
+	// Save, so Cancel keeps it.
+
+	const discardFileEntry = (fileEntryId) => {
+		if (!fileEntryId) {
+			return;
+		}
+
+		if (isSessionUpload(fileEntryId)) {
+			deleteFileEntry(fileEntryId);
+
+			return;
+		}
+
+		stagePendingDeletion(fileEntryId);
 	};
 
 	useEffect(() => {
@@ -454,7 +490,13 @@ function useFileLifecycle({
 		};
 	}, [deleteFileEntry]);
 
-	return {stagePendingDeletion};
+	return {
+		discardFileEntry,
+		isSessionUpload,
+		settlePendingDeletion,
+		stagePendingDeletion,
+		trackSessionUpload,
+	};
 }
 
 const Main = ({
@@ -496,7 +538,13 @@ const Main = ({
 	const [valid, setValid] = useState(initialValid);
 	const [progress, setProgress] = useState(0);
 
-	const {stagePendingDeletion} = useFileLifecycle({
+	const {
+		discardFileEntry,
+		isSessionUpload,
+		settlePendingDeletion,
+		stagePendingDeletion,
+		trackSessionUpload,
+	} = useFileLifecycle({
 		currentValue,
 		fileEntryDeleteURL,
 		portletNamespace,
@@ -681,7 +729,7 @@ const Main = ({
 	const handleOnClearButtonClicked = (event, isSignedIn) => {
 		onFocus(event);
 
-		stagePendingDeletion(getFileEntryId(currentValue));
+		discardFileEntry(getFileEntryId(currentValue));
 
 		setCurrentValue(null);
 
@@ -707,12 +755,23 @@ const Main = ({
 
 		onFocus(event);
 
-		stagePendingDeletion(getFileEntryId(currentValue));
+		const previousFileEntryId = getFileEntryId(currentValue);
 
-		uploadFileEntry(event);
+		// The previous file is staged before the request leaves, so leaving the
+		// page while the upload is in flight still removes it. A session upload
+		// also travels as oldFileEntryId, so the server removes it before it
+		// picks the new file name and the name stays the same. A file that came
+		// with the page is only staged, so Cancel keeps it.
+
+		stagePendingDeletion(previousFileEntryId);
+
+		uploadFileEntry(
+			event,
+			isSessionUpload(previousFileEntryId) ? previousFileEntryId : 0
+		);
 	};
 
-	const uploadFileEntry = (event) => {
+	const uploadFileEntry = (event, oldFileEntryId = 0) => {
 		const file = event.target.files[0];
 
 		if (isExceededUploadRequestSizeLimit(file.size)) {
@@ -744,6 +803,10 @@ const Main = ({
 				}
 
 				if (response.success) {
+					settlePendingDeletion(oldFileEntryId);
+
+					trackSessionUpload(getFileEntryId(response.file));
+
 					handleGuestUploadFileChanged(
 						'',
 						event,
@@ -752,7 +815,10 @@ const Main = ({
 				}
 				else {
 					handleGuestUploadFileChanged(
-						response.error.message,
+						response.error?.message ??
+							Liferay.Language.get(
+								'an-unexpected-error-occurred'
+							),
 						event,
 						null
 					);
@@ -766,7 +832,7 @@ const Main = ({
 		request.send(
 			convertToFormData({
 				[`${portletNamespace}file`]: file,
-				[`${portletNamespace}oldFileEntryId`]: 0,
+				[`${portletNamespace}oldFileEntryId`]: oldFileEntryId,
 			})
 		);
 	};
