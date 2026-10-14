@@ -859,7 +859,7 @@ const Main = ({
 					name={name}
 					onBlur={onBlur}
 					onClearButtonClicked={(event) => {
-						handleOnClearButtonClicked(event, value, isSignedIn);
+						handleOnClearButtonClicked(event, isSignedIn);
 					}}
 					onFocus={onFocus}
 					onUploadSelectButtonClicked={(event) =>
@@ -887,7 +887,7 @@ const Main = ({
 					message={message}
 					name={name}
 					onClearButtonClicked={(event) => {
-						handleOnClearButtonClicked(event, value, isSignedIn);
+						handleOnClearButtonClicked(event, isSignedIn);
 					}}
 					onSelectButtonClicked={handleSelectButtonClicked}
 					placeholder={placeholder}
