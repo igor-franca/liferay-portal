@@ -5,6 +5,7 @@
 
 package com.liferay.dynamic.data.mapping.util;
 
+import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.dynamic.data.mapping.constants.DDMFormConstants;
 import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.petra.string.StringBundler;
@@ -14,7 +15,10 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.model.Repository;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil;
+import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
@@ -40,6 +44,52 @@ public class DDMFormUtil {
 			}
 
 			return _createDDMFormDefaultUser(companyId);
+		}
+	}
+
+	public static Folder getDDMFormFolder(
+			long companyId, long groupId, ServiceContext serviceContext)
+		throws PortalException {
+
+		ServiceContext folderServiceContext =
+			(ServiceContext)serviceContext.clone();
+
+		folderServiceContext.setAddGroupPermissions(true);
+		folderServiceContext.setAddGuestPermissions(true);
+
+		Repository repository =
+			PortletFileRepositoryUtil.fetchPortletRepository(
+				groupId, DDMFormConstants.SERVICE_NAME);
+
+		if (repository == null) {
+			repository = PortletFileRepositoryUtil.addPortletRepository(
+				groupId, DDMFormConstants.SERVICE_NAME, folderServiceContext);
+		}
+
+		try {
+			return PortletFileRepositoryUtil.getPortletFolder(
+				repository.getRepositoryId(),
+				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+				DDMFormConstants.DDM_FORM_UPLOADED_FILES_FOLDER_NAME);
+		}
+		catch (PortalException portalException) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(portalException);
+			}
+
+			User ddmFormDefaultUser = getDDMFormDefaultUser(companyId);
+
+			if (ddmFormDefaultUser == null) {
+				throw new PortalException(
+					"Unable to get the DDM form default user for company " +
+						companyId);
+			}
+
+			return PortletFileRepositoryUtil.addPortletFolder(
+				ddmFormDefaultUser.getUserId(), repository.getRepositoryId(),
+				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+				DDMFormConstants.DDM_FORM_UPLOADED_FILES_FOLDER_NAME,
+				folderServiceContext);
 		}
 	}
 
