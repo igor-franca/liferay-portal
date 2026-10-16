@@ -369,7 +369,7 @@ public class DocumentLibraryDDMFormFieldTemplateContextContributor
 	private String _getGuestUploadURL(
 		DDMFormField ddmFormField,
 		DDMFormFieldRenderingContext ddmFormFieldRenderingContext,
-		long folderId, HttpServletRequest httpServletRequest) {
+		HttpServletRequest httpServletRequest) {
 
 		RequestBackedPortletURLFactory requestBackedPortletURLFactory =
 			RequestBackedPortletURLFactoryUtil.create(httpServletRequest);
@@ -381,8 +381,6 @@ public class DocumentLibraryDDMFormFieldTemplateContextContributor
 					DDMPortletKeys.DYNAMIC_DATA_MAPPING_FORM))
 		).setActionName(
 			"/dynamic_data_mapping_form/upload_file_entry"
-		).setParameter(
-			"folderId", folderId
 		).setParameter(
 			"formInstanceId",
 			ParamUtil.getString(
@@ -615,19 +613,8 @@ public class DocumentLibraryDDMFormFieldTemplateContextContributor
 			groupId = ddmFormInstance.getGroupId();
 		}
 
-		Folder ddmFormFolder = _getDDMFormFolder(
-			themeDisplay.getCompanyId(), groupId, httpServletRequest);
-
-		if (ddmFormFolder == null) {
-			return new HashMap<>();
-		}
-
-		long ddmFormFolderId = ddmFormFolder.getFolderId();
-
 		if (!themeDisplay.isSignedIn()) {
 			return HashMapBuilder.<String, Object>put(
-				"folderId", ddmFormFolderId
-			).put(
 				"guestUploadURL",
 				() -> {
 					String guestUploadURL = GetterUtil.getString(
@@ -639,14 +626,21 @@ public class DocumentLibraryDDMFormFieldTemplateContextContributor
 
 					return _getGuestUploadURL(
 						ddmFormField, ddmFormFieldRenderingContext,
-						ddmFormFolderId, httpServletRequest);
+						httpServletRequest);
 				}
 			).build();
 		}
 
+		Folder ddmFormFolder = _getDDMFormFolder(
+			themeDisplay.getCompanyId(), groupId, httpServletRequest);
+
+		if (ddmFormFolder == null) {
+			return new HashMap<>();
+		}
+
 		long privateUserFolderId = _getPrivateUserFolderId(
-			ddmFormFolder.getRepositoryId(), ddmFormFolderId, httpServletRequest,
-			themeDisplay.getUser());
+			ddmFormFolder.getRepositoryId(), ddmFormFolder.getFolderId(),
+			httpServletRequest, themeDisplay.getUser());
 
 		return HashMapBuilder.<String, Object>put(
 			"folderId", privateUserFolderId
