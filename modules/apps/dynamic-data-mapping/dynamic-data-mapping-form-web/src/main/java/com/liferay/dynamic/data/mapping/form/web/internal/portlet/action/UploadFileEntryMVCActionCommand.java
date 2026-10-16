@@ -11,7 +11,6 @@ import com.liferay.document.library.kernel.exception.FileMimeTypeException;
 import com.liferay.document.library.kernel.exception.FileNameException;
 import com.liferay.document.library.kernel.exception.FileSizeException;
 import com.liferay.document.library.kernel.exception.InvalidFileException;
-import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.util.DLValidator;
 import com.liferay.dynamic.data.mapping.constants.DDMActionKeys;
 import com.liferay.dynamic.data.mapping.constants.DDMFormConstants;
@@ -33,18 +32,13 @@ import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.ResourceConstants;
-import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.model.role.RoleConstants;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.service.CompanyLocalService;
-import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
-import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -119,12 +113,6 @@ public class UploadFileEntryMVCActionCommand extends BaseMVCActionCommand {
 
 	@Reference
 	private ObjectFieldSettingLocalService _objectFieldSettingLocalService;
-
-	@Reference
-	private ResourcePermissionLocalService _resourcePermissionLocalService;
-
-	@Reference
-	private RoleLocalService _roleLocalService;
 
 	@Reference
 	private UploadHandler _uploadHandler;
@@ -208,14 +196,8 @@ public class UploadFileEntryMVCActionCommand extends BaseMVCActionCommand {
 				DDMFormConstants.SERVICE_NAME, folderId, file, uniqueFileName,
 				mimeType, true);
 
-			Role role = _roleLocalService.getRole(
-				themeDisplay.getCompanyId(), RoleConstants.GUEST);
-
-			_resourcePermissionLocalService.setResourcePermissions(
-				themeDisplay.getCompanyId(), DLFileEntry.class.getName(),
-				ResourceConstants.SCOPE_INDIVIDUAL,
-				String.valueOf(fileEntry.getFileEntryId()), role.getRoleId(),
-				new String[0]);
+			DDMFormUtil.removeGuestPermissions(
+				themeDisplay.getCompanyId(), fileEntry.getFileEntryId());
 
 			return fileEntry;
 		}
