@@ -12,7 +12,6 @@ import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
 import com.liferay.dynamic.data.mapping.constants.DDMFormConstants;
 import com.liferay.dynamic.data.mapping.util.DDMFormUtil;
-import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
@@ -30,7 +29,6 @@ import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ContentTypes;
-import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.TempFileEntryUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.test.rule.Inject;
@@ -47,7 +45,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpSession;
 
 /**
  * @author Igor Franca
@@ -72,10 +69,11 @@ public class DeleteFileEntryMVCActionCommandTest {
 	@Test
 	public void testProcessAction() throws Exception {
 		Assert.assertNotNull(_processAction(_addFileEntry()));
+		Assert.assertNull(
+			_processAction(
+				_addTempFileEntry(DDMFormConstants.TEMP_FOLDER_NAME)));
 		Assert.assertNotNull(
 			_processAction(_addTempFileEntry(RandomTestUtil.randomString())));
-		Assert.assertNull(
-			_processAction(_addTempFileEntry(_getTempFolderName())));
 	}
 
 	private FileEntry _addFileEntry() throws Exception {
@@ -97,13 +95,6 @@ public class DeleteFileEntryMVCActionCommandTest {
 			ContentTypes.TEXT_PLAIN);
 	}
 
-	private String _getTempFolderName() {
-		return StringBundler.concat(
-			DDMFormConstants.TEMP_FOLDER_NAME, "-",
-			DigesterUtil.digestHex(
-				DigesterUtil.SHA_256, _mockHttpSession.getId()));
-	}
-
 	private DLFileEntry _processAction(FileEntry fileEntry) throws Exception {
 		MockHttpServletRequest mockHttpServletRequest =
 			new MockHttpServletRequest();
@@ -118,8 +109,6 @@ public class DeleteFileEntryMVCActionCommandTest {
 
 		mockHttpServletRequest.setAttribute(
 			WebKeys.THEME_DISPLAY, themeDisplay);
-
-		mockHttpServletRequest.setSession(_mockHttpSession);
 
 		_mvcActionCommand.processAction(
 			new MockLiferayPortletActionRequest(mockHttpServletRequest),
@@ -142,8 +131,6 @@ public class DeleteFileEntryMVCActionCommandTest {
 
 	@DeleteAfterTestRun
 	private Group _group;
-
-	private final MockHttpSession _mockHttpSession = new MockHttpSession();
 
 	@Inject(
 		filter = "mvc.command.name=/dynamic_data_mapping_form/delete_file_entry"
