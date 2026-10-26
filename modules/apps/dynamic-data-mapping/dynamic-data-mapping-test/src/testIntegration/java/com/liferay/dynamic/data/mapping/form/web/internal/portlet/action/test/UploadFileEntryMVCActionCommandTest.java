@@ -15,7 +15,6 @@ import com.liferay.dynamic.data.mapping.test.util.DDMFormInstanceTestUtil;
 import com.liferay.dynamic.data.mapping.util.DDMFormUtil;
 import com.liferay.petra.memory.DeleteFileFinalizeAction;
 import com.liferay.petra.memory.FinalizeManager;
-import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.configuration.test.util.CompanyConfigurationTemporarySwapper;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -44,7 +43,6 @@ import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.FileItem;
 import com.liferay.portal.kernel.util.ContentTypes;
-import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -79,7 +77,6 @@ import org.junit.runner.RunWith;
 
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockHttpSession;
 
 /**
  * @author Carolina Barbosa
@@ -130,7 +127,8 @@ public class UploadFileEntryMVCActionCommandTest {
 			TestPropsValues.getCompanyId());
 
 		_oldFileEntry = TempFileEntryUtil.addTempFileEntry(
-			_group.getGroupId(), user.getUserId(), _getTempFolderName(),
+			_group.getGroupId(), user.getUserId(),
+			DDMFormConstants.TEMP_FOLDER_NAME,
 			TempFileEntryUtil.getTempFileName("file.txt"),
 			new ByteArrayInputStream(TestDataConstants.TEST_BYTE_ARRAY),
 			ContentTypes.TEXT_PLAIN);
@@ -164,8 +162,8 @@ public class UploadFileEntryMVCActionCommandTest {
 			fileJSONObject.getString("title"));
 
 		FileEntry tempFileEntry = TempFileEntryUtil.getTempFileEntry(
-			_group.getGroupId(), dlFileEntry.getUserId(), _getTempFolderName(),
-			dlFileEntry.getTitle());
+			_group.getGroupId(), dlFileEntry.getUserId(),
+			DDMFormConstants.TEMP_FOLDER_NAME, dlFileEntry.getTitle());
 
 		Assert.assertEquals(
 			dlFileEntry.getFileEntryId(), tempFileEntry.getFileEntryId());
@@ -265,7 +263,6 @@ public class UploadFileEntryMVCActionCommandTest {
 			"groupId", String.valueOf(_ddmFormInstance.getGroupId()));
 		mockHttpServletRequest.addParameter(
 			"oldFileEntryId", String.valueOf(_oldFileEntry.getFileEntryId()));
-		mockHttpServletRequest.setSession(_mockHttpSession);
 
 		ThemeDisplay themeDisplay = new ThemeDisplay();
 
@@ -282,13 +279,6 @@ public class UploadFileEntryMVCActionCommandTest {
 			"multipart/form-data;boundary=" + System.currentTimeMillis());
 
 		return mockHttpServletRequest;
-	}
-
-	private String _getTempFolderName() {
-		return StringBundler.concat(
-			DDMFormConstants.TEMP_FOLDER_NAME, "-",
-			DigesterUtil.digestHex(
-				DigesterUtil.SHA_256, _mockHttpSession.getId()));
 	}
 
 	private JSONObject _processAction() throws Exception {
@@ -321,8 +311,6 @@ public class UploadFileEntryMVCActionCommandTest {
 
 	@Inject
 	private JSONFactory _jsonFactory;
-
-	private final MockHttpSession _mockHttpSession = new MockHttpSession();
 
 	@Inject(
 		filter = "mvc.command.name=/dynamic_data_mapping_form/upload_file_entry"

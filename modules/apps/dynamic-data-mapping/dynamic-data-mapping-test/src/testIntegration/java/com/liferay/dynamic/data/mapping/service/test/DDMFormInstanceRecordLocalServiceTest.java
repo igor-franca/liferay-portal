@@ -43,7 +43,7 @@ import com.liferay.portal.kernel.security.auth.CompanyInheritableThreadLocalCall
 import com.liferay.portal.kernel.security.permission.ResourceActions;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
-import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
+import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalService;
 import com.liferay.portal.kernel.service.WorkflowInstanceLinkLocalService;
@@ -136,10 +136,8 @@ public class DDMFormInstanceRecordLocalServiceTest
 		Assert.assertEquals(
 			ddmFormInstanceRecord.getFormInstanceRecordId(),
 			dlFileEntry.getClassPK());
-
 		Assert.assertEquals(
 			_ddmFormFolder.getFolderId(), dlFileEntry.getFolderId());
-
 		Assert.assertEquals("file.txt", dlFileEntry.getTitle());
 
 		User ddmFormDefaultUser = DDMFormUtil.getDDMFormDefaultUser(
@@ -152,7 +150,7 @@ public class DDMFormInstanceRecordLocalServiceTest
 		Assert.assertEquals(
 			dlFileEntry.getUuid(), fileEntryJSONObject.getString("uuid"));
 
-		Role role = RoleLocalServiceUtil.getRole(
+		Role role = _roleLocalService.getRole(
 			user.getCompanyId(), RoleConstants.GUEST);
 
 		Assert.assertTrue(
@@ -552,6 +550,9 @@ public class DDMFormInstanceRecordLocalServiceTest
 
 	@Inject
 	private ResourcePermissionLocalService _resourcePermissionLocalService;
+
+	@Inject
+	private RoleLocalService _roleLocalService;
 
 	@Inject
 	private WorkflowDefinitionLinkLocalService

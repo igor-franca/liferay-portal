@@ -430,15 +430,17 @@ public class DDMFormInstanceRecordLocalServiceImpl
 		ddmFormInstanceRecord.setFormInstanceVersion(
 			ddmFormInstance.getVersion());
 
+		List<FileEntry> tempFileEntries = new ArrayList<>();
+
+		_addFileEntries(
+			user.getCompanyId(), ddmFormInstanceRecordId, ddmFormValues,
+			ddmFormInstanceRecord.getGroupId(), tempFileEntries);
+
 		ddmFormInstanceRecord = ddmFormInstanceRecordPersistence.update(
 			ddmFormInstanceRecord);
 
 		DDMFormInstanceRecordVersion ddmFormInstanceRecordVersion =
 			ddmFormInstanceRecord.getLatestFormInstanceRecordVersion();
-
-		_addFileEntries(
-			user.getCompanyId(), ddmFormInstanceRecordId, ddmFormValues,
-			ddmFormInstanceRecord.getGroupId());
 
 		if (ddmFormInstanceRecordVersion.isApproved()) {
 			long ddmStorageId = _createDDMContent(
@@ -485,6 +487,8 @@ public class DDMFormInstanceRecordLocalServiceImpl
 				deleteDDMFormInstanceRecordVersion(
 					ddmFormInstanceRecordVersion);
 
+			_deleteTempFileEntries(tempFileEntries);
+
 			return ddmFormInstanceRecord;
 		}
 
@@ -492,6 +496,8 @@ public class DDMFormInstanceRecordLocalServiceImpl
 			user.getCompanyId(), ddmFormInstance, ddmFormInstanceRecord,
 			ddmFormInstanceRecordVersion, ddmFormInstanceRecord.getGroupId(),
 			serviceContext, userId);
+
+		_deleteTempFileEntries(tempFileEntries);
 
 		return ddmFormInstanceRecord;
 	}
@@ -591,7 +597,8 @@ public class DDMFormInstanceRecordLocalServiceImpl
 
 	private void _addFileEntries(
 			long companyId, long ddmFormInstanceRecordId,
-			DDMFormValues ddmFormValues, long groupId)
+			DDMFormValues ddmFormValues, long groupId,
+			List<FileEntry> tempFileEntries)
 		throws PortalException {
 
 		User ddmFormDefaultUser = DDMFormUtil.getDDMFormDefaultUser(companyId);
@@ -608,6 +615,17 @@ public class DDMFormInstanceRecordLocalServiceImpl
 			return;
 		}
 
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setAddGroupPermissions(true);
+		serviceContext.setAddGuestPermissions(true);
+
+		Folder ddmFormFolder = PortletFileRepositoryUtil.addPortletFolder(
+			ddmFormDefaultUser.getUserId(), repository.getRepositoryId(),
+			DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			DDMFormConstants.DDM_FORM_UPLOADED_FILES_FOLDER_NAME,
+			serviceContext);
+
 		DDMForm ddmForm = ddmFormValues.getDDMForm();
 
 		Map<String, DDMFormField> ddmFormFieldsMap =
@@ -616,16 +634,10 @@ public class DDMFormInstanceRecordLocalServiceImpl
 		DDMFormFieldValueAccessor<JSONObject> ddmFormFieldValueAccessor =
 			_ddmFormFieldTypeServicesRegistry.getDDMFormFieldValueAccessor(
 				DDMFormFieldTypeConstants.DOCUMENT_LIBRARY);
-
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
 			ddmFormValues.getDDMFormFieldValuesMap(true);
 
-		Folder ddmFormFolder = PortletFileRepositoryUtil.getPortletFolder(
-			repository.getRepositoryId(),
-			DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-			DDMFormConstants.DDM_FORM_UPLOADED_FILES_FOLDER_NAME);
-
-		List<FileEntry> tempFileEntries = new ArrayList<>();
+		Role role = _roleLocalService.getRole(companyId, RoleConstants.GUEST);
 
 		for (List<DDMFormFieldValue> ddmFormFieldValues :
 				ddmFormFieldValuesMap.values()) {
@@ -681,9 +693,6 @@ public class DDMFormInstanceRecordLocalServiceImpl
 					continue;
 				}
 
-				Role role = _roleLocalService.getRole(
-					companyId, RoleConstants.GUEST);
-
 				_resourcePermissionLocalService.setResourcePermissions(
 					companyId, DLFileEntry.class.getName(),
 					ResourceConstants.SCOPE_INDIVIDUAL,
@@ -715,11 +724,6 @@ public class DDMFormInstanceRecordLocalServiceImpl
 				tempFileEntries.add(tempFileEntry);
 			}
 		}
-
-		for (FileEntry tempFileEntry : tempFileEntries) {
-			TempFileEntryUtil.deleteTempFileEntry(
-				tempFileEntry.getFileEntryId());
-		}
 	}
 
 	private DDMFormInstanceRecord _addFormInstanceRecord(
@@ -740,7 +744,11 @@ public class DDMFormInstanceRecordLocalServiceImpl
 		ddmFormInstanceRecord.setVersionUserId(user.getUserId());
 		ddmFormInstanceRecord.setVersionUserName(user.getFullName());
 
-		_addFileEntries(user.getCompanyId(), recordId, ddmFormValues, groupId);
+		List<FileEntry> tempFileEntries = new ArrayList<>();
+
+		_addFileEntries(
+			user.getCompanyId(), recordId, ddmFormValues, groupId,
+			tempFileEntries);
 
 		long ddmStorageId = _createDDMContent(
 			groupId, ddmFormInstance.getFormInstanceId(), ddmFormValues,
@@ -780,6 +788,8 @@ public class DDMFormInstanceRecordLocalServiceImpl
 			user.getCompanyId(), ddmFormInstance, ddmFormInstanceRecord,
 			ddmFormInstanceRecordVersion, groupId, serviceContext,
 			user.getUserId());
+
+		_deleteTempFileEntries(tempFileEntries);
 
 		return ddmFormInstanceRecord;
 	}
@@ -924,6 +934,15 @@ public class DDMFormInstanceRecordLocalServiceImpl
 			ddmFormInstanceRecord.getFormInstanceRecordId());
 
 		return ddmFormInstanceRecord;
+	}
+
+	private void _deleteTempFileEntries(List<FileEntry> tempFileEntries)
+		throws PortalException {
+
+		for (FileEntry tempFileEntry : tempFileEntries) {
+			TempFileEntryUtil.deleteTempFileEntry(
+				tempFileEntry.getFileEntryId());
+		}
 	}
 
 	private String _getContextURL(

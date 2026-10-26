@@ -14,6 +14,7 @@ import com.liferay.document.library.kernel.exception.InvalidFileException;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.util.DLValidator;
 import com.liferay.dynamic.data.mapping.constants.DDMActionKeys;
+import com.liferay.dynamic.data.mapping.constants.DDMFormConstants;
 import com.liferay.dynamic.data.mapping.constants.DDMPortletKeys;
 import com.liferay.dynamic.data.mapping.form.web.internal.portlet.action.util.FileEntryMVCActionCommandUtil;
 import com.liferay.dynamic.data.mapping.form.web.internal.security.permission.resource.DDMFormInstancePermission;
@@ -49,7 +50,6 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.TempFileEntryUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -88,7 +88,6 @@ public class UploadFileEntryMVCActionCommand extends BaseMVCActionCommand {
 
 		FileEntryMVCActionCommandUtil.deleteTempFileEntry(
 			ParamUtil.getLong(actionRequest, "oldFileEntryId"),
-			_portal.getHttpServletRequest(actionRequest),
 			(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY));
 
 		_uploadHandler.upload(
@@ -120,9 +119,6 @@ public class UploadFileEntryMVCActionCommand extends BaseMVCActionCommand {
 
 	@Reference
 	private ObjectFieldSettingLocalService _objectFieldSettingLocalService;
-
-	@Reference
-	private Portal _portal;
 
 	@Reference
 	private ResourcePermissionLocalService _resourcePermissionLocalService;
@@ -205,9 +201,7 @@ public class UploadFileEntryMVCActionCommand extends BaseMVCActionCommand {
 				themeDisplay.getCompanyId());
 
 			FileEntry fileEntry = TempFileEntryUtil.addTempFileEntry(
-				groupId, user.getUserId(),
-				FileEntryMVCActionCommandUtil.getTempFolderName(
-					uploadPortletRequest),
+				groupId, user.getUserId(), DDMFormConstants.TEMP_FOLDER_NAME,
 				TempFileEntryUtil.getTempFileName(fileName), file, mimeType);
 
 			Role role = _roleLocalService.getRole(
