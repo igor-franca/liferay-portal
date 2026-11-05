@@ -474,8 +474,14 @@ function ClayTableRowOptionalDropTarget({
 		className: classNames(className, dropClassName),
 		items,
 		onClick: selectable
-			? () => {
-					onItemSelectionChange(item, true);
+			? (event: React.MouseEvent) => {
+					if (
+						!(event.target as Element).closest(
+							'.autofit-col-toggle'
+						)
+					) {
+						onItemSelectionChange(item, true);
+					}
 				}
 			: undefined,
 		ref: dropRef,
