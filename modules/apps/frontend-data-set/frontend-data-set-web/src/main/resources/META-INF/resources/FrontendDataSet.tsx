@@ -156,6 +156,7 @@ const FrontendDataSetContent = ({
 	onActionDropdownItemClick,
 	onBulkActionItemClick,
 	onItemsPropSearch,
+	onLoadMore,
 	onSelectedItemsChange,
 	overrideEmptyResultView,
 	pagination,
@@ -2406,6 +2407,9 @@ const FrontendDataSetContent = ({
 					setInfoPanelOpen((value) => !value);
 				},
 				onItemsChange,
+				onLoadMore:
+					onLoadMore &&
+					((item) => onLoadMore(item).then(transformDataSetItems)),
 				onSearch: handleSearch,
 				onSnapshotChange: handleSnapshotChange,
 				onViewChange: (viewName: string) => {

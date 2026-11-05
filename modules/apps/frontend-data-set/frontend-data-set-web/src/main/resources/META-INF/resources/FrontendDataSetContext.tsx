@@ -74,6 +74,7 @@ export interface IFrontendDataSetContext {
 	onFilterChange: Function;
 	onInfoPanelToggleButtonClick: Function;
 	onItemsChange: ({itemKey, items}: {itemKey: string; items: any}) => void;
+	onLoadMore?: (item: any) => Promise<any[]>;
 	onSearch: ({query}: {query: string}) => void;
 	onSnapshotChange: Function;
 	onViewChange: (viewName: string) => void;

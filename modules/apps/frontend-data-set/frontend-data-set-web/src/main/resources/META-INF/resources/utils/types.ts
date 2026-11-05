@@ -385,6 +385,7 @@ export interface IFrontendDataSetProps {
 	onActionDropdownItemClick?: any;
 	onBulkActionItemClick?: any;
 	onItemsPropSearch?: (item: any, query: string) => boolean;
+	onLoadMore?: (item: any) => Promise<any[]>;
 	onSelectedItemsChange?: (selectedItems: Array<any>) => void;
 	overrideEmptyResultView?: boolean;
 	pagination?: {

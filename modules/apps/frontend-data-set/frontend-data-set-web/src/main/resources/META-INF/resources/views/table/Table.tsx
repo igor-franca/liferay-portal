@@ -173,6 +173,7 @@ const Row = ({
 	itemInlineChanges?: {[key: string]: any};
 	items: any[];
 	itemsActions: Array<IItemsActions>;
+	lazy?: boolean;
 	onItemSelectionChange: Function;
 	selectionType?: 'single' | 'multiple';
 }) => {
@@ -367,10 +368,16 @@ const Body = ({
 	const {
 		allItemsSelectedActive,
 		nestedItemsKey,
+		nestedItemsReferenceKey,
+		onLoadMore,
 		selectable,
 		selectedItemsKey,
 		selectedItemsValue,
 	} = useContext(FrontendDataSetContext);
+
+	const [loadedItems, setLoadedItems] = useState<Array<any>>();
+
+	useEffect(() => setLoadedItems(undefined), [items]);
 
 	const {accessibleNameField} = schema;
 
@@ -386,8 +393,10 @@ const Body = ({
 				items={
 					inlineAddingSettings
 						? [...items, defaultAddItem]
-						: addNestedItemsKey(items, nestedItemsKey)
+						: (loadedItems ??
+							addNestedItemsKey(items, nestedItemsKey))
 				}
+				onItemsChange={onLoadMore ? setLoadedItems : undefined}
 			>
 				{(item: any) => {
 					let accessibleName = Liferay.Language.get('item') ?? '';
@@ -425,6 +434,13 @@ const Body = ({
 							itemInlineChanges={itemInlineChanges}
 							items={items}
 							itemsActions={itemsActions}
+							lazy={
+								!!onLoadMore &&
+								!!getObjectValueFromPath({
+									object: item,
+									path: nestedItemsReferenceKey,
+								})?.length
+							}
 							onItemSelectionChange={onItemSelectionChange}
 							selectionType={selectionType}
 						/>
@@ -793,6 +809,7 @@ const Table = ({
 		itemsChanges,
 		nestedItemsKey,
 		nestedItemsReferenceKey,
+		onLoadMore,
 		selectable,
 		selectionType,
 		updateActiveSorts,
@@ -891,6 +908,13 @@ const Table = ({
 					),
 				}}
 				nestedKey={nestedItemsReferenceKey}
+				onLoadMore={
+					onLoadMore &&
+					((item: any) =>
+						onLoadMore(item).then((children) =>
+							addNestedItemsKey(children, nestedItemsKey)
+						))
+				}
 				onSortChange={onSortChange}
 				onVisibleColumnsChange={(visibleColumns: any) => {
 					const visibleFieldNames: VisibleFieldNames = {};
