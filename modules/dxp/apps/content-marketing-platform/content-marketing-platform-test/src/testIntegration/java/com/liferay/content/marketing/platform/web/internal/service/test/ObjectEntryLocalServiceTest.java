@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.test.mail.MailServiceTestUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -112,9 +113,21 @@ public class ObjectEntryLocalServiceTest {
 				).build(),
 				ServiceContextTestUtil.getServiceContext());
 
+		ObjectEntry cmpSubtaskObjectEntry = _addCMPTaskObjectEntry(
+			cmpTaskObjectEntry);
+
+		ObjectEntry cmpSubsubtaskObjectEntry = _addCMPTaskObjectEntry(
+			cmpSubtaskObjectEntry);
+
 		_objectEntryLocalService.deleteObjectEntry(
 			cmpTaskObjectEntry.getObjectEntryId());
 
+		Assert.assertNull(
+			_objectEntryLocalService.fetchObjectEntry(
+				cmpSubsubtaskObjectEntry.getObjectEntryId()));
+		Assert.assertNull(
+			_objectEntryLocalService.fetchObjectEntry(
+				cmpSubtaskObjectEntry.getObjectEntryId()));
 		Assert.assertNull(
 			_objectEntryLocalService.fetchObjectEntry(
 				cmpTaskLinkObjectEntry.getObjectEntryId()));
@@ -128,6 +141,26 @@ public class ObjectEntryLocalServiceTest {
 	@Test
 	public void testUpdateCMPTaskObjectEntry() throws Exception {
 		_testUpdateCMPObjectEntry(CMPTestUtil.addCMPTaskObjectEntry());
+	}
+
+	private ObjectEntry _addCMPTaskObjectEntry(ObjectEntry cmpTaskObjectEntry)
+		throws Exception {
+
+		return _objectEntryLocalService.addObjectEntry(
+			cmpTaskObjectEntry.getGroupId(), cmpTaskObjectEntry.getUserId(),
+			cmpTaskObjectEntry.getObjectDefinitionId(), 0, null,
+			HashMapBuilder.<String, Serializable>put(
+				"r_cmpProjectToCMPTasks_c_cmpProjectId",
+				MapUtil.getLong(
+					cmpTaskObjectEntry.getValues(),
+					"r_cmpProjectToCMPTasks_c_cmpProjectId")
+			).put(
+				"r_cmpTaskToCMPTasks_c_cmpTaskId",
+				cmpTaskObjectEntry.getObjectEntryId()
+			).put(
+				"title", RandomTestUtil.randomString()
+			).build(),
+			ServiceContextTestUtil.getServiceContext());
 	}
 
 	private void _testUpdateCMPObjectEntry(ObjectEntry cmpObjectEntry)
