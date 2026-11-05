@@ -67,7 +67,8 @@ public class ViewProjectTasksSectionDisplayContext
 		}
 
 		sb.append(")");
-		sb.append(getNestedFieldsAPIURLParameters("cmpProjectToCMPTasks"));
+		sb.append(getNestedFieldsAPIURLParameters(
+				"cmpProjectToCMPTasks", "cmpTaskToCMPTasks"));
 
 		return sb.toString();
 	}

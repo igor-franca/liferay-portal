@@ -51,6 +51,8 @@ public class TaskSectionTableFDSView extends BaseTableFDSView {
 			fdsTableSchemaField -> fdsTableSchemaField.setContentRenderer(
 				"projectTitleTableCellRenderer")
 		).add(
+			"embedded.r_cmpTaskToCMPTasks_c_cmpTask.title", "parent"
+		).add(
 			"dueDate", "due-date",
 			fdsTableSchemaField -> fdsTableSchemaField.setContentRenderer(
 				"dueDateTableCellRenderer")
