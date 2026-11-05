@@ -1432,6 +1432,225 @@ test(
 );
 
 test(
+	'Subtasks are created from the task detail page',
+	{tag: '@LPD-107810'},
+	async ({editTaskPage, page, tasksPage}) => {
+		const subtaskName = getRandomString();
+
+		// Create a subtask
+
+		await tasksPage.goto();
+
+		await page.getByRole('link', {exact: true, name: taskNames[0]}).click();
+
+		await expect(
+			page.getByRole('heading', {name: 'Subtasks'})
+		).toBeVisible();
+
+		await page.getByRole('button', {name: 'New Subtask'}).click();
+
+		await editTaskPage.titleInput.fill(subtaskName);
+
+		await editTaskPage.saveButton.click();
+
+		// Check the subtask in the parent task
+
+		await expect(
+			page.getByRole('link', {exact: true, name: subtaskName})
+		).toBeVisible();
+
+		await page.getByRole('link', {exact: true, name: subtaskName}).click();
+
+		await expect(
+			page.getByRole('link', {exact: true, name: taskNames[0]})
+		).toBeVisible();
+		await expect(
+			page.getByRole('heading', {name: 'Subtasks'})
+		).toBeVisible();
+	}
+);
+
+test(
+	'Subtasks are deleted with their task',
+	{tag: '@LPD-107810'},
+	async ({apiHelpers, page, tasksPage}) => {
+		const subtask = await apiHelpers.objectEntry.postObjectEntry(
+			{
+				r_cmpProjectToCMPTasks_c_cmpProjectId: project.id,
+				r_cmpTaskToCMPTasks_c_cmpTaskId: tasks.at(-1).id,
+				title: getRandomString(),
+			},
+			cmpTask,
+			project.scopeKey
+		);
+
+		// Select a task and its own subtask
+
+		await tasksPage.goto();
+
+		await tasksPage.projectTasksTab.click();
+
+		await page
+			.getByRole('row')
+			.filter({
+				has: page.getByRole('link', {exact: true, name: taskNames[2]}),
+			})
+			.getByRole('button', {name: 'Expandable'})
+			.click();
+
+		for (const name of [taskNames[2], subtask.title]) {
+			await page
+				.getByRole('row')
+				.filter({has: page.getByRole('link', {exact: true, name})})
+				.locator('input[title="Select Item"]')
+				.check();
+		}
+
+		await tasksPage.execBulkItemAction('Delete');
+
+		await tasksPage.dialogDeleteButton.click();
+
+		await waitForAlert(page, 'Info:Delete action started for 2 tasks.', {
+			autoClose: true,
+			type: 'info',
+		});
+
+		// Check that both are deleted
+
+		await expect(async () => {
+			await tasksPage.goto();
+
+			await expect(
+				page.getByRole('link', {exact: true, name: subtask.title})
+			).toBeHidden();
+			await expect(
+				page.getByRole('link', {exact: true, name: taskNames[2]})
+			).toBeHidden();
+			await expect(tasksPage.getItem(taskNames[0])).toBeVisible();
+		}).toPass({timeout: 10000});
+	}
+);
+
+test(
+	'Subtasks are limited to two levels',
+	{tag: '@LPD-107810'},
+	async ({apiHelpers, page, tasksPage}) => {
+		const subtask = await apiHelpers.objectEntry.postObjectEntry(
+			{
+				r_cmpProjectToCMPTasks_c_cmpProjectId: project.id,
+				r_cmpTaskToCMPTasks_c_cmpTaskId: tasks.at(-1).id,
+				title: getRandomString(),
+			},
+			cmpTask,
+			project.scopeKey
+		);
+
+		const subsubtask = await apiHelpers.objectEntry.postObjectEntry(
+			{
+				r_cmpProjectToCMPTasks_c_cmpProjectId: project.id,
+				r_cmpTaskToCMPTasks_c_cmpTaskId: subtask.id,
+				title: getRandomString(),
+			},
+			cmpTask,
+			project.scopeKey
+		);
+
+		// Check the sub-subtask detail page
+
+		await tasksPage.goto();
+
+		await tasksPage.dataSetFragmentPage.search(subsubtask.title);
+
+		await page
+			.getByRole('link', {exact: true, name: subsubtask.title})
+			.click();
+
+		await expect(
+			page.getByRole('link', {exact: true, name: subtask.title})
+		).toBeVisible();
+		await expect(
+			page.getByRole('heading', {name: 'Subtasks'})
+		).toBeHidden();
+
+		// Check the validations
+
+		await expect(
+			apiHelpers.objectEntry.postObjectEntry(
+				{
+					r_cmpProjectToCMPTasks_c_cmpProjectId: project.id,
+					r_cmpTaskToCMPTasks_c_cmpTaskId: subsubtask.id,
+					title: getRandomString(),
+				},
+				cmpTask,
+				project.scopeKey
+			)
+		).rejects.toThrow('The parent must be a task or a subtask.');
+
+		expect(
+			await apiHelpers.objectEntry.patchObjectEntry(
+				{r_cmpTaskToCMPTasks_c_cmpTaskId: tasks.at(-1).id},
+				cmpTask,
+				subsubtask.id
+			)
+		).toMatchObject({title: 'The parent task cannot be changed.'});
+	}
+);
+
+test(
+	'Subtasks inform when they are due after their parent',
+	{tag: '@LPD-107810'},
+	async ({apiHelpers, page, tasksPage}) => {
+		await apiHelpers.objectEntry.patchObjectEntry(
+			{dueDate: '2026-11-12'},
+			cmpTask,
+			tasks.at(-1).id
+		);
+
+		const subtask = await apiHelpers.objectEntry.postObjectEntry(
+			{
+				r_cmpProjectToCMPTasks_c_cmpProjectId: project.id,
+				r_cmpTaskToCMPTasks_c_cmpTaskId: tasks.at(-1).id,
+				title: getRandomString(),
+			},
+			cmpTask,
+			project.scopeKey
+		);
+
+		await tasksPage.goto();
+
+		await tasksPage.dataSetFragmentPage.search(subtask.title);
+
+		await page
+			.getByRole('row')
+			.filter({
+				has: page.getByRole('link', {exact: true, name: subtask.title}),
+			})
+			.getByRole('button', {name: 'Item Actions'})
+			.click();
+
+		await page.getByRole('menuitem', {name: 'Edit'}).click();
+
+		const dueDateInput = page.getByRole('textbox', {name: /Due Date/});
+
+		await dueDateInput.fill('11/13/2026');
+		await dueDateInput.press('Tab');
+
+		await expect(
+			page.getByText(
+				"This date is after the parent task's due date (11/12/2026)."
+			)
+		).toBeVisible();
+
+		await dueDateInput.fill('11/11/2026');
+		await dueDateInput.press('Tab');
+
+		await expect(
+			page.getByText("This date is after the parent task's due date")
+		).toBeHidden();
+	}
+);
+
+test(
 	'Table view updates a task due date from the kebab menu',
 	{tag: ['@LPD-69885', '@LPD-98671']},
 	async ({apiHelpers, page, projectPage, projectsPage, tasksPage}) => {
@@ -1544,6 +1763,142 @@ test(
 					.getByText(toDisplayString(rescheduledDate))
 			).toBeHidden();
 		});
+	}
+);
+
+test(
+	'Task lists filter tasks and subtasks by type',
+	{tag: '@LPD-107810'},
+	async ({apiHelpers, page, tasksPage}) => {
+		const subtask = await apiHelpers.objectEntry.postObjectEntry(
+			{
+				r_cmpProjectToCMPTasks_c_cmpProjectId: project.id,
+				r_cmpTaskToCMPTasks_c_cmpTaskId: tasks.at(-1).id,
+				title: getRandomString(),
+			},
+			cmpTask,
+			project.scopeKey
+		);
+
+		await tasksPage.goto();
+
+		await page.getByRole('button', {name: 'Filter'}).click();
+
+		await page.getByRole('menuitem', {exact: true, name: 'Type'}).click();
+
+		await page.getByRole('radio', {name: 'Subtasks'}).check();
+
+		await page.getByRole('button', {name: 'Add Filter'}).click();
+
+		await expect(tasksPage.getItem(subtask.title)).toContainText(
+			tasks.at(-1).title
+		);
+		await expect(
+			page.getByRole('link', {exact: true, name: tasks.at(-1).title})
+		).toBeHidden();
+	}
+);
+
+test(
+	'Task lists nest subtasks under their task',
+	{tag: '@LPD-107810'},
+	async ({apiHelpers, page, tasksPage}) => {
+		const subtask = await apiHelpers.objectEntry.postObjectEntry(
+			{
+				r_cmpProjectToCMPTasks_c_cmpProjectId: project.id,
+				r_cmpTaskToCMPTasks_c_cmpTaskId: tasks.at(-1).id,
+				title: getRandomString(),
+			},
+			cmpTask,
+			project.scopeKey
+		);
+
+		const subsubtask = await apiHelpers.objectEntry.postObjectEntry(
+			{
+				r_cmpProjectToCMPTasks_c_cmpProjectId: project.id,
+				r_cmpTaskToCMPTasks_c_cmpTaskId: subtask.id,
+				title: getRandomString(),
+			},
+			cmpTask,
+			project.scopeKey
+		);
+
+		// Expand the task and the subtask
+
+		await tasksPage.goto();
+
+		const subtaskLink = page.getByRole('link', {
+			exact: true,
+			name: subtask.title,
+		});
+
+		await expect(subtaskLink).toBeHidden();
+
+		await page
+			.getByRole('row')
+			.filter({
+				has: page.getByRole('link', {exact: true, name: taskNames[2]}),
+			})
+			.getByRole('button', {name: 'Expandable'})
+			.click();
+
+		await page
+			.getByRole('row')
+			.filter({has: subtaskLink})
+			.getByRole('button', {name: 'Expandable'})
+			.click();
+
+		await expect(
+			page.getByRole('link', {exact: true, name: subsubtask.title})
+		).toBeVisible();
+
+		// Search flattens the list
+
+		await tasksPage.dataSetFragmentPage.search(subtask.title);
+
+		await expect(subtaskLink).toBeVisible();
+		await expect(
+			page.getByRole('link', {exact: true, name: taskNames[2]})
+		).toBeHidden();
+	}
+);
+
+test(
+	'Tasks can be set to Done with open subtasks',
+	{tag: '@LPD-107810'},
+	async ({apiHelpers, page, tasksPage}) => {
+		await apiHelpers.objectEntry.postObjectEntry(
+			{
+				r_cmpProjectToCMPTasks_c_cmpProjectId: project.id,
+				r_cmpTaskToCMPTasks_c_cmpTaskId: tasks.at(-1).id,
+				title: getRandomString(),
+			},
+			cmpTask,
+			project.scopeKey
+		);
+
+		await apiHelpers.objectEntry.patchObjectEntry(
+			{state: 'inProgress'},
+			cmpTask,
+			tasks.at(-1).id
+		);
+
+		await tasksPage.goto();
+
+		await page.getByRole('link', {exact: true, name: taskNames[2]}).click();
+
+		await page
+			.getByRole('combobox')
+			.filter({hasText: 'In Progress'})
+			.click();
+
+		await page.getByRole('option', {name: 'Done'}).click();
+
+		await waitForAlert(
+			page,
+			'Info:Task marked as Done. 1 subtasks are still not done yet.',
+			{type: 'info'}
+		);
 	}
 );
 
