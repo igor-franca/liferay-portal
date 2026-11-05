@@ -23,7 +23,8 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	property = {
 		"frontend.data.set.name=" + CMPSiteInitializerFDSNames.CMP_ALL_TASKS,
-		"frontend.data.set.name=" + CMPSiteInitializerFDSNames.CMP_PROJECT_TASKS
+		"frontend.data.set.name=" + CMPSiteInitializerFDSNames.CMP_PROJECT_TASKS,
+		"frontend.data.set.name=" + CMPSiteInitializerFDSNames.CMP_SUBTASKS
 	},
 	service = FDSView.class
 )
