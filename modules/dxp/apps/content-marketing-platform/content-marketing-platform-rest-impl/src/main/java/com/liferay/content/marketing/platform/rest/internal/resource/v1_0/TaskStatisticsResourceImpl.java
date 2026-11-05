@@ -88,6 +88,10 @@ public class TaskStatisticsResourceImpl extends BaseTaskStatisticsResourceImpl {
 			ObjectEntryTable.INSTANCE.status.neq(
 				WorkflowConstants.STATUS_DRAFT
 			).and(
+				_filterFactory.create(
+					"r_cmpTaskToCMPTasks_c_cmpTaskId eq null",
+					cmpTaskObjectDefinition)
+			).and(
 				_filterFactory.create(filterString, cmpTaskObjectDefinition)
 			),
 			false, null);

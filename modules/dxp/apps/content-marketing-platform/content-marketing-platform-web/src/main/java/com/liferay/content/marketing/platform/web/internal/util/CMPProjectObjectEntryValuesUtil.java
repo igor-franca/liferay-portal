@@ -101,6 +101,10 @@ public class CMPProjectObjectEntryValuesUtil {
 			ObjectEntryTable.INSTANCE.status.neq(
 				WorkflowConstants.STATUS_DRAFT
 			).and(
+				filterFactory.create(
+					"r_cmpTaskToCMPTasks_c_cmpTaskId eq null",
+					cmpTaskObjectDefinition)
+			).and(
 				filterFactory.create(filterString, cmpTaskObjectDefinition)
 			),
 			false, null);
