@@ -75,6 +75,9 @@ public class AddTaskStrutsAction implements StrutsAction {
 						() -> HashMapBuilder.<String, Object>put(
 							"r_cmpProjectToCMPTasks_c_cmpProjectId",
 							ParamUtil.getLong(httpServletRequest, "projectId")
+						).put(
+							"r_cmpTaskToCMPTasks_c_cmpTaskId",
+							ParamUtil.getLong(httpServletRequest, "parentId")
 						).build());
 					setStatus(
 						() -> new Status() {
