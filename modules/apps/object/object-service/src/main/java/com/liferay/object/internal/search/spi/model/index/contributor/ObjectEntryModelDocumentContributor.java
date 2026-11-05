@@ -620,9 +620,15 @@ public class ObjectEntryModelDocumentContributor
 				MapUtil.getLong(values, "r_userToCMPProjectSponsor_userId"));
 			document.addKeyword("cmpState", MapUtil.getString(values, "state"));
 			document.addKeyword(
+				"cmpSubtask",
+				MapUtil.getLong(values, "r_cmpTaskToCMPTasks_c_cmpTaskId") > 0);
+			document.addKeyword(
 				"cmpTaskCMPProjectId",
 				MapUtil.getLong(
 					values, "r_cmpProjectToCMPTasks_c_cmpProjectId"));
+			document.addKeyword(
+				"cmpTaskCMPTaskId",
+				MapUtil.getLong(values, "r_cmpTaskToCMPTasks_c_cmpTaskId"));
 		}
 
 		textEmbeddingContentHelper.contribute(document);
