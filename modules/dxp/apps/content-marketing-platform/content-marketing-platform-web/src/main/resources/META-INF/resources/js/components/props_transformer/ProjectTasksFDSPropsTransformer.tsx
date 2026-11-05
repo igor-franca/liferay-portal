@@ -24,6 +24,7 @@ import {
 	registerTabFDS,
 } from '../../utils/cmpTabPersistence';
 import getCMPProjectObjectEntryIds from '../../utils/getCMPProjectObjectEntryIds';
+import getNestedTasksProps from '../../utils/getNestedTasksProps';
 import {getFormattedLabel} from '../../utils/getFormattedText';
 import {openCMPModal} from '../../utils/openCMPModal';
 import {transformFDSBulkActions} from '../../utils/transformFDSBulkActions';
@@ -123,6 +124,10 @@ export default function ProjectTasksFDSPropsTransformer({
 
 	return {
 		...otherProps,
+		...getNestedTasksProps(
+			additionalProps.additionalAPIURLParameters,
+			otherProps.apiURL
+		),
 		atom: cmpTasksFDSAtom,
 		bulkActions: transformFDSBulkActions(
 			styleBulkActions(bulkActions).map((action) => ({

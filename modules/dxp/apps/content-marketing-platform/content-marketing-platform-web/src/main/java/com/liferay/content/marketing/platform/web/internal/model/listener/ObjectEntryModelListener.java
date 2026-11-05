@@ -17,6 +17,7 @@ import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
 import com.liferay.object.constants.ObjectActionKeys;
 import com.liferay.object.constants.ObjectDefinitionConstants;
+import com.liferay.object.exception.ObjectEntryValuesException;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectEntry;
 import com.liferay.object.rest.filter.factory.FilterFactory;
@@ -142,11 +143,36 @@ public class ObjectEntryModelListener extends BaseModelListener<ObjectEntry> {
 	}
 
 	@Override
+	public void onBeforeCreate(ObjectEntry objectEntry)
+		throws ModelListenerException {
+
+		try {
+			_validateParent(null, objectEntry);
+		}
+		catch (Exception exception) {
+			throw new ModelListenerException(exception);
+		}
+	}
+
+	@Override
 	public void onBeforeRemove(ObjectEntry objectEntry)
 		throws ModelListenerException {
 
 		try {
 			_deleteObjectEntries(objectEntry);
+		}
+		catch (Exception exception) {
+			throw new ModelListenerException(exception);
+		}
+	}
+
+	@Override
+	public void onBeforeUpdate(
+			ObjectEntry originalObjectEntry, ObjectEntry objectEntry)
+		throws ModelListenerException {
+
+		try {
+			_validateParent(originalObjectEntry, objectEntry);
 		}
 		catch (Exception exception) {
 			throw new ModelListenerException(exception);
@@ -645,6 +671,41 @@ public class ObjectEntryModelListener extends BaseModelListener<ObjectEntry> {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ObjectEntryModelListener.class);
+
+	private void _validateParent(
+			ObjectEntry originalObjectEntry, ObjectEntry objectEntry)
+		throws PortalException {
+
+		long parentObjectEntryId = MapUtil.getLong(
+			objectEntry.getValues(), "r_cmpTaskToCMPTasks_c_cmpTaskId");
+
+		if ((originalObjectEntry != null) &&
+			(parentObjectEntryId != MapUtil.getLong(
+				originalObjectEntry.getValues(),
+				"r_cmpTaskToCMPTasks_c_cmpTaskId"))) {
+
+			throw new ObjectEntryValuesException.InvalidObjectField(
+				null, "The parent task cannot be changed",
+				"the-parent-task-cannot-be-changed");
+		}
+
+		if (parentObjectEntryId == 0) {
+			return;
+		}
+
+		ObjectEntry parentObjectEntry =
+			_objectEntryLocalService.fetchObjectEntry(parentObjectEntryId);
+
+		if ((parentObjectEntry == null) ||
+			(parentObjectEntry.getObjectDefinitionId() !=
+				objectEntry.getObjectDefinitionId()) ||
+			(CMPObjectEntryUtil.getDepth(parentObjectEntry) > 1)) {
+
+			throw new ObjectEntryValuesException.InvalidObjectField(
+				null, "The parent must be a task or a subtask",
+				"the-parent-must-be-a-task-or-a-subtask");
+		}
+	}
 
 	@Reference
 	private AuditRouter _auditRouter;

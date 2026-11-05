@@ -20,8 +20,10 @@ page import="com.liferay.content.marketing.platform.web.internal.display.context
 page import="com.liferay.content.marketing.platform.web.internal.display.context.ViewProjectSponsorAssigneeSectionDisplayContext" %><%@
 page import="com.liferay.content.marketing.platform.web.internal.display.context.ViewProjectTasksSectionDisplayContext" %><%@
 page import="com.liferay.content.marketing.platform.web.internal.display.context.ViewProjectsSectionDisplayContext" %><%@
+page import="com.liferay.content.marketing.platform.web.internal.display.context.ViewSubtasksSectionDisplayContext" %><%@
 page import="com.liferay.content.marketing.platform.web.internal.display.context.ViewTaskInfoSummarySectionDisplayContext" %><%@
-page import="com.liferay.content.marketing.platform.web.internal.display.context.ViewWorkflowTasksSectionDisplayContext" %>
+page import="com.liferay.content.marketing.platform.web.internal.display.context.ViewWorkflowTasksSectionDisplayContext" %><%@
+page import="com.liferay.portal.kernel.language.LanguageUtil" %>
 
 <liferay-theme:defineObjects />
 

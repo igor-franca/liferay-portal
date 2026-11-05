@@ -12,6 +12,7 @@ import com.liferay.content.marketing.platform.web.internal.frontend.data.set.fil
 import com.liferay.content.marketing.platform.web.internal.frontend.data.set.filter.CreateDateFDSFilter;
 import com.liferay.content.marketing.platform.web.internal.frontend.data.set.filter.DueDateRangeFDSFilter;
 import com.liferay.content.marketing.platform.web.internal.frontend.data.set.filter.StateSelectionFDSFilter;
+import com.liferay.content.marketing.platform.web.internal.frontend.data.set.filter.SubtaskSelectionFDSFilter;
 import com.liferay.content.marketing.platform.web.internal.frontend.data.set.filter.TagSelectionFDSFilter;
 import com.liferay.content.marketing.platform.web.internal.util.ActionUtil;
 import com.liferay.depot.service.DepotEntryLocalService;
@@ -90,6 +91,8 @@ public abstract class BaseTasksSectionDisplayContext
 
 	public Map<String, Object> getAdditionalProps() throws Exception {
 		return HashMapBuilder.<String, Object>put(
+			"additionalAPIURLParameters", "filter=cmpSubtask ne true"
+		).put(
 			"cmpProjectObjectDefinitionId",
 			cmpProjectObjectDefinition.getObjectDefinitionId()
 		).put(
@@ -281,6 +284,7 @@ public abstract class BaseTasksSectionDisplayContext
 		}
 
 		fdsFilters.add(new StateSelectionFDSFilter());
+		fdsFilters.add(new SubtaskSelectionFDSFilter());
 		fdsFilters.add(
 			new TagSelectionFDSFilter(
 				assetTagLocalService, cmpProjectObjectDefinition,

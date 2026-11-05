@@ -13,6 +13,7 @@ import com.liferay.layout.display.page.constants.LayoutDisplayPageWebKeys;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectEntry;
 import com.liferay.object.service.ObjectDefinitionLocalService;
+import com.liferay.object.service.ObjectEntryLocalServiceUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -27,6 +28,8 @@ import com.liferay.portal.kernel.util.WebKeys;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
@@ -175,47 +178,85 @@ public class TaskBreadcrumbComponentSectionFragmentRenderer
 			}
 		).put(
 			"breadcrumbItems",
-			JSONUtil.putAll(
-				JSONUtil.put(
-					"active", false
-				).put(
-					"href", ActionUtil.getProjectsURL(themeDisplay)
-				).put(
-					"label", LanguageUtil.get(httpServletRequest, "projects")
-				),
-				JSONUtil.put(
-					"active", false
-				).put(
-					"href",
-					() -> {
-						String viewProjectURL =
-							ActionUtil.getBaseViewProjectURL(
-								_objectDefinitionLocalService.
-									fetchObjectDefinitionByExternalReferenceCode(
-										"L_CMP_PROJECT",
-										themeDisplay.getCompanyId()),
-								themeDisplay);
+			() -> {
+				JSONArray jsonArray = JSONUtil.putAll(
+					JSONUtil.put(
+						"active", false
+					).put(
+						"href", ActionUtil.getProjectsURL(themeDisplay)
+					).put(
+						"label", LanguageUtil.get(httpServletRequest, "projects")
+					),
+					JSONUtil.put(
+						"active", false
+					).put(
+						"href",
+						() -> {
+							String viewProjectURL =
+								ActionUtil.getBaseViewProjectURL(
+									_objectDefinitionLocalService.
+										fetchObjectDefinitionByExternalReferenceCode(
+											"L_CMP_PROJECT",
+											themeDisplay.getCompanyId()),
+									themeDisplay);
 
-						return viewProjectURL + parentObjectEntryId;
-					}
-				).put(
-					"label",
-					() -> {
-						ObjectEntry parentObjectEntry =
-							objectEntryService.getObjectEntry(
-								parentObjectEntryId);
+							return viewProjectURL + parentObjectEntryId;
+						}
+					).put(
+						"label",
+						() -> {
+							ObjectEntry parentObjectEntry =
+								objectEntryService.getObjectEntry(
+									parentObjectEntryId);
 
-						return MapUtil.getString(
-							parentObjectEntry.getValues(), "title");
-					}
-				),
-				JSONUtil.put(
-					"active", true
-				).put(
-					"href", StringPool.BLANK
-				).put(
-					"label", title
-				))
+							return MapUtil.getString(
+								parentObjectEntry.getValues(), "title");
+						}
+					));
+
+				List<ObjectEntry> cmpTaskObjectEntries = new ArrayList<>();
+
+				ObjectEntry cmpTaskObjectEntry =
+					ObjectEntryLocalServiceUtil.fetchObjectEntry(
+						MapUtil.getLong(
+							objectEntry.getValues(),
+							"r_cmpTaskToCMPTasks_c_cmpTaskId"));
+
+				while (cmpTaskObjectEntry != null) {
+					cmpTaskObjectEntries.add(0, cmpTaskObjectEntry);
+
+					cmpTaskObjectEntry =
+						ObjectEntryLocalServiceUtil.fetchObjectEntry(
+							MapUtil.getLong(
+								cmpTaskObjectEntry.getValues(),
+								"r_cmpTaskToCMPTasks_c_cmpTaskId"));
+				}
+
+				for (ObjectEntry curCMPTaskObjectEntry : cmpTaskObjectEntries) {
+					jsonArray.put(
+						JSONUtil.put(
+							"active", false
+						).put(
+							"href",
+							ActionUtil.getBaseViewTaskURL(
+								objectDefinition, themeDisplay) +
+									curCMPTaskObjectEntry.getObjectEntryId()
+						).put(
+							"label",
+							MapUtil.getString(
+								curCMPTaskObjectEntry.getValues(), "title")
+						));
+				}
+
+				return jsonArray.put(
+					JSONUtil.put(
+						"active", true
+					).put(
+						"href", StringPool.BLANK
+					).put(
+						"label", title
+					));
+			}
 		).put(
 			"hideSpace", true
 		).put(

@@ -4,7 +4,7 @@
  */
 
 import {openToast} from 'frontend-js-components-web';
-import {escapeHTML, sub} from 'frontend-js-web';
+import {escapeHTML, fetch, sub} from 'frontend-js-web';
 
 import {getFormattedLabel} from './getFormattedText';
 
@@ -104,6 +104,26 @@ const displayErrorToast = (errorMessage?: string) => {
 	});
 };
 
+const displayOpenSubtasksToast = async (taskId: string) => {
+	const response = await fetch(
+		`/o/search/v1.0/search?emptySearch=true&filter=cmpTaskCMPTaskId eq ${taskId} and cmpState ne 'done'&pageSize=1`
+	);
+
+	const {totalCount} = await response.json();
+
+	if (totalCount) {
+		openToast({
+			message: sub(
+				Liferay.Language.get(
+					'task-marked-as-done-x-subtasks-are-still-not-done-yet'
+				),
+				totalCount
+			),
+			type: 'info',
+		});
+	}
+};
+
 const displayStateSuccessToast = () => {
 	openToast({
 		message: Liferay.Language.get('state-was-successfully-updated'),
@@ -119,5 +139,6 @@ export {
 	displayDeleteSuccessToast,
 	displayDueDateSuccessToast,
 	displayErrorToast,
+	displayOpenSubtasksToast,
 	displayStateSuccessToast,
 };

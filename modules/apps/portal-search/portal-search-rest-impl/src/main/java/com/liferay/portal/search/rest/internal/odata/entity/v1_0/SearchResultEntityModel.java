@@ -26,6 +26,7 @@ public class SearchResultEntityModel implements EntityModel {
 
 	public SearchResultEntityModel() {
 		_entityFieldsMap = EntityModel.toEntityFieldsMap(
+			new BooleanEntityField("cmpSubtask", locale -> "cmpSubtask"),
 			new BooleanEntityField("cmsRoot", locale -> "cms_root"),
 			new BooleanEntityField("completed", locale -> "completed"),
 			new BooleanEntityField(
@@ -104,6 +105,8 @@ public class SearchResultEntityModel implements EntityModel {
 				"cmpProjectSponsorUserId", locale -> "cmpProjectSponsorUserId"),
 			new IntegerEntityField(
 				"cmpTaskCMPProjectId", locale -> "cmpTaskCMPProjectId"),
+			new IntegerEntityField(
+				"cmpTaskCMPTaskId", locale -> "cmpTaskCMPTaskId"),
 			new IntegerEntityField("creatorId", locale -> Field.USER_ID),
 			new IntegerEntityField(
 				"entryClassPK", locale -> Field.ENTRY_CLASS_PK),

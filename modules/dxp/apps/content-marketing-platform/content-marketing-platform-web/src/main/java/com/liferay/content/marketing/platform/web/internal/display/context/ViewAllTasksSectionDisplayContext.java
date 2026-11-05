@@ -70,7 +70,8 @@ public class ViewAllTasksSectionDisplayContext
 		sb.append("&filter=(objectDefinitionId eq ");
 		sb.append(objectDefinition.getObjectDefinitionId());
 		sb.append(" or cmpTaskObjectEntryIds/any(x:x gt 0))");
-		sb.append(getNestedFieldsAPIURLParameters("cmpProjectToCMPTasks"));
+		sb.append(getNestedFieldsAPIURLParameters(
+				"cmpProjectToCMPTasks", "cmpTaskToCMPTasks"));
 
 		return sb.toString();
 	}

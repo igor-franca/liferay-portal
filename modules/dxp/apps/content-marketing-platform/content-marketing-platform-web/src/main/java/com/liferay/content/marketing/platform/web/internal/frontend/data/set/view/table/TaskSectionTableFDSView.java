@@ -23,7 +23,8 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	property = {
 		"frontend.data.set.name=" + CMPSiteInitializerFDSNames.CMP_ALL_TASKS,
-		"frontend.data.set.name=" + CMPSiteInitializerFDSNames.CMP_PROJECT_TASKS
+		"frontend.data.set.name=" + CMPSiteInitializerFDSNames.CMP_PROJECT_TASKS,
+		"frontend.data.set.name=" + CMPSiteInitializerFDSNames.CMP_SUBTASKS
 	},
 	service = FDSView.class
 )
@@ -49,6 +50,8 @@ public class TaskSectionTableFDSView extends BaseTableFDSView {
 			"projectTitle", "project",
 			fdsTableSchemaField -> fdsTableSchemaField.setContentRenderer(
 				"projectTitleTableCellRenderer")
+		).add(
+			"embedded.r_cmpTaskToCMPTasks_c_cmpTask.title", "parent"
 		).add(
 			"dueDate", "due-date",
 			fdsTableSchemaField -> fdsTableSchemaField.setContentRenderer(

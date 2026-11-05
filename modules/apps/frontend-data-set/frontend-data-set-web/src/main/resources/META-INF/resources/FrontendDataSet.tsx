@@ -156,6 +156,7 @@ const FrontendDataSetContent = ({
 	onActionDropdownItemClick,
 	onBulkActionItemClick,
 	onItemsPropSearch,
+	onLoadMore,
 	onSelectedItemsChange,
 	overrideEmptyResultView,
 	pagination,
@@ -1254,7 +1255,11 @@ const FrontendDataSetContent = ({
 		setSelectedItems(newSelectedItems);
 	}
 
-	function selectItems(value: any, forceSingleSelection = false) {
+	function selectItems(
+		value: any,
+		forceSingleSelection = false,
+		selectedItem?: any
+	) {
 		const values = Array.isArray(value) ? value : [value];
 
 		if (forceSingleSelection) {
@@ -1292,7 +1297,7 @@ const FrontendDataSetContent = ({
 
 		const nextSelectedItems = nextSelectedValues
 			.map((val) =>
-				[...selectedItems, ...items].find(
+				[...selectedItems, ...items, selectedItem].find(
 					(item) =>
 						getObjectValueFromPath({
 							object: item,
@@ -1848,7 +1853,8 @@ const FrontendDataSetContent = ({
 										object: selectedItem,
 										path: selectedItemsKey,
 									}),
-									forceSingleSelection
+									forceSingleSelection,
+									selectedItem
 								);
 							}
 						}}
@@ -2406,6 +2412,9 @@ const FrontendDataSetContent = ({
 					setInfoPanelOpen((value) => !value);
 				},
 				onItemsChange,
+				onLoadMore:
+					onLoadMore &&
+					((item) => onLoadMore(item).then(transformDataSetItems)),
 				onSearch: handleSearch,
 				onSnapshotChange: handleSnapshotChange,
 				onViewChange: (viewName: string) => {

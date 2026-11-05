@@ -12,6 +12,7 @@ import React, {useState} from 'react';
 import {patchTaskById} from '../../utils/api';
 import {
 	displayAssignSuccessToast,
+	displayOpenSubtasksToast,
 	displayStateSuccessToast,
 } from '../../utils/toastUtil';
 import CustomAssignee from '../CustomAssignee';
@@ -70,6 +71,12 @@ export default function TaskInfoSummary({
 									setSelectedStateKey(key);
 
 									displayStateSuccessToast();
+
+									if (key === 'done') {
+										displayOpenSubtasksToast(
+											cmpTaskObjectEntryId
+										);
+									}
 
 									Liferay.fire(UPDATE_HISTORY);
 								}
