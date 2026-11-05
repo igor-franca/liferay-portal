@@ -13,6 +13,7 @@ import com.liferay.object.rest.filter.factory.FilterFactory;
 import com.liferay.object.service.ObjectDefinitionLocalService;
 import com.liferay.object.service.ObjectEntryFolderLocalService;
 import com.liferay.object.service.ObjectEntryLocalService;
+import com.liferay.object.service.ObjectEntryLocalServiceUtil;
 import com.liferay.petra.function.transform.TransformUtil;
 import com.liferay.petra.sql.dsl.expression.Predicate;
 import com.liferay.petra.string.CharPool;
@@ -86,6 +87,26 @@ public class CMPObjectEntryUtil {
 			filterFactory, groupLocalService, "L_CMP_TASK_LINK",
 			objectDefinitionLocalService, objectEntry, objectEntryLocalService,
 			"r_cmpTaskToCMPTaskLinks_c_cmpTaskId");
+	}
+
+	public static int getDepth(ObjectEntry objectEntry) {
+		int depth = 0;
+
+		ObjectEntry parentObjectEntry =
+			ObjectEntryLocalServiceUtil.fetchObjectEntry(
+				MapUtil.getLong(
+					objectEntry.getValues(), "r_cmpTaskToCMPTasks_c_cmpTaskId"));
+
+		while (parentObjectEntry != null) {
+			depth++;
+
+			parentObjectEntry = ObjectEntryLocalServiceUtil.fetchObjectEntry(
+				MapUtil.getLong(
+					parentObjectEntry.getValues(),
+					"r_cmpTaskToCMPTasks_c_cmpTaskId"));
+		}
+
+		return depth;
 	}
 
 	public static List<Long> getObjectEntryIds(
