@@ -366,6 +366,7 @@ const Body = ({
 }) => {
 	const {
 		allItemsSelectedActive,
+		nestedItemsKey,
 		selectable,
 		selectedItemsKey,
 		selectedItemsValue,
@@ -383,7 +384,9 @@ const Body = ({
 		<FDSDndProvider>
 			<ClayTableBody
 				items={
-					inlineAddingSettings ? [...items, defaultAddItem] : items
+					inlineAddingSettings
+						? [...items, defaultAddItem]
+						: addNestedItemsKey(items, nestedItemsKey)
 				}
 			>
 				{(item: any) => {
@@ -758,6 +761,20 @@ function getVisibleFieldsMap(
 	});
 
 	return visibleFieldsMap;
+}
+
+function addNestedItemsKey(items: Array<any>, nestedItemsKey?: string) {
+	if (!nestedItemsKey?.includes('.')) {
+		return items;
+	}
+
+	return items.map((item) => ({
+		...item,
+		[nestedItemsKey]: getObjectValueFromPath({
+			object: item,
+			path: nestedItemsKey,
+		}),
+	}));
 }
 
 const Table = ({
