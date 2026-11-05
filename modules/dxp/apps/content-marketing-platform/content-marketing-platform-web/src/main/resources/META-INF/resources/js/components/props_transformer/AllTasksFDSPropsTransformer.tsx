@@ -25,6 +25,7 @@ import {
 } from '../../utils/cmpTabPersistence';
 import {WORKFLOW_TASK_ACTION_LINK_ID} from '../../utils/constants';
 import getCMPProjectObjectEntryIds from '../../utils/getCMPProjectObjectEntryIds';
+import getNestedTasksProps from '../../utils/getNestedTasksProps';
 import {getFormattedLabel} from '../../utils/getFormattedText';
 import {openCMPModal} from '../../utils/openCMPModal';
 import {transformFDSBulkActions} from '../../utils/transformFDSBulkActions';
@@ -102,6 +103,10 @@ export default function AllTasksFDSPropsTransformer({
 
 	return {
 		...otherProps,
+		...getNestedTasksProps(
+			additionalProps.additionalAPIURLParameters,
+			otherProps.apiURL
+		),
 		bulkActions: transformFDSBulkActions(
 			styleBulkActions(bulkActions).map((action) => ({
 				...action,

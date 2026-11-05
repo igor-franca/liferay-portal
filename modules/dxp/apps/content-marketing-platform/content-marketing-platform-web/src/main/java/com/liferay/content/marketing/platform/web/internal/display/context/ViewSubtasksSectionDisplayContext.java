@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.util.MapUtil;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Igor Franca
@@ -66,7 +67,17 @@ public class ViewSubtasksSectionDisplayContext
 			"/o/search/v1.0/search?emptySearch=true&filter=(",
 			"objectDefinitionId eq ", objectDefinition.getObjectDefinitionId(),
 			" and cmpTaskCMPTaskId eq ", assetEntry.getClassPK(), ")",
-			getNestedFieldsAPIURLParameters("cmpProjectToCMPTasks"));
+			getNestedFieldsAPIURLParameters(
+				"cmpProjectToCMPTasks", "cmpTaskToCMPTasks"));
+	}
+
+	@Override
+	public Map<String, Object> getAdditionalProps() throws Exception {
+		Map<String, Object> additionalProps = super.getAdditionalProps();
+
+		additionalProps.remove("additionalAPIURLParameters");
+
+		return additionalProps;
 	}
 
 	@Override

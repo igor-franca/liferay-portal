@@ -91,6 +91,8 @@ public abstract class BaseTasksSectionDisplayContext
 
 	public Map<String, Object> getAdditionalProps() throws Exception {
 		return HashMapBuilder.<String, Object>put(
+			"additionalAPIURLParameters", "filter=cmpSubtask ne true"
+		).put(
 			"cmpProjectObjectDefinitionId",
 			cmpProjectObjectDefinition.getObjectDefinitionId()
 		).put(
