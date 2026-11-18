@@ -40,6 +40,7 @@ import {cmpTasksFDSAtom} from './atoms';
 import AssigneeRenderer from './cell_renderers/AssigneeRenderer';
 import CalendarView from './views/calendar_view/CalendarView';
 import KanbanView from './views/kanban_view/KanbanView';
+import getTaskTreeTableView from './views/tree_table_view/getTaskTreeTableView';
 
 export default function ProjectTasksFDSPropsTransformer({
 	additionalProps,
@@ -67,6 +68,10 @@ export default function ProjectTasksFDSPropsTransformer({
 
 	registerTabFDS(id, 1);
 	installCMPTabPersistence();
+
+	const taskTreeTableView = Liferay.FeatureFlags['LPD-107678']
+		? getTaskTreeTableView(otherProps.apiURL)
+		: null;
 
 	const calendarView: IView = {
 		component: (props: any) =>
@@ -125,6 +130,7 @@ export default function ProjectTasksFDSPropsTransformer({
 
 	return {
 		...otherProps,
+		...taskTreeTableView?.dataSetProps,
 		atom: cmpTasksFDSAtom,
 		bulkActions: transformFDSBulkActions(
 			styleBulkActions(bulkActions).map((action) => ({
@@ -383,6 +389,13 @@ export default function ProjectTasksFDSPropsTransformer({
 				});
 			}
 		},
-		views: [...nonDefaultViews, kanbanView, calendarView],
+		views: taskTreeTableView
+			? [
+					taskTreeTableView.view,
+					...nonDefaultViews,
+					kanbanView,
+					calendarView,
+				]
+			: [...nonDefaultViews, kanbanView, calendarView],
 	};
 }
