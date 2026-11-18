@@ -758,7 +758,10 @@ const FrontendDataSetContent = ({
 	const requestIdRef = useRef(0);
 
 	const requestData = useCallback(
-		(signal?: AbortSignal) => {
+		(
+			signal?: AbortSignal,
+			{delta, page}: {delta?: number; page?: number} = {}
+		) => {
 			if (!apiURL) {
 				return;
 			}
@@ -778,9 +781,9 @@ const FrontendDataSetContent = ({
 				additionalAPIURLParameters,
 				apiURL,
 				currentURL,
-				delta: paginationDelta,
+				delta: delta ?? paginationDelta,
 				odataFiltersStrings: activeFiltersOdataStrings,
-				page: pageNumber,
+				page: page ?? pageNumber,
 				searchParam: unfrozenGlobalFDSState.search.query,
 				sorts: activeSorts,
 			};
@@ -1487,6 +1490,15 @@ const FrontendDataSetContent = ({
 		sorts,
 		viewsDispatch,
 	]);
+
+	const requestItems = useCallback(
+		({delta, page}: {delta?: number; page?: number}) =>
+			requestData(undefined, {delta, page})!.then(({data}) => ({
+				...data,
+				items: transformDataSetItems(data.items),
+			})),
+		[requestData]
+	);
 
 	const refreshData = useCallback(
 		(successNotification?: ISuccessNotification) => {
@@ -2482,6 +2494,7 @@ const FrontendDataSetContent = ({
 				openModal,
 				openSidePanel,
 				portletId,
+				requestItems,
 				saveDataSetUserConfigurationURL,
 				searchAsYouType,
 				searchParam: unfrozenGlobalFDSState.search.query,

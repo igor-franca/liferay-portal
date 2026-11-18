@@ -80,6 +80,18 @@ export interface IFrontendDataSetContext {
 	openModal: Function;
 	openSidePanel: Function;
 	portletId?: string;
+	requestItems?: ({
+		delta,
+		page,
+	}: {
+		delta?: number;
+		page?: number;
+	}) => Promise<{
+		items: any[];
+		lastPage: number;
+		page: number;
+		totalCount: number;
+	}>;
 	saveDataSetUserConfigurationURL?: string;
 	searchAsYouType: boolean;
 	searchParam?: string;
