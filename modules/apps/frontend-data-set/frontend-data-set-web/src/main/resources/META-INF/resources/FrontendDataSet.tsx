@@ -480,6 +480,16 @@ const FrontendDataSetContent = ({
 	const [infoPanelOpen, setInfoPanelOpen] = useState<boolean>(false);
 	const [searching, setSearching] = useState(!!apiURL);
 	const [items, setItems] = useState(itemsProp || []);
+
+	// A view that loads rows on its own (more pages, nested rows) reports them
+	// here, so selection and the management bar see every loaded row.
+
+	const [viewItems, setViewItems] = useState<{
+		items: any[];
+		total?: number;
+	} | null>(null);
+
+	const loadedItems = viewItems?.items ?? items;
 	const [itemsChanges, setItemsChanges] = useState<{[key: string]: any}>({});
 
 	const [allItemsSelectedActive, setAllItemsSelectedActive] = useState(false);
@@ -498,7 +508,7 @@ const FrontendDataSetContent = ({
 	);
 
 	if (allItemsSelectedActive) {
-		selectedItemsValue = items.map((item) =>
+		selectedItemsValue = loadedItems.map((item) =>
 			getObjectValueFromPath({object: item, path: selectedItemsKey})
 		);
 	}
@@ -1290,7 +1300,7 @@ const FrontendDataSetContent = ({
 					selectedItemsValue.includes(value)
 					? []
 					: [
-							items.find(
+							loadedItems.find(
 								(item) =>
 									getObjectValueFromPath({
 										object: item,
@@ -1319,7 +1329,7 @@ const FrontendDataSetContent = ({
 
 		const nextSelectedItems = nextSelectedValues
 			.map((val) =>
-				[...selectedItems, ...items].find(
+				[...selectedItems, ...loadedItems].find(
 					(item) =>
 						getObjectValueFromPath({
 							object: item,
@@ -1791,7 +1801,7 @@ const FrontendDataSetContent = ({
 					}
 				}}
 				fluid={style === 'fluid'}
-				items={items}
+				items={loadedItems}
 				onBulkActionsClear={() => {
 					deselectItems(selectedItemsValue);
 
@@ -1811,7 +1821,7 @@ const FrontendDataSetContent = ({
 				showNavBarWhenSelected={showNavBarWhenSelected}
 				showSearch={showSearch}
 				showSelectAll={showSelectAll}
-				total={total}
+				total={viewItems?.total ?? total}
 			/>
 		</div>
 	) : null;
@@ -1863,7 +1873,7 @@ const FrontendDataSetContent = ({
 						) => {
 							if (allItemsSelectedActive) {
 								setSelectedItems(
-									items.filter(
+									loadedItems.filter(
 										(item) =>
 											getObjectValueFromPath({
 												object: item,
@@ -2491,6 +2501,7 @@ const FrontendDataSetContent = ({
 						value: stateUpdates,
 					});
 				},
+				onViewItemsChange: setViewItems,
 				openModal,
 				openSidePanel,
 				portletId,

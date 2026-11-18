@@ -77,6 +77,9 @@ export interface IFrontendDataSetContext {
 	onSearch: ({query}: {query: string}) => void;
 	onSnapshotChange: Function;
 	onViewChange: (viewName: string) => void;
+	onViewItemsChange?: (
+		viewItems: {items: any[]; total?: number} | null
+	) => void;
 	openModal: Function;
 	openSidePanel: Function;
 	portletId?: string;
