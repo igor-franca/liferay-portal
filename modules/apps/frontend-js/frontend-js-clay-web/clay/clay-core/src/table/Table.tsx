@@ -117,6 +117,12 @@ interface IProps extends React.HTMLAttributes<HTMLTableElement> {
 	};
 
 	/**
+	 * Index of the column that renders the expand button and the level
+	 * indentation of nested rows.
+	 */
+	expanderColumnIndex?: number;
+
+	/**
 	 * Flag to indicate which key name matches the nested rendering of the tree.
 	 */
 	nestedKey?: string;
@@ -218,6 +224,7 @@ export const Table = React.forwardRef(
 			defaultVisibleColumns = new Map(),
 			displayKeyboardArrowsIndicator = false,
 			expandedKeys: externalExpandedKeys,
+			expanderColumnIndex = 0,
 			itemIdKey = 'id',
 			messages: externalMessages,
 			visibleColumns: externalVisibleColumns,
@@ -303,6 +310,7 @@ export const Table = React.forwardRef(
 							alwaysVisibleColumns,
 							columnsVisibility,
 							expandedKeys,
+							expanderColumnIndex,
 							headCellsCount,
 							itemIdKey,
 							messages,
