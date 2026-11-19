@@ -33,5 +33,6 @@ ViewProjectTasksSectionDisplayContext viewProjectTasksSectionDisplayContext = (V
 		propsTransformer="{ProjectTasksFDSPropsTransformer} from content-marketing-platform-web"
 		selectedItemsKey="embedded.id"
 		selectionType="<%= viewProjectTasksSectionDisplayContext.getSelectionType() %>"
+		showSelectAll="<%= true %>"
 	/>
 </div>
