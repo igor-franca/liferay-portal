@@ -21,10 +21,4 @@ export interface IColumn {
 	width?: string;
 }
 
-export interface ITasksPage {
-	items: ITask[];
-	page: number;
-	totalCount: number;
-}
-
 export type TreeTask = ITask & {children?: TreeTask[]; id: number};

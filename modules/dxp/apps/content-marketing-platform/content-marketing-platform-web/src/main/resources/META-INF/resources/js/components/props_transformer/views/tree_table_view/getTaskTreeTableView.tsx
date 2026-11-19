@@ -8,7 +8,7 @@ import React from 'react';
 
 import {ITask} from '../../../../utils/types';
 import TaskTreeTableView, {ITaskTreeTableViewProps} from './TaskTreeTableView';
-import {SUBTASKS_NESTED_FIELDS, getSubtasks, getTasksCount} from './utils/taskSearchAPI';
+import {SUBTASKS_NESTED_FIELDS, getSubtasks} from './utils/taskSearchAPI';
 
 const BATCH_SIZE = 20;
 
@@ -20,24 +20,12 @@ const NESTED_FIELDS_PARAMETER = `nestedFields=${SUBTASKS_NESTED_FIELDS}`;
  * every item (Kanban, Calendar) asks for tasks and subtasks.
  */
 export default function getTaskTreeTableView(apiURL: string) {
-	const countAllTasks = () => getTasksCount(apiURL);
-
 	const loadSubtasks = (task: ITask, sort?: string) =>
 		getSubtasks({apiURL, parentTaskId: task.embedded.id, sort});
 
 	const view: IView = {
-		component: (
-			props: Omit<
-				ITaskTreeTableViewProps,
-				'batchSize' | 'countAllTasks' | 'getSubtasks'
-			>
-		) => (
-			<TaskTreeTableView
-				{...props}
-				batchSize={BATCH_SIZE}
-				countAllTasks={countAllTasks}
-				getSubtasks={loadSubtasks}
-			/>
+		component: (props: Omit<ITaskTreeTableViewProps, 'getSubtasks'>) => (
+			<TaskTreeTableView {...props} getSubtasks={loadSubtasks} />
 		),
 		default: true,
 		initialPaginationDelta: BATCH_SIZE,

@@ -58,13 +58,3 @@ export async function getSubtasks({
 
 	return items;
 }
-
-export async function getTasksCount(apiURL: string): Promise<number> {
-	const url = getSearchURL(apiURL);
-
-	url.searchParams.set('pageSize', '1');
-
-	const {totalCount} = await getJSON(url);
-
-	return totalCount;
-}

@@ -6,25 +6,26 @@
 import {ITask, ITaskItemsActionsTask} from '../../../../../utils/types';
 import {TreeTask} from '../types';
 
-export function appendTreeTasks(
-	treeTasks: TreeTask[],
-	tasks: ITask[]
-): TreeTask[] {
-	const ids = new Set(treeTasks.map((treeTask) => treeTask.id));
+export function applyTaskUpdate(
+	treeTask: TreeTask,
+	update: ITaskItemsActionsTask
+): TreeTask {
 
-	return [
-		...treeTasks,
-		...tasks
-			.map(toTreeTask)
-			.filter((treeTask) => !ids.has(treeTask.id)),
-	];
-}
+	// The object entry API returns the task without the nested fields of the
+	// search API, so keep the parent and the subtasks.
 
-export function flattenTreeTasks(treeTasks: TreeTask[]): TreeTask[] {
-	return treeTasks.flatMap((treeTask) => [
-		treeTask,
-		...flattenTreeTasks(treeTask.children ?? []),
-	]);
+	return {
+		...treeTask,
+		actions: update.actions ?? treeTask.actions,
+		embedded: {
+			...(update.embedded as unknown as ITask['embedded']),
+			cmpTaskToCMPTasks: treeTask.embedded.cmpTaskToCMPTasks,
+			r_cmpProjectToCMPTasks_c_cmpProject:
+				treeTask.embedded.r_cmpProjectToCMPTasks_c_cmpProject,
+			r_cmpTaskToCMPTasks_c_cmpTask:
+				treeTask.embedded.r_cmpTaskToCMPTasks_c_cmpTask,
+		},
+	};
 }
 
 export function hasSubtasks(treeTask: TreeTask) {
@@ -41,39 +42,4 @@ export function toTreeTask(task: ITask): TreeTask {
 		actions: task.actions ?? task.embedded.actions,
 		id: task.embedded.id,
 	};
-}
-
-export function updateTreeTask(
-	treeTasks: TreeTask[],
-	updatedTask: ITaskItemsActionsTask
-): TreeTask[] {
-	return treeTasks.map((treeTask) => {
-		if (treeTask.id === updatedTask.embedded.id) {
-
-			// The object entry API returns the task without the nested fields
-			// of the search API, so keep the parent and the children.
-
-			return {
-				...treeTask,
-				actions: updatedTask.actions ?? treeTask.actions,
-				embedded: {
-					...(updatedTask.embedded as unknown as ITask['embedded']),
-					cmpTaskToCMPTasks: treeTask.embedded.cmpTaskToCMPTasks,
-					r_cmpProjectToCMPTasks_c_cmpProject:
-						treeTask.embedded.r_cmpProjectToCMPTasks_c_cmpProject,
-					r_cmpTaskToCMPTasks_c_cmpTask:
-						treeTask.embedded.r_cmpTaskToCMPTasks_c_cmpTask,
-				},
-			};
-		}
-
-		if (treeTask.children) {
-			return {
-				...treeTask,
-				children: updateTreeTask(treeTask.children, updatedTask),
-			};
-		}
-
-		return treeTask;
-	});
 }

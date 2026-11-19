@@ -15,17 +15,16 @@ import {
 	FrontendDataSetContext,
 	IItemsActions,
 } from '@liferay/frontend-data-set-web';
-import {sub} from 'frontend-js-web';
-import React, {useCallback, useContext, useMemo, useState} from 'react';
+import React, {useCallback, useContext, useMemo} from 'react';
 
-import {ITask, ITaskItemsActionsTask} from '../../../../utils/types';
+import {ITask} from '../../../../utils/types';
 import {getColumns} from './columns';
 import TaskTreeTableCell from './components/TaskTreeTableCell';
-import useLoadedTasksReport from './hooks/useLoadedTasksReport';
-import useTaskBatches from './hooks/useTaskBatches';
+import useInfiniteScroll from './hooks/useInfiniteScroll';
+import useTaskTree from './hooks/useTaskTree';
 import {IColumn, TreeTask} from './types';
 import getSortParameter from './utils/getSortParameter';
-import {hasSubtasks, toTreeTask, updateTreeTask} from './utils/treeTasks';
+import {hasSubtasks} from './utils/treeTasks';
 
 import './TaskTreeTableView.scss';
 
@@ -43,8 +42,6 @@ const TABLE_MESSAGES = {
 };
 
 export interface ITaskTreeTableViewProps {
-	batchSize: number;
-	countAllTasks: () => Promise<number>;
 	getSubtasks: (task: ITask, sort?: string) => Promise<ITask[]>;
 	items: ITask[];
 	itemsActions: IItemsActions[];
@@ -52,31 +49,19 @@ export interface ITaskTreeTableViewProps {
 }
 
 /**
- * Lists the tasks of a project as a tree. Subtasks load when their task is
- * expanded, and top-level tasks load in batches on scroll. With a search or a
- * filter, the list is flat and shows the parent of each task.
+ * Lists the tasks of a project as a tree. The data set items are the
+ * top-level tasks, and the data set loads the next ones on scroll. Subtasks
+ * load when their task is expanded. With a search or a filter, the list is
+ * flat and shows the parent of each task.
  */
 export default function TaskTreeTableView({
-	batchSize,
-	countAllTasks,
 	getSubtasks,
 	items,
 	itemsActions,
 	onItemSelectionChange,
 }: ITaskTreeTableViewProps) {
-	const {globalFDSState, selectable, sorts} = useContext(
-		FrontendDataSetContext
-	);
-
-	const [announcement, setAnnouncement] = useState('');
-
-	const announceLoadedItems = useCallback(
-		(count: number) =>
-			setAnnouncement(
-				sub(Liferay.Language.get('x-items-loaded'), [count])
-			),
-		[]
-	);
+	const {globalFDSState, hasMoreItems, loadMoreItems, selectable, sorts} =
+		useContext(FrontendDataSetContext);
 
 	const flat =
 		!!globalFDSState?.search?.query ||
@@ -84,35 +69,23 @@ export default function TaskTreeTableView({
 			(filter: {active?: boolean}) => filter.active
 		);
 
-	const {loading, sentinelRef, setTreeTasks, treeTasks} = useTaskBatches({
-		batchSize,
+	const {loadSubtasks, treeTasks, updateTask} = useTaskTree({
+		getSubtasks: useCallback(
+			(task: ITask) => getSubtasks(task, getSortParameter(sorts)),
+			[getSubtasks, sorts]
+		),
 		items,
-		onBatchLoaded: announceLoadedItems,
 	});
 
-	useLoadedTasksReport({countAllTasks, flat, treeTasks});
+	const {loading, sentinelRef} = useInfiniteScroll({
+		hasMore: !!hasMoreItems && !!loadMoreItems,
+		onLoadMore: loadMoreItems!,
+	});
 
 	const columns = useMemo(
 		() => getColumns({flat, selectable}),
 		[flat, selectable]
 	);
-
-	const handleTaskChange = useCallback(
-		(task: ITaskItemsActionsTask) =>
-			setTreeTasks((treeTasks) => updateTreeTask(treeTasks, task)),
-		[setTreeTasks]
-	);
-
-	const loadSubtasks = async (item: unknown) => {
-		const subtasks = await getSubtasks(
-			item as TreeTask,
-			getSortParameter(sorts)
-		);
-
-		announceLoadedItems(subtasks.length);
-
-		return subtasks.map(toTreeTask);
-	};
 
 	return (
 		<div className="task-tree-table-view">
@@ -120,7 +93,7 @@ export default function TaskTreeTableView({
 				expanderColumnIndex={selectable ? 1 : 0}
 				messages={TABLE_MESSAGES}
 				nestedKey={flat ? undefined : 'children'}
-				onLoadMore={loadSubtasks}
+				onLoadMore={(item: unknown) => loadSubtasks(item as TreeTask)}
 			>
 				<ClayTableHead items={columns}>
 					{(column: IColumn) => (
@@ -134,7 +107,10 @@ export default function TaskTreeTableView({
 					)}
 				</ClayTableHead>
 
-				<ClayTableBody items={treeTasks} onItemsChange={setTreeTasks}>
+				{/* The tree is derived from the data set items and the loaded
+				subtasks, so the copy Clay keeps of the rows is not needed */}
+
+				<ClayTableBody items={treeTasks} onItemsChange={() => {}}>
 					{(treeTask: TreeTask) => (
 						<ClayTableRow
 							items={columns}
@@ -153,7 +129,7 @@ export default function TaskTreeTableView({
 										columnKey={column.key}
 										itemsActions={itemsActions}
 										onSelectionChange={onItemSelectionChange}
-										onTaskChange={handleTaskChange}
+										onTaskChange={updateTask}
 										treeTask={treeTask}
 									/>
 								</ClayTableCell>
@@ -178,7 +154,7 @@ export default function TaskTreeTableView({
 			</div>
 
 			<div aria-live="polite" className="sr-only">
-				{announcement}
+				{loading ? Liferay.Language.get('loading-more-items') : ''}
 			</div>
 		</div>
 	);
