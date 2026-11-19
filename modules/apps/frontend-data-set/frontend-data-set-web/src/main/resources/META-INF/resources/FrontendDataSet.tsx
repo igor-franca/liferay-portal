@@ -503,6 +503,7 @@ const FrontendDataSetContent = ({
 		);
 	}
 
+	const [loadedPage, setLoadedPage] = useState(1);
 	const [total, setTotal] = useState(0);
 
 	const isMounted = useIsMounted();
@@ -758,10 +759,7 @@ const FrontendDataSetContent = ({
 	const requestIdRef = useRef(0);
 
 	const requestData = useCallback(
-		(
-			signal?: AbortSignal,
-			{delta, page}: {delta?: number; page?: number} = {}
-		) => {
+		(signal?: AbortSignal, page = pageNumber) => {
 			if (!apiURL) {
 				return;
 			}
@@ -781,9 +779,9 @@ const FrontendDataSetContent = ({
 				additionalAPIURLParameters,
 				apiURL,
 				currentURL,
-				delta: delta ?? paginationDelta,
+				delta: paginationDelta,
 				odataFiltersStrings: activeFiltersOdataStrings,
-				page: page ?? pageNumber,
+				page,
 				searchParam: unfrozenGlobalFDSState.search.query,
 				sorts: activeSorts,
 			};
@@ -993,6 +991,7 @@ const FrontendDataSetContent = ({
 			const transformedItems = transformDataSetItems(dataSetData.items);
 
 			setItems(transformedItems);
+			setLoadedPage(dataSetData.page);
 			setTotal(dataSetData.totalCount);
 
 			recordSearch(dataSetData.totalCount);
@@ -1500,13 +1499,33 @@ const FrontendDataSetContent = ({
 		viewsDispatch,
 	]);
 
-	const requestItems = useCallback(
-		({delta, page}: {delta?: number; page?: number}) =>
-			requestData(undefined, {delta, page})!.then(({data}) => ({
-				...data,
-				items: transformDataSetItems(data.items),
-			})),
-		[requestData]
+	const loadMoreItems = useCallback(
+		() =>
+			requestData(undefined, loadedPage + 1)!.then(({data, stale}) => {
+				if (stale) {
+					return;
+				}
+
+				const getItemKey = (item: any) =>
+					getObjectValueFromPath({
+						object: item,
+						path: selectedItemsKey,
+					});
+
+				setItems((items) => {
+					const itemKeys = new Set(items.map(getItemKey));
+
+					return [
+						...items,
+						...transformDataSetItems(data.items).filter(
+							(item) => !itemKeys.has(getItemKey(item))
+						),
+					];
+				});
+				setLoadedPage(data.page);
+				setTotal(data.totalCount);
+			}),
+		[loadedPage, requestData, selectedItemsKey]
 	);
 
 	const refreshData = useCallback(
@@ -2389,6 +2408,7 @@ const FrontendDataSetContent = ({
 				formId,
 				formName,
 				globalFDSState: unfrozenGlobalFDSState,
+				hasMoreItems: items.length < total,
 				hideManagementBarInEmptyState,
 				highlightItems,
 				highlightedItemsValue,
@@ -2400,6 +2420,7 @@ const FrontendDataSetContent = ({
 				itemsActions,
 				itemsChanges,
 				loadData: refreshData,
+				loadMoreItems,
 				modalId: dataSetSupportModalIdRef.current,
 				namespace,
 				nestedItemsKey,
@@ -2504,7 +2525,6 @@ const FrontendDataSetContent = ({
 				openModal,
 				openSidePanel,
 				portletId,
-				requestItems,
 				saveDataSetUserConfigurationURL,
 				searchAsYouType,
 				searchParam: unfrozenGlobalFDSState.search.query,
