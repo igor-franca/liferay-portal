@@ -21,7 +21,6 @@ import React, {useCallback, useContext, useMemo, useState} from 'react';
 import {ITask, ITaskItemsActionsTask} from '../../../../utils/types';
 import {getColumns} from './columns';
 import TaskTreeTableCell from './components/TaskTreeTableCell';
-import useLoadedTasksReport from './hooks/useLoadedTasksReport';
 import useTaskBatches from './hooks/useTaskBatches';
 import {IColumn, TreeTask} from './types';
 import getSortParameter from './utils/getSortParameter';
@@ -86,11 +85,11 @@ export default function TaskTreeTableView({
 
 	const {loading, sentinelRef, setTreeTasks, treeTasks} = useTaskBatches({
 		batchSize,
+		countAllTasks,
+		flat,
 		items,
 		onBatchLoaded: announceLoadedItems,
 	});
-
-	useLoadedTasksReport({countAllTasks, flat, treeTasks});
 
 	const columns = useMemo(
 		() => getColumns({flat, selectable}),

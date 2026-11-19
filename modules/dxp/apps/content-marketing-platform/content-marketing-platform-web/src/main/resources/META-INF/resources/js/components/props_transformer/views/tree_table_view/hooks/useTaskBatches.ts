@@ -8,46 +8,76 @@ import {useContext, useEffect, useRef, useState} from 'react';
 
 import {ITask} from '../../../../../utils/types';
 import {ITasksPage, TreeTask} from '../types';
-import {appendTreeTasks, toTreeTask} from '../utils/treeTasks';
+import {mergeTreeTasks, toTreeTask} from '../utils/treeTasks';
 
 /**
- * Keeps the top-level tasks of the view. The first batch is the data set
- * response, and the next batches load when the sentinel below the table
- * scrolls into view.
+ * The data set items are the loaded top-level tasks. The next batches load
+ * when the sentinel below the table scrolls into view, and they are appended
+ * to the data set items, so selection and Select All see them as any other
+ * row. In the tree, the data set total counts tasks and subtasks, since
+ * Select All reaches both.
  */
 export default function useTaskBatches({
 	batchSize,
+	countAllTasks,
+	flat,
 	items,
 	onBatchLoaded,
 }: {
 	batchSize: number;
+	countAllTasks: () => Promise<number>;
+	flat: boolean;
 	items: ITask[];
 	onBatchLoaded: (batchItemsCount: number) => void;
 }) {
-	const {requestItems} = useContext(FrontendDataSetContext);
+	const {requestItems, updateDataSetItems} = useContext(
+		FrontendDataSetContext
+	);
 
+	const [allTasksCount, setAllTasksCount] = useState<number>();
 	const [failed, setFailed] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [page, setPage] = useState(1);
-	const [totalCount, setTotalCount] = useState<number>();
+	const [topLevelTasksCount, setTopLevelTasksCount] = useState<number>();
 	const [treeTasks, setTreeTasks] = useState<TreeTask[]>(() =>
 		items.map(toTreeTask)
 	);
 
+	const itemsRef = useRef(items);
 	const sentinelRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		setFailed(false);
-		setPage(1);
-		setTotalCount(undefined);
-		setTreeTasks(items.map(toTreeTask));
+		itemsRef.current = items;
+
+		setTreeTasks((treeTasks) => mergeTreeTasks(treeTasks, items));
 	}, [items]);
+
+	useEffect(() => {
+		if (flat) {
+			return;
+		}
+
+		countAllTasks()
+			.then((count) => {
+				setAllTasksCount(count);
+
+				updateDataSetItems({
+					items: itemsRef.current,
+					lastPage: page,
+					page,
+					totalCount: count,
+				});
+			})
+			.catch(() => setAllTasksCount(undefined));
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [countAllTasks, flat]);
 
 	const hasMore =
 		!failed &&
-		(totalCount === undefined
+		(topLevelTasksCount === undefined
 			? items.length >= batchSize
-			: treeTasks.length < totalCount);
+			: items.length < topLevelTasksCount);
 
 	useEffect(() => {
 		const sentinel = sentinelRef.current;
@@ -67,11 +97,26 @@ export default function useTaskBatches({
 
 			requestItems({delta: batchSize, page: page + 1})
 				.then((tasksPage: ITasksPage) => {
-					setPage(tasksPage.page);
-					setTotalCount(tasksPage.totalCount);
-					setTreeTasks((treeTasks) =>
-						appendTreeTasks(treeTasks, tasksPage.items)
+					const ids = new Set(
+						itemsRef.current.map((item) => item.embedded.id)
 					);
+
+					setPage(tasksPage.page);
+					setTopLevelTasksCount(tasksPage.totalCount);
+
+					updateDataSetItems({
+						items: [
+							...itemsRef.current,
+							...tasksPage.items.filter(
+								(item) => !ids.has(item.embedded.id)
+							),
+						],
+						lastPage: tasksPage.page,
+						page: tasksPage.page,
+						totalCount: flat
+							? tasksPage.totalCount
+							: (allTasksCount ?? tasksPage.totalCount),
+					});
 
 					onBatchLoaded(tasksPage.items.length);
 				})
@@ -82,7 +127,17 @@ export default function useTaskBatches({
 		intersectionObserver.observe(sentinel);
 
 		return () => intersectionObserver.disconnect();
-	}, [batchSize, hasMore, loading, onBatchLoaded, page, requestItems]);
+	}, [
+		allTasksCount,
+		batchSize,
+		flat,
+		hasMore,
+		loading,
+		onBatchLoaded,
+		page,
+		requestItems,
+		updateDataSetItems,
+	]);
 
 	return {loading, sentinelRef, setTreeTasks, treeTasks};
 }

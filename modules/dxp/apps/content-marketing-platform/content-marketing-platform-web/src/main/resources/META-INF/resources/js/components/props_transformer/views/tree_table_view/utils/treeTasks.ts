@@ -6,25 +6,21 @@
 import {ITask, ITaskItemsActionsTask} from '../../../../../utils/types';
 import {TreeTask} from '../types';
 
-export function appendTreeTasks(
+/**
+ * Follows the data set items, and keeps the rows the view already has, with
+ * their loaded subtasks and the updates made by row actions.
+ */
+export function mergeTreeTasks(
 	treeTasks: TreeTask[],
 	tasks: ITask[]
 ): TreeTask[] {
-	const ids = new Set(treeTasks.map((treeTask) => treeTask.id));
+	const treeTasksById = new Map(
+		treeTasks.map((treeTask) => [treeTask.id, treeTask])
+	);
 
-	return [
-		...treeTasks,
-		...tasks
-			.map(toTreeTask)
-			.filter((treeTask) => !ids.has(treeTask.id)),
-	];
-}
-
-export function flattenTreeTasks(treeTasks: TreeTask[]): TreeTask[] {
-	return treeTasks.flatMap((treeTask) => [
-		treeTask,
-		...flattenTreeTasks(treeTask.children ?? []),
-	]);
+	return tasks.map(
+		(task) => treeTasksById.get(task.embedded.id) ?? toTreeTask(task)
+	);
 }
 
 export function hasSubtasks(treeTask: TreeTask) {

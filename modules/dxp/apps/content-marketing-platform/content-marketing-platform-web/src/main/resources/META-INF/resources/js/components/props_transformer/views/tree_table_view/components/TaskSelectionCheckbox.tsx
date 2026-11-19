@@ -17,7 +17,9 @@ export default function TaskSelectionCheckbox({
 	onSelectionChange: (treeTask: TreeTask) => void;
 	treeTask: TreeTask;
 }) {
-	const {selectedItemsValue} = useContext(FrontendDataSetContext);
+	const {allItemsSelectedActive, selectedItemsValue} = useContext(
+		FrontendDataSetContext
+	);
 
 	const selectedValues: unknown[] = selectedItemsValue ?? [];
 
@@ -27,7 +29,9 @@ export default function TaskSelectionCheckbox({
 				Liferay.Language.get('select-x'),
 				treeTask.embedded.title
 			)}
-			checked={selectedValues.includes(treeTask.id)}
+			checked={
+				allItemsSelectedActive || selectedValues.includes(treeTask.id)
+			}
 			onChange={() => onSelectionChange(treeTask)}
 		/>
 	);
