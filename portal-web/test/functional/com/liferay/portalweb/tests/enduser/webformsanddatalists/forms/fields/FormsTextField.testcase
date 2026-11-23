@@ -402,7 +402,11 @@ definition {
 
 		Form.gotoAdvancedTab();
 
-		FormFields.enableSwitch(fieldName = "repeatable");
+		FormViewBuilder.setFieldRepeatable();
+
+		AssertElementPresent(
+			key_fieldLabel = "Text Field",
+			locator1 = "FormFields#FIELD_REPEATABLE_ADD_BUTTON_SPECIFIC");
 
 		Form.save();
 
@@ -413,7 +417,7 @@ definition {
 		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.addRepeatableField(
-			fieldName = ${fieldTextField},
+			fieldName = "Text Field",
 			repeatableFieldNumber = 1);
 
 		FormFields.editRepeatingText(
