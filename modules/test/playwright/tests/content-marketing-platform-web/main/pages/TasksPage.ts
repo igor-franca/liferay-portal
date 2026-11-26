@@ -202,11 +202,28 @@ export class TasksPage {
 		await this.dataSetFragmentPage.execBulkItemAction({action});
 	}
 
+	async execTreeBulkItemAction(action: string) {
+		await this.page
+			.locator('.management-bar')
+			.getByRole('button', {exact: true, name: action})
+			.click();
+	}
+
 	async execItemAction({action, filter}: ExecItemActionArgs) {
 		await this.dataSetFragmentPage.execItemAction({
 			action,
 			filter,
 		});
+	}
+
+	async expandItem(filter: string) {
+		await this.getItem(filter)
+			.getByRole('button', {name: 'Expand'})
+			.click();
+	}
+
+	getItemCheckbox(filter: string) {
+		return this.getItem(filter).getByRole('checkbox');
 	}
 
 	getBulkUpdateStateSelector(stepName: string) {
