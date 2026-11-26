@@ -304,6 +304,7 @@ interface ObjectField {
 	objectDefinitionExternalReferenceCode1: string;
 	objectFieldSettings?: ObjectFieldSetting[];
 	objectRelationshipExternalReferenceCode?: string;
+	priority?: number;
 	readOnly: ReadOnlyFieldValue;
 	readOnlyConditionExpression: string;
 	relationshipId?: number;
@@ -457,6 +458,7 @@ interface ObjectRelationship {
 	deletionType: string;
 	description?: LocalizedValue<string>;
 	edge?: boolean;
+	externalReferenceCode: string;
 	id: number;
 	label: LocalizedValue<string>;
 	name: string;
@@ -466,6 +468,7 @@ interface ObjectRelationship {
 	objectDefinitionId2: number;
 	readonly objectDefinitionName2: string;
 	parameterObjectFieldName?: string;
+	priority?: number;
 	reverse: boolean;
 	system?: boolean;
 	type: ObjectRelationshipType;
