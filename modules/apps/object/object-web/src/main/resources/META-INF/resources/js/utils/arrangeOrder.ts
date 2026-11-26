@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {API} from '@liferay/object-js-components-web';
+
 export interface OrderItem {
 	externalReferenceCode: string;
 	priority: number;
@@ -11,7 +13,10 @@ export interface OrderItem {
 
 const PRIORITY_INTERVAL = 1000;
 
-export function getOrderItemKey({externalReferenceCode, type}: OrderItem) {
+export function getOrderItemKey({
+	externalReferenceCode,
+	type,
+}: Pick<OrderItem, 'externalReferenceCode' | 'type'>) {
 	return `${type}#${externalReferenceCode}`;
 }
 
@@ -92,4 +97,73 @@ export function getPriorities(orderItems: OrderItem[], movedKeys: Set<string>) {
 	});
 
 	return priorities;
+}
+
+export async function saveOrder({
+	movedKeys,
+	objectDefinitionId,
+	orderItems,
+}: {
+	movedKeys: Set<string>;
+	objectDefinitionId: number;
+	orderItems: OrderItem[];
+}) {
+	const url = `/o/object-admin/v1.0/object-definitions/${objectDefinitionId}`;
+
+	const objectDefinition = await API.fetchJSON<ObjectDefinition>(url);
+
+	const objectFields = objectDefinition.objectFields ?? [];
+	const objectRelationships = objectDefinition.objectRelationships ?? [];
+
+	const keys = new Set([
+		...objectFields.map(({externalReferenceCode}) =>
+			getOrderItemKey({
+				externalReferenceCode,
+				type: 'objectField',
+			})
+		),
+		...objectRelationships.map(({externalReferenceCode}) =>
+			getOrderItemKey({
+				externalReferenceCode,
+				type: 'objectRelationship',
+			})
+		),
+	]);
+
+	if (
+		keys.size !== orderItems.length ||
+		orderItems.some((orderItem) => !keys.has(getOrderItemKey(orderItem)))
+	) {
+		throw {type: 'ObjectDefinitionChanged'};
+	}
+
+	const priorities = getPriorities(orderItems, movedKeys);
+
+	for (const objectField of objectFields) {
+		const priority = priorities.get(
+			getOrderItemKey({
+				externalReferenceCode: objectField.externalReferenceCode,
+				type: 'objectField',
+			})
+		);
+
+		if (priority !== undefined) {
+			objectField.priority = priority;
+		}
+	}
+
+	for (const objectRelationship of objectRelationships) {
+		const priority = priorities.get(
+			getOrderItemKey({
+				externalReferenceCode: objectRelationship.externalReferenceCode,
+				type: 'objectRelationship',
+			})
+		);
+
+		if (priority !== undefined) {
+			objectRelationship.priority = priority;
+		}
+	}
+
+	await API.save({item: objectDefinition, method: 'PUT', url});
 }
