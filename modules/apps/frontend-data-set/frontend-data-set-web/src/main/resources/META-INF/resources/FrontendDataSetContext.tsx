@@ -115,6 +115,7 @@ export interface IFrontendDataSetContext {
 	}: IDataSetData) => void;
 	updateFilters: IConfigInURLUpdaterThunk<EConfigInURLKeys.ACTIVE_FILTERS>;
 	updateItem: Function;
+	updateTotalSelectableItems: (totalSelectableItems?: number) => void;
 	updateUserConfiguration: (
 		configuration: IUserConfiguration
 	) => Promise<void>;
@@ -150,6 +151,7 @@ const FrontendDataSetContext = React.createContext({
 	updateAdditionalAPIURLParameters: () => {},
 	updateDataSetItems: () => {},
 	updateItem: () => {},
+	updateTotalSelectableItems: () => {},
 } as unknown as IFrontendDataSetContext);
 
 export default FrontendDataSetContext;
