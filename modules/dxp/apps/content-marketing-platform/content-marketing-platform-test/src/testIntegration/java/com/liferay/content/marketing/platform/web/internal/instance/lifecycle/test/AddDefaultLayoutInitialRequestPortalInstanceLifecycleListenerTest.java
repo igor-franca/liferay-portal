@@ -51,6 +51,20 @@ public class AddDefaultLayoutInitialRequestPortalInstanceLifecycleListenerTest {
 			PermissionCheckerMethodTestRule.INSTANCE);
 
 	@Test
+	public void testAddCompany() throws Exception {
+		Assume.assumeTrue(LicenseManagerUtil.isAppEnabled(App.CMP));
+
+		Company company = CompanyTestUtil.addCompany(false);
+
+		Group group = _groupLocalService.fetchGroup(
+			company.getCompanyId(), GroupConstants.CMS);
+
+		_assertDefaultLayoutPageTemplateEntry(
+			group, "L_CMP_PROJECT", "Project");
+		_assertDefaultLayoutPageTemplateEntry(group, "L_CMP_TASK", "Task");
+	}
+
+	@Test
 	public void testPortalInstanceRegistered() throws Exception {
 		Assume.assumeTrue(LicenseManagerUtil.isAppEnabled(App.CMP));
 
@@ -112,6 +126,24 @@ public class AddDefaultLayoutInitialRequestPortalInstanceLifecycleListenerTest {
 
 		Assert.assertEquals(
 			"Awareness", assetCategory.getTitle(LocaleUtil.ITALY, false));
+	}
+
+	private void _assertDefaultLayoutPageTemplateEntry(
+		Group group, String externalReferenceCode, String name) {
+
+		ObjectDefinition objectDefinition =
+			_objectDefinitionLocalService.
+				fetchObjectDefinitionByExternalReferenceCode(
+					externalReferenceCode, group.getCompanyId());
+
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
+			_layoutPageTemplateEntryLocalService.
+				fetchDefaultLayoutPageTemplateEntry(
+					group.getGroupId(),
+					_portal.getClassNameId(objectDefinition.getClassName()), 0);
+
+		Assert.assertNotNull(externalReferenceCode, layoutPageTemplateEntry);
+		Assert.assertEquals(name, layoutPageTemplateEntry.getName());
 	}
 
 	@Inject
