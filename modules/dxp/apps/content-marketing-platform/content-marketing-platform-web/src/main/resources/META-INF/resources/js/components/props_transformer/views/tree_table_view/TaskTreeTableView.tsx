@@ -15,8 +15,9 @@ import {
 	FrontendDataSetContext,
 	IItemsActions,
 } from '@liferay/frontend-data-set-web';
-import React, {useContext, useMemo} from 'react';
+import React, {useContext, useEffect, useMemo} from 'react';
 
+import {getTasksCount} from '../../../../utils/api';
 import {ITask} from '../../../../utils/types';
 import TaskTreeTableCell, {ColumnKey} from './components/TaskTreeTableCell';
 import useInfiniteScroll from './hooks/useInfiniteScroll';
@@ -89,6 +90,7 @@ export default function TaskTreeTableView({
 		sorts,
 		total,
 		updateDataSetItems,
+		updateTotalSelectableItems,
 	} = useContext(FrontendDataSetContext);
 
 	const flat =
@@ -106,6 +108,33 @@ export default function TaskTreeTableView({
 			total: total ?? 0,
 			updateDataSetItems,
 		});
+
+	// Select All also selects the subtasks, which are not in the data set
+	// items. The flat list already counts every match.
+
+	useEffect(() => {
+		if (flat) {
+			return;
+		}
+
+		let ignore = false;
+
+		getTasksCount(apiURL!).then((tasksCount) => {
+			if (!ignore) {
+				updateTotalSelectableItems(tasksCount);
+			}
+		});
+
+		return () => {
+			ignore = true;
+		};
+	}, [apiURL, flat, items, updateTotalSelectableItems]);
+
+	useEffect(() => {
+		if (!flat) {
+			return () => updateTotalSelectableItems(undefined);
+		}
+	}, [flat, updateTotalSelectableItems]);
 
 	const {loading, sentinelRef} = useInfiniteScroll({
 		hasMore,

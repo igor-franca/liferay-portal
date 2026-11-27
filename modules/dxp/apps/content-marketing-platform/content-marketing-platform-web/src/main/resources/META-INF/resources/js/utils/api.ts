@@ -162,6 +162,25 @@ export async function getTasksByParentTaskIds({
 	);
 }
 
+/**
+ * Counts the items of the tasks data set URL, which, unlike the rows of the
+ * tree table view, include the subtasks.
+ */
+export async function getTasksCount(apiURL: string) {
+	const url = new URL(
+		Liferay.ThemeDisplay.getPortalURL() +
+			Liferay.ThemeDisplay.getPathContext() +
+			apiURL
+	);
+
+	url.searchParams.delete('nestedFields');
+	url.searchParams.set('pageSize', '1');
+
+	const {data} = await ApiHelper.get<{totalCount: number}>(url.toString());
+
+	return data?.totalCount;
+}
+
 export async function getUserAccount(id: string) {
 	return ApiHelper.get(`/o/headless-admin-user/v1.0/user-accounts/${id}`)
 		.then((response) => {
