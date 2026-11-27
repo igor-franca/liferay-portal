@@ -15,8 +15,9 @@ import {
 	FrontendDataSetContext,
 	IItemsActions,
 } from '@liferay/frontend-data-set-web';
-import React, {useContext, useMemo} from 'react';
+import React, {useCallback, useContext, useEffect, useMemo} from 'react';
 
+import {getTasksCount} from '../../../../utils/api';
 import {ITask} from '../../../../utils/types';
 import TaskTreeTableCell, {ColumnKey} from './components/TaskTreeTableCell';
 import useInfiniteScroll from './hooks/useInfiniteScroll';
@@ -82,13 +83,17 @@ export default function TaskTreeTableView({
 	onItemSelectionChange,
 }: TaskTreeTableViewProps) {
 	const {
+		allItemsSelectedActive,
 		apiURL,
 		globalFDSState,
 		requestPage,
 		selectable,
+		selectedItemsValue,
+		selectItems,
 		sorts,
 		total,
 		updateDataSetItems,
+		updateTotalSelectableItems,
 	} = useContext(FrontendDataSetContext);
 
 	const flat =
@@ -107,10 +112,52 @@ export default function TaskTreeTableView({
 			updateDataSetItems,
 		});
 
+	// Select All also selects the subtasks, which are not in the data set
+	// items. The flat list already counts every match.
+
+	useEffect(() => {
+		if (flat) {
+			return;
+		}
+
+		let ignore = false;
+
+		getTasksCount(apiURL!).then((tasksCount) => {
+			if (!ignore) {
+				updateTotalSelectableItems(tasksCount);
+			}
+		});
+
+		return () => {
+			ignore = true;
+		};
+	}, [apiURL, flat, items, updateTotalSelectableItems]);
+
+	useEffect(() => {
+		if (!flat) {
+			return () => updateTotalSelectableItems(undefined);
+		}
+	}, [flat, updateTotalSelectableItems]);
+
+	// The tasks loaded on scroll arrive selected when every loaded task is, so
+	// the selection bar keeps offering Select All.
+
+	const loadMoreTasks = useCallback(async () => {
+		const selectNextTasks =
+			!allItemsSelectedActive &&
+			items.every((task) => selectedItemsValue?.includes(task.embedded.id));
+
+		const nextTasks = await loadMore();
+
+		if (selectNextTasks && nextTasks.length) {
+			selectItems(nextTasks.map((task) => task.embedded.id));
+		}
+	}, [allItemsSelectedActive, items, loadMore, selectItems, selectedItemsValue]);
+
 	const {loading, sentinelRef} = useInfiniteScroll({
 		hasMore,
 		items,
-		onLoadMore: loadMore,
+		onLoadMore: loadMoreTasks,
 	});
 
 	const columns = useMemo(

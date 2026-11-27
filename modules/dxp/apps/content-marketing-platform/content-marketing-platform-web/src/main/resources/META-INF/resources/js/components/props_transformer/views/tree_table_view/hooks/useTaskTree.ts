@@ -171,22 +171,23 @@ export default function useTaskTree({
 		const data = await requestPage!(pageRef.current + 1);
 
 		if (data.stale || itemsRef.current !== requestedItems) {
-			return;
+			return [];
 		}
 
 		const taskIds = new Set(requestedItems.map((task) => task.embedded.id));
 
-		const newItems = [
-			...requestedItems,
-			...(data.items as ITask[]).filter(
-				(task) => !taskIds.has(task.embedded.id)
-			),
-		];
+		const nextTasks = (data.items as ITask[]).filter(
+			(task) => !taskIds.has(task.embedded.id)
+		);
+
+		const newItems = [...requestedItems, ...nextTasks];
 
 		ownTaskIdsKeyRef.current = getTaskIdsKey(newItems);
 		pageRef.current = data.page;
 
 		updateDataSetItems!({...data, items: newItems});
+
+		return nextTasks;
 	}, [items, requestPage, updateDataSetItems]);
 
 	const loadSubtasks = useCallback(

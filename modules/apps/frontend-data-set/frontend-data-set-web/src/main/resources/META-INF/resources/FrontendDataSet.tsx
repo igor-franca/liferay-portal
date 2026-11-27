@@ -506,6 +506,11 @@ const FrontendDataSetContent = ({
 
 	const [total, setTotal] = useState(0);
 
+	// A view can select rows that are not in the items, like nested rows, so it
+	// can give the number of items that Select All selects.
+
+	const [totalSelectableItems, setTotalSelectableItems] = useState<number>();
+
 	const isMounted = useIsMounted();
 
 	const updateFilterActivation = ({
@@ -1869,7 +1874,7 @@ const FrontendDataSetContent = ({
 				showNavBarWhenSelected={showNavBarWhenSelected}
 				showSearch={showSearch}
 				showSelectAll={showSelectAll}
-				total={total}
+				total={totalSelectableItems ?? total}
 			/>
 		</div>
 	) : null;
@@ -2564,6 +2569,7 @@ const FrontendDataSetContent = ({
 				selectedItemsKey,
 				selectedItemsValue,
 				selectionType,
+				selectItems,
 				showBulkActionsManagementBar,
 				showBulkActionsManagementBarActions,
 				showInfoPanel: infoPanelComponent ? true : false,
@@ -2578,6 +2584,7 @@ const FrontendDataSetContent = ({
 				updateDataSetItems,
 				updateFilters,
 				updateItem,
+				updateTotalSelectableItems: setTotalSelectableItems,
 				updateUserConfiguration,
 				updateView,
 				updateVisibleFields,

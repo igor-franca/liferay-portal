@@ -95,6 +95,7 @@ export interface IFrontendDataSetContext {
 	selectedItemsKey: string;
 	selectedItemsValue?: Array<any>;
 	selectionType?: 'single' | 'multiple';
+	selectItems: (value: any) => void;
 	showBulkActionsManagementBar: boolean;
 	showBulkActionsManagementBarActions: boolean;
 	showInfoPanel: boolean;
@@ -115,6 +116,7 @@ export interface IFrontendDataSetContext {
 	}: IDataSetData) => void;
 	updateFilters: IConfigInURLUpdaterThunk<EConfigInURLKeys.ACTIVE_FILTERS>;
 	updateItem: Function;
+	updateTotalSelectableItems: (totalSelectableItems?: number) => void;
 	updateUserConfiguration: (
 		configuration: IUserConfiguration
 	) => Promise<void>;
@@ -146,10 +148,12 @@ const FrontendDataSetContext = React.createContext({
 	selectable: false,
 	selectedItems: [],
 	selectedItemsValue: [],
+	selectItems: () => {},
 	toggleItemInlineEdit: () => {},
 	updateAdditionalAPIURLParameters: () => {},
 	updateDataSetItems: () => {},
 	updateItem: () => {},
+	updateTotalSelectableItems: () => {},
 } as unknown as IFrontendDataSetContext);
 
 export default FrontendDataSetContext;
