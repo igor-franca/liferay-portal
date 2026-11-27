@@ -95,6 +95,7 @@ export interface IFrontendDataSetContext {
 	selectedItemsKey: string;
 	selectedItemsValue?: Array<any>;
 	selectionType?: 'single' | 'multiple';
+	selectItems: (value: any) => void;
 	showBulkActionsManagementBar: boolean;
 	showBulkActionsManagementBarActions: boolean;
 	showInfoPanel: boolean;
@@ -147,6 +148,7 @@ const FrontendDataSetContext = React.createContext({
 	selectable: false,
 	selectedItems: [],
 	selectedItemsValue: [],
+	selectItems: () => {},
 	toggleItemInlineEdit: () => {},
 	updateAdditionalAPIURLParameters: () => {},
 	updateDataSetItems: () => {},
