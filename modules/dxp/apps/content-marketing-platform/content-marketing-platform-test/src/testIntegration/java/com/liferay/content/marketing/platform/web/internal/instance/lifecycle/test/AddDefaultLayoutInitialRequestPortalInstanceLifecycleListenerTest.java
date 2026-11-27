@@ -12,6 +12,7 @@ import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.service.ObjectDefinitionLocalService;
+import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.license.util.App;
 import com.liferay.portal.kernel.license.util.LicenseManagerUtil;
@@ -19,13 +20,20 @@ import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
+import com.liferay.portal.kernel.struts.StrutsAction;
+import com.liferay.portal.kernel.test.context.ContextUserReplace;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.CompanyTestUtil;
+import com.liferay.portal.kernel.test.util.UserTestUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
@@ -36,6 +44,9 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * @author Carolina Barbosa
@@ -58,6 +69,40 @@ public class AddDefaultLayoutInitialRequestPortalInstanceLifecycleListenerTest {
 
 		Group group = _groupLocalService.fetchGroup(
 			company.getCompanyId(), GroupConstants.CMS);
+
+		User user = UserTestUtil.getAdminUser(company.getCompanyId());
+
+		try (SafeCloseable safeCloseable =
+				CompanyThreadLocal.setCompanyIdWithSafeCloseable(
+					company.getCompanyId());
+			ContextUserReplace contextUserReplace = new ContextUserReplace(
+				user)) {
+
+			MockHttpServletRequest mockHttpServletRequest =
+				new MockHttpServletRequest();
+
+			mockHttpServletRequest.setAttribute(
+				WebKeys.THEME_DISPLAY,
+				new ThemeDisplay() {
+					{
+						setCompany(company);
+						setSiteDefaultLocale(LocaleUtil.US);
+						setUser(user);
+					}
+				});
+
+			ObjectDefinition objectDefinition =
+				_objectDefinitionLocalService.
+					fetchObjectDefinitionByExternalReferenceCode(
+						"L_CMP_PROJECT", company.getCompanyId());
+
+			mockHttpServletRequest.setParameter(
+				"objectDefinitionId",
+				String.valueOf(objectDefinition.getObjectDefinitionId()));
+
+			_addProjectStrutsAction.execute(
+				mockHttpServletRequest, new MockHttpServletResponse());
+		}
 
 		_assertDefaultLayoutPageTemplateEntry(
 			group, "L_CMP_PROJECT", "Project");
@@ -145,6 +190,9 @@ public class AddDefaultLayoutInitialRequestPortalInstanceLifecycleListenerTest {
 		Assert.assertNotNull(externalReferenceCode, layoutPageTemplateEntry);
 		Assert.assertEquals(name, layoutPageTemplateEntry.getName());
 	}
+
+	@Inject(filter = "path=/cms/add_project")
+	private StrutsAction _addProjectStrutsAction;
 
 	@Inject
 	private AssetCategoryLocalService _assetCategoryLocalService;
