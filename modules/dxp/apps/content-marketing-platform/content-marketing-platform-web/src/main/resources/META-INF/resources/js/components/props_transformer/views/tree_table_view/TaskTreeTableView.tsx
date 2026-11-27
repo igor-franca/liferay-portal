@@ -15,7 +15,7 @@ import {
 	FrontendDataSetContext,
 	IItemsActions,
 } from '@liferay/frontend-data-set-web';
-import React, {useContext, useEffect, useMemo} from 'react';
+import React, {useCallback, useContext, useEffect, useMemo} from 'react';
 
 import {getTasksCount} from '../../../../utils/api';
 import {ITask} from '../../../../utils/types';
@@ -83,10 +83,13 @@ export default function TaskTreeTableView({
 	onItemSelectionChange,
 }: TaskTreeTableViewProps) {
 	const {
+		allItemsSelectedActive,
 		apiURL,
 		globalFDSState,
 		requestPage,
 		selectable,
+		selectedItemsValue,
+		selectItems,
 		sorts,
 		total,
 		updateDataSetItems,
@@ -136,10 +139,25 @@ export default function TaskTreeTableView({
 		}
 	}, [flat, updateTotalSelectableItems]);
 
+	// The tasks loaded on scroll arrive selected when every loaded task is, so
+	// the selection bar keeps offering Select All.
+
+	const loadMoreTasks = useCallback(async () => {
+		const selectNextTasks =
+			!allItemsSelectedActive &&
+			items.every((task) => selectedItemsValue?.includes(task.embedded.id));
+
+		const nextTasks = await loadMore();
+
+		if (selectNextTasks && nextTasks.length) {
+			selectItems(nextTasks.map((task) => task.embedded.id));
+		}
+	}, [allItemsSelectedActive, items, loadMore, selectItems, selectedItemsValue]);
+
 	const {loading, sentinelRef} = useInfiniteScroll({
 		hasMore,
 		items,
-		onLoadMore: loadMore,
+		onLoadMore: loadMoreTasks,
 	});
 
 	const columns = useMemo(
